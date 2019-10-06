@@ -37,5 +37,7 @@ namespace osu.Game.Rulesets.tau.Beatmaps
                 PositionToEnd = position
             };
         }
+
+        protected override Beatmap<TauHitObject> CreateBeatmap() => new TauBeatmap();
     }
 }
