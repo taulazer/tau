@@ -7,6 +7,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.tau.Objects;
 using osu.Game.Rulesets.Objects.Types;
+using osuTK;
 
 namespace osu.Game.Rulesets.tau.Beatmaps
 {
@@ -26,10 +27,14 @@ namespace osu.Game.Rulesets.tau.Beatmaps
 
         protected override IEnumerable<TauHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap)
         {
+            Vector2 position = ((IHasPosition)original).Position;
+            float angle = position.GetDegreesFromPosition(Vector2.Zero);
+
             yield return new TauHitObject
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
+                PositionToEnd = position
             };
         }
     }
