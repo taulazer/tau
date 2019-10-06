@@ -1,12 +1,14 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osuTK;
 
@@ -30,6 +32,16 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
             InternalChild = new DefaultCursor(beatmap.Value.BeatmapInfo.BaseDifficulty.CircleSize);
 
             this.beatmap.BindTo(beatmap);
+        }
+
+        protected override bool OnMouseMove(MouseMoveEvent e)
+        {
+            var angle = Math.Atan2(OriginPosition.Y + Height / 2 - e.MousePosition.Y,
+                            OriginPosition.X + Width / 2 - e.MousePosition.X) * 180.0 / Math.PI - 90;
+
+            Rotation = (float)angle;
+
+            return base.OnMouseMove(e);
         }
 
         private class DefaultCursor : CompositeDrawable
@@ -64,25 +76,16 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
                                 InnerRadius = 0.05f,
                                 Rotation = -360 * (0.1f / 2)
                             },
-                            new EquilateralTriangle
+                            new Box
                             {
                                 Anchor = Anchor.TopCentre,
                                 Origin = Anchor.TopCentre,
                                 RelativeSizeAxes = Axes.Y,
-                                // todo: strange accuracy.. needs fix
-                                Size = new Vector2(10f, 1f),
-                                Scale = new Vector2(1f, 0.25f / 4.5f)
+                                Size = new Vector2(5f, 0.5f),
                             }
                         }
                     }
                 };
-            }
-
-            protected override void Update()
-            {
-                base.Update();
-
-                Rotation += (float)Time.Elapsed / 10;
             }
         }
     }

@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.tau.UI
                         {
                             RelativeSizeAxes = Axes.Both,
                             Current = new BindableDouble(1),
-                            InnerRadius = 0.025f,
+                            InnerRadius = 0.025f / 2,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             FillMode = FillMode.Fit,
