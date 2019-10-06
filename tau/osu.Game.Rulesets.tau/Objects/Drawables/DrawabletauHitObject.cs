@@ -15,6 +15,8 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
     {
         private Box box;
 
+        protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
+
         public DrawabletauHitObject(TauHitObject hitObject)
             : base(hitObject)
         {
@@ -27,7 +29,7 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
                 RelativeSizeAxes = Axes.Both,
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
-                Alpha = 0.2f
+                Alpha = 0.05f
             });
 
             hitObject.Angle = hitObject.PositionToEnd.GetDegreesFromPosition(box.AnchorPosition) * 4;
@@ -35,6 +37,13 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
 
             var a = hitObject.Angle *= (float)(Math.PI / 180);
             Position = new Vector2(50 * (float)Math.Cos(a), 50 * (float)Math.Sin(a));
+        }
+
+        protected override void UpdateInitialTransforms()
+        {
+            base.UpdateInitialTransforms();
+
+            box.FadeIn(HitObject.TimeFadeIn);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -56,6 +65,9 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
             switch (state)
             {
                 case ArmedState.Idle:
+                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
+                    this.Delay(HitObject.TimePreempt).FadeOut(500);
+                    Expire(true);
                     break;
 
                 case ArmedState.Hit:
