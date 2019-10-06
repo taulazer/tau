@@ -31,7 +31,6 @@ namespace osu.Game.Rulesets.tau.Replays
                 Frames.Add(new TauReplayFrame
                 {
                     Time = hitObject.StartTime,
-                    Position = hitObject.Position,
                     // todo: add required inputs and extra frames.
                 });
             }

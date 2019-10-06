@@ -18,8 +18,6 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
             Size = new Vector2(40);
             Origin = Anchor.Centre;
 
-            Position = hitObject.Position;
-
             // todo: add visuals.
         }
 

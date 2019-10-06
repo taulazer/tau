@@ -3,18 +3,13 @@
 
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
-using osu.Game.Rulesets.Objects.Types;
-using osuTK;
 
 namespace osu.Game.Rulesets.tau.Objects
 {
-    public class TauHitObject : HitObject, IHasPosition
+    public class TauHitObject : HitObject
     {
         public override Judgement CreateJudgement() => new Judgement();
 
-        public Vector2 Position { get; set; }
-
-        public float X => Position.X;
-        public float Y => Position.Y;
+        public float Angle { get; set; }
     }
 }
