@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.tau.Objects
         public override Judgement CreateJudgement() => new Judgement();
 
         public double TimePreempt = 600;
-        public double TimeFadeIn = 400;
+        public double TimeFadeIn = 100;
 
         public float Angle { get; set; }
         public Vector2 PositionToEnd { get; set; }
@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.tau.Objects
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
             TimePreempt = (float)BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
-            TimeFadeIn = 400;
+            TimeFadeIn = 100;
         }
     }
 }

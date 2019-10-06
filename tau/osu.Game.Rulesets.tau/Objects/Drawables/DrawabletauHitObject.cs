@@ -35,15 +35,16 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
             hitObject.Angle = hitObject.PositionToEnd.GetDegreesFromPosition(box.AnchorPosition) * 4;
             Rotation = hitObject.Angle;
 
-            var a = hitObject.Angle *= (float)(Math.PI / 180);
-            Position = new Vector2(50 * (float)Math.Cos(a), 50 * (float)Math.Sin(a));
+            Position = Vector2.Zero;
         }
 
         protected override void UpdateInitialTransforms()
         {
             base.UpdateInitialTransforms();
+            var a = Rotation *= (float)(Math.PI / 180);
 
             box.FadeIn(HitObject.TimeFadeIn);
+            this.MoveTo(new Vector2(225 * (float)Math.Cos(a), 225 * (float)Math.Sin(a)), HitObject.TimePreempt);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
