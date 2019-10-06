@@ -34,16 +34,6 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
             this.beatmap.BindTo(beatmap);
         }
 
-        protected override bool OnMouseMove(MouseMoveEvent e)
-        {
-            var angle = Math.Atan2(OriginPosition.Y + Height / 2 - e.MousePosition.Y,
-                            OriginPosition.X + Width / 2 - e.MousePosition.X) * 180.0 / Math.PI - 90;
-
-            Rotation = (float)angle;
-
-            return base.OnMouseMove(e);
-        }
-
         private class DefaultCursor : CompositeDrawable
         {
             public DefaultCursor(float cs = 5f)
@@ -72,9 +62,9 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
-                                Current = new BindableDouble(0.1f),
+                                Current = new BindableDouble(convertValue(cs)),
                                 InnerRadius = 0.05f,
-                                Rotation = -360 * (0.1f / 2)
+                                Rotation = -360 * ((float)convertValue(cs) / 2)
                             },
                             new Box
                             {
@@ -86,6 +76,24 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
                         }
                     }
                 };
+
+                const double a = 1;
+                const double b = 10;
+                const double c = 0.2;
+                const double d = 0.005;
+
+                // Thank you AlFas for this code.
+                double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
+            }
+
+            protected override bool OnMouseMove(MouseMoveEvent e)
+            {
+                var angle = Math.Atan2(OriginPosition.Y + Height / 2 - e.MousePosition.Y,
+                                OriginPosition.X + Width / 2 - e.MousePosition.X) * 180.0 / Math.PI - 90;
+
+                Rotation = (float)angle;
+
+                return base.OnMouseMove(e);
             }
         }
     }
