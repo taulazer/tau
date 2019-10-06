@@ -44,12 +44,23 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
                 RelativeSizeAxes = Axes.Both;
                 AddInternal(new GameplayCursor(cs));
 
-                AddInternal(new CursorContainer
+                AddInternal(new AbsoluteCursor
                 {
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 });
+            }
+
+            private class AbsoluteCursor : CursorContainer
+            {
+                protected override Drawable CreateCursor() => new CircularProgress
+                {
+                    Size = new Vector2(15),
+                    Origin = Anchor.Centre,
+                    InnerRadius = 0.25f,
+                    Current = new Bindable<double>(1)
+                };
             }
 
             private class GameplayCursor : CompositeDrawable
@@ -76,7 +87,7 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
                             Masking = true,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Size = new Vector2(0.75f),
+                            Size = new Vector2(0.6f),
                             Children = new Drawable[]
                             {
                                 new CircularProgress
@@ -93,7 +104,7 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
                                     Anchor = Anchor.TopCentre,
                                     Origin = Anchor.TopCentre,
                                     RelativeSizeAxes = Axes.Y,
-                                    Size = new Vector2(5f, 0.5f),
+                                    Size = new Vector2(2.5f / 2, 0.5f),
                                 }
                             }
                         }
@@ -106,17 +117,11 @@ namespace osu.Game.Rulesets.tau.UI.Cursor
 
                     // Thank you AlFas for this code.
                     double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
-
-                    AddInternal(new Box
-                    {
-                        Position = AnchorPosition,
-                        Size = new Vector2(10)
-                    });
                 }
 
                 protected override bool OnMouseMove(MouseMoveEvent e)
                 {
-                    var angle = e.MousePosition.GetDegreesFromPosition(AnchorPosition);
+                    var angle = e.MousePosition.GetDegreesFromPosition(AnchorPosition) - 25;
 
                     container.Rotation = angle;
 

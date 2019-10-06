@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.tau.UI
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.75f),
+                    Size = new Vector2(0.6f),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.tau.UI
                         {
                             RelativeSizeAxes = Axes.Both,
                             Current = new BindableDouble(1),
-                            InnerRadius = 0.025f / 2,
+                            InnerRadius = 0.025f / 4,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             FillMode = FillMode.Fit,
