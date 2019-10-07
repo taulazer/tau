@@ -4,6 +4,7 @@
 using System;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.MathUtils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
@@ -45,7 +46,7 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
             var a = b *= (float)(Math.PI / 180);
 
             box.FadeIn(HitObject.TimeFadeIn);
-            this.MoveTo(new Vector2(-(225 * (float)Math.Cos(a)), -(225 * (float)Math.Sin(a))), HitObject.TimePreempt);
+            this.MoveTo(new Vector2(-(225 * (float)Math.Cos(a)), (225 * (float)Math.Sin(a))), HitObject.TimePreempt);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -73,8 +74,13 @@ namespace osu.Game.Rulesets.tau.Objects.Drawables
                     break;
 
                 case ArmedState.Hit:
-                    box.ScaleTo(2, time_fade_hit / 3, Easing.OutCubic)
-                        .FadeColour(Color4.Yellow, time_fade_hit / 3, Easing.OutQuint)
+                    var b = HitObject.PositionToEnd.GetDegreesFromPosition(box.AnchorPosition) * 4;
+                    var a = b *= (float)(Math.PI / 180);
+
+                    box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
+                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
+                        .RotateTo(RNG.Next(-45, 45), time_fade_hit, Easing.OutCubic)
+                        .MoveToOffset(new Vector2(20 * (float)Math.Cos(a), -(20 * (float)Math.Sin(a))), time_fade_hit, Easing.OutCubic)
                         .FadeOut(time_fade_hit)
                         .Expire();
                     break;
