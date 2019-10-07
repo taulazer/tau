@@ -1,11 +1,14 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
+using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.tau.Objects;
 using osu.Game.Rulesets.tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
 using osuTK;
@@ -15,14 +18,15 @@ namespace osu.Game.Rulesets.tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        protected override GameplayCursorContainer CreateCursor() => new TauCursorContainer();
+        private TauCursorContainer cursor;
+        protected override GameplayCursorContainer CreateCursor() => cursor;
 
-        [BackgroundDependencyLoader]
-        private void load()
+        public TauPlayfield(Func<TauHitObject, DrawableHitObject<TauHitObject>> createDrawableRepresentation)
         {
+            cursor = new TauCursorContainer(createDrawableRepresentation);
+
             AddRangeInternal(new Drawable[]
             {
-                HitObjectContainer,
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -42,7 +46,8 @@ namespace osu.Game.Rulesets.tau.UI
                             FillAspectRatio = 1, // 1:1 Aspect ratio to get a perfect circle
                         }
                     }
-                }
+                },
+                HitObjectContainer,
             });
         }
     }
