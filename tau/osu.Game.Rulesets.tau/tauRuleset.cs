@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.tau
 
         public override Drawable CreateIcon() => new Sprite
         {
-            Texture = new TextureStore(new TextureLoaderStore(CreateReourceStore()), false).Get("Textures/tau"),
+            Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau"),
         };
     }
 }
