@@ -4,7 +4,7 @@
     <AssemblyTitle>osu.Game.Rulesets.Sample</AssemblyTitle>
     <OutputType>Library</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <RootNamespace>osu.Game.Rulesets.tau</RootNamespace>
+    <RootNamespace>osu.Game.Rulesets.Tau</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**" />
