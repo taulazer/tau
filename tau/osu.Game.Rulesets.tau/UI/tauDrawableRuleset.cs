@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
 
-        protected override Playfield CreatePlayfield() => new TauPlayfield(CreateDrawableRepresentation);
+        protected override Playfield CreatePlayfield() => new TauPlayfield();
 
         protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new TauFramedReplayInputHandler(replay);
 
