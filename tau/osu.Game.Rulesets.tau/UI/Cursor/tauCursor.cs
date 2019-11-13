@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -11,8 +10,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
@@ -20,11 +17,9 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
     public class TauCursor : CompositeDrawable
     {
         private readonly IBindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
-        private Func<TauHitObject, DrawableHitObject<TauHitObject>> createDrawableRepresentation;
 
-        public TauCursor(Func<TauHitObject, DrawableHitObject<TauHitObject>> createDrawableRepresentation)
+        public TauCursor()
         {
-            this.createDrawableRepresentation = createDrawableRepresentation;
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
 

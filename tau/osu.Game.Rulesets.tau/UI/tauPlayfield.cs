@@ -1,14 +1,11 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
-using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
 using osuTK;
@@ -18,12 +15,14 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        private TauCursorContainer cursor;
-        protected override GameplayCursorContainer CreateCursor() => cursor;
+        private TauCursor cursor;
 
-        public TauPlayfield(Func<TauHitObject, DrawableHitObject<TauHitObject>> createDrawableRepresentation)
+        // Hides the cursor
+        protected override GameplayCursorContainer CreateCursor() => null;
+
+        public TauPlayfield()
         {
-            cursor = new TauCursorContainer(createDrawableRepresentation);
+            cursor = new TauCursor();
 
             AddRangeInternal(new Drawable[]
             {
@@ -48,6 +47,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     }
                 },
                 HitObjectContainer,
+                cursor
             });
         }
     }
