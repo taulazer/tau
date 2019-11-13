@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
-using osu.Game.Rulesets.tau.Objects;
 using osu.Game.Rulesets.Objects.Types;
+using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 
-namespace osu.Game.Rulesets.tau.Beatmaps
+namespace osu.Game.Rulesets.Tau.Beatmaps
 {
     public class TauBeatmapConverter : BeatmapConverter<TauHitObject>
     {

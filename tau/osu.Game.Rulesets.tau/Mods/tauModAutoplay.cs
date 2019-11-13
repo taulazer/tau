@@ -3,12 +3,12 @@
 
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.tau.Objects;
-using osu.Game.Rulesets.tau.Replays;
+using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Scoring;
 using osu.Game.Users;
 
-namespace osu.Game.Rulesets.tau.Mods
+namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModAutoplay : ModAutoplay<TauHitObject>
     {

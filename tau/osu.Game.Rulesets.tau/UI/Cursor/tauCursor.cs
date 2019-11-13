@@ -12,10 +12,10 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.tau.Objects;
+using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 
-namespace osu.Game.Rulesets.tau.UI.Cursor
+namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
     public class TauCursor : CompositeDrawable
     {

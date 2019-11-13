@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.tau.Objects.Drawables
+namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawabletauHitObject : DrawableHitObject<TauHitObject>
     {

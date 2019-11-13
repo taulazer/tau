@@ -5,7 +5,7 @@ using System.ComponentModel;
 using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.UI;
 
-namespace osu.Game.Rulesets.tau
+namespace osu.Game.Rulesets.Tau
 {
     public class TauInputManager : RulesetInputManager<TauAction>
     {

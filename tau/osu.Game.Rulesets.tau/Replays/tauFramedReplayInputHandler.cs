@@ -10,7 +10,7 @@ using osu.Game.Replays;
 using osu.Game.Rulesets.Replays;
 using osuTK;
 
-namespace osu.Game.Rulesets.tau.Replays
+namespace osu.Game.Rulesets.Tau.Replays
 {
     public class TauFramedReplayInputHandler : FramedReplayInputHandler<TauReplayFrame>
     {

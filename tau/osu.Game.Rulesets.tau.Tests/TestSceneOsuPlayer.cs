@@ -4,7 +4,7 @@
 using NUnit.Framework;
 using osu.Game.Tests.Visual;
 
-namespace osu.Game.Rulesets.tau.Tests
+namespace osu.Game.Rulesets.Tau.Tests
 {
     [TestFixture]
     public class TestSceneOsuPlayer : PlayerTestScene

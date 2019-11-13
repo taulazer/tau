@@ -9,14 +9,14 @@ using osu.Game.Input.Handlers;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.tau.Objects;
-using osu.Game.Rulesets.tau.Objects.Drawables;
-using osu.Game.Rulesets.tau.Replays;
-using osu.Game.Rulesets.tau.Scoring;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Replays;
+using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.UI;
 
-namespace osu.Game.Rulesets.tau.UI
+namespace osu.Game.Rulesets.Tau.UI
 {
     [Cached]
     public class DrawabletauRuleset : DrawableRuleset<TauHitObject>

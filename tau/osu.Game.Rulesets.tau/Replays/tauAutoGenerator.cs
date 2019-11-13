@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using osu.Game.Beatmaps;
 using osu.Game.Replays;
-using osu.Game.Rulesets.tau.Objects;
 using osu.Game.Rulesets.Replays;
+using osu.Game.Rulesets.Tau.Objects;
 
-namespace osu.Game.Rulesets.tau.Replays
+namespace osu.Game.Rulesets.Tau.Replays
 {
     public class TauAutoGenerator : AutoGenerator
     {

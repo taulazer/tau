@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osuTK;
 
-namespace osu.Game.Rulesets.tau.Objects
+namespace osu.Game.Rulesets.Tau.Objects
 {
     public class TauHitObject : HitObject
     {

@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.tau.Objects;
+using osu.Game.Rulesets.Tau.Objects;
 
-namespace osu.Game.Rulesets.tau.Beatmaps
+namespace osu.Game.Rulesets.Tau.Beatmaps
 {
     public class TauBeatmap : Beatmap<TauHitObject>
     {

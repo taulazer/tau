@@ -8,12 +8,12 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.tau.Objects;
-using osu.Game.Rulesets.tau.UI.Cursor;
+using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
 using osuTK;
 
-namespace osu.Game.Rulesets.tau.UI
+namespace osu.Game.Rulesets.Tau.UI
 {
     [Cached]
     public class TauPlayfield : Playfield

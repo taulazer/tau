@@ -4,7 +4,7 @@
 using System;
 using osuTK;
 
-namespace osu.Game.Rulesets.tau
+namespace osu.Game.Rulesets.Tau
 {
     public static class Extensions
     {

@@ -6,7 +6,7 @@ using osu.Framework;
 using osu.Framework.Platform;
 using osu.Game.Tests;
 
-namespace osu.Game.Rulesets.tau.Tests
+namespace osu.Game.Rulesets.Tau.Tests
 {
     public static class VisualTestRunner
     {

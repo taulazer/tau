@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using osu.Game.Rulesets.Replays;
 using osuTK;
 
-namespace osu.Game.Rulesets.tau.Replays
+namespace osu.Game.Rulesets.Tau.Replays
 {
     public class TauReplayFrame : ReplayFrame
     {
