@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
@@ -17,6 +18,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
     public class TauCursor : CompositeDrawable
     {
         private readonly IBindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
+
+        private DefaultCursor defaultCursor;
 
         public TauCursor()
         {
@@ -29,19 +32,54 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         [BackgroundDependencyLoader]
         private void load(IBindable<WorkingBeatmap> beatmap)
         {
-            InternalChild = new DefaultCursor(beatmap.Value.BeatmapInfo.BaseDifficulty.CircleSize);
+            InternalChild = defaultCursor = new DefaultCursor(beatmap.Value.BeatmapInfo.BaseDifficulty.CircleSize);
 
             this.beatmap.BindTo(beatmap);
         }
 
+        public bool CheckForValidation(DrawabletauHitObject h) => h.ScreenSpaceDrawQuad.AABBFloat.IntersectsWith(defaultCursor.HitReceptor.ScreenSpaceDrawQuad.AABBFloat);
+
         private class DefaultCursor : CompositeDrawable
         {
+            public readonly Box HitReceptor;
+
             public DefaultCursor(float cs = 5f)
             {
                 Origin = Anchor.Centre;
                 Anchor = Anchor.Centre;
 
                 RelativeSizeAxes = Axes.Both;
+
+                AddInternal(new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    FillMode = FillMode.Fit,
+                    FillAspectRatio = 1, // 1:1 Aspect Ratio.
+                    Size = new Vector2(0.6f),
+                    Children = new Drawable[]
+                    {
+                        HitReceptor = new Box
+                        {
+                            Height = 50,
+                            Width = (float)convertValue(cs),
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Alpha = 0,
+                            AlwaysPresent = true
+                        }
+                    }
+                });
+
+                const double a = 1;
+                const double b = 10;
+                const double c = 230;
+                const double d = 25;
+
+                // Thank you AlFas for this code.
+                double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
+
                 AddInternal(new GameplayCursor(cs));
 
                 AddInternal(new AbsoluteCursor
@@ -65,12 +103,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             private class GameplayCursor : CompositeDrawable
             {
-                private readonly CircularContainer container;
-                private float cs;
-
                 public GameplayCursor(float cs)
                 {
-                    this.cs = cs;
                     RelativeSizeAxes = Axes.Both;
 
                     Anchor = Anchor.Centre;
@@ -81,7 +115,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
                     InternalChildren = new Drawable[]
                     {
-                        container = new CircularContainer
+                        new CircularContainer
                         {
                             RelativeSizeAxes = Axes.Both,
                             Masking = true,
@@ -110,23 +144,23 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         }
                     };
 
-                    const double a = 1;
-                    const double b = 10;
-                    const double c = 0.2;
-                    const double d = 0.005;
+                    const double a = 2;
+                    const double b = 7;
+                    const double c = 0.15;
+                    const double d = 0.05;
 
                     // Thank you AlFas for this code.
                     double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
                 }
+            }
 
-                protected override bool OnMouseMove(MouseMoveEvent e)
-                {
-                    var angle = e.MousePosition.GetDegreesFromPosition(AnchorPosition) - 25;
+            protected override bool OnMouseMove(MouseMoveEvent e)
+            {
+                var angle = e.MousePosition.GetDegreesFromPosition(AnchorPosition) - 25;
 
-                    container.Rotation = angle;
+                Rotation = angle;
 
-                    return base.OnMouseMove(e);
-                }
+                return base.OnMouseMove(e);
             }
         }
     }

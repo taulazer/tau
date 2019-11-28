@@ -2,19 +2,40 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Diagnostics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Input.Bindings;
 using osu.Framework.MathUtils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 using osuTK.Graphics;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawabletauHitObject : DrawableHitObject<TauHitObject>
+    public class DrawabletauHitObject : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
     {
         private Box box;
+
+        public Func<DrawabletauHitObject, bool> CheckValidation;
+
+        /// <summary>
+        /// A list of keys which can result in hits for this HitObject.
+        /// </summary>
+        public TauAction[] HitActions { get; set; } = new[]
+        {
+            TauAction.RightButton,
+            TauAction.LeftButton,
+        };
+
+        /// <summary>
+        /// The action that caused this <see cref="DrawableHit"/> to be hit.
+        /// </summary>
+        public TauAction? HitAction { get; private set; }
+
+        private bool validActionPressed;
 
         protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
 
@@ -51,11 +72,31 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            if (Time.Current >= HitObject.StartTime)
+            Debug.Assert(HitObject.HitWindows != null);
+            if (CheckValidation == null) return;
+
+            if (!userTriggered)
             {
-                ApplyResult(r => r.Type = true
-                    ? HitResult.Perfect
-                    : HitResult.Miss);
+                if (!HitObject.HitWindows.CanBeHit(timeOffset))
+                    ApplyResult(r => r.Type = HitResult.Miss);
+
+                return;
+            }
+
+            bool validated = CheckValidation.Invoke(this);
+
+            if (timeOffset >= 0 && Result != null && validated)
+            {
+                var result = HitObject.HitWindows.ResultFor(timeOffset);
+                ApplyResult(r => r.Type = result);
+
+                if (result == HitResult.None)
+                    return;
+
+                if (!validActionPressed)
+                    ApplyResult(r => r.Type = HitResult.Miss);
+                else
+                    ApplyResult(r => r.Type = result);
             }
         }
 
@@ -93,5 +134,22 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
             }
         }
+
+        public bool OnPressed(TauAction action)
+        {
+            if (Judged)
+                return false;
+
+            validActionPressed = HitActions.Contains(action);
+
+            var result = UpdateResult(true);
+
+            if (IsHit)
+                HitAction = action;
+
+            return result;
+        }
+
+        public bool OnReleased(TauAction action) => false;
     }
 }

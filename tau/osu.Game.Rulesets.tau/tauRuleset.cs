@@ -38,6 +38,9 @@ namespace osu.Game.Rulesets.Tau
         {
             switch (type)
             {
+                case ModType.DifficultyReduction:
+                    return new[] { new TauModNoFail() };
+
                 case ModType.Automation:
                     return new[] { new TauModAutoplay() };
 
@@ -52,6 +55,8 @@ namespace osu.Game.Rulesets.Tau
         {
             new KeyBinding(InputKey.Z, TauAction.LeftButton),
             new KeyBinding(InputKey.X, TauAction.RightButton),
+            new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
+            new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
             new KeyBinding(InputKey.Space, TauAction.HardButton),
         };
 

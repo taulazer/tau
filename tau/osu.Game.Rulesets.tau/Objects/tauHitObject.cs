@@ -5,13 +5,14 @@ using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Tau.Judgements;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
     public class TauHitObject : HitObject
     {
-        public override Judgement CreateJudgement() => new Judgement();
+        public override Judgement CreateJudgement() => new TauJudgement();
 
         public double TimePreempt = 600;
         public double TimeFadeIn = 100;

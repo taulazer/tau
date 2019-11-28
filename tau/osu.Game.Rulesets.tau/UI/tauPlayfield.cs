@@ -6,6 +6,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
+using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
 using osuTK;
@@ -49,6 +51,16 @@ namespace osu.Game.Rulesets.Tau.UI
                 HitObjectContainer,
                 cursor
             });
+        }
+
+        public bool CheckIfWeCanValidate(DrawabletauHitObject obj) => cursor.CheckForValidation(obj);
+
+        public override void Add(DrawableHitObject h)
+        {
+            base.Add(h);
+
+            var obj = (DrawabletauHitObject)h;
+            obj.CheckValidation = CheckIfWeCanValidate;
         }
     }
 }
