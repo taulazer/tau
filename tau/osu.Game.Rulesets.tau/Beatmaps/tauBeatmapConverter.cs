@@ -28,7 +28,6 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         protected override IEnumerable<TauHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap)
         {
             Vector2 position = ((IHasPosition)original).Position;
-            float angle = position.GetDegreesFromPosition(Vector2.Zero);
 
             yield return new TauHitObject
             {

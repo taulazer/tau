@@ -67,7 +67,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             var a = b *= (float)(Math.PI / 180);
 
             box.FadeIn(HitObject.TimeFadeIn);
-            this.MoveTo(new Vector2(-(225 * (float)Math.Cos(a)), (225 * (float)Math.Sin(a))), HitObject.TimePreempt);
+            this.MoveTo(new Vector2(-(215 * (float)Math.Cos(a)), -(215 * (float)Math.Sin(a))), HitObject.TimePreempt);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)

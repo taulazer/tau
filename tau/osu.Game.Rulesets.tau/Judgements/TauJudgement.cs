@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Tau.Judgements
 {
     public class TauJudgement : Judgement
     {
-        public override HitResult MaxResult => HitResult.Great;
+        public override HitResult MaxResult => HitResult.Perfect;
 
         protected override int NumericResultFor(HitResult result)
         {
@@ -17,13 +17,7 @@ namespace osu.Game.Rulesets.Tau.Judgements
                 default:
                     return 0;
 
-                case HitResult.Meh:
-                    return 50;
-
-                case HitResult.Good:
-                    return 100;
-
-                case HitResult.Great:
+                case HitResult.Perfect:
                     return 300;
             }
         }
@@ -32,16 +26,11 @@ namespace osu.Game.Rulesets.Tau.Judgements
         {
             switch (result)
             {
-                case HitResult.Miss:
+                default:
                     return -0.02;
 
-                case HitResult.Meh:
-                case HitResult.Good:
-                case HitResult.Great:
+                case HitResult.Perfect:
                     return 0.01;
-
-                default:
-                    return 0;
             }
         }
     }

@@ -29,31 +29,14 @@ namespace osu.Game.Rulesets.Tau.Scoring
         {
             switch (result.Type)
             {
-                case HitResult.Great:
-                    return 10.2 - hpDrainRate;
-
-                case HitResult.Good:
-                    return 8 - hpDrainRate;
-
-                case HitResult.Meh:
-                    return 4 - hpDrainRate;
-
                 case HitResult.Miss:
                     return hpDrainRate;
 
                 default:
-                    return 0;
+                    return 10.2 - hpDrainRate; // Award less HP as drain rate is increased
             }
         }
 
-
-
-        protected override void Reset(bool storeResults)
-        {
-            base.Reset(storeResults);
-
-            Health.Value = 1;
-            Accuracy.Value = 1;
-        }
+        public override HitWindows CreateHitWindows() => new TauHitWindows();
     }
 }

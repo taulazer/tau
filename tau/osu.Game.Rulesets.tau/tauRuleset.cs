@@ -39,10 +39,18 @@ namespace osu.Game.Rulesets.Tau
             switch (type)
             {
                 case ModType.DifficultyReduction:
-                    return new[] { new TauModNoFail() };
+                    return new Mod[]
+                    {
+                        new TauModEasy(),
+                        new TauModNoFail(),
+                    };
 
                 case ModType.Automation:
-                    return new[] { new TauModAutoplay() };
+                    return new Mod[]
+                    {
+                        new MultiMod(new TauModAutoplay(), new ModCinema()),
+                        new TauModRelax(),
+                    };
 
                 default:
                     return new Mod[] { null };
