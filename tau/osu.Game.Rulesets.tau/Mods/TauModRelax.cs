@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             bool requiresHold = false;
             bool requiresHit = false;
 
-            const float relax_leniency = -3;
+            const float relax_leniency = 3;
 
             foreach (var drawable in playfield.HitObjectContainer.AliveObjects)
             {
@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                 double time = tauHit.Clock.CurrentTime;
                 double relativetime = time - tauHit.HitObject.StartTime;
 
-                if (time < tauHit.HitObject.StartTime - relax_leniency) continue;
+                if (time < tauHit.HitObject.StartTime + relax_leniency) continue;
 
                 if (tauHit.HitObject is IHasEndTime hasEnd && time > hasEnd.EndTime || tauHit.IsHit)
                     continue;
