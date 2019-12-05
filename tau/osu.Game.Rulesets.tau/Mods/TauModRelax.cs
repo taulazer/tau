@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             bool requiresHold = false;
             bool requiresHit = false;
 
-            const float relax_leniency = -3;
+            const float relax_leniency = 3;
 
             foreach (var drawable in playfield.HitObjectContainer.AliveObjects)
             {
