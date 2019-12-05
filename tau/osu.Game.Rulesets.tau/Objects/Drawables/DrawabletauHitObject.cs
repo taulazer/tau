@@ -6,7 +6,6 @@ using System.Diagnostics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
-using osu.Framework.MathUtils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
@@ -17,7 +16,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawabletauHitObject : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
     {
-        private Box box;
+        public Box Box;
 
         public Func<DrawabletauHitObject, bool> CheckValidation;
 
@@ -46,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            AddInternal(box = new Box
+            AddInternal(Box = new Box
             {
                 RelativeSizeAxes = Axes.Both,
                 Origin = Anchor.Centre,
@@ -54,8 +53,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Alpha = 0.05f
             });
 
-            hitObject.Angle = hitObject.PositionToEnd.GetDegreesFromPosition(box.AnchorPosition) * 4;
-            box.Rotation = hitObject.Angle;
+            hitObject.Angle = hitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
+            Box.Rotation = hitObject.Angle;
 
             Position = Vector2.Zero;
         }
@@ -63,10 +62,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void UpdateInitialTransforms()
         {
             base.UpdateInitialTransforms();
-            var b = HitObject.PositionToEnd.GetDegreesFromPosition(box.AnchorPosition) * 4;
+            var b = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
             var a = b *= (float)(Math.PI / 180);
 
-            box.FadeIn(HitObject.TimeFadeIn);
+            Box.FadeIn(HitObject.TimeFadeIn);
             this.MoveTo(new Vector2(-(215 * (float)Math.Cos(a)), -(215 * (float)Math.Sin(a))), HitObject.TimePreempt);
         }
 
@@ -88,6 +87,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (timeOffset >= 0 && Result != null && validated)
             {
                 var result = HitObject.HitWindows.ResultFor(timeOffset);
+                if (result >= HitResult.Meh)
+                    result = HitResult.Great;
+
                 ApplyResult(r => r.Type = result);
 
                 if (result == HitResult.None)
@@ -110,27 +112,35 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 case ArmedState.Idle:
                     LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-                    this.Delay(HitObject.TimePreempt).FadeOut(500);
-                    Expire(true);
+                    HitAction = null;
                     break;
 
                 case ArmedState.Hit:
-                    var b = HitObject.PositionToEnd.GetDegreesFromPosition(box.AnchorPosition) * 4;
+                    var b = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
                     var a = b *= (float)(Math.PI / 180);
 
-                    box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
-                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
-                        .RotateTo(RNG.Next(-45, 45), time_fade_hit, Easing.OutCubic)
-                        .MoveToOffset(new Vector2(20 * (float)Math.Cos(a), -(20 * (float)Math.Sin(a))), time_fade_hit, Easing.OutCubic)
-                        .FadeOut(time_fade_hit)
-                        .Expire();
+                    Console.WriteLine("Hit!");
+
+                    Box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
+                       .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
+                       .MoveToOffset(new Vector2(-(50 * (float)Math.Cos(a)), -(50 * (float)Math.Sin(a))), time_fade_hit, Easing.OutCubic)
+                       .FadeOut(time_fade_hit);
+
+                    this.FadeOut(time_fade_hit);
                     break;
 
                 case ArmedState.Miss:
-                    box.ScaleTo(0.5f, time_fade_miss, Easing.InCubic)
-                        .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
-                        .FadeOut(time_fade_miss)
-                        .Expire();
+                    Console.WriteLine("miss...");
+
+                    var c = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
+                    var d = c *= (float)(Math.PI / 180);
+
+                    Box.ScaleTo(0.5f, time_fade_miss, Easing.InCubic)
+                       .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
+                       .MoveToOffset(new Vector2(-(50 * (float)Math.Cos(d)), -(50 * (float)Math.Sin(d))), time_fade_hit, Easing.OutCubic)
+                       .FadeOut(time_fade_miss);
+
+                    this.FadeOut(time_fade_miss);
                     break;
             }
         }

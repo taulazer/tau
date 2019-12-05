@@ -2,12 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.Tau.UI
     public class TauPlayfield : Playfield
     {
         private TauCursor cursor;
+        private JudgementContainer<DrawableTauJudgement> judgementLayer;
 
         // Hides the cursor
         protected override GameplayCursorContainer CreateCursor() => null;
@@ -30,6 +31,11 @@ namespace osu.Game.Rulesets.Tau.UI
 
             AddRangeInternal(new Drawable[]
             {
+                judgementLayer = new JudgementContainer<DrawableTauJudgement>
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = 1,
+                },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -63,7 +69,29 @@ namespace osu.Game.Rulesets.Tau.UI
 
             var obj = (DrawabletauHitObject)h;
             obj.CheckValidation = CheckIfWeCanValidate;
-            Console.WriteLine(HitObjectContainer.Objects.Count());
+
+            obj.OnNewResult += onNewResult;
+        }
+
+        private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
+        {
+            if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
+                return;
+
+            var tauObj = (DrawabletauHitObject)judgedObject;
+
+            var b = tauObj.HitObject.PositionToEnd.GetDegreesFromPosition(tauObj.Box.AnchorPosition) * 4;
+            var a = b *= (float)(Math.PI / 180);
+
+            DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)
+            {
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Position = new Vector2(-(285 * (float)Math.Cos(a)), -(285 * (float)Math.Sin(a))),
+                Rotation = tauObj.Box.Rotation + 90,
+            };
+
+            judgementLayer.Add(explosion);
         }
     }
 }

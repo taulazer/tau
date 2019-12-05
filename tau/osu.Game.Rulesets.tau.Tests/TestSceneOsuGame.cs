@@ -3,10 +3,8 @@
 
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
 using osu.Game.Tests.Visual;
-using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
@@ -20,11 +18,6 @@ namespace osu.Game.Rulesets.Tau.Tests
 
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Black,
-                },
                 game
             };
         }
