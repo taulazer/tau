@@ -119,8 +119,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     var b = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
                     var a = b *= (float)(Math.PI / 180);
 
-                    Console.WriteLine("Hit!");
-
                     Box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
                        .MoveToOffset(new Vector2(-(50 * (float)Math.Cos(a)), -(50 * (float)Math.Sin(a))), time_fade_hit, Easing.OutCubic)
@@ -130,8 +128,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Miss:
-                    Console.WriteLine("miss...");
-
                     var c = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
                     var d = c *= (float)(Math.PI / 180);
 

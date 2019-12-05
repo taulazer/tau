@@ -3,12 +3,13 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using osu.Game.Input.Handlers;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
+using static osu.Game.Input.Handlers.ReplayInputHandler;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
@@ -21,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             bool requiresHold = false;
             bool requiresHit = false;
 
-            const float relax_leniency = 3;
+            const float relax_leniency = -3;
 
             foreach (var drawable in playfield.HitObjectContainer.AliveObjects)
             {
@@ -33,21 +34,26 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                 if (time < tauHit.HitObject.StartTime - relax_leniency) continue;
 
-                if ((tauHit.HitObject is IHasEndTime hasEnd && time > hasEnd.EndTime) || tauHit.IsHit)
+                if (tauHit.HitObject is IHasEndTime hasEnd && time > hasEnd.EndTime || tauHit.IsHit)
                     continue;
 
                 if (tauHit is DrawabletauHitObject)
                 {
                     Debug.Assert(tauHit.HitObject.HitWindows != null);
-                    requiresHit |= tauHit.HitObject.HitWindows.CanBeHit(relativetime);
+
+                    var play = (TauPlayfield)playfield;
+                    if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit))
+                        requiresHit = true;
                 }
             }
 
             if (requiresHit)
             {
-                addAction(true);
                 addAction(false);
+                addAction(true);
             }
+
+            addAction(requiresHold);
         }
 
         private bool wasHit;
@@ -62,7 +68,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             wasHit = hitting;
 
-            var state = new ReplayInputHandler.ReplayState<TauAction>
+            var state = new ReplayState<TauAction>
             {
                 PressedActions = new List<TauAction>()
             };
