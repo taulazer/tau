@@ -7,9 +7,13 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps;
+using osu.Game.Configuration;
+using osu.Game.Overlays.Settings;
+using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Beatmaps;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
@@ -58,6 +62,10 @@ namespace osu.Game.Rulesets.Tau
         }
 
         public override string ShortName => "tau";
+
+        public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
+
+        public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {

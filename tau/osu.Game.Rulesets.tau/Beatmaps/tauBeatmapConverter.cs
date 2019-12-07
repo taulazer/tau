@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
@@ -13,12 +14,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 {
     public class TauBeatmapConverter : BeatmapConverter<TauHitObject>
     {
-        protected override IEnumerable<Type> ValidConversionTypes { get; } = new[]
-        {
-            // todo: Populate with conversion types that should be supported other than position (ie. typeof(IHasCurve))
-            // https://github.com/ppy/osu/tree/master/osu.Game/Rulesets/Objects/Types
-            typeof(IHasPosition)
-        };
+        protected override IEnumerable<Type> ValidConversionTypes { get; } = new[] { typeof(IHasPosition) };
 
         public TauBeatmapConverter(IBeatmap beatmap)
             : base(beatmap)
@@ -28,13 +24,20 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         protected override IEnumerable<TauHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap)
         {
             Vector2 position = ((IHasPosition)original).Position;
+            var comboData = original as IHasCombo;
 
-            yield return new TauHitObject
+            switch (original)
             {
-                Samples = original.Samples,
-                StartTime = original.StartTime,
-                PositionToEnd = position
-            };
+                default:
+                    return new TauHitObject
+                    {
+                        Samples = original.Samples,
+                        StartTime = original.StartTime,
+                        PositionToEnd = position,
+                        NewCombo = comboData?.NewCombo ?? false,
+                        ComboOffset = comboData?.ComboOffset ?? 0,
+                    }.Yield();
+            }
         }
 
         protected override Beatmap<TauHitObject> CreateBeatmap() => new TauBeatmap();
