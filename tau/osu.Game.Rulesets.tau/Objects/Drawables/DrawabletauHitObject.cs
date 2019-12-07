@@ -90,8 +90,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 if (result >= HitResult.Meh)
                     result = HitResult.Great;
 
-                ApplyResult(r => r.Type = result);
-
                 if (result == HitResult.None)
                     return;
 
