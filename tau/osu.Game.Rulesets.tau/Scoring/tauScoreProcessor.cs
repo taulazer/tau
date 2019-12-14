@@ -4,21 +4,19 @@
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Tau.Scoring
 {
-    public class TauScoreProcessor : ScoreProcessor<TauHitObject>
+    public class TauScoreProcessor : ScoreProcessor
     {
-        public TauScoreProcessor(DrawableRuleset<TauHitObject> ruleset)
-            : base(ruleset)
+        public TauScoreProcessor(IBeatmap beatmap)
+            : base(beatmap)
         {
         }
 
         private float hpDrainRate;
 
-        protected override void ApplyBeatmap(Beatmap<TauHitObject> beatmap)
+        protected override void ApplyBeatmap(IBeatmap beatmap)
         {
             base.ApplyBeatmap(beatmap);
 

@@ -21,12 +21,12 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class DrawabletauRuleset : DrawableRuleset<TauHitObject>
     {
-        public DrawabletauRuleset(TauRuleset ruleset, IWorkingBeatmap beatmap, IReadOnlyList<Mod> mods)
+        public DrawabletauRuleset(TauRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods)
             : base(ruleset, beatmap, mods)
         {
         }
 
-        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
+        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(Beatmap);
 
         protected override Playfield CreatePlayfield() => new TauPlayfield();
 
