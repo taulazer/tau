@@ -47,6 +47,18 @@ namespace osu.Game.Rulesets.Tau
                     {
                         new TauModEasy(),
                         new TauModNoFail(),
+                        new MultiMod(new TauModHalfTime(), new TauModDaycore()),
+                        new TauModAutoHold(),
+                    };
+
+                case ModType.DifficultyIncrease:
+                    return new Mod[]
+                    {
+                        new TauModHardRock(),
+                        new TauModSuddenDeath(),
+                        new MultiMod(new TauModDoubleTime(), new TauModNightcore()),
+                        new TauModHidden(),
+                        new MultiMod(new TauModFlashlight(), new TauModBlinds()),
                     };
 
                 case ModType.Automation:
@@ -54,6 +66,12 @@ namespace osu.Game.Rulesets.Tau
                     {
                         new MultiMod(new TauModAutoplay(), new ModCinema()),
                         new TauModRelax(),
+                    };
+
+                case ModType.Fun:
+                    return new Mod[]
+                    {
+                        new MultiMod(new ModWindUp(), new ModWindDown()),
                     };
 
                 default:
