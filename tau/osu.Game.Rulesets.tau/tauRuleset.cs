@@ -12,9 +12,11 @@ using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Mods;
+using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 
@@ -22,11 +24,6 @@ namespace osu.Game.Rulesets.Tau
 {
     public class TauRuleset : Ruleset
     {
-        public TauRuleset(RulesetInfo rulesetInfo = null)
-            : base(rulesetInfo)
-        {
-        }
-
         public override string Description => "tau";
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
@@ -84,6 +81,8 @@ namespace osu.Game.Rulesets.Tau
         public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
 
         public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
+
+        public override ScoreProcessor CreateScoreProcessor(IBeatmap beatmap) => new TauScoreProcessor(beatmap);
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {

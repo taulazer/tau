@@ -14,7 +14,6 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
@@ -127,10 +126,10 @@ namespace osu.Game.Rulesets.Tau.UI
             private LogoVisualisation visualisation;
             private bool firstKiaiBeat = true;
             private int kiaiBeatIndex;
-            private Bindable<bool> showVisualisation = new Bindable<bool>();
+            private readonly Bindable<bool> showVisualisation = new Bindable<bool>(true);
 
             [BackgroundDependencyLoader]
-            private void load(TauRulesetConfigManager settings)
+            private void load()
             {
                 RelativeSizeAxes = Axes.Both;
                 Size = new Vector2(0.6f);
@@ -148,7 +147,8 @@ namespace osu.Game.Rulesets.Tau.UI
                     Colour = Color4.Transparent
                 };
 
-                settings?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualisation);
+                //settings?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualisation);
+
                 showVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
                 showVisualisation.TriggerChange();
             }
@@ -169,6 +169,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     {
                         visualisation.FlashColour(Color4.White, timingPoint.BeatLength * 4, Easing.In);
                         firstKiaiBeat = false;
+
                         return;
                     }
 

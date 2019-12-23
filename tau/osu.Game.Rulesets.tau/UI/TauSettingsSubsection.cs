@@ -22,6 +22,10 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             var config = (TauRulesetConfigManager)Config;
 
+            // for an odd reason, Config seems to be passed as null when creating it. doesnt even get called...
+            if (config == null)
+                return;
+
             Children = new Drawable[]
             {
                 new SettingsCheckbox
