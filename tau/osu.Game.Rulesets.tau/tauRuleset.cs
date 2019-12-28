@@ -65,6 +65,12 @@ namespace osu.Game.Rulesets.Tau
                         new TauModRelax(),
                     };
 
+                case ModType.Conversion:
+                    return new Mod[]
+                    {
+                        new TauModDifficultyAdjust(),
+                    };
+
                 case ModType.Fun:
                     return new Mod[]
                     {
