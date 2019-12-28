@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau
             new DrawabletauRuleset(this, beatmap, mods);
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
-            new TauBeatmapConverter(beatmap);
+            new TauBeatmapConverter(beatmap, this);
 
         public override DifficultyCalculator CreateDifficultyCalculator(WorkingBeatmap beatmap) =>
             new TauDifficultyCalculator(this, beatmap);
@@ -82,7 +82,7 @@ namespace osu.Game.Rulesets.Tau
 
         public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
 
-        public override ScoreProcessor CreateScoreProcessor(IBeatmap beatmap) => new TauScoreProcessor(beatmap);
+        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor();
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {

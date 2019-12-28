@@ -14,6 +14,7 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
@@ -128,8 +129,8 @@ namespace osu.Game.Rulesets.Tau.UI
             private int kiaiBeatIndex;
             private readonly Bindable<bool> showVisualisation = new Bindable<bool>(true);
 
-            [BackgroundDependencyLoader]
-            private void load()
+            [BackgroundDependencyLoader(true)]
+            private void load(TauRulesetConfigManager settings)
             {
                 RelativeSizeAxes = Axes.Both;
                 Size = new Vector2(0.6f);
@@ -147,7 +148,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Colour = Color4.Transparent
                 };
 
-                //settings?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualisation);
+                settings?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualisation);
 
                 showVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
                 showVisualisation.TriggerChange();
