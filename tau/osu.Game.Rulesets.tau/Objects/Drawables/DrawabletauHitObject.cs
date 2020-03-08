@@ -72,6 +72,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
             Debug.Assert(HitObject.HitWindows != null);
+
             if (CheckValidation == null) return;
 
             if (!userTriggered)
@@ -87,6 +88,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (timeOffset >= 0 && Result != null && validated)
             {
                 var result = HitObject.HitWindows.ResultFor(timeOffset);
+
                 if (result >= HitResult.Meh)
                     result = HitResult.Great;
 
@@ -111,6 +113,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case ArmedState.Idle:
                     LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
                     HitAction = null;
+
                     break;
 
                 case ArmedState.Hit:
@@ -123,6 +126,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                        .FadeOut(time_fade_hit);
 
                     this.FadeOut(time_fade_hit);
+
                     break;
 
                 case ArmedState.Miss:
@@ -135,6 +139,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                        .FadeOut(time_fade_miss);
 
                     this.FadeOut(time_fade_miss);
+
                     break;
             }
         }
@@ -154,6 +159,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             return result;
         }
 
-        public bool OnReleased(TauAction action) => false;
+        public void OnReleased(TauAction action) { }
     }
 }

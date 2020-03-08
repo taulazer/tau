@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         public override Judgement CreateJudgement() => new TauJudgement();
 
         public double TimePreempt = 600;
-        public double TimeFadeIn = 100;
+        public double TimeFadeIn = 400;
 
         public float Angle { get; set; }
         public Vector2 PositionToEnd { get; set; }

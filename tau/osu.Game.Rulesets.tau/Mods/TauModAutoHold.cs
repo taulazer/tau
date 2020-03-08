@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override string Name => "Auto Hold";
         public override string Acronym => "AH";
-        public override IconUsage Icon => OsuIcon.ModSpunout;
+        public override IconUsage? Icon => OsuIcon.ModSpunout;
         public override ModType Type => ModType.DifficultyReduction;
         public override string Description => @"Hold beat will automatically be completed.";
         public override double ScoreMultiplier => 0.9;

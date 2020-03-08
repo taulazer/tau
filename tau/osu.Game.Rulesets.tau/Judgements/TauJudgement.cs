@@ -19,6 +19,9 @@ namespace osu.Game.Rulesets.Tau.Judgements
 
                 case HitResult.Great:
                     return 300;
+
+                case HitResult.Good:
+                    return 150;
             }
         }
 
@@ -31,6 +34,9 @@ namespace osu.Game.Rulesets.Tau.Judgements
 
                 case HitResult.Miss:
                     return -0.02;
+
+                case HitResult.Good:
+                    return -0.01;
 
                 case HitResult.Great:
                     return 0.01;
