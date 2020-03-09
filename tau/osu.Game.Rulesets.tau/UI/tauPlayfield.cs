@@ -31,9 +31,6 @@ namespace osu.Game.Rulesets.Tau.UI
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
 
-        // Hides the cursor
-        protected override GameplayCursorContainer CreateCursor() => null;
-
         public TauPlayfield()
         {
             cursor = new TauCursor();
