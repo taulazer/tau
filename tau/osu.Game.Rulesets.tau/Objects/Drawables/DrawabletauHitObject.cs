@@ -86,11 +86,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             bool validated = CheckValidation.Invoke(this);
 
-            if (timeOffset >= 0 && Result != null && validated)
+            if (Result != null && validated)
             {
                 var result = HitObject.HitWindows.ResultFor(timeOffset);
 
-                if (result >= HitResult.Meh)
+                if (result >= HitResult.Meh && result <= HitResult.Great)
                     result = HitResult.Great;
 
                 if (result == HitResult.None)

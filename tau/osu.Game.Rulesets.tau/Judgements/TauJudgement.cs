@@ -17,29 +17,11 @@ namespace osu.Game.Rulesets.Tau.Judgements
                 default:
                     return 0;
 
+                case HitResult.Good:
+                    return 100;
+
                 case HitResult.Great:
                     return 300;
-
-                case HitResult.Good:
-                    return 150;
-            }
-        }
-
-        protected override double HealthIncreaseFor(HitResult result)
-        {
-            switch (result)
-            {
-                default:
-                    return 0;
-
-                case HitResult.Miss:
-                    return -0.02;
-
-                case HitResult.Good:
-                    return -0.01;
-
-                case HitResult.Great:
-                    return 0.01;
             }
         }
     }

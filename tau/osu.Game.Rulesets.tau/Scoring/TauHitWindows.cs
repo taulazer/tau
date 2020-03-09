@@ -12,7 +12,6 @@ namespace osu.Game.Rulesets.Tau.Scoring
             switch (result)
             {
                 case HitResult.Great:
-                case HitResult.Good:
                 case HitResult.Miss:
                     return true;
             }
@@ -22,9 +21,9 @@ namespace osu.Game.Rulesets.Tau.Scoring
 
         protected override DifficultyRange[] GetRanges() => new[]
         {
-            new DifficultyRange(HitResult.Great, 199, 199, 199),
-            new DifficultyRange(HitResult.Good, 299, 250, 200),
-            new DifficultyRange(HitResult.Miss, 300, 300, 300),
+            new DifficultyRange(HitResult.Great, 24, 30, 49),
+            new DifficultyRange(HitResult.Good, 49, 74, 99),
+            new DifficultyRange(HitResult.Miss, 50, 75, 100),
         };
     }
 }
