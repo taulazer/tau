@@ -8,12 +8,12 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.UserInterface;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
@@ -54,16 +54,23 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
                     {
-                        new CircularProgress
+                        new CircularContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Current = new BindableDouble(1),
-                            InnerRadius = 0.025f / 4,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
+                            Masking = true,
                             FillMode = FillMode.Fit,
                             FillAspectRatio = 1, // 1:1 Aspect ratio to get a perfect circle
-                        }
+                            BorderThickness = 3,
+                            BorderColour = Color4.White,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                AlwaysPresent = true,
+                                Alpha = 0,
+                            }
+                        },
                     }
                 },
                 HitObjectContainer,
