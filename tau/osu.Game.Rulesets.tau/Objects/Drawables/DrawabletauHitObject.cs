@@ -47,6 +47,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             AddInternal(Box = new Box
             {
+                EdgeSmoothness = new Vector2(1f),
                 RelativeSizeAxes = Axes.Both,
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,

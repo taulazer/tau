@@ -8,10 +8,12 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Graphics.Shaders;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
@@ -92,12 +94,19 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             private class AbsoluteCursor : CursorContainer
             {
-                protected override Drawable CreateCursor() => new CircularProgress
+                protected override Drawable CreateCursor() => new CircularContainer
                 {
                     Size = new Vector2(15),
                     Origin = Anchor.Centre,
-                    InnerRadius = 0.25f,
-                    Current = new Bindable<double>(1)
+                    Masking = true,
+                    BorderColour = Color4.White,
+                    BorderThickness = 4,
+                    Child = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        AlwaysPresent = true,
+                        Alpha = 0,
+                    }
                 };
             }
 
@@ -135,6 +144,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                                 },
                                 new Box
                                 {
+                                    EdgeSmoothness = new Vector2(1f),
                                     Anchor = Anchor.TopCentre,
                                     Origin = Anchor.TopCentre,
                                     RelativeSizeAxes = Axes.Y,
