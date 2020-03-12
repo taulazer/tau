@@ -24,23 +24,5 @@ namespace osu.Game.Rulesets.Tau.Judgements
                     return 300;
             }
         }
-
-        protected override double HealthIncreaseFor(HitResult result)
-        {
-            switch (result)
-            {
-                default:
-                    return 0;
-
-                case HitResult.Miss:
-                    return -0.02;
-
-                case HitResult.Great:
-                    return 0.01;
-
-                case HitResult.Perfect:
-                    return 0.02;
-            }
-        }
     }
 }
