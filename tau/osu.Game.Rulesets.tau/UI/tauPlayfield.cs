@@ -27,6 +27,7 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
+        private Circle playfieldBackground;
         private TauCursor cursor;
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
@@ -43,6 +44,16 @@ namespace osu.Game.Rulesets.Tau.UI
                     Depth = 1,
                 },
                 new VisualisationContainer(),
+                playfieldBackground = new Circle
+                {
+                    Colour = Color4.Black,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.6f),
+                    FillAspectRatio = 1,
+                    FillMode = FillMode.Fit,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -82,6 +93,26 @@ namespace osu.Game.Rulesets.Tau.UI
                     Anchor = Anchor.Centre,
                 },
             });
+        }
+
+        [Resolved]
+        private TauRulesetConfigManager config { get; set; }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            PlayfieldDimLevel = config.GetBindable<float>(TauRulesetSettings.PlayfieldDim);
+            PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
+
+            updateVisuals();
+        }
+
+        protected Bindable<float> PlayfieldDimLevel { get; private set; }
+
+        private void updateVisuals()
+        {
+            playfieldBackground.FadeTo(PlayfieldDimLevel.Value, 100);
         }
 
         public bool CheckIfWeCanValidate(DrawabletauHitObject obj) => cursor.CheckForValidation(obj);
@@ -131,7 +162,7 @@ namespace osu.Game.Rulesets.Tau.UI
             private LogoVisualisation visualisation;
             private bool firstKiaiBeat = true;
             private int kiaiBeatIndex;
-            private readonly Bindable<bool> showVisualisation = new Bindable<bool>(true);
+            protected Bindable<bool> ShowVisualisation;
 
             [BackgroundDependencyLoader(true)]
             private void load(TauRulesetConfigManager settings)
@@ -152,10 +183,10 @@ namespace osu.Game.Rulesets.Tau.UI
                     Colour = Color4.Transparent
                 };
 
-                settings?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualisation);
+                ShowVisualisation = settings.GetBindable<bool>(TauRulesetSettings.ShowVisualizer);
 
-                showVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
-                showVisualisation.TriggerChange();
+                ShowVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
+                ShowVisualisation.TriggerChange();
             }
 
             protected override void LoadComplete()

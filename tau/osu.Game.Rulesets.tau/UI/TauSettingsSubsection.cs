@@ -32,6 +32,13 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     LabelText = "Show Visualizer",
                     Bindable = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
+                },
+                new SettingsSlider<float>
+                {
+                    LabelText = "Playfield dim",
+                    Bindable = config.GetBindable<float>(TauRulesetSettings.PlayfieldDim),
+                    KeyboardStep = 0.01f,
+                    DisplayAsPercentage = true
                 }
             };
         }

@@ -18,11 +18,13 @@ namespace osu.Game.Rulesets.Tau.Configuration
             base.InitialiseDefaults();
 
             Set(TauRulesetSettings.ShowVisualizer, true);
+            Set(TauRulesetSettings.PlayfieldDim, 0.3f, 0, 1, 0.01f);
         }
     }
 
     public enum TauRulesetSettings
     {
-        ShowVisualizer
+        ShowVisualizer,
+        PlayfieldDim
     }
 }
