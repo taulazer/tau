@@ -14,9 +14,9 @@ We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users 
 
 ### Instructions
 ##### Windows
-On Windows, the library must be put in `%localappdata%\osulazer`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
+On Windows, the library must be put in `%localappdata%\osulazer\app-(Current osu!lazer Version)`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
 
-*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At this very time, not operating system is known to be unsupported.*
+*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At the very time of writing this (March 15th, 2020), no operating system is known to be unsupported.*
 
 ## Development
 When developing or debugging the osu!tau codebase, a few prerequisites are required as following:
