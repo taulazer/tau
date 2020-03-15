@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 const double d = 25;
 
                 // Thank you AlFas for this code.
-                double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
+                double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
 
                 AddInternal(new GameplayCursor(cs));
 
@@ -159,7 +159,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     const double d = 0.05;
 
                     // Thank you AlFas for this code.
-                    double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
+                    double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
                 }
             }
 
