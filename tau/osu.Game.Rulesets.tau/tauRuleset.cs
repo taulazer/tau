@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Tau
 {
     public class TauRuleset : Ruleset
     {
-        public override string Description => "tau";
+        public override string Description => "tae";
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
             new DrawabletauRuleset(this, beatmap, mods);
