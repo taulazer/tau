@@ -22,9 +22,9 @@ namespace osu.Game.Rulesets.Tau.Scoring
 
         protected override DifficultyRange[] GetRanges() => new[]
         {
-            new DifficultyRange(HitResult.Perfect, 127, 112, 97),
-            new DifficultyRange(HitResult.Great, 151, 136, 121),
-            new DifficultyRange(HitResult.Miss, 188, 173, 158),
+            new DifficultyRange(HitResult.Perfect, 140, 100, 60),
+            new DifficultyRange(HitResult.Great, 200, 150, 100),
+            new DifficultyRange(HitResult.Miss, 400, 400, 400),
         };
     }
 }
