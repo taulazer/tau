@@ -1,4 +1,4 @@
-// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
@@ -83,7 +83,19 @@ namespace osu.Game.Rulesets.Tau.UI
                         },
                     }
                 },
-                HitObjectContainer,
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    FillMode = FillMode.Fit,
+                    FillAspectRatio = 1,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(UNIVERSAL_SCALE),
+                    Children = new Drawable[]
+                    {
+                        HitObjectContainer,
+                    }
+                },
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
