@@ -1,4 +1,4 @@
-﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
@@ -32,6 +32,8 @@ namespace osu.Game.Rulesets.Tau.UI
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
 
+        public const float UNIVERSAL_SCALE = 0.6f;
+
         public TauPlayfield()
         {
             cursor = new TauCursor();
@@ -48,7 +50,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     Colour = Color4.Black,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.6f),
+                    Size = new Vector2(UNIVERSAL_SCALE),
                     FillAspectRatio = 1,
                     FillMode = FillMode.Fit,
                     Anchor = Anchor.Centre,
@@ -57,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.6f),
+                    Size = new Vector2(UNIVERSAL_SCALE),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
@@ -168,7 +170,7 @@ namespace osu.Game.Rulesets.Tau.UI
             private void load(TauRulesetConfigManager settings)
             {
                 RelativeSizeAxes = Axes.Both;
-                Size = new Vector2(0.6f);
+                Size = new Vector2(UNIVERSAL_SCALE);
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
 
