@@ -1,15 +1,10 @@
-﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using osu.Framework.Graphics;
-using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Replays;
-using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 
@@ -24,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// <summary>
         /// The "reaction time" in ms between "seeing" a new hit object and moving to "react" to it.
         /// </summary>
-        private readonly double reactionTime = 200;
+        private const double reactionTime = 200;
 
         public TauAutoGenerator(IBeatmap beatmap)
             : base(beatmap)
@@ -39,7 +34,8 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// </summary>
         private int buttonIndex;
 
-        private readonly float offset = 230, cursorDistance = 220;
+        private const float offset = 230;
+        private const float cursorDistance = 220;
 
         public override Replay Generate()
         {
@@ -47,12 +43,12 @@ namespace osu.Game.Rulesets.Tau.Replays
             Replay.Frames.Add(new TauReplayFrame(-100000, new Vector2(offset, offset + 150)));
             Replay.Frames.Add(new TauReplayFrame(Beatmap.HitObjects[0].StartTime - reactionTime, new Vector2(offset, offset + 150)));
 
-            for(int i = 0; i < Beatmap.HitObjects.Count; i++)
+            for (int i = 0; i < Beatmap.HitObjects.Count; i++)
             {
                 TauHitObject h = Beatmap.HitObjects[i];
 
                 //Make the cursor stay at the last note's position if there's enough time between the notes
-                if(i > 0 && h.StartTime - Beatmap.HitObjects[i - 1].StartTime > reactionTime)
+                if (i > 0 && h.StartTime - Beatmap.HitObjects[i - 1].StartTime > reactionTime)
                 {
                     float b = Beatmap.HitObjects[i - 1].PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;
 
