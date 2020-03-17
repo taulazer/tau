@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Tau.Replays
 
                 float a = h.PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;
 
-                Replay.Frames.Add(new TauReplayFrame(h.StartTime, new Vector2(offset - cursorDistance * MathF.Cos(a), offset - cursorDistance * MathF.Sin(a)), (TauAction)(buttonIndex++ % 2)));
+                Replay.Frames.Add(new TauReplayFrame(h.StartTime, new Vector2(offset - (cursorDistance * MathF.Cos(a)), offset - (cursorDistance * MathF.Sin(a))), (TauAction)(buttonIndex++ % 2)));
             }
 
             return Replay;
