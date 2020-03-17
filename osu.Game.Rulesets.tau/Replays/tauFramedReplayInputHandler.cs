@@ -44,7 +44,6 @@ namespace osu.Game.Rulesets.Tau.Replays
                 new MousePositionAbsoluteInput
                 {
                     Position = GamefieldToScreenSpace(Position),
-                    
                 },
                 new ReplayState<TauAction>
                 {

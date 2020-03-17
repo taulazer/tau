@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                 {
                     float b = Beatmap.HitObjects[i - 1].PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;
 
-                    Replay.Frames.Add(new TauReplayFrame(h.StartTime - reactionTime, new Vector2(offset - cursorDistance * MathF.Cos(b), offset - cursorDistance * MathF.Sin(b))));
+                    Replay.Frames.Add(new TauReplayFrame(h.StartTime - reactionTime, new Vector2(offset - (cursorDistance * MathF.Cos(b)), offset - (cursorDistance * MathF.Sin(b)))));
                 }
 
                 float a = h.PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;
