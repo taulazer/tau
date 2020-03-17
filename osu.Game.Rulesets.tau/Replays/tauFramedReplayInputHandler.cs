@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace osu.Game.Rulesets.Tau.Replays
 
                 Debug.Assert(CurrentTime != null);
 
-                return Interpolation.ValueAt(CurrentTime.Value, frame.Position, NextFrame.Position, frame.Time, NextFrame.Time);
+                return NextFrame != null ? Interpolation.ValueAt(CurrentTime.Value, frame.Position, NextFrame.Position, frame.Time, NextFrame.Time) : frame.Position;
             }
         }
 
@@ -43,6 +44,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                 new MousePositionAbsoluteInput
                 {
                     Position = GamefieldToScreenSpace(Position),
+                    
                 },
                 new ReplayState<TauAction>
                 {
