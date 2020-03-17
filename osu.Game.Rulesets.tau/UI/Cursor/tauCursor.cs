@@ -42,6 +42,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         private class DefaultCursor : CompositeDrawable
         {
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
+
             public readonly Box HitReceptor;
 
             public DefaultCursor(float cs = 5f)
