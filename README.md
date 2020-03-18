@@ -6,7 +6,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tauE/network)
 [![GitHub issues](https://img.shields.io/github/issues/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/issues)
 
-A customized [osu!](https://github.com/ppy/osu) mode surrounding a paddle and some notes. Original credit to the idea belonging to *pizzapip*.
+A customized [osu!](https://github.com/ppy/osu) mode surrounding a paddle and some notes. [Original](https://deadlysprinklez.itch.io/tau) credit to the idea belonging to *pizzapip*.
 
 ## Running the Gamemode
 We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users looking to play the mode without creating a development environment. All releases will work on all operating systems that *osu!* supports.
