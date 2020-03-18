@@ -34,8 +34,8 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// </summary>
         private int buttonIndex;
 
-        private const float offset = 230;
-        private const float cursorDistance = 220;
+        private const float offset = 305;
+        private const float cursorDistance = 280;
 
         public override Replay Generate()
         {
@@ -53,6 +53,8 @@ namespace osu.Game.Rulesets.Tau.Replays
                     float b = Beatmap.HitObjects[i - 1].PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;
 
                     Replay.Frames.Add(new TauReplayFrame(h.StartTime - reactionTime, new Vector2(offset - (cursorDistance * MathF.Cos(b)), offset - (cursorDistance * MathF.Sin(b)))));
+
+                    buttonIndex = (int)TauAction.LeftButton;
                 }
 
                 float a = h.PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;

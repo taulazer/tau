@@ -1,0 +1,33 @@
+﻿using osu.Game.Rulesets.UI;
+using osu.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using osuTK;
+using osu.Framework.Graphics.Containers;
+using osu.Game.Graphics.Containers;
+
+namespace osu.Game.Rulesets.Tau.UI
+{
+    class TauPlayfieldAdjustmentContainer : PlayfieldAdjustmentContainer
+    {
+        protected override Container<Drawable> Content => content;
+        private readonly Container content;
+
+        public TauPlayfieldAdjustmentContainer()
+        {
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+
+            InternalChild = new Container
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+                FillMode = FillMode.Fit,
+                FillAspectRatio = 1,
+                Child = content = new ScalingContainer { RelativeSizeAxes = Axes.Both }
+            };
+        }
+    }
+}
