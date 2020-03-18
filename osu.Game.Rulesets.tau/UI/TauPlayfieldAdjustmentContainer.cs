@@ -14,10 +14,14 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override Container<Drawable> Content => content;
         private readonly Container content;
 
+        private const float playfield_size_adjust = 4f / 3;
+
         public TauPlayfieldAdjustmentContainer()
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+
+            Size = new Vector2(playfield_size_adjust);
 
             InternalChild = new Container
             {
