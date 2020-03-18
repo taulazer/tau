@@ -1,15 +1,11 @@
 ﻿using osu.Game.Rulesets.UI;
 using osu.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using osuTK;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics.Containers;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    class TauPlayfieldAdjustmentContainer : PlayfieldAdjustmentContainer
     {
         protected override Container<Drawable> Content => content;
         private readonly Container content;
