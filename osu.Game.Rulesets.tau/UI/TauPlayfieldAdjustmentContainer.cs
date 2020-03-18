@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override Container<Drawable> Content => content;
         private readonly Container content;
 
-        private const float playfield_size_adjust = 4f / 3;
+        private const float playfield_size_adjust = 3.5f / 3;
 
         public TauPlayfieldAdjustmentContainer()
         {
