@@ -32,7 +32,6 @@ namespace osu.Game.Rulesets.Tau.UI
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
 
-        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
         public const float UNIVERSAL_SCALE = 0.6f;
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 

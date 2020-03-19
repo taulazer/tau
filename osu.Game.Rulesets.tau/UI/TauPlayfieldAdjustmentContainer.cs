@@ -1,5 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Rulesets.UI;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
@@ -8,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override Container<Drawable> Content => content;
         private readonly Container content;
 
-        private const float playfield_size_adjust = 0.8f;
+        private const float playfield_size_adjust = 1f;
 
         public TauPlayfieldAdjustmentContainer()
         {
