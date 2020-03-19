@@ -34,8 +34,8 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// </summary>
         private int buttonIndex;
 
-        private const float offset = 305;
-        private const float cursorDistance = 280;
+        private const float offset = (768 / 2f) * 0.6f;
+        private const float cursorDistance = 250;
 
         public override Replay Generate()
         {
