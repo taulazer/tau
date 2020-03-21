@@ -32,7 +32,7 @@ When developing or debugging the osu!tau codebase, a few prerequisites are requi
 You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the osu!tau directory.
 ```sh
 git clone https://github.com/Altenhh/tau.git
-cd tau/tau
+cd tau
 ```
 
 ### Building the Gamemode
