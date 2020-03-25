@@ -34,7 +34,6 @@ namespace osu.Game.Rulesets.Tau.Replays
             if (currentFrame.MouseLeft2) Actions.Add(TauAction.HardButton);
         }
 
-
         public LegacyReplayFrame ToLegacy(IBeatmap beatmap)
         {
             ReplayButtonState state = ReplayButtonState.None;
