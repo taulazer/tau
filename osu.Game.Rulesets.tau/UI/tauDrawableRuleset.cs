@@ -31,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.UI
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h) => new DrawabletauHitObject(h);
 
         protected override PassThroughInputManager CreateInputManager() => new TauInputManager(Ruleset?.RulesetInfo);
-        
+
         public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new TauPlayfieldAdjustmentContainer();
         
         protected override ReplayRecorder CreateReplayRecorder(Replay replay) => new TauReplayRecorder(replay);

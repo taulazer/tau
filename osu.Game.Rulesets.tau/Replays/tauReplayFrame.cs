@@ -38,12 +38,9 @@ namespace osu.Game.Rulesets.Tau.Replays
         {
             ReplayButtonState state = ReplayButtonState.None;
 
-            if (Actions.Contains(TauAction.LeftButton))
-                state |= ReplayButtonState.Left1;
-            if (Actions.Contains(TauAction.RightButton))
-                state |= ReplayButtonState.Right1;
-            if (Actions.Contains(TauAction.HardButton))
-                state |= ReplayButtonState.Left2;
+            if (Actions.Contains(TauAction.LeftButton)) state |= ReplayButtonState.Left1;
+            if (Actions.Contains(TauAction.RightButton)) state |= ReplayButtonState.Right1;
+            if (Actions.Contains(TauAction.HardButton)) state |= ReplayButtonState.Left2;
 
             return new LegacyReplayFrame(Time, Position.X, Position.Y, state);
         }
