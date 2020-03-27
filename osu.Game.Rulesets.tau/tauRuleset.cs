@@ -13,10 +13,12 @@ using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Mods;
+using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
@@ -106,5 +108,7 @@ namespace osu.Game.Rulesets.Tau
         {
             Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau"),
         };
+
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
     }
 }

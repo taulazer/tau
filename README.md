@@ -1,12 +1,17 @@
 [![tau](https://cdn.discordapp.com/attachments/680267083606655030/688688294329843732/the.png)](https://github.com/Altenhh/tau "tau")
 # osu!tau
+
+<div>
+    <a href="https://discord.gg/7Y8GXAa"><img src="https://canary.discordapp.com/api/guilds/689728872282849313/widget.png?style=banner2" alt="Join Discord Server"/></a>
+</div>
+
 [![release](https://img.shields.io/badge/build-1.0.4-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
 [![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE) 
 [![GitHub stars](https://img.shields.io/github/stars/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tauE/network)
 [![GitHub issues](https://img.shields.io/github/issues/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/issues)
 
-A customized [osu!](https://github.com/ppy/osu) mode surrounding a paddle and some notes. Original credit to the idea belonging to *pizzapip*.
+A customized [osu!](https://github.com/ppy/osu) mode surrounding a paddle and some notes. [Original](https://deadlysprinklez.itch.io/tau) credit to the idea belonging to *pizzapip*.
 
 ## Running the Gamemode
 We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users looking to play the mode without creating a development environment. All releases will work on all operating systems that *osu!* supports.
@@ -14,9 +19,9 @@ We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users 
 
 ### Instructions
 ##### Windows
-On Windows, the library must be put in `%localappdata%\osulazer`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
+On Windows, the library must be put in `%localappdata%\osulazer\app-(Current osu!lazer Version)`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
 
-*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At this very time, not operating system is known to be unsupported.*
+*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At the very time of writing this (March 15th, 2020), no operating system is known to be unsupported.*
 
 ## Development
 When developing or debugging the osu!tau codebase, a few prerequisites are required as following:
@@ -27,7 +32,7 @@ When developing or debugging the osu!tau codebase, a few prerequisites are requi
 You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the osu!tau directory.
 ```sh
 git clone https://github.com/Altenhh/tau.git
-cd tau/tau
+cd tau
 ```
 
 ### Building the Gamemode

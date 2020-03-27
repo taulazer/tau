@@ -32,6 +32,9 @@ namespace osu.Game.Rulesets.Tau.UI
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
 
+        public const float UNIVERSAL_SCALE = 0.6f;
+        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
+
         public TauPlayfield()
         {
             cursor = new TauCursor();
@@ -42,13 +45,15 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     RelativeSizeAxes = Axes.Both,
                     Depth = 1,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
                 },
                 new VisualisationContainer(),
                 playfieldBackground = new Circle
                 {
                     Colour = Color4.Black,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.6f),
+                    Size = new Vector2(UNIVERSAL_SCALE),
                     FillAspectRatio = 1,
                     FillMode = FillMode.Fit,
                     Anchor = Anchor.Centre,
@@ -57,7 +62,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.6f),
+                    Size = new Vector2(UNIVERSAL_SCALE),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
@@ -81,7 +86,19 @@ namespace osu.Game.Rulesets.Tau.UI
                         },
                     }
                 },
-                HitObjectContainer,
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    FillMode = FillMode.Fit,
+                    FillAspectRatio = 1,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Size = new Vector2(UNIVERSAL_SCALE),
+                    Children = new Drawable[]
+                    {
+                        HitObjectContainer,
+                    }
+                },
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
@@ -168,7 +185,7 @@ namespace osu.Game.Rulesets.Tau.UI
             private void load(TauRulesetConfigManager settings)
             {
                 RelativeSizeAxes = Axes.Both;
-                Size = new Vector2(0.6f);
+                Size = new Vector2(UNIVERSAL_SCALE);
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
 

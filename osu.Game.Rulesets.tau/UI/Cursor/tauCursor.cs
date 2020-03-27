@@ -42,6 +42,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         private class DefaultCursor : CompositeDrawable
         {
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
+
             public readonly Box HitReceptor;
 
             public DefaultCursor(float cs = 5f)
@@ -79,7 +81,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 const double d = 25;
 
                 // Thank you AlFas for this code.
-                double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
+                double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
 
                 AddInternal(new GameplayCursor(cs));
 
@@ -159,7 +161,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     const double d = 0.05;
 
                     // Thank you AlFas for this code.
-                    double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
+                    double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
                 }
             }
 

@@ -65,7 +65,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             private const float target_clamp = 1;
 
             private readonly float targetBreakMultiplier = 0;
-            private const float easing = 1;
+            private readonly float easing = 1;
 
             private readonly CompositeDrawable restrictTo;
 
@@ -123,7 +123,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             private float calculateGap(float value) => Math.Clamp(value, 0, target_clamp) * targetBreakMultiplier;
 
             // lagrange polinominal for (0,0) (0.6,0.4) (1,1) should make a good curve
-            private static float applyAdjustmentCurve(float value) => 0.6f * value * value + 0.4f * value;
+            private static float applyAdjustmentCurve(float value) => (0.6f * (value * value)) + (0.4f * value);
 
             protected override void Update()
             {

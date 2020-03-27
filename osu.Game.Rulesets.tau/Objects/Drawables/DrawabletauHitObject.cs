@@ -11,6 +11,7 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 using osuTK.Graphics;
 using System.Linq;
+using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -44,6 +45,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Size = new Vector2(TauHitObject.SIZE);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+            RelativePositionAxes = Axes.Both;
 
             AddInternal(Box = new Box
             {
@@ -67,7 +69,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             var a = b *= (float)(Math.PI / 180);
 
             Box.FadeIn(HitObject.TimeFadeIn);
-            this.MoveTo(new Vector2(-(215 * (float)Math.Cos(a)), -(215 * (float)Math.Sin(a))), HitObject.TimePreempt);
+            this.MoveTo(new Vector2(-(TauPlayfield.UNIVERSAL_SCALE * 0.8f * (float)Math.Cos(a)), -(TauPlayfield.UNIVERSAL_SCALE * 0.8f * (float)Math.Sin(a))), HitObject.TimePreempt);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
