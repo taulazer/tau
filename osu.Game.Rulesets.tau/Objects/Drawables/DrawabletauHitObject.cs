@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawabletauHitObject(TauHitObject hitObject)
             : base(hitObject)
         {
-            Size = new Vector2(10);
+            Size = new Vector2(TauHitObject.SIZE);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 

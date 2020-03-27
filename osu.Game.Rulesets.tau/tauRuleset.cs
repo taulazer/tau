@@ -11,6 +11,7 @@ using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
+using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Beatmaps;
@@ -89,6 +90,8 @@ namespace osu.Game.Rulesets.Tau
         public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
 
         public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor();
+
+        public override HitObjectComposer CreateHitObjectComposer() => new TauHitObjectComposer();
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {

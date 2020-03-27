@@ -9,6 +9,7 @@ using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Judgements;
 using osuTK;
+using SixLabors.Primitives;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
@@ -19,6 +20,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         public double TimePreempt = 600;
         public double TimeFadeIn = 400;
 
+        public static int SIZE = 10;
         public float Angle { get; set; }
         public Vector2 PositionToEnd { get; set; }
 
