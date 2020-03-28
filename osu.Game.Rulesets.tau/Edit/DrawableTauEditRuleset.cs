@@ -1,7 +1,9 @@
 ﻿using osu.Framework.Graphics;
+using osu.Framework.Graphics.Lines;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
@@ -10,6 +12,7 @@ using osu.Game.Rulesets.UI;
 using osuTK.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -53,7 +56,20 @@ namespace osu.Game.Rulesets.Tau.Edit
         {
             if (e.ControlPressed & e.PressedKeys.Contains(Key.S))
             {
-                
+                //Save in temp file for now
+                string directory = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "@osu");
+
+                Directory.CreateDirectory(directory);
+                var path = System.IO.Path.Combine(directory, "tau.osu");
+
+                //using (var sw = new StreamWriter(path))
+                //{
+                //    var encoder = new TauLegacyBeatmapEncoder();
+                //    sw.WriteLine(encoder.Encode(new Beatmap
+                //    {
+                //        HitObjects = Beatmap.HitObjects.OfType<HitObject>().ToList()
+                //    }));
+                //}
                 return true;
             }
             return base.OnKeyDown(e);
