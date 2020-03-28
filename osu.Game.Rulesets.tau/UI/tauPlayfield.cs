@@ -31,10 +31,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private TauCursor cursor;
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
-
-        private bool show_visualizer;
-        public virtual bool SHOW_VISUALIZER { get => show_visualizer; set => show_visualizer = value; }
-
+        public virtual bool ShowVisualizer { get; }
 
         public const float UNIVERSAL_SCALE = 0.6f;
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
@@ -116,7 +113,7 @@ namespace osu.Game.Rulesets.Tau.UI
             });
         }
 
-        [Resolved]
+        [Resolved(CanBeNull = true)]
         private TauRulesetConfigManager config { get; set; }
 
         protected override void LoadComplete()
@@ -183,7 +180,14 @@ namespace osu.Game.Rulesets.Tau.UI
             private LogoVisualisation visualisation;
             private bool firstKiaiBeat = true;
             private int kiaiBeatIndex;
+            private readonly bool showVisualizer;
+
             protected Bindable<bool> ShowVisualisation;
+
+            public VisualisationContainer(bool showVisualizer = true)
+            {
+                this.showVisualizer = showVisualizer;
+            }
 
             [BackgroundDependencyLoader(true)]
             private void load(TauRulesetConfigManager settings)
@@ -203,9 +207,8 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Colour = Color4.Transparent
                 };
-                
-                ShowVisualisation = SHOW_VISUALIZER ? settings.GetBindable<bool>(TauRulesetSettings.ShowVisualizer) : new BindableBool(false);
 
+                ShowVisualisation = showVisualizer ? settings?.GetBindable<bool>(TauRulesetSettings.ShowVisualizer) : new BindableBool();
                 ShowVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
                 ShowVisualisation.TriggerChange();
             }
