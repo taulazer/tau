@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints.Tap.Components
         {
             Origin = Anchor.Centre;
 
-            Size = new Vector2(10);
+            Size = new Vector2(TauHitObject.SIZE);
 
             CornerRadius = Size.X / 2;
             CornerExponent = 2;
