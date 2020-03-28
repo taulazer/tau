@@ -32,8 +32,6 @@ namespace osu.Game.Rulesets.Tau.Edit
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h)
             => base.CreateDrawableRepresentation(h)?.With(d => d.ApplyCustomUpdateState += updateState);
 
-
-
         private void updateState(DrawableHitObject hitObject, ArmedState state)
         {
             switch (state)
@@ -51,8 +49,6 @@ namespace osu.Game.Rulesets.Tau.Edit
                     break;
             }
         }
-
-
         protected override bool OnKeyDown(KeyDownEvent e)
         {
             if (e.ControlPressed & e.PressedKeys.Contains(Key.S))
@@ -64,12 +60,10 @@ namespace osu.Game.Rulesets.Tau.Edit
         }
 
         protected override Playfield CreatePlayfield() => new TauPlayfieldNoCursor();
-
         public class TauPlayfieldNoCursor : TauPlayfield
         {
             protected override GameplayCursorContainer CreateCursor() => null;
             public override bool ShowVisualizer => false;
         }
     }
-
 }

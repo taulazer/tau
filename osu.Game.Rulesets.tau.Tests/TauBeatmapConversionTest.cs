@@ -15,7 +15,6 @@ using osu.Game.Rulesets.Tau.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-
     public class TauBeatmapConversionTest : BeatmapConversionTest<ConvertValue>
     {
         protected override string ResourceAssembly => "osu.Game.Rulesets.Tau";
@@ -32,11 +31,8 @@ namespace osu.Game.Rulesets.Tau.Tests
                     break;
             }
         }
-
-
         protected override Ruleset CreateRuleset() => new TauRuleset();
     }
-
 
     public struct ConvertValue : IEquatable<ConvertValue>
     {
@@ -47,7 +43,6 @@ namespace osu.Game.Rulesets.Tau.Tests
 
         [JsonIgnore]
         public readonly TauHitObject HitObject;
-        
 
         public ConvertValue(TauHitObject hitObject)
         {
@@ -57,17 +52,13 @@ namespace osu.Game.Rulesets.Tau.Tests
         }
 
         private double startTime;
-
         public double StartTime
         {
             get => HitObject?.StartTime ?? startTime;
             set => startTime = value;
         }
 
-        
         private float position;
-
-
         public float Position
         {
             get
@@ -77,7 +68,6 @@ namespace osu.Game.Rulesets.Tau.Tests
             }
             set => position = value;
         }
-
         public bool Equals(ConvertValue other)
             => Precision.AlmostEquals(StartTime, other.StartTime, conversion_lenience)
                && Precision.AlmostEquals(Position, other.Position, conversion_lenience);

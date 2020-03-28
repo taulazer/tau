@@ -37,6 +37,5 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
             BeginPlacement();
             TauHit.PositionToEnd = ToLocalSpace(screenSpacePosition); // Need to fix this up
         }
-
     }
 }

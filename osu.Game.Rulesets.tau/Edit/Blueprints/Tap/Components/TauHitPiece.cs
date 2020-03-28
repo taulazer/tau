@@ -36,6 +36,5 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints.Tap.Components
 
             Scale = new Vector2(TauHitObject.SIZE);
         }
-
     }
 }

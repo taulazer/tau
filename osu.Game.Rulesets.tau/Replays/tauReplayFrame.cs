@@ -50,7 +50,5 @@ namespace osu.Game.Rulesets.Tau.Replays
 
             return new LegacyReplayFrame(Time, Position.X, Position.Y, state);
         }
-
     }
-
 }
