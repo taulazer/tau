@@ -68,6 +68,7 @@ namespace osu.Game.Rulesets.Tau.Edit
         public class TauPlayfieldNoCursor : TauPlayfield
         {
             protected override GameplayCursorContainer CreateCursor() => null;
+            public override bool SHOW_VISUALIZER => false;
         }
     }
 

@@ -32,6 +32,10 @@ namespace osu.Game.Rulesets.Tau.UI
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
 
+        private bool show_visualizer;
+        public virtual bool SHOW_VISUALIZER { get => show_visualizer; set => show_visualizer = value; }
+
+
         public const float UNIVERSAL_SCALE = 0.6f;
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
@@ -199,8 +203,8 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Colour = Color4.Transparent
                 };
-
-                ShowVisualisation = settings.GetBindable<bool>(TauRulesetSettings.ShowVisualizer);
+                
+                ShowVisualisation = SHOW_VISUALIZER ? settings.GetBindable<bool>(TauRulesetSettings.ShowVisualizer) : new BindableBool(false);
 
                 ShowVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
                 ShowVisualisation.TriggerChange();

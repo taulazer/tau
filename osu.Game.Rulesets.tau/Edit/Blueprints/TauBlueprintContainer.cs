@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
 {
     public class TauBlueprintContainer : ComposeBlueprintContainer
     {
-        public TauBlueprintContainer(IEnumerable<DrawabletauHitObject> drawableHitObjects)
+        public TauBlueprintContainer(IEnumerable<DrawableHitObject> drawableHitObjects)
             : base(drawableHitObjects)
         {
         }
@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
             switch (hitObject)
             {
                 case DrawabletauHitObject tap:
-                    return new TauHitobjectSelectionBlueprint(tap);
+                    return new TauHitObjectSelectionBlueprint(tap);
             }
 
             return base.CreateBlueprintFor(hitObject);

@@ -2,6 +2,7 @@
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Tau.Edit.Blueprints;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Edit.Compose.Components;

@@ -11,8 +11,9 @@
     <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2020.319.0" />
-    <PackageReference Include="ppy.osu.Game" Version="2020.325.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.6.0-2.final" />
+    <PackageReference Include="ppy.osu.Framework" Version="2020.327.0" />
+    <PackageReference Include="ppy.osu.Game" Version="2020.327.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Samples\Gameplay" />
