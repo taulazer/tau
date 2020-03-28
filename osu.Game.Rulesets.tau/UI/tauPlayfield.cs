@@ -31,6 +31,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private TauCursor cursor;
         private JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
+
         public virtual bool ShowVisualizer { get; }
 
         public const float UNIVERSAL_SCALE = 0.6f;
@@ -49,7 +50,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                new VisualisationContainer(),
+                new VisualisationContainer(ShowVisualizer),
                 playfieldBackground = new Circle
                 {
                     Colour = Color4.Black,
@@ -120,7 +121,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             base.LoadComplete();
 
-            PlayfieldDimLevel = config.GetBindable<float>(TauRulesetSettings.PlayfieldDim);
+            PlayfieldDimLevel = config?.GetBindable<float>(TauRulesetSettings.PlayfieldDim) ?? new Bindable<float>(0.3f);
             PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
 
             updateVisuals();
@@ -139,7 +140,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             base.Add(h);
 
-            var obj = (DrawabletauHitObject)h;
+            var obj = (DrawabletauHitObject) h;
             obj.CheckValidation = CheckIfWeCanValidate;
 
             obj.OnNewResult += onNewResult;
@@ -150,16 +151,16 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
-            var tauObj = (DrawabletauHitObject)judgedObject;
+            var tauObj = (DrawabletauHitObject) judgedObject;
 
             var b = tauObj.HitObject.PositionToEnd.GetDegreesFromPosition(tauObj.Box.AnchorPosition) * 4;
-            var a = b *= (float)(Math.PI / 180);
+            var a = b *= (float) (Math.PI / 180);
 
             DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)
             {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
-                Position = new Vector2(-(285 * (float)Math.Cos(a)), -(285 * (float)Math.Sin(a))),
+                Position = new Vector2(-(285 * (float) Math.Cos(a)), -(285 * (float) Math.Sin(a))),
                 Rotation = tauObj.Box.Rotation + 90,
             };
 
@@ -168,7 +169,7 @@ namespace osu.Game.Rulesets.Tau.UI
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
                 kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
                 {
-                    Position = new Vector2(-(215 * (float)Math.Cos(a)), -(215 * (float)Math.Sin(a))),
+                    Position = new Vector2(-(215 * (float) Math.Cos(a)), -(215 * (float) Math.Sin(a))),
                     Rotation = tauObj.Box.Rotation,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
@@ -209,6 +210,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 };
 
                 ShowVisualisation = showVisualizer ? settings?.GetBindable<bool>(TauRulesetSettings.ShowVisualizer) : new BindableBool();
+
                 ShowVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
                 ShowVisualisation.TriggerChange();
             }
