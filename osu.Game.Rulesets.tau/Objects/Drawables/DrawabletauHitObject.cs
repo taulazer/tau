@@ -14,6 +14,7 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.UI;
+using osu.Framework.Bindables;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
