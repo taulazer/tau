@@ -11,6 +11,8 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 using osuTK.Graphics;
 using System.Linq;
+using osu.Framework.Allocation;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -20,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public Box Box;
 
         public Func<DrawabletauHitObject, bool> CheckValidation;
-
+        
         /// <summary>
         /// A list of keys which can result in hits for this HitObject.
         /// </summary>
@@ -42,7 +44,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawabletauHitObject(TauHitObject hitObject)
             : base(hitObject)
         {
-            Size = new Vector2(10);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
             RelativePositionAxes = Axes.Both;
@@ -61,6 +62,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             Position = Vector2.Zero;
         }
+
+        [BackgroundDependencyLoader]
+        private void load(TauRulesetConfigManager config)
+            => this.Size = new Vector2(config.GetBindable<float>(TauRulesetSettings.BeatSize).Value);
 
         protected override void UpdateInitialTransforms()
         {
