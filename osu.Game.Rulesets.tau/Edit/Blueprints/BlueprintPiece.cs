@@ -1,8 +1,5 @@
 ﻿using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Tau.Objects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace osu.Game.Rulesets.Tau.Edit.Blueprints
 {
@@ -17,6 +14,6 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
         /// Updates this <see cref="BlueprintPiece{T}"/> using the properties of a <see cref="BlueprintPiece"/>.
         /// </summary>
         /// <param name="hitObject">The <see cref="BlueprintPiece"/> to reference properties from.</param>
-        public virtual void UpdateFrom(T hitObject) => Position = hitObject.PositionToEnd;
+        public virtual void UpdateFrom(T hitObject) => Position = hitObject.Position;
     }
 }

@@ -2,9 +2,8 @@
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Screens.Edit.Compose.Components;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using osu.Game.Rulesets.Tau.Edit.Blueprints.Tap;
 
 namespace osu.Game.Rulesets.Tau.Edit.Blueprints
 {

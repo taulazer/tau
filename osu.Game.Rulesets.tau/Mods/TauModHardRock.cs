@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         {
             var tauObject = (TauHitObject)hitObject;
 
-            tauObject.PositionToEnd = new Vector2(tauObject.PositionToEnd.X, -tauObject.PositionToEnd.Y);
+            tauObject.Position = new Vector2(tauObject.Position.X, -tauObject.Position.Y);
         }
     }
 }

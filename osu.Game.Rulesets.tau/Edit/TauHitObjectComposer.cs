@@ -6,9 +6,12 @@ using osu.Game.Rulesets.Tau.Edit.Blueprints;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Edit.Compose.Components;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using osu.Game.Rulesets.Tau.Edit.Tools.Big;
+using osu.Game.Rulesets.Tau.Edit.Tools.Hard;
+using osu.Game.Rulesets.Tau.Edit.Tools.Roll;
+using osu.Game.Rulesets.Tau.Edit.Tools.Slider;
+using osu.Game.Rulesets.Tau.Edit.Tools.Tap;
 
 namespace osu.Game.Rulesets.Tau.Edit
 {
@@ -21,9 +24,14 @@ namespace osu.Game.Rulesets.Tau.Edit
 
         protected override DrawableRuleset<TauHitObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             => new DrawableTauEditRuleset((TauRuleset) ruleset, beatmap, mods);
+
         protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => new HitObjectCompositionTool[]
         {
-            new TauHitObjectCompositionTool(),            
+            new TauHitBeatCompositionTool(),
+            new TauSliderCompositionTool(),
+            new TauHardBeatCompositionTool(),
+            new TauBigBeatCompositionTool(),
+            new TauRollBeatCompositionTool(),
         };
 
         protected override ComposeBlueprintContainer CreateBlueprintContainer() => new TauBlueprintContainer(HitObjects);

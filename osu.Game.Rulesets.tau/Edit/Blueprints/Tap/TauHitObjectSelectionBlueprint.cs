@@ -3,11 +3,8 @@ using osu.Game.Rulesets.Tau.Edit.Blueprints.Tap.Components;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace osu.Game.Rulesets.Tau.Edit.Blueprints
+namespace osu.Game.Rulesets.Tau.Edit.Blueprints.Tap
 {
     public class TauHitObjectSelectionBlueprint : TauSelectionBlueprint<TauHitObject>
     {

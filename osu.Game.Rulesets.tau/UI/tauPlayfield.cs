@@ -153,7 +153,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             var tauObj = (DrawabletauHitObject) judgedObject;
 
-            var b = tauObj.HitObject.PositionToEnd.GetDegreesFromPosition(tauObj.Box.AnchorPosition) * 4;
+            var b = tauObj.HitObject.Position.GetDegreesFromPosition(tauObj.Box.AnchorPosition) * 4;
             var a = b *= (float) (Math.PI / 180);
 
             DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)

@@ -16,6 +16,10 @@
     <PackageReference Include="ppy.osu.Game" Version="2020.327.0" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Edit\Blueprints\Hard\" />
+    <Folder Include="Edit\Blueprints\Big\" />
+    <Folder Include="Edit\Blueprints\Roll\" />
+    <Folder Include="Edit\Blueprints\Slider\" />
     <Folder Include="Resources\Samples\Gameplay" />
     <Folder Include="Resources\Textures" />
   </ItemGroup>

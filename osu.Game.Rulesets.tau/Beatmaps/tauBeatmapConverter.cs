@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     {
                         Samples = original is IHasCurve ? ((IHasCurve)original).NodeSamples[0] : original.Samples,
                         StartTime = original.StartTime,
-                        PositionToEnd = position,
+                        Position = position,
                         NewCombo = comboData?.NewCombo ?? false,
                         ComboOffset = comboData?.ComboOffset ?? 0,
                     }.Yield();
