@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Alpha = 0.05f
             });
 
-            hitObject.Angle = hitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
+            hitObject.Angle = hitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
             Box.Rotation = hitObject.Angle;
 
             Position = Vector2.Zero;
@@ -70,7 +70,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void UpdateInitialTransforms()
         {
             base.UpdateInitialTransforms();
-            var b = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
+            var b = HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
             var a = b *= (float)(Math.PI / 180);
 
             Box.FadeIn(HitObject.TimeFadeIn);
@@ -125,7 +125,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Hit:
-                    var b = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
+                    var b = HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
                     var a = b *= (float)(Math.PI / 180);
 
                     Box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
@@ -138,7 +138,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Miss:
-                    var c = HitObject.PositionToEnd.GetDegreesFromPosition(Box.AnchorPosition) * 4;
+                    var c = HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
                     var d = c *= (float)(Math.PI / 180);
 
                     Box.ScaleTo(0.5f, time_fade_miss, Easing.InCubic)
