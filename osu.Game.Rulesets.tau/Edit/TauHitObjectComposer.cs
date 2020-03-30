@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Tau.Edit
         }
 
         protected override DrawableRuleset<TauHitObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
-            => new DrawableTauEditRuleset((TauRuleset) ruleset, beatmap, mods);
+            => new DrawableTauEditRuleset((TauRuleset)ruleset, beatmap, mods);
 
         protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => new HitObjectCompositionTool[]
         {
