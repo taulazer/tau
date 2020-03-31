@@ -22,7 +22,6 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             var config = (TauRulesetConfigManager)Config;
 
-            // for an odd reason, Config seems to be passed as null when creating it. Doesnt even get called...
             if (config == null)
                 return;
 
