@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Tau.Judgements
 {
     public class TauJudgement : Judgement
     {
-        public override HitResult MaxResult => HitResult.Good;
+        public override HitResult MaxResult => HitResult.Great;
 
         protected override int NumericResultFor(HitResult result)
         {
