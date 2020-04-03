@@ -33,6 +33,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
 
         public const float UNIVERSAL_SCALE = 0.6f;
+        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
         public TauPlayfield()
         {
@@ -42,7 +43,6 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 judgementLayer = new JudgementContainer<DrawableTauJudgement>
                 {
-                    Scale = Vector2.One * (4f / 3),
                     RelativeSizeAxes = Axes.Both,
                     Depth = 1,
                     Anchor = Anchor.Centre,
@@ -105,7 +105,6 @@ namespace osu.Game.Rulesets.Tau.UI
                     Name = "Kiai hit explosions",
                     RelativeSizeAxes = Axes.Both,
                     FillMode = FillMode.Fit,
-                    Scale = Vector2.One * (4f / 3),
                     Blending = BlendingParameters.Additive,
                     Origin = Anchor.Centre,
                     Anchor = Anchor.Centre,
@@ -152,7 +151,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             var tauObj = (DrawabletauHitObject)judgedObject;
 
-            var b = tauObj.HitObject.PositionToEnd.GetDegreesFromPosition(tauObj.Box.AnchorPosition) * 4;
+            var b = tauObj.HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
             var a = b *= (float)(Math.PI / 180);
 
             DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)

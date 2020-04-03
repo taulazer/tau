@@ -6,6 +6,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Replays
@@ -34,8 +35,8 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// </summary>
         private int buttonIndex;
 
-        private const float offset = 305;
-        private const float cursorDistance = 280;
+        private const float offset = (768 / 2f) * TauPlayfield.UNIVERSAL_SCALE;
+        private const float cursorDistance = 250;
 
         public override Replay Generate()
         {
@@ -50,14 +51,14 @@ namespace osu.Game.Rulesets.Tau.Replays
                 //Make the cursor stay at the last note's position if there's enough time between the notes
                 if (i > 0 && h.StartTime - Beatmap.HitObjects[i - 1].StartTime > reactionTime)
                 {
-                    float b = Beatmap.HitObjects[i - 1].PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;
+                    float b = Beatmap.HitObjects[i - 1].PositionToEnd.GetHitObjectAngle(Vector2.Zero) * MathF.PI / 180;
 
                     Replay.Frames.Add(new TauReplayFrame(h.StartTime - reactionTime, new Vector2(offset - (cursorDistance * MathF.Cos(b)), offset - (cursorDistance * MathF.Sin(b)))));
 
                     buttonIndex = (int)TauAction.LeftButton;
                 }
 
-                float a = h.PositionToEnd.GetDegreesFromPosition(new Vector2(5, 5)) * 4 * MathF.PI / 180;
+                float a = h.PositionToEnd.GetHitObjectAngle(Vector2.Zero) * MathF.PI / 180;
 
                 Replay.Frames.Add(new TauReplayFrame(h.StartTime, new Vector2(offset - (cursorDistance * MathF.Cos(a)), offset - (cursorDistance * MathF.Sin(a))), (TauAction)(buttonIndex++ % 2)));
             }
