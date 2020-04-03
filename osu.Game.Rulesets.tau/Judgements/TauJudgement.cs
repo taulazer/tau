@@ -18,10 +18,10 @@ namespace osu.Game.Rulesets.Tau.Judgements
                     return 0;
 
                 case HitResult.Great:
-                    return 100;
+                    return 300;
 
                 case HitResult.Good:
-                    return 300;
+                    return 100;
             }
         }
     }
