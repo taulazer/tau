@@ -96,17 +96,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 return;
             }
 
-            bool validated = CheckValidation.Invoke(this);
-
-            if (Result != null && validated)
+            if (CheckValidation.Invoke(this))
             {
                 var result = HitObject.HitWindows.ResultFor(timeOffset);
 
-                if (result >= HitResult.Meh && result <= HitResult.Great)
-                    result = HitResult.Great;
-
                 if (result == HitResult.None)
                     return;
+
+                if (result == HitResult.Miss)
+                    ApplyResult(r => r.Type = HitResult.Miss);
 
                 if (!validActionPressed)
                     ApplyResult(r => r.Type = HitResult.Miss);
