@@ -5,7 +5,7 @@
     <a href="https://discord.gg/7Y8GXAa"><img src="https://canary.discordapp.com/api/guilds/689728872282849313/widget.png?style=banner2" alt="Join Discord Server"/></a>
 </div>
 
-[![release](https://img.shields.io/badge/build-1.0.4-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
+[![release](https://img.shields.io/badge/build-2020.403.6B3-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
 [![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE) 
 [![GitHub stars](https://img.shields.io/github/stars/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tauE/network)
