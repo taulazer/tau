@@ -21,7 +21,16 @@ We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users 
 ##### Windows
 On Windows, the library must be put in `%localappdata%\osulazer\app-(Current osu!lazer Version)`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
 
-*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At the very time of writing this (March 15th, 2020), no operating system is known to be unsupported.*
+##### Linux
+On Linux, you will need to extract the app image with the following command line:
+```sh
+./osu.AppImage --appimage-extract
+```
+This will extract all files to `squashfs-root`, in this folder go to `usr/bin` and put Tau's dll there.
+
+###### Special thanks to `Kotypey#9393` for figuring out how to install Tau on linux.
+
+*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At the very time of writing this (April 3rd, 2020), no operating system is known to be unsupported.*
 
 ## Development
 When developing or debugging the osu!tau codebase, a few prerequisites are required as following:
