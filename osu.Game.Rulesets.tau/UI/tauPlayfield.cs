@@ -179,7 +179,7 @@ namespace osu.Game.Rulesets.Tau.UI
             private LogoVisualisation visualisation;
             private bool firstKiaiBeat = true;
             private int kiaiBeatIndex;
-            protected Bindable<bool> ShowVisualisation;
+            private readonly Bindable<bool> ShowVisualisation = new Bindable<bool>(true);
 
             [BackgroundDependencyLoader(true)]
             private void load(TauRulesetConfigManager settings)
@@ -200,10 +200,9 @@ namespace osu.Game.Rulesets.Tau.UI
                     Colour = Color4.Transparent
                 };
 
-                ShowVisualisation = settings != null ? settings.GetBindable<bool>(TauRulesetSettings.ShowVisualizer) : new BindableBool(true);
-
-                ShowVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
-                ShowVisualisation.TriggerChange();
+                settings?.BindWith(TauRulesetSettings.ShowVisualizer, ShowVisualisation);
+                ShowVisualisation.BindValueChanged(value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); }, true);
+                
             }
 
             protected override void LoadComplete()
