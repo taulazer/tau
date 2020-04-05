@@ -12,12 +12,15 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
+    /// <summary>
+    /// The abstract Hit object for all Beat objects.
+    /// </summary>
     public class TauHitObject : HitObject, IHasComboInformation
     {
         public override Judgement CreateJudgement() => new TauJudgement();
 
-        public double TimePreempt = 600;
-        public double TimeFadeIn = 400;
+        public double TimePreempt { get; set; } = 600;
+        public double TimeFadeIn { get; set; } = 400;
 
         public float Angle { get; set; }
         public Vector2 PositionToEnd { get; set; }
