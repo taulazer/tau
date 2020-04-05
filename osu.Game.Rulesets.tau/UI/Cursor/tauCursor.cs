@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             this.beatmap.BindTo(beatmap);
         }
 
-        public bool CheckForValidation(DrawabletauHitObject h) => h.ScreenSpaceDrawQuad.AABBFloat.IntersectsWith(defaultCursor.HitReceptor.ScreenSpaceDrawQuad.AABBFloat);
+        public bool CheckForValidation(DrawabletauBeatObject h) => h.ScreenSpaceDrawQuad.AABBFloat.IntersectsWith(defaultCursor.HitReceptor.ScreenSpaceDrawQuad.AABBFloat);
 
         private class DefaultCursor : CompositeDrawable
         {
