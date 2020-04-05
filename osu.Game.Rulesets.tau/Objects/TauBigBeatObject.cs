@@ -5,6 +5,6 @@ namespace osu.Game.Rulesets.Tau.Objects
 {
     public class TauBigBeatObject : TauHitObject
     {
-        //TODO: Think if Big Beats should give two combos instead.
+        //TODO: Think if Big Beats should give two combos instead
     }
 }

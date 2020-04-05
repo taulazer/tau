@@ -20,6 +20,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableTauBigBeatObject : DrawableTauHitObject, IKeyBindingHandler<TauAction>
     {
+        private TauInputManager tauActionInputManager;
+        internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
+
         public Box Box;
 
         public Func<DrawableTauBigBeatObject, bool> CheckValidation;
@@ -64,13 +67,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Position = Vector2.Zero;
         }
 
-        private Bindable<float> size;
-        private const float increasedSize = 1.25f;
+        private Bindable<float> size = new Bindable<float>(10); // Change as you see fit.
+        private const float increasedSize = 1.5f;
 
-        [BackgroundDependencyLoader]
+        [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
         {
-            size = config.GetBindable<float>(TauRulesetSettings.BeatSize);
+            config?.BindWith(TauRulesetSettings.BeatSize, size);
             size.BindValueChanged(value => Size = new Vector2(value.NewValue * increasedSize), true);
         }
 
@@ -162,7 +165,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (Judged)
                 return false;
 
-            validActionPressed = HitActions.Contains(action);
+            validActionPressed = BothButtonPressed();
 
             var result = UpdateResult(true);
 
@@ -171,6 +174,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             return result;
         }
+
+        public bool BothButtonPressed() =>
+            (TauActionInputManager?.PressedActions.Contains(TauAction.LeftButton) ?? false)
+            && ((bool)TauActionInputManager?.PressedActions.Contains(TauAction.RightButton));
+
 
         public void OnReleased(TauAction action) { }
     }
