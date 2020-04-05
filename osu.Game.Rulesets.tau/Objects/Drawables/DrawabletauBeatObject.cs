@@ -64,12 +64,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Position = Vector2.Zero;
         }
 
-        private Bindable<float> size;
+        private Bindable<float> size = new Bindable<float>(10); // Change as you see fit.
 
-        [BackgroundDependencyLoader]
+        [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
         {
-            size = config.GetBindable<float>(TauRulesetSettings.BeatSize);
+            config?.BindWith(TauRulesetSettings.BeatSize, size);
             size.BindValueChanged(value => Size = new Vector2(value.NewValue), true);
         }
 

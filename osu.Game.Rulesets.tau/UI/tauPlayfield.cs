@@ -112,20 +112,21 @@ namespace osu.Game.Rulesets.Tau.UI
             });
         }
 
-        [Resolved]
-        private TauRulesetConfigManager config { get; set; }
+
+        protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(1); // Change the default as you see fit
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
+            PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
+        }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
-
-            PlayfieldDimLevel = config.GetBindable<float>(TauRulesetSettings.PlayfieldDim);
-            PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
-
             updateVisuals();
         }
-
-        protected Bindable<float> PlayfieldDimLevel { get; private set; }
 
         private void updateVisuals()
         {
@@ -201,14 +202,14 @@ namespace osu.Game.Rulesets.Tau.UI
                 };
 
                 settings?.BindWith(TauRulesetSettings.ShowVisualizer, ShowVisualisation);
-                ShowVisualisation.BindValueChanged(value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); }, true);
-                
+                ShowVisualisation.BindValueChanged(value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); });
             }
 
             protected override void LoadComplete()
             {
                 base.LoadComplete();
                 visualisation.AccentColour = Color4.White;
+                ShowVisualisation.TriggerChange();
             }
 
             protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, TrackAmplitudes amplitudes)
