@@ -132,13 +132,13 @@ namespace osu.Game.Rulesets.Tau.UI
             playfieldBackground.FadeTo(PlayfieldDimLevel.Value, 100);
         }
 
-        public bool CheckIfWeCanValidate(DrawabletauHitObject obj) => cursor.CheckForValidation(obj);
+        public bool CheckIfWeCanValidate(DrawabletauBeatObject obj) => cursor.CheckForValidation(obj);
 
         public override void Add(DrawableHitObject h)
         {
             base.Add(h);
 
-            var obj = (DrawabletauHitObject)h;
+            var obj = (DrawabletauBeatObject)h;
             obj.CheckValidation = CheckIfWeCanValidate;
 
             obj.OnNewResult += onNewResult;
@@ -149,7 +149,7 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
-            var tauObj = (DrawabletauHitObject)judgedObject;
+            var tauObj = (DrawabletauBeatObject)judgedObject;
 
             var b = tauObj.HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
             var a = b *= (float)(Math.PI / 180);
@@ -200,7 +200,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Colour = Color4.Transparent
                 };
 
-                ShowVisualisation = settings.GetBindable<bool>(TauRulesetSettings.ShowVisualizer);
+                ShowVisualisation = settings != null ? settings.GetBindable<bool>(TauRulesetSettings.ShowVisualizer) : new BindableBool(true);
 
                 ShowVisualisation.ValueChanged += value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); };
                 ShowVisualisation.TriggerChange();
