@@ -7,7 +7,9 @@ using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
+using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Judgements;
+using osu.Game.Rulesets.Tau.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
@@ -59,11 +61,13 @@ namespace osu.Game.Rulesets.Tau.Objects
             set => LastInComboBindable.Value = value;
         }
 
+        protected override HitWindows CreateHitWindows() => new TauHitWindows();
+
         protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, BeatmapDifficulty difficulty)
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
-            TimePreempt = (float)BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
+            TimePreempt = (float) BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
             TimeFadeIn = 100;
         }
     }

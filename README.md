@@ -5,7 +5,7 @@
     <a href="https://discord.gg/7Y8GXAa"><img src="https://canary.discordapp.com/api/guilds/689728872282849313/widget.png?style=banner2" alt="Join Discord Server"/></a>
 </div>
 
-[![release](https://img.shields.io/badge/build-1.0.4-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
+[![release](https://img.shields.io/badge/build-2020.403.6B3-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
 [![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE) 
 [![GitHub stars](https://img.shields.io/github/stars/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tauE/network)
@@ -21,7 +21,16 @@ We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users 
 ##### Windows
 On Windows, the library must be put in `%localappdata%\osulazer\app-(Current osu!lazer Version)`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
 
-*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At the very time of writing this (March 15th, 2020), no operating system is known to be unsupported.*
+##### Linux
+On Linux, you will need to extract the app image with the following command line:
+```sh
+./osu.AppImage --appimage-extract
+```
+This will extract all files to `squashfs-root`, in this folder go to `usr/bin` and put Tau's dll there.
+
+###### Special thanks to `Kotypey#9393` for figuring out how to install Tau on linux.
+
+*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At the very time of writing this (April 3rd, 2020), no operating system is known to be unsupported.*
 
 ## Development
 When developing or debugging the osu!tau codebase, a few prerequisites are required as following:
