@@ -57,25 +57,25 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Alpha = 0.05f
             });
 
-            hitObject.Angle = hitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
             Box.Rotation = hitObject.Angle;
 
             Position = Vector2.Zero;
         }
 
-        private Bindable<float> size;
+        private Bindable<float> size = new Bindable<float>(10); // Change as you see fit.
 
-        [BackgroundDependencyLoader]
+
+        [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
         {
-            size = config.GetBindable<float>(TauRulesetSettings.BeatSize);
+            config?.BindWith(TauRulesetSettings.BeatSize, size);
             size.BindValueChanged(value => this.Size = new Vector2(value.NewValue), true);
         }
 
         protected override void UpdateInitialTransforms()
         {
             base.UpdateInitialTransforms();
-            var b = HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
+            var b = HitObject.Angle;
             var a = b *= (float)(Math.PI / 180);
 
             Box.FadeIn(HitObject.TimeFadeIn);
@@ -128,7 +128,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Hit:
-                    var b = HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
+                    var b = HitObject.Angle;
                     var a = b *= (float)(Math.PI / 180);
 
                     Box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
@@ -141,7 +141,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Miss:
-                    var c = HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
+                    var c = HitObject.Angle;
                     var d = c *= (float)(Math.PI / 180);
 
                     Box.ScaleTo(0.5f, time_fade_miss, Easing.InCubic)
