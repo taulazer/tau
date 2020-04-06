@@ -16,6 +16,6 @@ namespace osu.Game.Rulesets.Tau
             return degrees;
         }
 
-        public static float GetHitObjectAngle(this Vector2 target, Vector2 self) => target.GetDegreesFromPosition(self) * 4;
+        public static float GetHitObjectAngle(this Vector2 target) => target.GetDegreesFromPosition(new Vector2(250, 192));
     }
 }
