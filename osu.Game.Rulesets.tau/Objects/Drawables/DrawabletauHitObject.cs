@@ -64,7 +64,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private Bindable<float> size = new Bindable<float>(10); // Change as you see fit.
 
-
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
         {
