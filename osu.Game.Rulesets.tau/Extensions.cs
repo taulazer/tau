@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Tau
         public static float GetDegreesFromPosition(this Vector2 target, Vector2 self)
         {
             Vector2 offset = self - target;
-            float degrees = (float)MathHelper.RadiansToDegrees(Math.Atan2(-offset.X, offset.Y));
+            float degrees = (float)MathHelper.RadiansToDegrees(Math.Atan2(-offset.X, -offset.Y));
 
             return degrees;
         }
