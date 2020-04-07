@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
         }
 
-        protected override Playfield CreatePlayfield() => new TauPlayfield();
+        protected override Playfield CreatePlayfield() => new TauPlayfield(Beatmap.BeatmapInfo.BaseDifficulty);
 
         protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new TauFramedReplayInputHandler(replay);
 
@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override PassThroughInputManager CreateInputManager() => new TauInputManager(Ruleset?.RulesetInfo);
 
         public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new TauPlayfieldAdjustmentContainer();
-        
+
         protected override ReplayRecorder CreateReplayRecorder(Replay replay) => new TauReplayRecorder(replay);
     }
 }
