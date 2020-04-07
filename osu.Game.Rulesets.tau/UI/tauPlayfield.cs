@@ -14,6 +14,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
@@ -35,9 +36,9 @@ namespace osu.Game.Rulesets.Tau.UI
         public const float UNIVERSAL_SCALE = 0.6f;
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
-        public TauPlayfield()
+        public TauPlayfield(BeatmapDifficulty difficulty)
         {
-            cursor = new TauCursor();
+            cursor = new TauCursor(difficulty);
 
             AddRangeInternal(new Drawable[]
             {
