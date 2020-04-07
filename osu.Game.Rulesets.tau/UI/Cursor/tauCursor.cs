@@ -167,7 +167,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             protected override bool OnMouseMove(MouseMoveEvent e)
             {
-                var angle = e.MousePosition.GetDegreesFromPosition(AnchorPosition) - 25;
+                var angle = e.MousePosition.GetDegreesFromPosition(AnchorPosition);
 
                 Rotation = angle;
 
