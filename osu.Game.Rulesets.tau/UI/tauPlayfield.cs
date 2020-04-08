@@ -14,6 +14,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
@@ -35,9 +36,9 @@ namespace osu.Game.Rulesets.Tau.UI
         public const float UNIVERSAL_SCALE = 0.6f;
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
-        public TauPlayfield()
+        public TauPlayfield(BeatmapDifficulty difficulty)
         {
-            cursor = new TauCursor();
+            cursor = new TauCursor(difficulty);
 
             AddRangeInternal(new Drawable[]
             {
@@ -112,7 +113,6 @@ namespace osu.Game.Rulesets.Tau.UI
             });
         }
 
-
         protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(1); // Change the default as you see fit
 
         [BackgroundDependencyLoader(true)]
@@ -133,13 +133,13 @@ namespace osu.Game.Rulesets.Tau.UI
             playfieldBackground.FadeTo(PlayfieldDimLevel.Value, 100);
         }
 
-        public bool CheckIfWeCanValidate(DrawabletauBeatObject obj) => cursor.CheckForValidation(obj);
+        public bool CheckIfWeCanValidate(DrawabletauHitObject obj) => cursor.CheckForValidation(obj);
 
         public override void Add(DrawableHitObject h)
         {
             base.Add(h);
 
-            var obj = (DrawabletauBeatObject)h;
+            var obj = (DrawabletauHitObject)h;
             obj.CheckValidation = CheckIfWeCanValidate;
 
             obj.OnNewResult += onNewResult;
@@ -150,10 +150,9 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
-            var tauObj = (DrawabletauBeatObject)judgedObject;
+            var tauObj = (DrawabletauHitObject)judgedObject;
 
-            var b = tauObj.HitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
-            var a = b *= (float)(Math.PI / 180);
+            var a = tauObj.HitObject.Angle * (float)(Math.PI / 180);
 
             DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)
             {
