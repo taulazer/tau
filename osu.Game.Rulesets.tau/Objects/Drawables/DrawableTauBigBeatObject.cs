@@ -61,7 +61,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Alpha = 0.05f
             });
 
-            hitObject.Angle = hitObject.PositionToEnd.GetHitObjectAngle(Vector2.Zero);
             Box.Rotation = hitObject.Angle;
 
             Position = Vector2.Zero;
