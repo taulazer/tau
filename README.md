@@ -30,7 +30,14 @@ This will extract all files to `squashfs-root`, in this folder go to `usr/bin` a
 
 ###### Special thanks to `Kotypey#9393` for figuring out how to install Tau on linux.
 
-*If instructions for your platform isn't listed above, then it's either being written, or is unsupported. At the very time of writing this (April 3rd, 2020), no operating system is known to be unsupported.*
+##### macOS
+On macOS, the library must be put inside the osu!lazer app contents here `osu!.app/Contents/MacOS/`
+
+![Context menu](https://cdn.discordapp.com/attachments/699046236979986483/699060248391974982/tau.png)
+
+You can access the app contents by right-clicking on osu! and clicking "Show Package Contents"
+
+###### Special thanks to `sexnine#6969` for figuring out how to install Tau on macOS.
 
 ## Development
 When developing or debugging the osu!tau codebase, a few prerequisites are required as following:
