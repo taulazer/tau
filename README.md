@@ -1,4 +1,4 @@
-[![tau](https://cdn.discordapp.com/attachments/415884845739278336/699910550943039498/tau-banner.png)](https://github.com/Altenhh/tau "tau")
+[![tau](https://cdn.discordapp.com/attachments/415884845739278336/699913841391435808/tau-banner.png)](https://github.com/Altenhh/tau "tau")
 # tau for osu!
 
 <div>
@@ -40,12 +40,12 @@ You can access the app contents by right-clicking on osu! and clicking "Show Pac
 ###### Special thanks to `sexnine#6969` for figuring out how to install Tau on macOS.
 
 ## Development
-When developing or debugging the osu!tau codebase, a few prerequisites are required as following:
+When developing or debugging the tau codebase, a few prerequisites are required as following:
 * An IDE that supports the C# language in automatic completion, and syntax highlighting; examples of such being [Visual Studio 2019](https://visualstudio.microsoft.com/vs/) and above, or [JetBrains Rider](https://www.jetbrains.com/rider/).
 * The [osu!framework](https://github.com/ppy/osu-framework/tree/master/osu.Framework), and [osu!](https://github.com/ppy/osu) codebases are added as dependencies for building
 
 ### Source Code 
-You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the osu!tau directory.
+You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the tau directory.
 ```sh
 git clone https://github.com/Altenhh/tau.git
 cd tau
@@ -60,6 +60,6 @@ All contributions are appreciated, as to improve the mode on its playability and
 For new ideas and features, we would prefer for you to write an issue before trying to add it to show the maintainers.
 
 ## License
-osu!tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/Altenhh/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of osu!tau.
+tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/Altenhh/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
 
 The licensing here does not directly apply to [osu!](https://github.com/ppy/osu), as it is bound to its own licensing. What is reflected in our licensing *may* not be allowed in the [osu!](https://github.com/ppy/osu) github repository.
