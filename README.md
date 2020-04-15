@@ -1,5 +1,5 @@
-[![tau](https://cdn.discordapp.com/attachments/680267083606655030/688688294329843732/the.png)](https://github.com/Altenhh/tau "tau")
-# osu!tau
+[![tau]([https://cdn.discordapp.com/attachments/415884845739278336/699910550943039498/tau-banner.png])](https://github.com/Altenhh/tau "tau")
+# tau for osu!
 
 <div>
     <a href="https://discord.gg/7Y8GXAa"><img src="https://canary.discordapp.com/api/guilds/689728872282849313/widget.png?style=banner2" alt="Join Discord Server"/></a>
