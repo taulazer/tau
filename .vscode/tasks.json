@@ -1,16 +1,14 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build (Debug)",
+            "label": "Build tests (Debug)",
             "type": "shell",
             "command": "dotnet",
             "args": [
                 "build",
                 "--no-restore",
-                "osu.Game.Rulesets.tauRuleset.Tests.csproj",
+                "osu.Game.Rulesets.Tau.Tests",
                 "/p:GenerateFullPaths=true",
                 "/m",
                 "/verbosity:m"
@@ -19,13 +17,13 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Build (Release)",
+            "label": "Build tests (Release)",
             "type": "shell",
             "command": "dotnet",
             "args": [
                 "build",
                 "--no-restore",
-                "osu.Game.Rulesets.tauRuleset.Tests.csproj",
+                "osu.Game.Rulesets.Tau.Tests",
                 "/p:Configuration=Release",
                 "/p:GenerateFullPaths=true",
                 "/m",
@@ -34,14 +32,28 @@
             "group": "build",
             "problemMatcher": "$msCompile"
         },
+        // Test Tasks
         {
-            "label": "Restore",
+            "label": "Run tests (Debug)",
             "type": "shell",
             "command": "dotnet",
             "args": [
-                "restore"
+                "test",
+                "/p:Configuration=Debug",
             ],
-            "problemMatcher": []
+            "group": "test",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Run tests (Release)",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "test",
+                "/p:Configuration=Release",
+            ],
+            "group": "test",
+            "problemMatcher": "$msCompile"
         }
     ]
 }

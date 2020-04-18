@@ -2,30 +2,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "VisualTests (Debug)",
+            "name": "Tau for osu! (Tests, Debug)",
             "type": "coreclr",
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/bin/Debug/netcoreapp2.2/osu.Game.Rulesets.tauRuleset.Tests.dll"
+                "${workspaceRoot}/osu.Game.Rulesets.Tau.Tests/bin/Debug/netcoreapp3.0/osu.Game.Rulesets.Tau.Tests.dll"
             ],
             "cwd": "${workspaceRoot}",
-            "preLaunchTask": "Build (Debug)",
-            "env": {},
+            "preLaunchTask": "Build tests (Debug)",
             "console": "internalConsole"
         },
         {
-            "name": "VisualTests (Release)",
+            "name": "Tau for osu! (Tests, Release)",
             "type": "coreclr",
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/bin/Release/netcoreapp2.2/osu.Game.Rulesets.tauRuleset.Tests.dll"
+                "${workspaceRoot}/osu.Game.Rulesets.Tau.Tests/bin/Release/netcoreapp3.0/osu.Game.Rulesets.Tau.Tests.dll"
             ],
             "cwd": "${workspaceRoot}",
-            "preLaunchTask": "Build (Release)",
-            "env": {},
+            "preLaunchTask": "Build tests (Release)",
             "console": "internalConsole"
-        }
+        },
     ]
 }
