@@ -14,7 +14,5 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
         {
         }
 
-        [Test]
-        public void 
     }
 }

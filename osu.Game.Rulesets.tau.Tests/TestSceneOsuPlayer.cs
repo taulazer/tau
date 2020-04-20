@@ -7,9 +7,9 @@ using osu.Game.Tests.Visual;
 namespace osu.Game.Rulesets.Tau.Tests
 {
     [TestFixture]
-    public class TestSceneTauPlayer : PlayerTestScene
+    public class TestSceneOsuPlayer : PlayerTestScene
     {
-        public TestSceneTauPlayer()
+        public TestSceneOsuPlayer()
             : base(new TauRuleset())
         {
         }
