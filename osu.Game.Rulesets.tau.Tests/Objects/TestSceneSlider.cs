@@ -13,6 +13,5 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             : base(new TauRuleset())
         {
         }
-
     }
 }
