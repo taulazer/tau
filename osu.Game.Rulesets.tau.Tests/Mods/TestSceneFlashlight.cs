@@ -9,11 +9,11 @@ using osu.Game.Tests.Visual;
 namespace osu.Game.Rulesets.Tau.Tests.Mods
 {
     [TestFixture]
-    public class TestSceneTauBlinds : TestSceneOsuPlayer
+    public class TestSceneFlashlight : TestScenePlayer
     {
         protected override TestPlayer CreatePlayer(Ruleset ruleset)
         {
-            SelectedMods.Value = new Mod[] { new TauModAutoplay(), new TauModBlinds() };
+            SelectedMods.Value = new Mod[] { new TauModAutoplay(), new TauModFlashlight() };
             return base.CreatePlayer(ruleset);
         }
     }

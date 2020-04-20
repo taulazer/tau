@@ -8,7 +8,7 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneOsuGame : OsuTestScene
+    public class TestSceneGame : OsuTestScene
     {
         [BackgroundDependencyLoader]
         private void load(GameHost host, OsuGameBase gameBase)
