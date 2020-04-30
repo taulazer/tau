@@ -55,7 +55,7 @@ Copy the ruleset file into the `rulesets` directory, do make sure that duplicate
 
 Once done, restart osu!lazer, if lazer is already open. Once lazer is started, you should see the ruleset alongside the standard rulesets on the toolbar at the top.
 
-###### Do note that this instructions will only work with desktop devices.
+###### Do note that this instruction will only work with desktop devices.
 
 ## Development
 When developing or debugging the tau codebase, a few prerequisites are required as following:
