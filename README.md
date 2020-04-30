@@ -51,6 +51,7 @@ You can access the app contents by right-clicking on osu! and clicking "Show Pac
 
 ##### New Method
 From the osu settings menu scroll down till you see `Open osu! folder`, that button should take you under `%appdata%/osu`.
+![open osu! folder](https://github.com/LumpBloom7/sentakki/wiki/images/Instuction1.png)
 Copy the ruleset file into the `rulesets` directory, do make sure that duplicate copies of the ruleset is overwritten.
 
 Once done, restart osu!lazer, if lazer is already open. Once lazer is started, you should see the ruleset alongside the standard rulesets on the toolbar at the top.
