@@ -18,6 +18,13 @@ We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users 
 ### [Latest Releases](https://github.com/Altenhh/tau/releases)
 
 ### Instructions
+
+Since version [2020.429.0](https://github.com/ppy/osu/releases/tag/2020.429.0) The installation method has now changed and is much more consistent than the old method. If you wish to see the old method of how to install this ruleset the please expand details below.
+
+<details>
+<summary><b>Old method</b></summary>
+<p>
+
 ##### Windows
 On Windows, the library must be put in `%localappdata%\osulazer\app-(Current osu!lazer Version)`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
 
@@ -38,6 +45,17 @@ On macOS, the library must be put inside the osu!lazer app contents here `osu!.a
 You can access the app contents by right-clicking on osu! and clicking "Show Package Contents"
 
 ###### Special thanks to `sexnine#6969` for figuring out how to install Tau on macOS.
+
+</p>
+</details>
+
+##### New Method
+From the osu settings menu scroll down till you see `Open osu! folder`, that button should take you under `%appdata%/osu`.
+Copy the ruleset file into the `rulesets` directory, do make sure that duplicate copies of the ruleset is overwritten.
+
+Once done, restart osu!lazer, if lazer is already open. Once lazer is started, you should see the ruleset alongside the standard rulesets on the toolbar at the top.
+
+###### Do note that this instructions will only work with desktop devices.
 
 ## Development
 When developing or debugging the tau codebase, a few prerequisites are required as following:
