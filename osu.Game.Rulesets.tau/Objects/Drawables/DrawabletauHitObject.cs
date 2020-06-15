@@ -21,6 +21,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     public class DrawabletauHitObject : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
     {
         public Box Box;
+        public Box IntersectArea;
 
         public Func<DrawabletauHitObject, bool> CheckValidation;
 
@@ -49,13 +50,24 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Origin = Anchor.Centre;
             RelativePositionAxes = Axes.Both;
 
-            AddInternal(Box = new Box
-            {
-                EdgeSmoothness = new Vector2(1f),
-                RelativeSizeAxes = Axes.Both,
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-                Alpha = 0.05f
+            AddRangeInternal(new Drawable[]{
+                Box = new Box
+                {
+                    EdgeSmoothness = new Vector2(1f),
+                    RelativeSizeAxes = Axes.Both,
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    Alpha = 0.05f
+                },
+                IntersectArea = new Box
+                {
+                    Size = new Vector2(10),
+                    RelativeSizeAxes = Axes.None,
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    Alpha = 0,
+                    AlwaysPresent = true
+                }
             });
 
             Box.Rotation = hitObject.Angle;
