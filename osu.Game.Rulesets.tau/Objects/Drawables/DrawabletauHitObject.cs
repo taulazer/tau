@@ -50,32 +50,34 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Origin = Anchor.Centre;
             RelativePositionAxes = Axes.Both;
 
-            AddRangeInternal(new Drawable[]{
-                Box = new Box
+            AddRangeInternal(new Drawable[]
                 {
-                    EdgeSmoothness = new Vector2(1f),
-                    RelativeSizeAxes = Axes.Both,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Alpha = 0.05f
-                },
-                IntersectArea = new Box
-                {
-                    Size = new Vector2(10),
-                    RelativeSizeAxes = Axes.None,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Alpha = 0,
-                    AlwaysPresent = true
+                    Box = new Box
+                    {
+                        EdgeSmoothness = new Vector2(1f),
+                        RelativeSizeAxes = Axes.Both,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Alpha = 0.05f
+                    },
+                    IntersectArea = new Box
+                    {
+                        Size = new Vector2(10),
+                        RelativeSizeAxes = Axes.None,
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Alpha = 0,
+                        AlwaysPresent = true
+                    }
                 }
-            });
+            );
 
             Box.Rotation = hitObject.Angle;
 
             Position = Vector2.Zero;
         }
 
-        private Bindable<float> size = new Bindable<float>(10); // Change as you see fit.
+        private readonly Bindable<float> size = new Bindable<float>(10); // Change as you see fit.
 
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
