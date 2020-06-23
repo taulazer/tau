@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             foreach (var drawable in playfield.HitObjectContainer.AliveObjects)
             {
-                if (!(drawable is DrawabletauHitObject tauHit))
+                if (!(drawable is DrawableTauHitObject tauHit))
                     continue;
 
                 double time = tauHit.Clock.CurrentTime;
@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                 if (tauHit.HitObject is IHasDuration hasEnd && time > hasEnd.EndTime || tauHit.IsHit)
                     continue;
 
-                if (tauHit is DrawabletauHitObject)
+                if (tauHit is DrawableTauHitObject)
                 {
                     Debug.Assert(tauHit.HitObject.HitWindows != null);
 
