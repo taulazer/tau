@@ -7,6 +7,9 @@
     <RootNamespace>osu.Game.Rulesets.Tau</RootNamespace>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>osu.Game.Rulesets.Tau</AssemblyName>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**"/>
   </ItemGroup>
