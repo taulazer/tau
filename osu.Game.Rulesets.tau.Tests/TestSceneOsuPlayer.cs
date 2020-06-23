@@ -9,9 +9,6 @@ namespace osu.Game.Rulesets.Tau.Tests
     [TestFixture]
     public class TestSceneOsuPlayer : PlayerTestScene
     {
-        public TestSceneOsuPlayer()
-            : base(new TauRuleset())
-        {
-        }
+        protected override Ruleset CreatePlayerRuleset() => new TauRuleset();
     }
 }
