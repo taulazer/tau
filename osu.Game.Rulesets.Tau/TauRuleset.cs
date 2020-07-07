@@ -1,8 +1,10 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using osu.Framework.Allocation;
 using System.Collections.Generic;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
@@ -21,6 +23,7 @@ using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau
 {
@@ -103,9 +106,26 @@ namespace osu.Game.Rulesets.Tau
             new KeyBinding(InputKey.Space, TauAction.HardButton),
         };
 
-        public override Drawable CreateIcon() => new Sprite
+        public override Drawable CreateIcon() => new Container
         {
-            Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau"),
+            AutoSizeAxes = Axes.Both,
+            Children = new Drawable[]{
+                new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Icon = FontAwesome.Regular.Circle,
+                    },
+                    new Sprite
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1),
+                        Scale = new Vector2(.625f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau")
+                    }
+            }
         };
 
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
