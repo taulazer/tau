@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -20,8 +21,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableTauHitObject : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
     {
-        public Box Box;
-        public Box IntersectArea;
+        public Container Box;
+        public Container IntersectArea;
 
         public Func<DrawableTauHitObject, bool> CheckValidation;
 
@@ -52,24 +53,25 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Size = Vector2.One;
             AddRangeInternal(new Drawable[]
                 {
-                    Box = new Box
+                    Box = new Container
                     {
-                        EdgeSmoothness = new Vector2(1f),
-                        //RelativeSizeAxes = Axes.Both,
                         RelativePositionAxes = Axes.Both,
                         Origin = Anchor.Centre,
                         Anchor = Anchor.Centre,
                         Alpha = 0.05f,
+                        Children = new Drawable[]{
+                            new Box{
+                                RelativeSizeAxes= Axes.Both
+                            },
+                            IntersectArea = new Container{
+                                Size = new Vector2(10),
+                                RelativeSizeAxes = Axes.None,
+                                Origin = Anchor.Centre,
+                                Anchor = Anchor.Centre,
+                                AlwaysPresent = true
+                            }
+                        }
                     },
-                    IntersectArea = new Box
-                    {
-                        Size = new Vector2(10),
-                        RelativeSizeAxes = Axes.None,
-                        Origin = Anchor.Centre,
-                        Anchor = Anchor.Centre,
-                        Alpha = 0,
-                        AlwaysPresent = true
-                    }
                 }
             );
 
