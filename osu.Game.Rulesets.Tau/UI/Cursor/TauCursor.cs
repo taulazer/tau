@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         HitReceptor = new Box
                         {
                             Height = 50,
-                            Width = (float)convertValue(cs),
+                            Width = (float)convertValue(cs)*1.6f,
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Alpha = 0,
