@@ -96,7 +96,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             Box.FadeIn(HitObject.TimeFadeIn);
             //Box.MoveToY(-.5f, HitObject.TimePreempt);
-            Box.MoveTo(new Vector2(-(0.5f * (float)Math.Cos(a)), -(.5f * (float)Math.Sin(a))), HitObject.TimePreempt);
+            Box.MoveTo(new Vector2(-(0.485f * (float)Math.Cos(a)), -(.485f * (float)Math.Sin(a))), HitObject.TimePreempt);
 
         }
 
