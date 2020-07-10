@@ -40,8 +40,11 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public TauPlayfield(BeatmapDifficulty difficulty)
         {
+            RelativeSizeAxes = Axes.None;
             cursor = new TauCursor(difficulty);
-
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+            Size = new Vector2(768);
             AddRangeInternal(new Drawable[]
             {
                 judgementLayer = new JudgementContainer<DrawableTauJudgement>
@@ -56,16 +59,12 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     Colour = Color4.Black,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(UNIVERSAL_SCALE),
-                    FillAspectRatio = 1,
-                    FillMode = FillMode.Fit,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(UNIVERSAL_SCALE),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
@@ -76,8 +75,6 @@ namespace osu.Game.Rulesets.Tau.UI
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Masking = true,
-                            FillMode = FillMode.Fit,
-                            FillAspectRatio = 1, // 1:1 Aspect ratio to get a perfect circle
                             BorderThickness = 3,
                             BorderColour = Color4.White,
                             Child = new Box
@@ -89,19 +86,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         },
                     }
                 },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    FillMode = FillMode.Fit,
-                    FillAspectRatio = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(UNIVERSAL_SCALE),
-                    Children = new Drawable[]
-                    {
-                        HitObjectContainer,
-                    }
-                },
+                HitObjectContainer,
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
@@ -160,7 +145,7 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
-                Position = new Vector2(-(285 * (float)Math.Cos(a)), -(285 * (float)Math.Sin(a))),
+                Position = new Vector2(-(.6f * (float)Math.Cos(a)), -(.6f * (float)Math.Sin(a))),
                 Rotation = tauObj.Box.Rotation + 90,
             };
 
@@ -169,7 +154,7 @@ namespace osu.Game.Rulesets.Tau.UI
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
                 kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
                 {
-                    Position = new Vector2(-(215 * (float)Math.Cos(a)), -(215 * (float)Math.Sin(a))),
+                    Position = new Vector2(-(.475f * (float)Math.Cos(a)), -(.475f * (float)Math.Sin(a))),
                     Rotation = tauObj.Box.Rotation,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
@@ -187,7 +172,6 @@ namespace osu.Game.Rulesets.Tau.UI
             private void load(TauRulesetConfigManager settings)
             {
                 RelativeSizeAxes = Axes.Both;
-                Size = new Vector2(UNIVERSAL_SCALE);
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
 

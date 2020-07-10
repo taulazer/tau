@@ -21,6 +21,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableTauJudgement(JudgementResult result, DrawableTauHitObject judgedObject)
             : base(result, judgedObject)
         {
+            RelativePositionAxes = Axes.Both;
+            Scale = new Vector2(1.66f);
         }
 
         [BackgroundDependencyLoader]
