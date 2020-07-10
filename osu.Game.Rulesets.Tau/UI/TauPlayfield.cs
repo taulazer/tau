@@ -139,14 +139,12 @@ namespace osu.Game.Rulesets.Tau.UI
 
             var tauObj = (DrawableTauHitObject)judgedObject;
 
-            var a = tauObj.HitObject.Angle * (float)(Math.PI / 180);
-
             DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)
             {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
-                Position = new Vector2(-(.6f * (float)Math.Cos(a)), -(.6f * (float)Math.Sin(a))),
-                Rotation = tauObj.Box.Rotation + 90,
+                Position = Extensions.GetCircularPosition(.6f, tauObj.HitObject.Angle),
+                Rotation = tauObj.HitObject.Angle,
             };
 
             judgementLayer.Add(explosion);
@@ -154,8 +152,8 @@ namespace osu.Game.Rulesets.Tau.UI
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
                 kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
                 {
-                    Position = new Vector2(-(.475f * (float)Math.Cos(a)), -(.475f * (float)Math.Sin(a))),
-                    Rotation = tauObj.Box.Rotation,
+                    Position = Extensions.GetCircularPosition(.475f, tauObj.HitObject.Angle),
+                    Rotation = tauObj.HitObject.Angle,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
                 });
