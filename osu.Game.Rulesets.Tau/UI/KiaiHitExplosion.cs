@@ -21,8 +21,9 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public KiaiHitExplosion(DrawableHitObject judgedObject, bool isSmall = false)
         {
-            Height = 10;
-            Width = 10;
+            Height = 16;
+            Width = 16;
+            RelativePositionAxes = Axes.Both;
 
             // scale roughly in-line with visual appearance of notes
             Scale = new Vector2(1f, 0.5f);

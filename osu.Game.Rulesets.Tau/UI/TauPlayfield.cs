@@ -156,7 +156,7 @@ namespace osu.Game.Rulesets.Tau.UI
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
                 kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
                 {
-                    Position = new Vector2(-(215 * (float)Math.Cos(a)), -(215 * (float)Math.Sin(a))),
+                    Position = new Vector2(-(.475f * (float)Math.Cos(a)), -(.475f * (float)Math.Sin(a))),
                     Rotation = tauObj.Box.Rotation,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
