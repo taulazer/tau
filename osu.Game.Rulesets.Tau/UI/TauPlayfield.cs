@@ -75,8 +75,6 @@ namespace osu.Game.Rulesets.Tau.UI
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Masking = true,
-                            /* FillMode = FillMode.Fit,
-                            FillAspectRatio = 1, // 1:1 Aspect ratio to get a perfect circle */
                             BorderThickness = 3,
                             BorderColour = Color4.White,
                             Child = new Box
