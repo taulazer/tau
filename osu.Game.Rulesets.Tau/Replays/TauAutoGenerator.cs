@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// </summary>
         private int buttonIndex;
 
-        private const float offset = (768 / 2f) * TauPlayfield.UNIVERSAL_SCALE;
+        private const float offset = 768 / 2f;
         private const float cursorDistance = 250;
 
         public override Replay Generate()

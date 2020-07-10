@@ -48,17 +48,18 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            RelativePositionAxes = Axes.Both;
-
+            RelativeSizeAxes = Axes.Both;
+            Size = Vector2.One;
             AddRangeInternal(new Drawable[]
                 {
                     Box = new Box
                     {
                         EdgeSmoothness = new Vector2(1f),
-                        RelativeSizeAxes = Axes.Both,
+                        //RelativeSizeAxes = Axes.Both,
+                        RelativePositionAxes = Axes.Both,
                         Origin = Anchor.Centre,
                         Anchor = Anchor.Centre,
-                        Alpha = 0.05f
+                        Alpha = 0.05f,
                     },
                     IntersectArea = new Box
                     {
@@ -73,7 +74,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             );
 
             Box.Rotation = hitObject.Angle;
-
             Position = Vector2.Zero;
         }
 
@@ -83,7 +83,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void load(TauRulesetConfigManager config)
         {
             config?.BindWith(TauRulesetSettings.BeatSize, size);
-            size.BindValueChanged(value => this.Size = new Vector2(value.NewValue), true);
+            size.BindValueChanged(value => Box.Size = new Vector2(value.NewValue), true);
         }
 
         protected override void UpdateInitialTransforms()
@@ -93,7 +93,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             var a = b *= (float)(Math.PI / 180);
 
             Box.FadeIn(HitObject.TimeFadeIn);
-            this.MoveTo(new Vector2(-(TauPlayfield.UNIVERSAL_SCALE * 0.8f * (float)Math.Cos(a)), -(TauPlayfield.UNIVERSAL_SCALE * 0.8f * (float)Math.Sin(a))), HitObject.TimePreempt);
+            //Box.MoveToY(-.5f, HitObject.TimePreempt);
+            Box.MoveTo(new Vector2(-(0.5f * (float)Math.Cos(a)), -(.5f * (float)Math.Sin(a))), HitObject.TimePreempt);
+
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -142,10 +144,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     var b = HitObject.Angle;
                     var a = b *= (float)(Math.PI / 180);
 
-                    Box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
+                    /* Box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
                        .MoveToOffset(new Vector2(-(50 * (float)Math.Cos(a)), -(50 * (float)Math.Sin(a))), time_fade_hit, Easing.OutCubic)
-                       .FadeOut(time_fade_hit);
+                       .FadeOut(time_fade_hit); */
 
                     this.FadeOut(time_fade_hit);
 
@@ -155,10 +157,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     var c = HitObject.Angle;
                     var d = c *= (float)(Math.PI / 180);
 
-                    Box.ScaleTo(0.5f, time_fade_miss, Easing.InCubic)
+                    /* Box.ScaleTo(0.5f, time_fade_miss, Easing.InCubic)
                        .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
                        .MoveToOffset(new Vector2(-(50 * (float)Math.Cos(d)), -(50 * (float)Math.Sin(d))), time_fade_hit, Easing.OutCubic)
-                       .FadeOut(time_fade_miss);
+                       .FadeOut(time_fade_miss); */
 
                     this.FadeOut(time_fade_miss);
 

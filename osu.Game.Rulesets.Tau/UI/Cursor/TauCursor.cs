@@ -63,7 +63,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     Origin = Anchor.Centre,
                     FillMode = FillMode.Fit,
                     FillAspectRatio = 1, // 1:1 Aspect Ratio.
-                    Size = new Vector2(0.6f),
                     Children = new Drawable[]
                     {
                         HitReceptor = new Box
@@ -134,7 +133,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                             Masking = true,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Size = new Vector2(0.6f),
                             Children = new Drawable[]
                             {
                                 new CircularProgress
