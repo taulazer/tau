@@ -147,7 +147,7 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
-                Position = new Vector2(-(.55f * (float)Math.Cos(a)), -(.55f * (float)Math.Sin(a))),
+                Position = new Vector2(-(.6f * (float)Math.Cos(a)), -(.6f * (float)Math.Sin(a))),
                 Rotation = tauObj.Box.Rotation + 90,
             };
 

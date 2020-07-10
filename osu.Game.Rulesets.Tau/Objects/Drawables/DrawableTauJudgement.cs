@@ -22,6 +22,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             : base(result, judgedObject)
         {
             RelativePositionAxes = Axes.Both;
+            Scale = new Vector2(1.66f);
         }
 
         [BackgroundDependencyLoader]
