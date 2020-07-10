@@ -22,7 +22,6 @@ namespace osu.Game.Rulesets.Tau.Objects
         public double TimeFadeIn = 400;
 
         public float Angle { get; set; }
-        public Vector2 PositionToEnd { get; set; }
 
         public virtual bool NewCombo { get; set; }
 
@@ -64,7 +63,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
-            TimePreempt = (float) BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
+            TimePreempt = (float)BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
             TimeFadeIn = 100;
         }
     }
