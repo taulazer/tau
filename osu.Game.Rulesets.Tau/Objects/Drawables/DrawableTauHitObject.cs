@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                                 RelativeSizeAxes= Axes.Both
                             },
                             IntersectArea = new Container{
-                                Size = new Vector2(10),
+                                Size = new Vector2(16),
                                 RelativeSizeAxes = Axes.None,
                                 Origin = Anchor.Centre,
                                 Anchor = Anchor.Centre,
@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Position = Vector2.Zero;
         }
 
-        private readonly Bindable<float> size = new Bindable<float>(10); // Change as you see fit.
+        private readonly Bindable<float> size = new Bindable<float>(16); // Change as you see fit.
 
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)

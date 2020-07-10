@@ -59,8 +59,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     Colour = Color4.Black,
                     RelativeSizeAxes = Axes.Both,
-                    /* FillAspectRatio = 1,
-                    FillMode = FillMode.Fit, */
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
