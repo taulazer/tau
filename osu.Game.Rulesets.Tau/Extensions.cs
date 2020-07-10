@@ -10,9 +10,7 @@ namespace osu.Game.Rulesets.Tau
     public static class Extensions
     {
         public static Vector2 GetCircularPosition(float distance, float angle)
-        {
-            return new Vector2(-(distance * (float)Math.Cos((angle + 90f) * (float)(Math.PI / 180))), -(distance * (float)Math.Sin((angle + 90f) * (float)(Math.PI / 180))));
-        }
+            => new Vector2(-(distance * (float)Math.Cos((angle + 90f) * (float)(Math.PI / 180))), -(distance * (float)Math.Sin((angle + 90f) * (float)(Math.PI / 180))));
 
         public static float GetDegreesFromPosition(this Vector2 target, Vector2 self)
         {
