@@ -23,6 +23,11 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// </summary>
         private const double reactionTime = 200;
 
+        /// <summary>
+        /// The "release delay" in ms between hitting an action then releasing it
+        /// </summary>
+        private const double releaseDelay = 20;
+
         public TauAutoGenerator(IBeatmap beatmap)
             : base(beatmap)
         {
@@ -53,6 +58,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                 {
                     case HardBeat _:
                         Replay.Frames.Add(new TauReplayFrame(h.StartTime, (Replay.Frames.Last() as TauReplayFrame).Position, TauAction.HardButton));
+                        Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, (Replay.Frames.Last() as TauReplayFrame).Position));
                         break;
 
                     case Beat _:
@@ -64,6 +70,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                             buttonIndex = (int)TauAction.LeftButton;
                         }
                         Replay.Frames.Add(new TauReplayFrame(h.StartTime, Extensions.GetCircularPosition(cursorDistance, h.Angle) + new Vector2(offset), (TauAction)(buttonIndex++ % 2)));
+                        Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, Extensions.GetCircularPosition(cursorDistance, h.Angle) + new Vector2(offset)));
                         prevAngle = h.Angle;
                         break;
                 }
