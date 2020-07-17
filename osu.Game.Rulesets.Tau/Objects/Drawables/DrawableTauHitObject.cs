@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// <summary>
         /// A list of keys which can result in hits for this HitObject.
         /// </summary>
-        public TauAction[] HitActions { get; set; } = new[]
+        public virtual TauAction[] HitActions { get; set; } = new[]
         {
             TauAction.RightButton,
             TauAction.LeftButton,
