@@ -12,6 +12,7 @@ using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
@@ -146,24 +147,23 @@ namespace osu.Game.Rulesets.Tau.UI
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
             };
-
             switch (judgedObject)
             {
-                case DrawableTauHitObject tauObj:
-                    explosion.Position = Extensions.GetCircularPosition(.6f, tauObj.HitObject.Angle);
-                    explosion.Rotation = tauObj.HitObject.Angle;
+                case DrawableBeat beat:
+                    var angle = beat.HitObject.Angle;
+                    explosion.Position = Extensions.GetCircularPosition(.6f, angle);
+                    explosion.Rotation = angle;
                     if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
                         kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
                         {
-                            Position = Extensions.GetCircularPosition(.475f, tauObj.HitObject.Angle),
-                            Rotation = tauObj.HitObject.Angle,
+                            Position = Extensions.GetCircularPosition(.475f, angle),
+                            Rotation = angle,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre
                         });
                     break;
             }
             judgementLayer.Add(explosion);
-
         }
 
         private class VisualisationContainer : BeatSyncedContainer

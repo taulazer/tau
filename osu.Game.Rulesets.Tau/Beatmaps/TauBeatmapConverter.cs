@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 default:
                     if (isHard)
-                        return new TauHardBeat
+                        return new HardBeat
                         {
                             Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
                             StartTime = original.StartTime,
@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                             ComboOffset = comboData?.ComboOffset ?? 0,
                         }.Yield();
                     else
-                        return new TauHitObject
+                        return new Beat
                         {
                             Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
                             StartTime = original.StartTime,
