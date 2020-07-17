@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                 if (tauHit.HitObject is IHasDuration hasEnd && time > hasEnd.EndTime || tauHit.IsHit)
                     continue;
 
-                if (tauHit is DrawableTauHitObject)
+                if (tauHit is DrawableBeat)
                 {
                     Debug.Assert(tauHit.HitObject.HitWindows != null);
 
