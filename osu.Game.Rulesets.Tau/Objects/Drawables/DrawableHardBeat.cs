@@ -19,22 +19,12 @@ using osu.Framework.Bindables;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableHardBeat : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
+    public class DrawableHardBeat : DrawableTauHitObject, IKeyBindingHandler<TauAction>
     {
-        /// <summary>
-        /// A list of keys which can result in hits for this HitObject.
-        /// </summary>
-        public TauAction[] HitActions { get; set; } = new[]
+        public override TauAction[] HitActions { get; set; } = new[]
         {
             TauAction.HardButton
         };
-
-        /// <summary>
-        /// The action that caused this <see cref="DrawableHit"/> to be hit.
-        /// </summary>
-        public TauAction? HitAction { get; private set; }
-
-        protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
 
         public DrawableHardBeat(TauHitObject hitObject)
             : base(hitObject)
