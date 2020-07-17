@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Linq;
 using osu.Game.Beatmaps;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Replays;
@@ -44,22 +45,29 @@ namespace osu.Game.Rulesets.Tau.Replays
             Replay.Frames.Add(new TauReplayFrame(-100000, new Vector2(offset, offset + 150)));
             Replay.Frames.Add(new TauReplayFrame(Beatmap.HitObjects[0].StartTime - reactionTime, new Vector2(offset, offset + 150)));
 
+            float prevAngle = 0;
             for (int i = 0; i < Beatmap.HitObjects.Count; i++)
             {
                 TauHitObject h = Beatmap.HitObjects[i];
-
-                //Make the cursor stay at the last note's position if there's enough time between the notes
-                if (i > 0 && h.StartTime - Beatmap.HitObjects[i - 1].StartTime > reactionTime)
+                switch (h)
                 {
-                    float prevAngle = Beatmap.HitObjects[i - 1].Angle;
+                    case HardBeat _:
+                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, (Replay.Frames.Last() as TauReplayFrame).Position, TauAction.HardButton));
+                        break;
 
-                    Replay.Frames.Add(new TauReplayFrame(h.StartTime - reactionTime, Extensions.GetCircularPosition(cursorDistance, prevAngle) + new Vector2(offset)));
+                    case Beat _:
+                        //Make the cursor stay at the last note's position if there's enough time between the notes
+                        if (i > 0 && h.StartTime - Beatmap.HitObjects[i - 1].StartTime > reactionTime)
+                        {
+                            Replay.Frames.Add(new TauReplayFrame(h.StartTime - reactionTime, Extensions.GetCircularPosition(cursorDistance, prevAngle) + new Vector2(offset)));
 
-                    buttonIndex = (int)TauAction.LeftButton;
+                            buttonIndex = (int)TauAction.LeftButton;
+                        }
+                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, Extensions.GetCircularPosition(cursorDistance, h.Angle) + new Vector2(offset), (TauAction)(buttonIndex++ % 2)));
+                        prevAngle = h.Angle;
+                        break;
                 }
-                Replay.Frames.Add(new TauReplayFrame(h.StartTime, Extensions.GetCircularPosition(cursorDistance, h.Angle) + new Vector2(offset), (TauAction)(buttonIndex++ % 2)));
             }
-
             return Replay;
         }
     }
