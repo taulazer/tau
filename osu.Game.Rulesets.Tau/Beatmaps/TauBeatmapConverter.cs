@@ -8,6 +8,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Audio;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Beatmaps
@@ -27,18 +28,28 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         {
             Vector2 position = ((IHasPosition)original).Position;
             var comboData = original as IHasCombo;
+            bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
 
             switch (original)
             {
                 default:
-                    return new TauHitObject
-                    {
-                        Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
-                        StartTime = original.StartTime,
-                        Angle = position.GetHitObjectAngle(),
-                        NewCombo = comboData?.NewCombo ?? false,
-                        ComboOffset = comboData?.ComboOffset ?? 0,
-                    }.Yield();
+                    if (isHard)
+                        return new TauHardBeat
+                        {
+                            Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
+                            StartTime = original.StartTime,
+                            NewCombo = comboData?.NewCombo ?? false,
+                            ComboOffset = comboData?.ComboOffset ?? 0,
+                        }.Yield();
+                    else
+                        return new TauHitObject
+                        {
+                            Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
+                            StartTime = original.StartTime,
+                            Angle = position.GetHitObjectAngle(),
+                            NewCombo = comboData?.NewCombo ?? false,
+                            ComboOffset = comboData?.ComboOffset ?? 0,
+                        }.Yield();
             }
         }
 

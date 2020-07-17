@@ -11,7 +11,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class TauBigBeats : TauHitObject
+    public class TauHardBeat : TauHitObject
     {
 
     }

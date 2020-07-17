@@ -34,11 +34,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// </summary>
         public TauAction? HitAction { get; private set; }
 
-        private bool validActionPressed;
-
         protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
-
-        private CircularContainer ring;
 
         public DrawableTauHardBeat(TauHitObject hitObject)
             : base(hitObject)
@@ -46,19 +42,20 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
             RelativeSizeAxes = Axes.Both;
-            Size = Vector2.One;
+            Size = Vector2.Zero;
+            Alpha = 0f;
             AddRangeInternal(new Drawable[]
                 {
-                    ring = new CircularContainer
+                    new CircularContainer
                     {
-                        Size = new Vector2(0),
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1),
                         Masking=true,
                         BorderThickness = 5,
                         BorderColour = Color4.White,
-                        RelativePositionAxes = Axes.Both,
                         Origin = Anchor.Centre,
                         Anchor = Anchor.Centre,
-                        Alpha = 0.05f,
+                        Alpha = 1f,
                         Children = new Drawable[]{
                             new Box{
                                 RelativeSizeAxes= Axes.Both,
@@ -76,14 +73,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.UpdateInitialTransforms();
 
-            ring.FadeIn(HitObject.TimeFadeIn);
-            ring.ResizeTo(1, HitObject.TimePreempt)
+            this.FadeIn(HitObject.TimeFadeIn);
+            this.ResizeTo(1, HitObject.TimePreempt);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
             Debug.Assert(HitObject.HitWindows != null);
-
 
             if (!userTriggered)
             {
@@ -119,8 +115,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     var b = HitObject.Angle;
                     var a = b *= (float)(Math.PI / 180);
 
-                    ring.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
-                       .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
+                    this.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
+                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
                        .FadeOut(time_fade_hit);
 
                     this.FadeOut(time_fade_hit);
@@ -131,7 +127,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     var c = HitObject.Angle;
                     var d = c *= (float)(Math.PI / 180);
 
-                    ring.FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
+                    this.FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
                        .ResizeTo(1.1f, time_fade_hit, Easing.OutCubic)
                        .FadeOut(time_fade_miss);
 

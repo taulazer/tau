@@ -126,37 +126,44 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             base.Add(h);
 
-            var obj = (DrawableTauHitObject)h;
-            obj.CheckValidation = CheckIfWeCanValidate;
+            switch (h)
+            {
+                case DrawableTauHitObject _:
+                    var obj = (DrawableTauHitObject)h;
+                    obj.CheckValidation = CheckIfWeCanValidate;
+                    break;
+            }
 
-            obj.OnNewResult += onNewResult;
+            h.OnNewResult += onNewResult;
         }
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
-
-            var tauObj = (DrawableTauHitObject)judgedObject;
-
-            DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)
+            DrawableTauJudgement explosion = new DrawableTauJudgement(result, judgedObject)
             {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
-                Position = Extensions.GetCircularPosition(.6f, tauObj.HitObject.Angle),
-                Rotation = tauObj.HitObject.Angle,
             };
 
+            switch (judgedObject)
+            {
+                case DrawableTauHitObject tauObj:
+                    explosion.Position = Extensions.GetCircularPosition(.6f, tauObj.HitObject.Angle);
+                    explosion.Rotation = tauObj.HitObject.Angle;
+                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
+                        {
+                            Position = Extensions.GetCircularPosition(.475f, tauObj.HitObject.Angle),
+                            Rotation = tauObj.HitObject.Angle,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre
+                        });
+                    break;
+            }
             judgementLayer.Add(explosion);
 
-            if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
-                {
-                    Position = Extensions.GetCircularPosition(.475f, tauObj.HitObject.Angle),
-                    Rotation = tauObj.HitObject.Angle,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
-                });
         }
 
         private class VisualisationContainer : BeatSyncedContainer
