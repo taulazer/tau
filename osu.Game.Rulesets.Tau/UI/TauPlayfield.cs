@@ -161,7 +161,6 @@ namespace osu.Game.Rulesets.Tau.UI
                             Origin = Anchor.Centre
                         });
                     break;
-
             }
             judgementLayer.Add(explosion);
         }
