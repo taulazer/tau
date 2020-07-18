@@ -55,8 +55,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     },
                 }
             );
+            Colour = hitObject.Feign ? Color4.Aqua : Color4.White;
 
-            Rotation = hitObject.Angle;
+            Rotation = hitObject.Angle + (hitObject.Feign ? 180 : 0);
             Position = Vector2.Zero;
         }
 
@@ -75,6 +76,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             Box.FadeIn(HitObject.TimeFadeIn);
             Box.MoveToY(-0.485f, HitObject.TimePreempt);
+
+            if ((HitObject as Beat).Feign)
+                this.Delay(HitObject.TimePreempt / 4).RotateTo(Rotation + 180, 200, Easing.OutPow10).FadeColour(Color4.White, 200, Easing.OutPow10);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
