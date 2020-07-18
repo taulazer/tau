@@ -78,7 +78,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if ((HitObject as Beat).Feign)
             {
                 Box.MoveToY(.2425f, HitObject.TimePreempt / 4).Then().MoveToY(-.2425f, HitObject.TimePreempt / 4).Then().MoveToY(-0.485f, HitObject.TimePreempt / 2);
-                this.Delay(HitObject.TimePreempt / 4).FadeColour(Color4.White, HitObject.TimePreempt / 4);
+                this.Delay(HitObject.TimePreempt / 4).FadeColour(Color4.White, HitObject.TimePreempt / 8);
             }
             else
                 Box.MoveToY(-0.485f, HitObject.TimePreempt);
