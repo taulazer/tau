@@ -10,18 +10,16 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Scoring;
-using osuTK;
-
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class TauHitObject : HitObject, IHasComboInformation
+    public abstract class TauHitObject : HitObject, IHasComboInformation
     {
         public override Judgement CreateJudgement() => new TauJudgement();
 
         public double TimePreempt = 600;
         public double TimeFadeIn = 400;
 
-        public float Angle { get; set; }
+        public float Angle { get; set; } = 0;
 
         public virtual bool NewCombo { get; set; }
 

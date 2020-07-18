@@ -31,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             switch (original)
             {
                 default:
-                    return new TauHitObject
+                    return new Beat
                     {
                         Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
                         StartTime = original.StartTime,
