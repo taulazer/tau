@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public abstract class DrawableTauHitObject : DrawableHitObject<TauHitObject>
     {
-        public DrawableTauHitObject(TauHitObject obj)
+        protected DrawableTauHitObject(TauHitObject obj)
             : base(obj)
         {
         }
@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// <summary>
         /// A list of keys which can result in hits for this HitObject.
         /// </summary>
-        public virtual TauAction[] HitActions { get; set; } = new[]
+        protected virtual TauAction[] HitActions { get; set; } =
         {
             TauAction.RightButton,
             TauAction.LeftButton,
@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// <summary>
         /// The action that caused this <see cref="DrawableHit"/> to be hit.
         /// </summary>
-        public TauAction? HitAction { get; protected set; }
+        protected TauAction? HitAction { get; set; }
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
     }

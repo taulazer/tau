@@ -47,6 +47,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             {
                 case DrawableBeat beat:
                     return beat.IntersectArea.ScreenSpaceDrawQuad.AABBFloat.IntersectsWith(defaultCursor.HitReceptor.ScreenSpaceDrawQuad.AABBFloat);
+
                 default:
                     return true;
             }
@@ -77,7 +78,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         HitReceptor = new Box
                         {
                             Height = 50,
-                            Width = (float)convertValue(cs)*1.6f,
+                            Width = (float)convertValue(cs) * 1.6f,
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Alpha = 0,
@@ -92,7 +93,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 const double d = 25;
 
                 // Thank you AlFas for this code.
-                double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
+                double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
 
                 AddInternal(new GameplayCursor(cs));
 
@@ -171,7 +172,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     const double d = 0.0605;
 
                     // Thank you AlFas for this code.
-                    double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
+                    double convertValue(double value) => c + (d - c) * (value - a) / (b - a);
                 }
             }
 

@@ -10,8 +10,8 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
 using osuTK.Graphics;
@@ -123,7 +123,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             private float calculateGap(float value) => Math.Clamp(value, 0, target_clamp) * targetBreakMultiplier;
 
             // lagrange polinominal for (0,0) (0.6,0.4) (1,1) should make a good curve
-            private static float applyAdjustmentCurve(float value) => (0.6f * (value * value)) + (0.4f * value);
+            private static float applyAdjustmentCurve(float value) => 0.6f * (value * value) + 0.4f * value;
 
             protected override void Update()
             {

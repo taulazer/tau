@@ -16,6 +16,7 @@ namespace osu.Game.Rulesets.Tau.Tests
             using (DesktopGameHost host = Host.GetSuitableHost(@"osu", true))
             {
                 host.Run(new OsuTestBrowser());
+
                 return 0;
             }
         }

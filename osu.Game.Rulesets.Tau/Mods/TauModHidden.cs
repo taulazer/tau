@@ -7,7 +7,6 @@ using System.Linq;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 
@@ -20,12 +19,12 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public override Type[] IncompatibleMods => new[] { typeof(TauModAutoHold) };
 
-        private const double fade_in_duration_multiplier = 0.4;
-        private const double fade_out_duration_multiplier = 0.3;
+        private const double fadeInDurationMultiplier = 0.4;
+        private const double fadeOutDurationMultiplier = 0.3;
 
         public override void ApplyToDrawableHitObjects(IEnumerable<DrawableHitObject> drawables)
         {
-            static void adjustFadeIn(TauHitObject h) => h.TimeFadeIn = h.TimePreempt * fade_in_duration_multiplier;
+            static void adjustFadeIn(TauHitObject h) => h.TimeFadeIn = h.TimePreempt * fadeInDurationMultiplier;
 
             foreach (var d in drawables.OfType<DrawableTauHitObject>())
             {
@@ -46,10 +45,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             var h = d.HitObject;
 
             var fadeOutStartTime = h.StartTime - h.TimePreempt + h.TimeFadeIn;
-            var fadeOutDuration = h.TimePreempt * fade_out_duration_multiplier;
-
-            // new duration from completed fade in to end (before fading out)
-            var longFadeDuration = (h as IHasDuration)?.EndTime ?? h.StartTime - fadeOutStartTime;
+            var fadeOutDuration = h.TimePreempt * fadeOutDurationMultiplier;
 
             // future proofing yet again.
             switch (drawable)

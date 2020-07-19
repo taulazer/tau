@@ -49,14 +49,17 @@ namespace osu.Game.Rulesets.Tau.Replays
             Replay.Frames.Add(new TauReplayFrame(Beatmap.HitObjects[0].StartTime - reactionTime, new Vector2(offset, offset + 150)));
 
             float prevAngle = 0;
+
             for (int i = 0; i < Beatmap.HitObjects.Count; i++)
             {
                 TauHitObject h = Beatmap.HitObjects[i];
+
                 switch (h)
                 {
                     case HardBeat _:
-                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, (Replay.Frames.Last() as TauReplayFrame).Position, TauAction.HardButton));
-                        Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, (Replay.Frames.Last() as TauReplayFrame).Position));
+                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, ((TauReplayFrame)Replay.Frames.Last()).Position, TauAction.HardButton));
+                        Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, ((TauReplayFrame)Replay.Frames.Last()).Position));
+
                         break;
 
                     case Beat _:
@@ -67,12 +70,15 @@ namespace osu.Game.Rulesets.Tau.Replays
 
                             buttonIndex = (int)TauAction.LeftButton;
                         }
+
                         Replay.Frames.Add(new TauReplayFrame(h.StartTime, Extensions.GetCircularPosition(cursorDistance, h.Angle) + new Vector2(offset), (TauAction)(buttonIndex++ % 2)));
                         Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, Extensions.GetCircularPosition(cursorDistance, h.Angle) + new Vector2(offset)));
                         prevAngle = h.Angle;
+
                         break;
                 }
             }
+
             return Replay;
         }
     }
