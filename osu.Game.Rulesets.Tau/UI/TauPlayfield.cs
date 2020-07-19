@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
@@ -12,7 +11,6 @@ using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
@@ -127,20 +125,22 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             base.Add(h);
 
-            var obj = (DrawableTauHitObject)h;
-            obj.CheckValidation = CheckIfWeCanValidate;
+            switch (h)
+            {
+                case DrawableTauHitObject _:
+                    var obj = (DrawableTauHitObject)h;
+                    obj.CheckValidation = CheckIfWeCanValidate;
+                    break;
+            }
 
-            obj.OnNewResult += onNewResult;
+            h.OnNewResult += onNewResult;
         }
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
-
-            var tauObj = (DrawableTauHitObject)judgedObject;
-
-            DrawableTauJudgement explosion = new DrawableTauJudgement(result, tauObj)
+            DrawableTauJudgement explosion = new DrawableTauJudgement(result, judgedObject)
             {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
@@ -153,13 +153,26 @@ namespace osu.Game.Rulesets.Tau.UI
                     explosion.Rotation = angle;
 
                     if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject.AccentColour.Value)
                         {
-                            Position = Extensions.GetCircularPosition(.475f, angle),
-                            Rotation = angle,
+                            Position = Extensions.GetCircularPosition(.5f, angle),
+                            Angle = angle,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre
                         });
+
+                    break;
+
+                case DrawableHardBeat hardBeat:
+                    explosion.Position = Extensions.GetCircularPosition(.6f, 0);
+
+                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject.AccentColour.Value, true)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre
+                        });
+
                     break;
             }
             judgementLayer.Add(explosion);

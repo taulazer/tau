@@ -7,6 +7,7 @@ using osu.Framework.Graphics;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
@@ -18,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private SkinnableSprite lighting;
         private Bindable<Color4> lightingColour;
 
-        public DrawableTauJudgement(JudgementResult result, DrawableTauHitObject judgedObject)
+        public DrawableTauJudgement(JudgementResult result, DrawableHitObject judgedObject)
             : base(result, judgedObject)
         {
             RelativePositionAxes = Axes.Both;

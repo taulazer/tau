@@ -21,6 +21,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         {
             bool requiresHold = false;
             bool requiresHit = false;
+            bool requiresHardHit = false;
 
             const float relax_leniency = 3;
 
@@ -45,12 +46,20 @@ namespace osu.Game.Rulesets.Tau.Mods
                     if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit))
                         requiresHit = true;
                 }
+                else if (tauHit is DrawableHardBeat)
+                {
+                    if (tauHit.HitObject.HitWindows.CanBeHit(relativetime))
+                    {
+                        requiresHit = true;
+                        requiresHardHit = true;
+                    }
+                }
             }
 
             if (requiresHit)
             {
-                addAction(false);
-                addAction(true);
+                addAction(false, requiresHardHit);
+                addAction(true, requiresHardHit);
             }
 
             addAction(requiresHold);
@@ -61,7 +70,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         private TauInputManager tauInputManager;
 
-        private void addAction(bool hitting)
+        private void addAction(bool hitting, bool hardhit = false)
         {
             if (wasHit == hitting)
                 return;
@@ -75,8 +84,15 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             if (hitting)
             {
-                state.PressedActions.Add(wasLeft ? TauAction.LeftButton : TauAction.RightButton);
-                wasLeft = !wasLeft;
+                if (hardhit)
+                {
+                    state.PressedActions.Add(TauAction.HardButton);
+                }
+                else
+                {
+                    state.PressedActions.Add(wasLeft ? TauAction.LeftButton : TauAction.RightButton);
+                    wasLeft = !wasLeft;
+                }
             }
 
             state.Apply(tauInputManager.CurrentState, tauInputManager);

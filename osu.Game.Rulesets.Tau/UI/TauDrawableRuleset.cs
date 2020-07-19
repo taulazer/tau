@@ -32,8 +32,12 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             switch (h)
             {
+                case HardBeat _:
+                    return new DrawableHardBeat(h);
+
                 case Beat beat:
                     return new DrawableBeat(beat);
+
                 default:
                     return null;
             }
