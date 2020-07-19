@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     particles.Add(new Box
                     {
                         RelativePositionAxes = Axes.Both,
-                        Position = Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 0.15f + 0.5f, (float)rng.NextDouble() * 360f),
+                        Position = Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 0.15f) + 0.5f, (float)rng.NextDouble() * 360f),
                         Rotation = (float)rng.NextDouble() * 360f,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.BottomCentre,
@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     particles.Add(new Box
                     {
                         RelativePositionAxes = Axes.Both,
-                        Position = Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 0.15f, (float)rng.NextDouble() / 10 * 10 + (Angle - 20)),
+                        Position = Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 0.15f, ((float)rng.NextDouble() / 10 * 10) + (Angle - 20)),
                         Rotation = (float)rng.NextDouble() * 360f,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.BottomCentre,
@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
                 if (circular)
                 {
-                    particle.MoveTo(Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 2f + 0.5f, particle.Position.GetDegreesFromPosition(Vector2.Zero)), duration, Easing.OutQuint)
+                    particle.MoveTo(Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f, particle.Position.GetDegreesFromPosition(Vector2.Zero)), duration, Easing.OutQuint)
                             .ScaleTo(new Vector2(rng.Next(1, 2)), duration, Easing.OutQuint)
                             .FadeOut(duration, Easing.OutQuint);
                 }
@@ -93,7 +93,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     {
                         float diff = bigNumber - smallNumber;
 
-                        return (float)rng.NextDouble() * diff + smallNumber;
+                        return ((float)rng.NextDouble() * diff) + smallNumber;
                     }
                 }
 
