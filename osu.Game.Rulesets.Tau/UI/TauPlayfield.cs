@@ -17,6 +17,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Cursor;
+using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Menu;
 using osuTK;
@@ -180,7 +181,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private class VisualisationContainer : BeatSyncedContainer
         {
-            private LogoVisualisation visualisation;
+            private PlayfieldVisualisation visualisation;
             private bool firstKiaiBeat = true;
             private int kiaiBeatIndex;
             private readonly Bindable<bool> ShowVisualisation = new Bindable<bool>(true);
@@ -192,7 +193,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
 
-                Child = visualisation = new LogoVisualisation
+                Child = visualisation = new PlayfieldVisualisation
                 {
                     RelativeSizeAxes = Axes.Both,
                     FillMode = FillMode.Fit,
