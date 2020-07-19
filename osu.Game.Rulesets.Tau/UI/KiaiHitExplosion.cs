@@ -99,6 +99,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 }
 
                 particle.Expire(true);
+                this.Delay(duration).Expire(true);
             }
         }
     }
