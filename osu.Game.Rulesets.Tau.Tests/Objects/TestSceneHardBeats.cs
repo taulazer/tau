@@ -10,7 +10,6 @@ using osu.Game.Tests.Visual;
 using osuTK;
 using System.Linq;
 
-
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
