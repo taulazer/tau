@@ -22,6 +22,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.HardButton
         };
 
+        private CircularContainer container;
+
         public DrawableHardBeat(TauHitObject hitObject)
             : base(hitObject)
         {
@@ -32,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Alpha = 0f;
             AddRangeInternal(new Drawable[]
                 {
-                    new CircularContainer
+                    container = new CircularContainer
                     {
                         RelativeSizeAxes = Axes.Both,
                         Size = new Vector2(1),
@@ -52,6 +54,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     },
                 }
             );
+
             Position = Vector2.Zero;
         }
 
@@ -101,11 +104,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     var b = HitObject.Angle;
                     var a = b *= (float)(Math.PI / 180);
 
-                    this.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
-                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
-                       .FadeOut(time_fade_hit);
+                    this.ScaleTo(1.25f, time_fade_hit, Easing.OutQuint)
+                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
+                        .FadeOut(time_fade_hit);
 
-                    this.FadeOut(time_fade_hit);
+                    container.TransformTo(nameof(container.BorderThickness), 0f, time_fade_hit, Easing.OutQuint);
 
                     break;
 
@@ -114,10 +117,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     var d = c *= (float)(Math.PI / 180);
 
                     this.FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
-                       .ResizeTo(1.1f, time_fade_hit, Easing.OutCubic)
-                       .FadeOut(time_fade_miss);
+                        .ResizeTo(1.1f, time_fade_hit, Easing.OutQuint)
+                        .FadeOut(time_fade_miss);
 
-                    this.FadeOut(time_fade_miss);
+                    container.TransformTo(nameof(container.BorderThickness), 0f, time_fade_miss, Easing.OutQuint);
 
                     break;
             }

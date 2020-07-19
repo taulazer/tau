@@ -160,6 +160,10 @@ namespace osu.Game.Rulesets.Tau.UI
                             Origin = Anchor.Centre
                         });
                     break;
+
+                case DrawableHardBeat hardBeat:
+                    explosion.Position = Extensions.GetCircularPosition(.6f, 0);
+                    break;
             }
             judgementLayer.Add(explosion);
         }

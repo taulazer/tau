@@ -119,9 +119,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Hit:
-                    Box.ScaleTo(2f, time_fade_hit, Easing.OutCubic)
-                       .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutCubic)
-                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutCubic)
+                    Box.ScaleTo(2f, time_fade_hit, Easing.OutQuint)
+                       .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
+                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
                        .FadeOut(time_fade_hit);
 
                     this.FadeOut(time_fade_hit);
@@ -129,9 +129,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Miss:
-                    Box.ScaleTo(0.5f, time_fade_miss, Easing.InCubic)
+                    Box.ScaleTo(0.5f, time_fade_miss, Easing.InQuint)
                        .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
-                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutCubic)
+                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
                        .FadeOut(time_fade_miss);
 
                     this.FadeOut(time_fade_miss);
