@@ -13,6 +13,7 @@ namespace osu.Game.Rulesets.Tau.UI
 {
     public class KiaiHitExplosion : CompositeDrawable
     {
+        public override bool RemoveWhenNotAlive => true;
         private List<Drawable> particles;
         private bool circular;
 
