@@ -4,8 +4,6 @@
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
-using osuTK;
-using System;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
