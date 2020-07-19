@@ -151,18 +151,28 @@ namespace osu.Game.Rulesets.Tau.UI
                     var angle = beat.HitObject.Angle;
                     explosion.Position = Extensions.GetCircularPosition(.6f, angle);
                     explosion.Rotation = angle;
+
                     if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject.AccentColour.Value)
                         {
-                            Position = Extensions.GetCircularPosition(.475f, angle),
-                            Rotation = angle,
+                            Position = Extensions.GetCircularPosition(.5f, angle),
+                            Angle = angle,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre
                         });
+
                     break;
 
                 case DrawableHardBeat hardBeat:
                     explosion.Position = Extensions.GetCircularPosition(.6f, 0);
+
+                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject.AccentColour.Value, true)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre
+                        });
+
                     break;
             }
             judgementLayer.Add(explosion);
