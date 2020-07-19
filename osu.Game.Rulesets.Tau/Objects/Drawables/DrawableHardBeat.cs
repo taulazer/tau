@@ -108,7 +108,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_hit);
 
-                    container.TransformTo(nameof(container.BorderThickness), 0f, time_fade_hit, Easing.OutQuint);
+                    container.TransformTo(nameof(container.BorderThickness), 0f, time_fade_hit);
 
                     break;
 
