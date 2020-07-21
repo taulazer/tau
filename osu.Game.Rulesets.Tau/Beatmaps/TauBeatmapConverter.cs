@@ -6,13 +6,12 @@ using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Objects;
-using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Beatmaps
 {
     public class TauBeatmapConverter : BeatmapConverter<TauHitObject>
     {
-        public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition);
+        public override bool CanConvert() => true;
 
         public TauBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -21,7 +20,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         protected override IEnumerable<TauHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap)
         {
-            Vector2 position = ((IHasPosition)original).Position;
+            var position = ((IHasPosition)original).Position;
             var comboData = original as IHasCombo;
             bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
 

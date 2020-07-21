@@ -9,11 +9,13 @@ using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Configuration;
 using osu.Game.Rulesets.Difficulty;
+using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Edit;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
@@ -126,5 +128,7 @@ namespace osu.Game.Rulesets.Tau
         };
 
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
+
+        public override HitObjectComposer CreateHitObjectComposer() => new TauHitObjectComposer(this);
     }
 }
