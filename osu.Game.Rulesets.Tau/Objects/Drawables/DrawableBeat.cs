@@ -16,7 +16,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableBeat : DrawableTauHitObject, IKeyBindingHandler<TauAction>
     {
-        public Container Box;
         public Container IntersectArea;
 
         private bool validActionPressed;
@@ -24,39 +23,27 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableBeat(Beat hitObject)
             : base(hitObject)
         {
+            RelativePositionAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            RelativeSizeAxes = Axes.Both;
-            Size = Vector2.One;
 
             AddRangeInternal(new Drawable[]
             {
-                Box = new Container
+                new Box
                 {
-                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both
+                },
+                IntersectArea = new Container
+                {
+                    Size = new Vector2(16),
+                    RelativeSizeAxes = Axes.None,
                     Origin = Anchor.Centre,
                     Anchor = Anchor.Centre,
-                    Alpha = 0.05f,
-                    Children = new Drawable[]
-                    {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
-                        IntersectArea = new Container
-                        {
-                            Size = new Vector2(16),
-                            RelativeSizeAxes = Axes.None,
-                            Origin = Anchor.Centre,
-                            Anchor = Anchor.Centre,
-                            AlwaysPresent = true
-                        }
-                    }
-                },
+                    AlwaysPresent = true
+                }
             });
 
             Rotation = hitObject.Angle;
-            Position = Vector2.Zero;
         }
 
         private readonly Bindable<float> size = new Bindable<float>(16); // Change as you see fit.
@@ -65,15 +52,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void load(TauRulesetConfigManager config)
         {
             config?.BindWith(TauRulesetSettings.BeatSize, size);
-            size.BindValueChanged(value => Box.Size = new Vector2(value.NewValue), true);
+            size.BindValueChanged(value => Size = new Vector2(value.NewValue), true);
         }
 
         protected override void UpdateInitialTransforms()
         {
             base.UpdateInitialTransforms();
 
-            Box.FadeIn(HitObject.TimeFadeIn);
-            Box.MoveToY(-0.485f, HitObject.TimePreempt);
+            this.FadeIn(HitObject.TimeFadeIn);
+            this.MoveTo(Extensions.GetCircularPosition(0.485f, HitObject.Angle), HitObject.TimePreempt);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -119,22 +106,18 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Hit:
-                    Box.ScaleTo(2f, time_fade_hit, Easing.OutQuint)
-                       .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
-                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
-                       .FadeOut(time_fade_hit);
-
-                    this.FadeOut(time_fade_hit);
+                    this.ScaleTo(2f, time_fade_hit, Easing.OutQuint)
+                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
+                        .MoveToOffset(Extensions.GetCircularPosition(.075f, HitObject.Angle), time_fade_hit, Easing.OutQuint)
+                        .FadeOut(time_fade_hit);
 
                     break;
 
                 case ArmedState.Miss:
-                    Box.ScaleTo(0.5f, time_fade_miss, Easing.InQuint)
-                       .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
-                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
-                       .FadeOut(time_fade_miss);
-
-                    this.FadeOut(time_fade_miss);
+                    this.ScaleTo(0.5f, time_fade_miss, Easing.InQuint)
+                        .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
+                        .MoveToOffset(Extensions.GetCircularPosition(.075f, HitObject.Angle), time_fade_hit, Easing.OutQuint)
+                        .FadeOut(time_fade_miss);
 
                     break;
             }
