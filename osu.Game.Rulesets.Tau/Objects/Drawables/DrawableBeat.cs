@@ -2,18 +2,18 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Diagnostics;
+using System.Linq;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osuTK;
 using osuTK.Graphics;
-using System.Linq;
-using osu.Framework.Allocation;
-using osu.Game.Rulesets.Tau.Configuration;
-using osu.Framework.Bindables;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -31,29 +31,32 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Origin = Anchor.Centre;
             RelativeSizeAxes = Axes.Both;
             Size = Vector2.One;
+
             AddRangeInternal(new Drawable[]
+            {
+                Box = new Container
                 {
-                    Box = new Container
+                    RelativePositionAxes = Axes.Both,
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    Alpha = 0.05f,
+                    Children = new Drawable[]
                     {
-                        RelativePositionAxes = Axes.Both,
-                        Origin = Anchor.Centre,
-                        Anchor = Anchor.Centre,
-                        Alpha = 0.05f,
-                        Children = new Drawable[]{
-                            new Box{
-                                RelativeSizeAxes= Axes.Both
-                            },
-                            IntersectArea = new Container{
-                                Size = new Vector2(16),
-                                RelativeSizeAxes = Axes.None,
-                                Origin = Anchor.Centre,
-                                Anchor = Anchor.Centre,
-                                AlwaysPresent = true
-                            }
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both
+                        },
+                        IntersectArea = new Container
+                        {
+                            Size = new Vector2(16),
+                            RelativeSizeAxes = Axes.None,
+                            Origin = Anchor.Centre,
+                            Anchor = Anchor.Centre,
+                            AlwaysPresent = true
                         }
-                    },
-                }
-            );
+                    }
+                },
+            });
 
             Rotation = hitObject.Angle;
             Position = Vector2.Zero;

@@ -7,19 +7,18 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Framework.Graphics.Shapes;
-using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
-using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.Tau.UI.Components;
+using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
-using osu.Game.Screens.Menu;
 using osuTK;
 using osuTK.Graphics;
 
@@ -28,12 +27,11 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        private Circle playfieldBackground;
-        private TauCursor cursor;
-        private JudgementContainer<DrawableTauJudgement> judgementLayer;
+        private readonly Circle playfieldBackground;
+        private readonly TauCursor cursor;
+        private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
 
-        public const float UNIVERSAL_SCALE = 0.6f;
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
@@ -45,6 +43,7 @@ namespace osu.Game.Rulesets.Tau.UI
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
             Size = new Vector2(768);
+
             AddRangeInternal(new Drawable[]
             {
                 judgementLayer = new JudgementContainer<DrawableTauJudgement>
@@ -131,6 +130,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 case DrawableTauHitObject _:
                     var obj = (DrawableTauHitObject)h;
                     obj.CheckValidation = CheckIfWeCanValidate;
+
                     break;
             }
 
@@ -141,11 +141,13 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
+
             DrawableTauJudgement explosion = new DrawableTauJudgement(result, judgedObject)
             {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
             };
+
             switch (judgedObject)
             {
                 case DrawableBeat beat:
@@ -164,7 +166,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
                     break;
 
-                case DrawableHardBeat hardBeat:
+                case DrawableHardBeat _:
                     explosion.Position = Extensions.GetCircularPosition(.6f, 0);
 
                     if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
@@ -176,6 +178,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
                     break;
             }
+
             judgementLayer.Add(explosion);
         }
 
@@ -184,7 +187,7 @@ namespace osu.Game.Rulesets.Tau.UI
             private PlayfieldVisualisation visualisation;
             private bool firstKiaiBeat = true;
             private int kiaiBeatIndex;
-            private readonly Bindable<bool> ShowVisualisation = new Bindable<bool>(true);
+            private readonly Bindable<bool> showVisualisation = new Bindable<bool>(true);
 
             [BackgroundDependencyLoader(true)]
             private void load(TauRulesetConfigManager settings)
@@ -204,15 +207,15 @@ namespace osu.Game.Rulesets.Tau.UI
                     Colour = Color4.Transparent
                 };
 
-                settings?.BindWith(TauRulesetSettings.ShowVisualizer, ShowVisualisation);
-                ShowVisualisation.BindValueChanged(value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); });
+                settings?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualisation);
+                showVisualisation.BindValueChanged(value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); });
             }
 
             protected override void LoadComplete()
             {
                 base.LoadComplete();
                 visualisation.AccentColour = Color4.White;
-                ShowVisualisation.TriggerChange();
+                showVisualisation.TriggerChange();
             }
 
             protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)

@@ -1,3 +1,7 @@
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
+
+using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -8,7 +12,6 @@ using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Tests.Visual;
 using osuTK;
-using System.Linq;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
@@ -33,7 +36,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
 
             AddStep("Miss Single", () => testSingle());
             AddStep("Hit Single", () => testSingle(true));
-            AddUntilStep("Wait for object despawn", () => !Children.Any(h => (h is DrawableTauHitObject) && (h as DrawableTauHitObject).AllJudged == false));
+            AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject && (h as DrawableTauHitObject).AllJudged == false));
         }
 
         private void testSingle(bool auto = false)

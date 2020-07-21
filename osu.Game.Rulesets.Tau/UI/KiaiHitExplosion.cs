@@ -14,8 +14,8 @@ namespace osu.Game.Rulesets.Tau.UI
     public class KiaiHitExplosion : CompositeDrawable
     {
         public override bool RemoveWhenNotAlive => true;
-        private List<Drawable> particles;
-        private bool circular;
+        private readonly List<Drawable> particles;
+        private readonly bool circular;
 
         /// <summary>
         /// Used whenever circular isn't set to True.
@@ -33,9 +33,9 @@ namespace osu.Game.Rulesets.Tau.UI
 
             if (circular)
             {
-                const int particleCount = 50;
+                const int particle_count = 50;
 
-                for (int i = 0; i < particleCount; i++)
+                for (int i = 0; i < particle_count; i++)
                 {
                     particles.Add(new Box
                     {
@@ -50,9 +50,9 @@ namespace osu.Game.Rulesets.Tau.UI
             }
             else
             {
-                const int particleCount = 10;
+                const int particle_count = 10;
 
-                for (int i = 0; i < particleCount; i++)
+                for (int i = 0; i < particle_count; i++)
                 {
                     particles.Add(new Box
                     {

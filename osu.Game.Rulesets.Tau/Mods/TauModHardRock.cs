@@ -19,6 +19,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             tauObject.Angle %= 360;
 
             var newAngle = 0.0f;
+
             if (tauObject.Angle >= 0 && tauObject.Angle < 180)
                 newAngle = 90 + (90 - tauObject.Angle);
             else if (tauObject.Angle >= 180)

@@ -19,7 +19,8 @@ namespace osu.Game.Rulesets.Tau.Replays
         {
         }
 
-        public TauReplayFrame(double time, Vector2 position,  params TauAction[] actions) : base(time)
+        public TauReplayFrame(double time, Vector2 position, params TauAction[] actions)
+            : base(time)
         {
             Position = position;
             Actions.AddRange(actions);

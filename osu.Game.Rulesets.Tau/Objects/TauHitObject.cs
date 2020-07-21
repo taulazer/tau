@@ -10,6 +10,7 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Scoring;
+
 namespace osu.Game.Rulesets.Tau.Objects
 {
     public abstract class TauHitObject : HitObject, IHasComboInformation
@@ -19,7 +20,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         public double TimePreempt = 600;
         public double TimeFadeIn = 400;
 
-        public float Angle { get; set; } = 0;
+        public float Angle { get; set; }
 
         public virtual bool NewCombo { get; set; }
 

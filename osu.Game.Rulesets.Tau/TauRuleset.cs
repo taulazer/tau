@@ -108,22 +108,23 @@ namespace osu.Game.Rulesets.Tau
         public override Drawable CreateIcon() => new Container
         {
             AutoSizeAxes = Axes.Both,
-            Children = new Drawable[]{
+            Children = new Drawable[]
+            {
                 new SpriteIcon
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Icon = FontAwesome.Regular.Circle,
-                    },
-                    new Sprite
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(1),
-                        Scale = new Vector2(.625f),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau")
-                    }
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Icon = FontAwesome.Regular.Circle,
+                },
+                new Sprite
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1),
+                    Scale = new Vector2(.625f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau")
+                }
             }
         };
 

@@ -47,6 +47,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             {
                 case DrawableBeat beat:
                     return beat.IntersectArea.ScreenSpaceDrawQuad.AABBFloat.IntersectsWith(defaultCursor.HitReceptor.ScreenSpaceDrawQuad.AABBFloat);
+
                 default:
                     return true;
             }
@@ -77,7 +78,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         HitReceptor = new Box
                         {
                             Height = 50,
-                            Width = (float)convertValue(cs)*1.6f,
+                            Width = (float)convertValue(cs) * 1.6f,
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Alpha = 0,

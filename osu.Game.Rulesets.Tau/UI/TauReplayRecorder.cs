@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using osu.Game.Replays;
-using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Replays;
+using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.UI;
 using osuTK;
 
@@ -18,6 +18,6 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         protected override ReplayFrame HandleFrame(Vector2 mousePosition, List<TauAction> actions, ReplayFrame previousFrame)
-            => new TauReplayFrame(Time.Current, mousePosition, actions.ToArray() );
+            => new TauReplayFrame(Time.Current, mousePosition, actions.ToArray());
     }
 }

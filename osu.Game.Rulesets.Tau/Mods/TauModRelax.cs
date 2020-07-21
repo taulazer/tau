@@ -43,16 +43,16 @@ namespace osu.Game.Rulesets.Tau.Mods
                     Debug.Assert(tauHit.HitObject.HitWindows != null);
 
                     var play = (TauPlayfield)playfield;
+
                     if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit))
                         requiresHit = true;
                 }
                 else if (tauHit is DrawableHardBeat)
                 {
-                    if (tauHit.HitObject.HitWindows.CanBeHit(relativetime))
-                    {
-                        requiresHit = true;
-                        requiresHardHit = true;
-                    }
+                    if (!tauHit.HitObject.HitWindows.CanBeHit(relativetime)) continue;
+
+                    requiresHit = true;
+                    requiresHardHit = true;
                 }
             }
 
