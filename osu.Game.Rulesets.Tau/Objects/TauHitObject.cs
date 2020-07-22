@@ -18,7 +18,13 @@ namespace osu.Game.Rulesets.Tau.Objects
         public double TimePreempt = 600;
         public double TimeFadeIn = 400;
 
-        public float Angle { get; set; }
+        public BindableFloat AngleBindable = new BindableFloat();
+
+        public float Angle
+        {
+            get => AngleBindable.Value;
+            set => AngleBindable.Value = value;
+        }
 
         public virtual bool NewCombo { get; set; }
 

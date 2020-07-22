@@ -47,12 +47,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         private readonly Bindable<float> size = new Bindable<float>(16); // Change as you see fit.
+        private Bindable<float> angle;
 
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
         {
             config?.BindWith(TauRulesetSettings.BeatSize, size);
             size.BindValueChanged(value => Size = new Vector2(value.NewValue), true);
+
+            angle = HitObject.AngleBindable.GetBoundCopy();
         }
 
         protected override void UpdateInitialTransforms()
@@ -60,7 +63,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.FadeIn(HitObject.TimeFadeIn);
-            this.MoveTo(Extensions.GetCircularPosition(0.485f, HitObject.Angle), HitObject.TimePreempt);
+
+            angle.BindValueChanged(a =>
+            {
+                this.MoveTo(Extensions.GetCircularPosition(0.485f, a.NewValue), HitObject.TimePreempt);
+                Rotation = a.NewValue;
+            }, true);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
