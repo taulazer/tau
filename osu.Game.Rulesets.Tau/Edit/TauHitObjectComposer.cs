@@ -17,6 +17,7 @@ namespace osu.Game.Rulesets.Tau.Edit
         protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => new HitObjectCompositionTool[]
         {
             new BeatCompositionTool(),
+            new HardBeatCompositionTool(),
         };
 
         protected override ComposeBlueprintContainer CreateBlueprintContainer(IEnumerable<DrawableHitObject> hitObjects) =>
