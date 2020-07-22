@@ -29,11 +29,21 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
             var topLeft = new Vector2(float.MaxValue, float.MaxValue);
             var bottomRight = new Vector2(float.MinValue, float.MinValue);
 
-            topLeft = Vector2.ComponentMin(topLeft, Parent.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.TopLeft));
-            bottomRight = Vector2.ComponentMax(bottomRight, Parent.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.BottomRight));
+            if (DrawableObject is DrawableBeat beat)
+            {
+                topLeft = Vector2.ComponentMin(topLeft, Parent.ToLocalSpace(beat.Box.ScreenSpaceDrawQuad.TopLeft));
 
-            Size = DrawableObject is DrawableHardBeat ? bottomRight - topLeft : new Vector2(16);
-            Position = topLeft;
+                Size = new Vector2(16);
+                Position = topLeft;
+            }
+            else
+            {
+                topLeft = Vector2.ComponentMin(topLeft, Parent.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.TopLeft));
+                bottomRight = Vector2.ComponentMax(bottomRight, Parent.ToLocalSpace(DrawableObject.ScreenSpaceDrawQuad.BottomRight));
+
+                Size = bottomRight - topLeft;
+                Position = topLeft;
+            }
         }
     }
 }
