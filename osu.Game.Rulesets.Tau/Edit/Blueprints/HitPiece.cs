@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Edit.Blueprints
@@ -9,7 +10,10 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
     {
         public HitPiece()
         {
+            Size = new Vector2(16);
             Origin = Anchor.Centre;
+            Anchor = Anchor.Centre;
+            RelativePositionAxes = Axes.Both;
 
             InternalChild = new Container
             {

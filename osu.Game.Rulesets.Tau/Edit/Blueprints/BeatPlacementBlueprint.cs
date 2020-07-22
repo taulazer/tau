@@ -59,10 +59,10 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
             base.UpdatePosition(result);
 
             var angle = result.ScreenSpacePosition.GetDegreesFromPosition(ScreenSpaceDrawQuad.Centre);
-            HitObject.Angle = angle;
-            piece.Position = Extensions.GetCircularPosition(0.485f, angle);
-            piece.Rotation = angle;
-            distance.Rotation = angle + 180;
+            HitObject.Angle = angle + 180;
+            piece.Position = Extensions.GetCircularPosition(0.485f, angle + 180);
+            piece.Rotation = angle + 180;
+            distance.Rotation = angle;
         }
     }
 }
