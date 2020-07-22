@@ -31,6 +31,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
                     Origin = Anchor.TopCentre,
                     RelativePositionAxes = Axes.Both,
                     Width = 5,
+                    EdgeSmoothness = Vector2.One
                 }
             };
         }
