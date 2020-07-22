@@ -22,6 +22,9 @@ namespace osu.Game.Rulesets.Tau.Edit
             {
                 case DrawableBeat beat:
                     return new BeatSelectionBlueprint(beat);
+
+                case DrawableHardBeat hardBeat:
+                    return new HardBeatSelectionBlueprint(hardBeat);
             }
 
             return base.CreateBlueprintFor(hitObject);

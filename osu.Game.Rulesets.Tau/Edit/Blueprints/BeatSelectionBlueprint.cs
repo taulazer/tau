@@ -16,8 +16,8 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
         protected readonly HitPiece SelectionPiece;
         protected readonly Box Distance;
 
-        public BeatSelectionBlueprint(DrawableBeat drawableCircle)
-            : base(drawableCircle)
+        public BeatSelectionBlueprint(DrawableBeat hitObject)
+            : base(hitObject)
         {
             InternalChildren = new Drawable[]
             {

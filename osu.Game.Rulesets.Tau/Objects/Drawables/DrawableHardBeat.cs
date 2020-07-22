@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.HardButton
         };
 
-        private readonly CircularContainer container;
+        public readonly CircularContainer Circle;
 
         public DrawableHardBeat(TauHitObject hitObject)
             : base(hitObject)
@@ -31,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             AddRangeInternal(new Drawable[]
             {
-                container = new CircularContainer
+                Circle = new CircularContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1),
@@ -103,7 +103,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_hit);
 
-                    container.TransformTo(nameof(container.BorderThickness), 0f, time_fade_hit);
+                    Circle.TransformTo(nameof(Circle.BorderThickness), 0f, time_fade_hit);
 
                     break;
 
@@ -112,7 +112,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         .ResizeTo(1.1f, time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_miss);
 
-                    container.TransformTo(nameof(container.BorderThickness), 0f, time_fade_miss, Easing.OutQuint);
+                    Circle.TransformTo(nameof(Circle.BorderThickness), 0f, time_fade_miss, Easing.OutQuint);
 
                     break;
             }
