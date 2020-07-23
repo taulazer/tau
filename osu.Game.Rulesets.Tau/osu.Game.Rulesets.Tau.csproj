@@ -11,13 +11,13 @@
     <AssemblyName>osu.Game.Rulesets.Tau</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\**" />
+    <EmbeddedResource Include="Resources\**"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game" Version="2020.714.0" />
+    <PackageReference Include="ppy.osu.Game" Version="2020.723.0"/>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\Samples\Gameplay" />
-    <Folder Include="Resources\Textures" />
+    <Folder Include="Resources\Samples\Gameplay"/>
+    <Folder Include="Resources\Textures"/>
   </ItemGroup>
 </Project>

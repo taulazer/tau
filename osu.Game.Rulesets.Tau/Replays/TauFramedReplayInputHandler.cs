@@ -33,19 +33,16 @@ namespace osu.Game.Rulesets.Tau.Replays
             }
         }
 
-        public override List<IInput> GetPendingInputs()
+        public override void CollectPendingInputs(List<IInput> inputs)
         {
-            return new List<IInput>
+            inputs.Add(new MousePositionAbsoluteInput
             {
-                new MousePositionAbsoluteInput
-                {
-                    Position = GamefieldToScreenSpace(Position),
-                },
-                new ReplayState<TauAction>
-                {
-                    PressedActions = CurrentFrame?.Actions ?? new List<TauAction>(),
-                }
-            };
+                Position = GamefieldToScreenSpace(Position),
+            });
+            inputs.Add(new ReplayState<TauAction>
+            {
+                PressedActions = CurrentFrame?.Actions ?? new List<TauAction>(),
+            });
         }
     }
 }
