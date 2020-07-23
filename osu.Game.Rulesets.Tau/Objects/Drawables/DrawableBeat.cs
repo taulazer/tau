@@ -59,7 +59,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         private readonly Bindable<float> size = new Bindable<float>(16); // Change as you see fit.
-        private Bindable<float> angle;
 
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
@@ -67,9 +66,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             config?.BindWith(TauRulesetSettings.BeatSize, size);
             size.BindValueChanged(value => Box.Size = new Vector2(value.NewValue), true);
 
-            angle = HitObject.AngleBindable.GetBoundCopy();
-
-            angle.BindValueChanged(a =>
+            HitObject.AngleBindable.BindValueChanged(a =>
             {
                 Rotation = a.NewValue;
             }, true);
