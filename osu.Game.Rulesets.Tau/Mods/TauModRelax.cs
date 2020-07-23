@@ -6,16 +6,31 @@ using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
+using osu.Game.Screens.Play;
 using static osu.Game.Input.Handlers.ReplayInputHandler;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModRelax : ModRelax, IUpdatableByPlayfield, IApplicableToDrawableRuleset<TauHitObject>
+    public class TauModRelax : ModRelax, IUpdatableByPlayfield, IApplicableToDrawableRuleset<TauHitObject>, IApplicableToPlayer
     {
         public override string Description => @"You don't need to click. Give your clicking/tapping fingers a break from the heat of things.";
 
+        private bool hasReplay;
+        public void ApplyToPlayer(Player player)
+        {
+            if (tauInputManager.ReplayInputHandler != null)
+            {
+                hasReplay = true;
+                return;
+            }
+            tauInputManager.AllowUserPresses = false;
+        }
+
         public void Update(Playfield playfield)
         {
+            if (hasReplay)
+                return;
+
             bool requiresHold = false;
             bool requiresHit = false;
             bool requiresHardHit = false;
