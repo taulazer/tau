@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
                     RelativeSizeAxes = Axes.Y,
                     Height = .5f,
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
+                    Origin = Anchor.BottomCentre,
                     RelativePositionAxes = Axes.Both,
                     Width = 5,
                     EdgeSmoothness = Vector2.One
@@ -40,11 +40,11 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
         {
             base.Update();
 
-            SelectionPiece.Rotation = DrawableObject.Rotation + 180;
-            SelectionPiece.Position = Extensions.GetCircularPosition(DrawableObject.Box.Y, DrawableObject.Rotation + 180);
+            SelectionPiece.Rotation = DrawableObject.Rotation;
+            SelectionPiece.Position = Extensions.GetCircularPosition(-DrawableObject.Box.Y, DrawableObject.Rotation);
 
             Distance.Rotation = DrawableObject.Rotation;
-            Distance.Height = DrawableObject.Box.Y;
+            Distance.Height = -DrawableObject.Box.Y;
         }
 
         public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.Box.ScreenSpaceDrawQuad.Centre;

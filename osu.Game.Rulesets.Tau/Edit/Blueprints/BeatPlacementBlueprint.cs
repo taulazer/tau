@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
                     RelativeSizeAxes = Axes.Y,
                     Height = .5f,
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
+                    Origin = Anchor.BottomCentre,
                     RelativePositionAxes = Axes.Both,
                     Width = 5,
                     EdgeSmoothness = Vector2.One
@@ -59,10 +59,10 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
         {
             base.UpdatePosition(result);
 
-            var angle = result.ScreenSpacePosition.GetDegreesFromPosition(ScreenSpaceDrawQuad.Centre);
-            HitObject.Angle = angle + 180;
-            piece.Position = Extensions.GetCircularPosition(0.485f, angle + 180);
-            piece.Rotation = angle + 180;
+            var angle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(result.ScreenSpacePosition);
+            HitObject.Angle = angle;
+            piece.Position = Extensions.GetCircularPosition(0.485f, angle);
+            piece.Rotation = angle;
             distance.Rotation = angle;
         }
     }

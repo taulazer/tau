@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Tau.Edit
                 if (h is HardBeat)
                     continue;
 
-                h.Angle = moveEvent.ScreenSpacePosition.GetDegreesFromPosition(ScreenSpaceDrawQuad.Centre) + 180;
+                h.Angle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(moveEvent.ScreenSpacePosition);
 
                 EditorBeatmap?.UpdateHitObject(h);
             }
