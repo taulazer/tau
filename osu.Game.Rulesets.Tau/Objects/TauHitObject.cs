@@ -7,17 +7,24 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Scoring;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public abstract class TauHitObject : HitObject, IHasComboInformation
+    public abstract class TauHitObject : HitObject, IHasComboInformation, IHasPosition
     {
         public override Judgement CreateJudgement() => new TauJudgement();
 
         public double TimePreempt = 600;
         public double TimeFadeIn = 400;
 
-        public float Angle { get; set; }
+        public BindableFloat AngleBindable = new BindableFloat();
+
+        public float Angle
+        {
+            get => AngleBindable.Value;
+            set => AngleBindable.Value = value;
+        }
 
         public virtual bool NewCombo { get; set; }
 
@@ -62,5 +69,11 @@ namespace osu.Game.Rulesets.Tau.Objects
             TimePreempt = (float)BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
             TimeFadeIn = 100;
         }
+
+        #region Editor Implementation.
+        public float X { get; set; }
+        public float Y { get; set; }
+        public Vector2 Position { get; set; }
+        #endregion
     }
 }

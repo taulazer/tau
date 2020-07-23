@@ -77,7 +77,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
                 if (circular)
                 {
-                    particle.MoveTo(Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f, particle.Position.GetDegreesFromPosition(Vector2.Zero)), duration, Easing.OutQuint)
+                    particle.MoveTo(Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f, Vector2.Zero.GetDegreesFromPosition(particle.Position)), duration, Easing.OutQuint)
                             .ScaleTo(new Vector2(rng.Next(1, 2)), duration, Easing.OutQuint)
                             .FadeOut(duration, Easing.OutQuint);
                 }

@@ -96,7 +96,7 @@ namespace osu.Game.Rulesets.Tau.UI
             });
         }
 
-        protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(1); // Change the default as you see fit
+        protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
 
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
