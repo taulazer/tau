@@ -2,6 +2,7 @@
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Tau.Beatmaps
 {
@@ -9,7 +10,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
     {
         public override IEnumerable<BeatmapStatistic> GetStatistics()
         {
-            int beats = HitObjects.Count;
+            int beats = HitObjects.Count(b => b is Beat);
+            int hardbeats = HitObjects.Count(b => b is HardBeat);
 
             return new[]
             {
@@ -18,6 +20,12 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     Name = "Beat count",
                     Content = beats.ToString(),
                     Icon = FontAwesome.Solid.Square
+                },
+                new BeatmapStatistic
+                {
+                    Name = "HardBeat count",
+                    Content = hardbeats.ToString(),
+                    Icon = FontAwesome.Regular.Circle
                 }
             };
         }
