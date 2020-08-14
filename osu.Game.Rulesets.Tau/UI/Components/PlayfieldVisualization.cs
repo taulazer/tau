@@ -14,6 +14,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osuTK;
 using osuTK.Graphics;
+using System.Diagnostics;
 
 namespace osu.Game.Rulesets.Tau.UI.Components
 {
@@ -104,21 +105,19 @@ namespace osu.Game.Rulesets.Tau.UI.Components
             indexOffset = (indexOffset + indexChange) % barsPerVisualiser;
         }
 
-        private double delta;
+        private double lastUpdateTime = double.MinValue;
 
         protected override void Update()
         {
             base.Update();
 
-            delta += Math.Abs(Time.Elapsed);
-
-            if (delta >= timeBetweenUpdates)
-            {
+            if (Math.Abs(lastUpdateTime - Time.Current) > 50){
                 updateAmplitudes();
-                delta %= timeBetweenUpdates;
+                lastUpdateTime = Time.Current;
             }
 
-            float decayFactor = Math.Abs((float)Time.Elapsed) * decayPerMilisecond;
+            float decayFactor = (float)Math.Abs(Time.Elapsed) * decayPerMilisecond;
+
 
             for (int i = 0; i < barsPerVisualiser; i++)
             {
