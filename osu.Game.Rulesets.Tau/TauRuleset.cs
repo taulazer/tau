@@ -21,6 +21,8 @@ using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
+using osu.Game.Screens.Ranking.Statistics;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau
@@ -102,6 +104,21 @@ namespace osu.Game.Rulesets.Tau
             new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
             new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
             new KeyBinding(InputKey.Space, TauAction.HardButton),
+        };
+
+        public override StatisticRow[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
+        {
+            new StatisticRow
+            {
+                Columns = new[]
+                {
+                    new StatisticItem("Timing Distribution", new HitEventTimingDistributionGraph(score.HitEvents)
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 250
+                    })
+                }
+            },
         };
 
         public override Drawable CreateIcon() => new Container
