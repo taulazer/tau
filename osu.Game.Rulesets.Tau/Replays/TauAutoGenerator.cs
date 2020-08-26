@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using osu.Game.Beatmaps;
 using osu.Game.Replays;
@@ -17,11 +18,6 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// The "reaction time" in ms between "seeing" a new hit object and moving to "react" to it.
         /// </summary>
         private const double reactionTime = 200;
-
-        /// <summary>
-        /// The "release delay" in ms between hitting an action then releasing it
-        /// </summary>
-        private const double releaseDelay = 20;
 
         public TauAutoGenerator(IBeatmap beatmap)
             : base(beatmap)
@@ -45,11 +41,15 @@ namespace osu.Game.Rulesets.Tau.Replays
             Replay.Frames.Add(new TauReplayFrame(-100000, new Vector2(offset, offset + 150)));
             Replay.Frames.Add(new TauReplayFrame(Beatmap.HitObjects[0].StartTime - reactionTime, new Vector2(offset, offset + 150)));
 
+
             float prevAngle = 0;
 
             for (int i = 0; i < Beatmap.HitObjects.Count; i++)
             {
                 TauHitObject h = Beatmap.HitObjects[i];
+                double releaseDelay = KEY_UP_DELAY;
+                if (i + 1 < Beatmap.HitObjects.Count)
+                    releaseDelay = Math.Min(KEY_UP_DELAY, Beatmap.HitObjects[i + 1].StartTime - h.StartTime);
 
                 switch (h)
                 {
