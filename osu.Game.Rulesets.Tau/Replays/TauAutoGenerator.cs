@@ -41,7 +41,6 @@ namespace osu.Game.Rulesets.Tau.Replays
             Replay.Frames.Add(new TauReplayFrame(-100000, new Vector2(offset, offset + 150)));
             Replay.Frames.Add(new TauReplayFrame(Beatmap.HitObjects[0].StartTime - reactionTime, new Vector2(offset, offset + 150)));
 
-
             float prevAngle = 0;
 
             for (int i = 0; i < Beatmap.HitObjects.Count; i++)
