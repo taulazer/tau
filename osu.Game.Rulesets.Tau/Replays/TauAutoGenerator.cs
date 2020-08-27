@@ -47,6 +47,7 @@ namespace osu.Game.Rulesets.Tau.Replays
             {
                 TauHitObject h = Beatmap.HitObjects[i];
                 double releaseDelay = KEY_UP_DELAY;
+
                 if (i + 1 < Beatmap.HitObjects.Count)
                     releaseDelay = Math.Min(KEY_UP_DELAY, Beatmap.HitObjects[i + 1].StartTime - h.StartTime);
 
