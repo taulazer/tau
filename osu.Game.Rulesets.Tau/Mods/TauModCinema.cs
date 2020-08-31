@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Objects;
