@@ -66,7 +66,7 @@ namespace osu.Game.Rulesets.Tau
                 case ModType.Automation:
                     return new Mod[]
                     {
-                        new MultiMod(new TauModAutoplay(), new ModCinema()),
+                        new MultiMod(new TauModAutoplay(), new TauModCinema()),
                         new TauModRelax(),
                     };
 
