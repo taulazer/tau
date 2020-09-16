@@ -3,6 +3,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects;
 using System.Linq;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Beatmaps
 {
@@ -19,13 +20,21 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 {
                     Name = "Beat count",
                     Content = beats.ToString(),
-                    Icon = FontAwesome.Solid.Square
+                    CreateIcon = () => new SpriteIcon
+                    {
+                        Icon = FontAwesome.Solid.Square,
+                        Scale = new Vector2(.7f)
+                    },
                 },
                 new BeatmapStatistic
                 {
                     Name = "HardBeat count",
                     Content = hardbeats.ToString(),
-                    Icon = FontAwesome.Regular.Circle
+                    CreateIcon = () => new SpriteIcon
+                    {
+                        Icon = FontAwesome.Regular.Circle,
+                        Scale = new Vector2(.7f)
+                    },
                 }
             };
         }
