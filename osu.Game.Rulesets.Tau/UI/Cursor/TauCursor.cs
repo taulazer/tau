@@ -9,7 +9,6 @@ using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
-using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
@@ -104,20 +103,55 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             private class AbsoluteCursor : CursorContainer
             {
-                protected override Drawable CreateCursor() => new CircularContainer
+                public Container Cursor;
+
+                protected override Drawable CreateCursor()
                 {
-                    Size = new Vector2(15),
-                    Origin = Anchor.Centre,
-                    Masking = true,
-                    BorderColour = Color4.White,
-                    BorderThickness = 4,
-                    Child = new Box
+                    Cursor = new Container
+                    {
+                        Size = new Vector2(25),
+                        Origin = Anchor.Centre,
+                        Child = new CircularContainer
+                        {
+                            Size = new Vector2(25),
+                            Origin = Anchor.Centre,
+                            Anchor = Anchor.Centre,
+                            Masking = true,
+                            BorderColour = TauPlayfield.ACCENT_COLOR,
+                            BorderThickness = 5,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                AlwaysPresent = true,
+                                Alpha = 0,
+                            }
+                        }
+                    };
+
+                    Cursor.Add(new CircularProgress
                     {
                         RelativeSizeAxes = Axes.Both,
-                        AlwaysPresent = true,
-                        Alpha = 0,
-                    }
-                };
+                        Scale = new Vector2(1.5f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Current = new BindableDouble(0.33),
+                        Rotation = -150,
+                        InnerRadius = 0.1f
+                    });
+
+                    Cursor.Add(new CircularProgress
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Scale = new Vector2(1.5f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Current = new BindableDouble(0.33),
+                        Rotation = 30,
+                        InnerRadius = 0.1f
+                    });
+
+                    return Cursor;
+                }
             }
 
             private class GameplayCursor : CompositeDrawable
@@ -136,6 +170,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     {
                         new CircularContainer
                         {
+                            Colour = TauPlayfield.ACCENT_COLOR,
                             RelativeSizeAxes = Axes.Both,
                             Masking = true,
                             Anchor = Anchor.Centre,
