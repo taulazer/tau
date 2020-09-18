@@ -9,6 +9,7 @@ using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
