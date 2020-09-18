@@ -31,6 +31,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
+        public static readonly Color4 ACCENT_COLOR = Color4Extensions.FromHex(@"FF0040");
+
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
         public TauPlayfield(BeatmapDifficulty difficulty)
@@ -72,7 +74,7 @@ namespace osu.Game.Rulesets.Tau.UI
                             Origin = Anchor.Centre,
                             Masking = true,
                             BorderThickness = 3,
-                            BorderColour = Color4.White,
+                            BorderColour = ACCENT_COLOR.Opacity(0.5f),
                             Child = new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
