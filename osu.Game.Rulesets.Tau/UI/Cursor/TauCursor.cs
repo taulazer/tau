@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         {
             this.difficulty = difficulty;
 
-            angleRange = 90 - ((difficulty.CircleSize - 1) * 9f);
+            angleRange = (float)BeatmapDifficulty.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
 
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
@@ -154,7 +154,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             protected override Drawable CreateCursor() => new CircularContainer
             {
-                Size = new Vector2(60),
+                Size = new Vector2(40),
                 Origin = Anchor.Centre,
                 Children = new Drawable[]
                 {
