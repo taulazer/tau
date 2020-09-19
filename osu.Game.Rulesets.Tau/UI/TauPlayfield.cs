@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -136,6 +137,9 @@ namespace osu.Game.Rulesets.Tau.UI
             h.OnNewResult += onNewResult;
         }
 
+        [Resolved]
+        private OsuColour colour { get; set; }
+
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
@@ -155,7 +159,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     explosion.Rotation = angle;
 
                     if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject.AccentColour.Value)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type))
                         {
                             Position = Extensions.GetCircularPosition(.5f, angle),
                             Angle = angle,
@@ -169,10 +173,10 @@ namespace osu.Game.Rulesets.Tau.UI
                     explosion.Position = Extensions.GetCircularPosition(.6f, 0);
 
                     if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(judgedObject.AccentColour.Value, true)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), true)
                         {
                             Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
+                            Origin = Anchor.Centre,
                         });
 
                     break;
