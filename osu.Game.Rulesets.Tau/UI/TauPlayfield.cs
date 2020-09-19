@@ -12,7 +12,9 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Rulesets.Tau.UI.Combo;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
@@ -24,6 +26,8 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
+        private readonly ComboCounter counter1;
+        private readonly ComboCounter counter2;
         private readonly Circle playfieldBackground;
         private readonly TauCursor cursor;
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
@@ -35,10 +39,10 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
-        public TauPlayfield(BeatmapDifficulty difficulty)
+        public TauPlayfield(Beatmap<TauHitObject> beatmap)
         {
             RelativeSizeAxes = Axes.None;
-            cursor = new TauCursor(difficulty);
+            cursor = new TauCursor(beatmap.BeatmapInfo.BaseDifficulty);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
             Size = new Vector2(768);
@@ -83,6 +87,20 @@ namespace osu.Game.Rulesets.Tau.UI
                             }
                         },
                     }
+                },
+                counter1 = new ComboCounter(beatmap)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativePositionAxes = Axes.X,
+                    X = 0.5f
+                },
+                counter2 = new ComboCounter(beatmap, true)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativePositionAxes = Axes.X,
+                    X = -0.5f
                 },
                 HitObjectContainer,
                 cursor,
@@ -140,6 +158,9 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
+
+            counter1.AddResult(result);
+            counter2.AddResult(result);
 
             DrawableTauJudgement explosion = new DrawableTauJudgement(result, judgedObject)
             {

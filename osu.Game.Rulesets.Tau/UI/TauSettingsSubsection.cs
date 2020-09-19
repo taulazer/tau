@@ -2,6 +2,7 @@
 using osu.Framework.Graphics;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.UI.Combo;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
@@ -41,6 +42,11 @@ namespace osu.Game.Rulesets.Tau.UI
                     LabelText = "Beat Size",
                     Bindable = config.GetBindable<float>(TauRulesetSettings.BeatSize),
                     KeyboardStep = 1f
+                },
+                new SettingsDropdown<ComboSetting>
+                {
+                    LabelText = "Combo Counter Type",
+                    Bindable = config.GetBindable<ComboSetting>(TauRulesetSettings.ComboCounter)
                 }
             };
         }

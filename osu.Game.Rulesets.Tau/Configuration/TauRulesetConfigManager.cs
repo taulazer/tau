@@ -1,5 +1,6 @@
 ﻿using osu.Game.Configuration;
 using osu.Game.Rulesets.Configuration;
+using osu.Game.Rulesets.Tau.UI.Combo;
 
 namespace osu.Game.Rulesets.Tau.Configuration
 {
@@ -17,6 +18,7 @@ namespace osu.Game.Rulesets.Tau.Configuration
             Set(TauRulesetSettings.ShowVisualizer, true);
             Set(TauRulesetSettings.PlayfieldDim, 0.3f, 0, 1, 0.01f);
             Set(TauRulesetSettings.BeatSize, 16f, 10, 25, 1f);
+            Set(TauRulesetSettings.ComboCounter, ComboSetting.Disabled);
         }
     }
 
@@ -24,6 +26,7 @@ namespace osu.Game.Rulesets.Tau.Configuration
     {
         ShowVisualizer,
         PlayfieldDim,
-        BeatSize
+        BeatSize,
+        ComboCounter
     }
 }
