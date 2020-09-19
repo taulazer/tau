@@ -24,6 +24,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         private readonly float angleRange;
 
         private readonly Paddle paddle;
+        private readonly AbsoluteCursor cursor;
 
         public TauCursor(BeatmapDifficulty difficulty)
         {
@@ -36,7 +37,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             RelativeSizeAxes = Axes.Both;
             AddInternal(paddle = new Paddle(angleRange));
-            AddInternal(new AbsoluteCursor());
+            AddInternal(cursor = new AbsoluteCursor());
         }
 
         [BackgroundDependencyLoader]
@@ -61,6 +62,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             paddle.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+            cursor.ActiveCursor.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
 
             return base.OnMouseMove(e);
         }
