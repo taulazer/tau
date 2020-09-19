@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         {
             this.difficulty = difficulty;
 
-            angleRange = 90 - ((difficulty.CircleSize - 2) * 11.25f);
+            angleRange = 90 - ((difficulty.CircleSize - 1) * 7.5f);
 
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
