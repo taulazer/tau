@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         {
             this.difficulty = difficulty;
 
-            angleRange = 90 - ((difficulty.CircleSize - 1) * 7.5f);
+            angleRange = 90 - ((difficulty.CircleSize - 1) * 9f);
 
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
@@ -140,7 +140,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             protected override bool OnMouseMove(MouseMoveEvent e)
             {
-                circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / (DrawHeight), .05f, .45f);
+                circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / (DrawHeight), .015f, .485f);
                 bottomLine.Height = -circle.Y - .015f;
                 topLine.Height = .5f + circle.Y - .015f;
                 return base.OnMouseMove(e);
