@@ -17,11 +17,40 @@ namespace osu.Game.Rulesets.Tau
             return angle + 90;
         }
 
+        public static float GetDeltaAngle(float a, float b)
+        {
+            float x = b;
+            float y = a;
+
+            if (a > b)
+            {
+                x = a;
+                y = b;
+            }
+
+            if (x - y < 180)
+                x -= y;
+            else
+                x = 360 - x + y;
+
+            return x;
+        }
+
         public static float GetHitObjectAngle(this Vector2 target)
         {
             Vector2 offset = new Vector2(256, 192) - target; // Using centre of playfield.
 
-            return (float)MathHelper.RadiansToDegrees(Math.Atan2(offset.X, -offset.Y)) - 180;
+            var tmp = (float)MathHelper.RadiansToDegrees(Math.Atan2(offset.X, -offset.Y)) - 180;
+
+            return tmp.NormalizeAngle();
+        }
+
+        public static float NormalizeAngle(this float degrees)
+        {
+            if (degrees < 0) degrees += 360;
+            if (degrees >= 360) degrees %= 360;
+
+            return degrees;
         }
     }
 }
