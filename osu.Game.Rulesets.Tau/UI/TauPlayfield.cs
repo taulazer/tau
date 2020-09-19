@@ -213,7 +213,7 @@ namespace osu.Game.Rulesets.Tau.UI
             protected override void LoadComplete()
             {
                 base.LoadComplete();
-                visualisation.AccentColour = Color4.White;
+                visualisation.AccentColour = ACCENT_COLOR.Opacity(0.5f);
                 showVisualisation.TriggerChange();
             }
 
@@ -225,14 +225,14 @@ namespace osu.Game.Rulesets.Tau.UI
 
                     if (firstKiaiBeat)
                     {
-                        visualisation.FlashColour(Color4.White, timingPoint.BeatLength * 4, Easing.In);
+                        visualisation.FlashColour(ACCENT_COLOR.Opacity(0.5f), timingPoint.BeatLength * 4, Easing.In);
                         firstKiaiBeat = false;
 
                         return;
                     }
 
                     if (kiaiBeatIndex >= 5)
-                        visualisation.FlashColour(Color4.White.Opacity(0.15f), timingPoint.BeatLength, Easing.In);
+                        visualisation.FlashColour(ACCENT_COLOR.Opacity(0.25f), timingPoint.BeatLength, Easing.In);
                 }
                 else
                 {
