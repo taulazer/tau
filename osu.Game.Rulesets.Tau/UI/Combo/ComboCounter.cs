@@ -17,6 +17,8 @@ namespace osu.Game.Rulesets.Tau.UI.Combo
         private readonly IBeatmap beatmap;
         private readonly CircularProgress missedNotes;
         private readonly CircularProgress clearedNotes;
+        private int clearedNotesCount;
+        private int missedNotesCount;
 
         public ComboCounter(IBeatmap beatmap, bool flip = false)
         {
@@ -69,17 +71,17 @@ namespace osu.Game.Rulesets.Tau.UI.Combo
             if (result.Type == HitResult.None)
                 return;
 
-            var value = 0.2d / beatmap.HitObjects.Count;
+            var value = 0.2f / beatmap.HitObjects.Count;
 
             if (result.IsHit)
             {
-                clearedNotes.TransformBindableTo(clearedNotes.Current, clearedNotes.Current.Value + value, 500, Easing.OutQuint);
+                clearedNotes.TransformBindableTo(clearedNotes.Current, ++clearedNotesCount * value, 500, Easing.OutQuint);
 
                 return;
             }
 
-            missedNotes.TransformBindableTo(missedNotes.Current, missedNotes.Current.Value + value, 500, Easing.OutQuint);
-            clearedNotes.RotateTo(clearedNotes.Rotation + (float)value * 350, 500, Easing.OutQuint);
+            missedNotes.TransformBindableTo(missedNotes.Current, ++missedNotesCount * value, 500, Easing.OutQuint);
+            clearedNotes.RotateTo(missedNotesCount * value * 360 + 55, 500, Easing.OutQuint);
         }
     }
 }
