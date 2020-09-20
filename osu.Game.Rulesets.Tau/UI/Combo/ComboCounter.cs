@@ -1,4 +1,5 @@
-﻿using osu.Framework.Bindables;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -6,6 +7,7 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osuTK;
 using osuTK.Graphics;
 
@@ -13,7 +15,6 @@ namespace osu.Game.Rulesets.Tau.UI.Combo
 {
     public class ComboCounter : CircularContainer
     {
-        private bool flip;
         private readonly IBeatmap beatmap;
         private readonly CircularProgress missedNotes;
         private readonly CircularProgress clearedNotes;
@@ -23,7 +24,6 @@ namespace osu.Game.Rulesets.Tau.UI.Combo
         public ComboCounter(IBeatmap beatmap, bool flip = false)
         {
             this.beatmap = beatmap;
-            this.flip = flip;
 
             FillMode = FillMode.Fit;
             FillAspectRatio = 1;
@@ -64,6 +64,42 @@ namespace osu.Game.Rulesets.Tau.UI.Combo
                     Rotation = 55
                 },
             };
+        }
+
+        private readonly Bindable<ComboSetting> setting = new Bindable<ComboSetting>(ComboSetting.Disabled);
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.ComboCounter, setting);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            setting.BindValueChanged(s =>
+            {
+                switch (s.NewValue)
+                {
+                    case ComboSetting.Disabled:
+                        this.FadeOut(500);
+
+                        break;
+
+                    //TODO: Implement other modes
+                    case ComboSetting.Overall:
+                    case ComboSetting.Timeline:
+                        this.FadeIn(500);
+
+                        break;
+
+                    default:
+                        this.FadeOut(500);
+
+                        break;
+                }
+            }, true);
         }
 
         public void AddResult(JudgementResult result)
