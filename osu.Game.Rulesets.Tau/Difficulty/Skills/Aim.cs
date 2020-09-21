@@ -23,7 +23,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
         protected override double StrainValueOf(DifficultyHitObject current)
         {
-        
+            // No need to aim HardBeat
+            if (current.BaseObject is HardBeat){ return 0; }
+            
             var tauCurrent = (TauDifficultyHitObject)current;
 
             double result = 0;
