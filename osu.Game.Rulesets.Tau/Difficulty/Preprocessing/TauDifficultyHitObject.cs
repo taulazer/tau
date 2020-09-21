@@ -9,8 +9,6 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 {
     public class TauDifficultyHitObject : DifficultyHitObject
     {
-        private const int normalized_radius = 52;
-
         protected new TauHitObject BaseObject => (TauHitObject)base.BaseObject;
 
         /// <summary>
