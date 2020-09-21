@@ -26,7 +26,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
         protected override double StrainValueOf(DifficultyHitObject current)
         {
-        
+            double NoteMultiplier = 1;
+            
 
             var tauCurrent = (TauDifficultyHitObject)current;
 
@@ -39,7 +40,13 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             double angleBonus = 1.0;
 
-            if (tauCurrent.Angle != null && tauCurrent.Angle.Value < angle_bonus_begin)
+            if (current.BaseObject is HardBeat)
+            { 
+                NoteMultiplier = 1.5;
+                speedBonus*=NoteMultiplier;
+            }
+
+            else if (tauCurrent.Angle != null && tauCurrent.Angle.Value < angle_bonus_begin)
             {
                 angleBonus = 1 + Math.Pow(Math.Sin(1.5 * (angle_bonus_begin - tauCurrent.Angle.Value)), 2) / 3.57;
 
