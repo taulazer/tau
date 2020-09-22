@@ -49,23 +49,21 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         private void setDistances()
         {
-
-            Vector2 lastCursorPosition = getEndCursorPosition(lastObject);
-
-            JumpDistance = (getEndCursorPosition(BaseObject) - lastCursorPosition).Length;
-
+            JumpDistance = (getEndCursorPosition(BaseObject) - getEndCursorPosition(lastObject)).Length;
 
             if (lastLastObject != null)
             {  
-                Vector2 lastLastCursorPosition = getEndCursorPosition(lastLastObject);
+                // Vector2 lastLastCursorPosition = getEndCursorPosition(lastLastObject);
 
-                Vector2 v1 = lastLastCursorPosition - getEndCursorPosition(lastObject);
-                Vector2 v2 = getEndCursorPosition(BaseObject) - lastCursorPosition;
+                // Vector2 v1 = lastLastCursorPosition - getEndCursorPosition(lastObject);
+                // Vector2 v2 = getEndCursorPosition(BaseObject) - lastCursorPosition;
 
-                float dot = Vector2.Dot(v1, v2);
-                float det = v1.X * v2.Y - v1.Y * v2.X;
+                // float dot = Vector2.Dot(v1, v2);
+                // float det = v1.X * v2.Y - v1.Y * v2.X;
+                // Angle = Math.Abs(Math.Atan2(det, dot));
 
-                Angle = Math.Abs(Math.Atan2(det, dot));
+                // Inscribed angle
+                Angle = 0.5f * (lastLastObject.Angle - BaseObject.Angle);
             }
         }
 
