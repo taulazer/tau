@@ -27,22 +27,27 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (current.BaseObject is HardBeat){ return 0; }
             
             var tauCurrent = (TauDifficultyHitObject)current;
+            
+            var note = (TauHitObject)current.BaseObject;
+            var notePrev = (TauHitObject)current.LastObject;
 
+            var jumpAngle = Math.Abs(note.Angle - notePrev.Angle);
+            
             double result = 0;
             double angleBonus;
             if (Previous.Count > 0)
             {
-                var osuPrevious = (TauDifficultyHitObject)Previous[0];
+                var tauPrevious = (TauDifficultyHitObject)Previous[0];
 
                 if (tauCurrent.Angle != null && tauCurrent.Angle.Value > angle_bonus_begin)
                 {
-                    const double scale = 5;
+                    const double min_jump = 5;
 
                     angleBonus = Math.Sqrt(
-                        Math.Max(osuPrevious.JumpDistance - scale, 0)
+                        Math.Max(tauPrevious.JumpDistance - min_jump, 0)
                         * Math.Pow(Math.Sin(tauCurrent.Angle.Value - angle_bonus_begin), 2)
-                        * Math.Max(tauCurrent.JumpDistance - scale, 0));
-                    result = 30 * applyDiminishingExp(Math.Max(0, angleBonus)) / Math.Max(timing_threshold, osuPrevious.StrainTime);
+                        * Math.Max(tauCurrent.JumpDistance - min_jump, 0));
+                    result = 30 * applyDiminishingExp(Math.Max(0, angleBonus)) / Math.Max(timing_threshold, tauPrevious.StrainTime);
                 }
             }
 
