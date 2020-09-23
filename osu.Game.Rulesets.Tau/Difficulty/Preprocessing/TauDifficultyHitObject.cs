@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
@@ -32,14 +33,17 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         /// </summary>
         public readonly double StrainTime;
 
+        public IBeatmap beatmap;
+
         private readonly TauHitObject lastLastObject;
         private readonly TauHitObject lastObject;
 
-        public TauDifficultyHitObject(HitObject hitObject, HitObject lastLastObject, HitObject lastObject, double clockRate)
+        public TauDifficultyHitObject(HitObject hitObject, HitObject lastLastObject, HitObject lastObject, double clockRate, IBeatmap bm)
             : base(hitObject, lastObject, clockRate)
         {
             this.lastLastObject = (TauHitObject)lastLastObject;
             this.lastObject = (TauHitObject)lastObject;
+            this.beatmap = bm;
 
             setDistances();
 
@@ -49,6 +53,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         private void setDistances()
         {
+
             JumpDistance = (getEndCursorPosition(BaseObject) - getEndCursorPosition(lastObject)).Length;
 
             if (lastLastObject != null)
