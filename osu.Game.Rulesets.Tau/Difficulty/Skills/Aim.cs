@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
@@ -30,8 +31,13 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             
             var note = (TauHitObject)current.BaseObject;
             var notePrev = (TauHitObject)current.LastObject;
+            
+            var noteDif = (TauDifficultyHitObject)current;
 
-            var jumpAngle = Math.Abs(note.Angle - notePrev.Angle);
+            var paddle_size = noteDif.beatmap.BeatmapInfo.BaseDifficulty.CircleSize;
+            var jumpAngle = Math.Abs(note.Angle - notePrev.Angle)*0.5;
+
+            var paddle_size_bonus = 0.01f*Math.Pow(paddle_size -4,3) +1;
             
             double result = 0;
             double angleBonus;
@@ -59,8 +65,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             // strainPeaks.Add(Math.Max(option1,option2));
             return Math.Max(
-                angle_strain,
-                flat_strain
+                angle_strain * paddle_size_bonus,
+                flat_strain * paddle_size_bonus
             );
         }
 

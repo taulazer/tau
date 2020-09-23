@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Tau
             double aimRating = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
             double speedRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double starRating = aimRating + speedRating + Math.Abs(aimRating - speedRating) / 2;
-
+            
             // Uncomment to see aimrating vs speedrating of a map: if aim rating is 3.5 and speed rating is 2.6 then sr will be 352.6
             // double starRating = Math.Round(aimRating,1)*100 + Math.Round(speedRating,1);
 
@@ -74,7 +74,7 @@ namespace osu.Game.Rulesets.Tau
                 var last = beatmap.HitObjects[i - 1];
                 var current = beatmap.HitObjects[i];
 
-                yield return new TauDifficultyHitObject(current, lastLast, last, clockRate);
+                yield return new TauDifficultyHitObject(current, lastLast, last, clockRate, beatmap);
             }
         }
 
