@@ -8,14 +8,14 @@ namespace osu.Game.Rulesets.Tau.Edit
     {
         public override bool HandleMovement(MoveSelectionEvent moveEvent)
         {
-            foreach (var h in SelectedHitObjects.OfType<TauHitObject>())
+            foreach (var h in EditorBeatmap.SelectedHitObjects.OfType<TauHitObject>())
             {
                 if (h is HardBeat)
                     continue;
 
                 h.Angle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(moveEvent.ScreenSpacePosition);
 
-                EditorBeatmap?.UpdateHitObject(h);
+                EditorBeatmap?.Update(h);
             }
 
             return true;
