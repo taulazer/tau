@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 {
     public class TauBeatmapConverter : BeatmapConverter<TauHitObject>
     {
-        public override bool CanConvert() => true;
+        public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition);
 
         public TauBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
