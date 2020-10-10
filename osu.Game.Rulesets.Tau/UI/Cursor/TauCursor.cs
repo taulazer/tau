@@ -17,9 +17,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
     public class TauCursor : CompositeDrawable
     {
         private readonly IBindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
-        private readonly BeatmapDifficulty difficulty;
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
-
 
         private readonly float angleRange;
 
@@ -28,8 +26,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public TauCursor(BeatmapDifficulty difficulty)
         {
-            this.difficulty = difficulty;
-
             angleRange = (float)BeatmapDifficulty.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
 
             Origin = Anchor.Centre;
@@ -52,7 +48,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             {
                 case DrawableBeat beat:
                     var angleDiff = Extensions.GetDeltaAngle(paddle.Rotation, beat.HitObject.Angle);
-                    return (Math.Abs(angleDiff) <= angleRange / 2);
+                    return Math.Abs(angleDiff) <= angleRange / 2;
 
                 default:
                     return true;
@@ -97,7 +93,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
-                                Current = new BindableDouble((double)(angleRange/360)),
+                                Current = new BindableDouble(angleRange/360),
                                 InnerRadius = 0.05f,
                                 Rotation = -angleRange/2
                             },
@@ -140,7 +136,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             protected override bool OnMouseMove(MouseMoveEvent e)
             {
-                circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / (DrawHeight), .015f, .45f);
+                circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / DrawHeight, .015f, .45f);
                 bottomLine.Height = -circle.Y - .015f;
                 topLine.Height = .5f + circle.Y - .015f;
                 return base.OnMouseMove(e);
@@ -149,7 +145,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public class AbsoluteCursor : CursorContainer
         {
-
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
             protected override Drawable CreateCursor() => new CircularContainer
