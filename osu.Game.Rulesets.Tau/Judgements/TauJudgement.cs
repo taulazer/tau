@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Tau.Judgements
     {
         public override HitResult MaxResult => HitResult.Great;
 
-        protected override int NumericResultFor(HitResult result)
+        protected new int ToNumericResult(HitResult result)
         {
             switch (result)
             {

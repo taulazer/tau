@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         };
 
         /// <summary>
-        /// The action that caused this <see cref="DrawableHit"/> to be hit.
+        /// The action that caused HitObjects to be hit.
         /// </summary>
         protected TauAction? HitAction { get; set; }
 
