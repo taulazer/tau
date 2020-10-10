@@ -4,6 +4,5 @@ namespace osu.Game.Rulesets.Tau.Scoring
 {
     public class TauScoreProcessor : ScoreProcessor
     {
-        public override HitWindows CreateHitWindows() => new TauHitWindows();
     }
 }
