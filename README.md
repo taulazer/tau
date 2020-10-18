@@ -71,8 +71,14 @@ git clone https://github.com/Altenhh/tau.git
 cd tau
 ```
 
-### Building the Gamemode
-[SECTION WIP]
+### Building the Gamemode From Source
+To build Tao, you will need to have [.NET Core](https://dotnet.microsoft.com/download) installed on your computer.
+
+First, open a terminal and navigate to wherever you have the Tao source code downloaded. Once you are in the root of the repository, enter the directory named `osu.Game.Rulesets.Tau`.
+
+Next, run the command `dotnet build` and wait for the project to be built. This shouldn't take very long.
+
+Once the project has finished building, dotnet should tell you where the binary was built to (usually somewhere along the lines of ./tau/osu.Game.Rulesets.Tau/bin/Debug/netstandardx.x/). Find the .dll binary in the given location and follow the installation instructions above.
 
 ## Contributions
 All contributions are appreciated, as to improve the mode on its playability and functionality. As this gamemode isn't perfect, we would enjoy all additions to the code through bugfixing and ideas. Contributions should be done over an issue or a pull request, to give maintainers a chance to review changes to the codebase.
