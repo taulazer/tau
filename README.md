@@ -72,9 +72,9 @@ cd tau
 ```
 
 ### Building the Gamemode From Source
-To build Tao, you will need to have [.NET Core](https://dotnet.microsoft.com/download) installed on your computer.
+To build Tau, you will need to have [.NET Core](https://dotnet.microsoft.com/download) installed on your computer.
 
-First, open a terminal and navigate to wherever you have the Tao source code downloaded. Once you are in the root of the repository, enter the directory named `osu.Game.Rulesets.Tau`.
+First, open a terminal and navigate to wherever you have the Tau source code downloaded. Once you are in the root of the repository, enter the directory named `osu.Game.Rulesets.Tau`.
 
 Next, run the command `dotnet build` and wait for the project to be built. This shouldn't take very long.
 
