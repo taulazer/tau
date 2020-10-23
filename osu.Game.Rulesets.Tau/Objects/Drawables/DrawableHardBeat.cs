@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
@@ -84,6 +86,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             ApplyResult(r => r.Type = result);
         }
 
+        [Resolved]
+        private OsuColour colour { get; set; }
+
         protected override void UpdateStateTransforms(ArmedState state)
         {
             base.UpdateStateTransforms(state);
@@ -100,7 +105,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 case ArmedState.Hit:
                     this.ScaleTo(1.25f, time_fade_hit, Easing.OutQuint)
-                        .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
+                        .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_hit);
 
                     Circle.TransformTo(nameof(Circle.BorderThickness), 0f, time_fade_hit);

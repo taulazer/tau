@@ -6,6 +6,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
@@ -108,6 +109,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
         }
 
+        [Resolved]
+        private OsuColour colour { get; set; }
+
         protected override void UpdateStateTransforms(ArmedState state)
         {
             base.UpdateStateTransforms(state);
@@ -124,7 +128,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 case ArmedState.Hit:
                     Box.ScaleTo(2f, time_fade_hit, Easing.OutQuint)
-                       .FadeColour(Color4.Yellow, time_fade_hit, Easing.OutQuint)
+                       .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
                        .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
                        .FadeOut(time_fade_hit);
 

@@ -41,7 +41,8 @@ namespace osu.Game.Rulesets.Tau.UI
                         Rotation = (float)rng.NextDouble() * 360f,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.BottomCentre,
-                        Size = new Vector2(rng.Next(1, 15))
+                        Size = new Vector2(rng.Next(1, 15)),
+                        Colour = colour
                     });
                 }
             }
@@ -58,7 +59,8 @@ namespace osu.Game.Rulesets.Tau.UI
                         Rotation = (float)rng.NextDouble() * 360f,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.BottomCentre,
-                        Size = new Vector2(rng.Next(1, 15))
+                        Size = new Vector2(rng.Next(1, 15)),
+                        Colour = colour
                     });
                 }
             }

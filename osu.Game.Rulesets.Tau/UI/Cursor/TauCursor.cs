@@ -1,4 +1,4 @@
-﻿using osu.Framework.Allocation;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -86,6 +86,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         Masking = true,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
+                        Colour = TauPlayfield.ACCENT_COLOR,
                         Children = new Drawable[]
                         {
                             new CircularProgress
