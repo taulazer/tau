@@ -157,5 +157,17 @@ namespace osu.Game.Rulesets.Tau
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
 
         public override HitObjectComposer CreateHitObjectComposer() => new TauHitObjectComposer(this);
+
+        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
+
+        protected override IEnumerable<HitResult> GetValidHitResults()
+        {
+            return new[]
+            {
+                HitResult.Great,
+                HitResult.Good,
+                HitResult.Miss,
+            };
+        }
     }
 }

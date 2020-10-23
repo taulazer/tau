@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Tau
                 StarRating = beatmap.BeatmapInfo.StarDifficulty,
                 Mods = mods,
                 Skills = skills,
-                MaxCombo = beatmap.HitObjects.Count(),
+                MaxCombo = beatmap.HitObjects.Count,
             };
 
         protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate) => Array.Empty<DifficultyHitObject>();

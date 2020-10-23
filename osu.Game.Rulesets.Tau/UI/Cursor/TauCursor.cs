@@ -10,31 +10,35 @@ using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
 using osuTK.Graphics;
+using System;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
     public class TauCursor : CompositeDrawable
     {
         private readonly IBindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
-        private readonly BeatmapDifficulty difficulty;
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
-        private DefaultCursor defaultCursor;
+        private readonly float angleRange;
+
+        private readonly Paddle paddle;
+        private readonly AbsoluteCursor cursor;
 
         public TauCursor(BeatmapDifficulty difficulty)
         {
-            this.difficulty = difficulty;
+            angleRange = (float)BeatmapDifficulty.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
 
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
 
             RelativeSizeAxes = Axes.Both;
+            AddInternal(paddle = new Paddle(angleRange));
+            AddInternal(cursor = new AbsoluteCursor());
         }
 
         [BackgroundDependencyLoader]
         private void load(IBindable<WorkingBeatmap> beatmap)
         {
-            InternalChild = defaultCursor = new DefaultCursor(difficulty.CircleSize);
-
             this.beatmap.BindTo(beatmap);
         }
 
@@ -43,144 +47,138 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             switch (h)
             {
                 case DrawableBeat beat:
-                    return beat.IntersectArea.ScreenSpaceDrawQuad.AABBFloat.IntersectsWith(defaultCursor.HitReceptor.ScreenSpaceDrawQuad.AABBFloat);
+                    var angleDiff = Extensions.GetDeltaAngle(paddle.Rotation, beat.HitObject.Angle);
+                    return Math.Abs(angleDiff) <= angleRange / 2;
 
                 default:
                     return true;
             }
         }
 
-        private class DefaultCursor : CompositeDrawable
+        protected override bool OnMouseMove(MouseMoveEvent e)
+        {
+            paddle.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+            cursor.ActiveCursor.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+
+            return base.OnMouseMove(e);
+        }
+
+        public class Paddle : CompositeDrawable
         {
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
-            public readonly Box HitReceptor;
-
-            public DefaultCursor(float cs = 5f)
+            private readonly Box topLine;
+            private readonly Box bottomLine;
+            private readonly CircularContainer circle;
+            public Paddle(float angleRange)
             {
-                Origin = Anchor.Centre;
-                Anchor = Anchor.Centre;
-
                 RelativeSizeAxes = Axes.Both;
+                Anchor = Anchor.Centre;
+                Origin = Anchor.Centre;
+                FillMode = FillMode.Fit;
+                FillAspectRatio = 1; // 1:1 Aspect Ratio.
 
-                AddInternal(new Container
+                InternalChildren = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    FillMode = FillMode.Fit,
-                    FillAspectRatio = 1, // 1:1 Aspect Ratio.
-                    Children = new Drawable[]
-                    {
-                        HitReceptor = new Box
-                        {
-                            Height = 50,
-                            Width = (float)convertValue(cs) * 1.6f,
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Alpha = 0,
-                            AlwaysPresent = true
-                        }
-                    }
-                });
-
-                const double a = 1;
-                const double b = 10;
-                const double c = 230;
-                const double d = 25;
-
-                // Thank you AlFas for this code.
-                double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
-
-                AddInternal(new GameplayCursor(cs));
-
-                AddInternal(new AbsoluteCursor
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                });
-            }
-
-            private class AbsoluteCursor : CursorContainer
-            {
-                protected override Drawable CreateCursor() => new CircularContainer
-                {
-                    Size = new Vector2(15),
-                    Origin = Anchor.Centre,
-                    Masking = true,
-                    BorderColour = TauPlayfield.ACCENT_COLOR,
-                    BorderThickness = 4,
-                    Child = new Box
+                    new CircularContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        AlwaysPresent = true,
-                        Alpha = 0,
+                        Masking = true,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Colour = TauPlayfield.ACCENT_COLOR,
+                        Children = new Drawable[]
+                        {
+                            new CircularProgress
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Current = new BindableDouble(angleRange/360),
+                                InnerRadius = 0.05f,
+                                Rotation = -angleRange/2
+                            },
+                            bottomLine = new Box{
+                                EdgeSmoothness = new Vector2(1f),
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.BottomCentre,
+                                RelativeSizeAxes = Axes.Y,
+                                Size = new Vector2(1.25f, 0.235f)
+                            },
+                            topLine = new Box{
+                                EdgeSmoothness = new Vector2(1f),
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                RelativeSizeAxes = Axes.Y,
+                                Size = new Vector2(1.25f, 0.235f)
+                            },
+                            circle = new CircularContainer
+                            {
+                                RelativePositionAxes = Axes.Both,
+                                RelativeSizeAxes = Axes.Both,
+                                Y = -.25f,
+                                Size = new Vector2(.03f),
+                                Origin = Anchor.Centre,
+                                Anchor = Anchor.Centre,
+                                Masking = true,
+                                BorderColour = Color4.White,
+                                BorderThickness = 4,
+                                Child = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    AlwaysPresent = true,
+                                    Alpha = 0,
+                                }
+                            }
+                        }
                     }
                 };
             }
 
-            private class GameplayCursor : CompositeDrawable
-            {
-                public GameplayCursor(float cs)
-                {
-                    RelativeSizeAxes = Axes.Both;
-
-                    Anchor = Anchor.Centre;
-                    Origin = Anchor.Centre;
-
-                    FillMode = FillMode.Fit;
-                    FillAspectRatio = 1; // 1:1 Aspect Ratio.
-
-                    InternalChildren = new Drawable[]
-                    {
-                        new CircularContainer
-                        {
-                            Colour = TauPlayfield.ACCENT_COLOR,
-                            RelativeSizeAxes = Axes.Both,
-                            Masking = true,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Children = new Drawable[]
-                            {
-                                new CircularProgress
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Current = new BindableDouble(convertValue(cs)),
-                                    InnerRadius = 0.05f,
-                                    Rotation = -360 * ((float)convertValue(cs) / 2)
-                                },
-                                new Box
-                                {
-                                    EdgeSmoothness = new Vector2(1f),
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    RelativeSizeAxes = Axes.Y,
-                                    Size = new Vector2(2.5f / 2, 0.5f),
-                                }
-                            }
-                        }
-                    };
-
-                    const double a = 2;
-                    const double b = 7;
-                    const double c = 0.15;
-                    const double d = 0.0605;
-
-                    // Thank you AlFas for this code.
-                    double convertValue(double value) => c + (((d - c) * (value - a)) / (b - a));
-                }
-            }
-
             protected override bool OnMouseMove(MouseMoveEvent e)
             {
-                var angle = AnchorPosition.GetDegreesFromPosition(e.MousePosition);
-
-                Rotation = angle;
-
+                circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / DrawHeight, .015f, .45f);
+                bottomLine.Height = -circle.Y - .015f;
+                topLine.Height = .5f + circle.Y - .015f;
                 return base.OnMouseMove(e);
+            }
+        }
+
+        public class AbsoluteCursor : CursorContainer
+        {
+            public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
+
+            protected override Drawable CreateCursor() => new CircularContainer
+            {
+                Size = new Vector2(40),
+                Origin = Anchor.Centre,
+                Children = new Drawable[]
+                {
+                    new CircularProgress
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Current = new BindableDouble(.33f),
+                        InnerRadius = 0.1f,
+                        Rotation = -150
+                    },
+                    new CircularProgress
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Current = new BindableDouble(.33f),
+                        InnerRadius = 0.1f,
+                        Rotation = 30
+                    },
+                }
+            };
+
+            protected override void LoadComplete()
+            {
+                base.LoadComplete();
+                ActiveCursor.Spin(3000, RotationDirection.Clockwise).Loop();
             }
         }
     }
