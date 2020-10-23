@@ -14,7 +14,6 @@ using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osuTK;
 using osuTK.Graphics;
-using System.Diagnostics;
 
 namespace osu.Game.Rulesets.Tau.UI.Components
 {
@@ -28,37 +27,37 @@ namespace osu.Game.Rulesets.Tau.UI.Components
         /// <summary>
         /// The number of bars to jump each update iteration.
         /// </summary>
-        private const int indexChange = 5;
+        private const int index_change = 5;
 
         /// <summary>
         /// The maximum length of each bar in the visualiser. Will be reduced when kiai is not activated.
         /// </summary>
-        private const float barLength = 600;
+        private const float bar_length = 600;
 
         /// <summary>
         /// The number of bars in one rotation of the visualiser.
         /// </summary>
-        private const int barsPerVisualiser = 200;
+        private const int bars_per_visualiser = 200;
 
         /// <summary>
         /// How many times we should stretch around the circumference (overlapping overselves).
         /// </summary>
-        private const float visualiserRounds = 5;
+        private const float visualiser_rounds = 5;
 
         /// <summary>
         /// How much should each bar go down each millisecond (based on a full bar).
         /// </summary>
-        private const float decayPerMilisecond = 0.0024f;
+        private const float decay_per_milisecond = 0.0024f;
 
         /// <summary>
         /// Number of milliseconds between each amplitude update.
         /// </summary>
-        private const float timeBetweenUpdates = 50;
+        private const float time_between_updates = 50;
 
         /// <summary>
         /// The minimum amplitude to show a bar.
         /// </summary>
-        private const float amplitudeDeadZone = 1f / barLength;
+        private const float amplitude_dead_zone = 1f / bar_length;
 
         private int indexOffset;
 
@@ -94,15 +93,15 @@ namespace osu.Game.Rulesets.Tau.UI.Components
 
             var amplitudes = (track?.CurrentAmplitudes ?? ChannelAmplitudes.Empty).FrequencyAmplitudes.Span;
 
-            for (int i = 0; i < barsPerVisualiser; i++)
+            for (int i = 0; i < bars_per_visualiser; i++)
             {
-                float targetAmplitude = amplitudes[(i + indexOffset) % barsPerVisualiser];
+                float targetAmplitude = amplitudes[(i + indexOffset) % bars_per_visualiser];
 
                 if (targetAmplitude > frequencyAmplitudes[i])
                     frequencyAmplitudes[i] = targetAmplitude;
             }
 
-            indexOffset = (indexOffset + indexChange) % barsPerVisualiser;
+            indexOffset = (indexOffset + index_change) % bars_per_visualiser;
         }
 
         private double lastUpdateTime = double.MinValue;
@@ -111,15 +110,15 @@ namespace osu.Game.Rulesets.Tau.UI.Components
         {
             base.Update();
 
-            if (Math.Abs(lastUpdateTime - Time.Current) > 50){
+            if (Math.Abs(lastUpdateTime - Time.Current) > 50)
+            {
                 updateAmplitudes();
                 lastUpdateTime = Time.Current;
             }
 
-            float decayFactor = (float)Math.Abs(Time.Elapsed) * decayPerMilisecond;
+            float decayFactor = (float)Math.Abs(Time.Elapsed) * decay_per_milisecond;
 
-
-            for (int i = 0; i < barsPerVisualiser; i++)
+            for (int i = 0; i < bars_per_visualiser; i++)
             {
                 //3% of extra bar length to make it a little faster when bar is almost at it's minimum
                 frequencyAmplitudes[i] -= decayFactor * (frequencyAmplitudes[i] + 0.03f);
@@ -177,20 +176,20 @@ namespace osu.Game.Rulesets.Tau.UI.Components
 
                 if (audioData != null)
                 {
-                    for (int j = 0; j < visualiserRounds; j++)
+                    for (int j = 0; j < visualiser_rounds; j++)
                     {
-                        for (int i = 0; i < barsPerVisualiser; i++)
+                        for (int i = 0; i < bars_per_visualiser; i++)
                         {
-                            if (audioData[i] < amplitudeDeadZone)
+                            if (audioData[i] < amplitude_dead_zone)
                                 continue;
 
-                            float rotation = MathUtils.DegreesToRadians((i / (float)barsPerVisualiser * 360) + (j * 360 / visualiserRounds));
+                            float rotation = MathUtils.DegreesToRadians((i / (float)bars_per_visualiser * 360) + (j * 360 / visualiser_rounds));
                             float rotationCos = MathF.Cos(rotation);
                             float rotationSin = MathF.Sin(rotation);
                             // taking the cos and sin to the 0..1 range
                             var barPosition = new Vector2((rotationCos / 2) + 0.5f, (rotationSin / 2) + 0.5f) * size;
 
-                            var barSize = new Vector2(size * MathF.Sqrt(2 * (1 - MathF.Cos(MathUtils.DegreesToRadians(360f / barsPerVisualiser)))) / 2f, barLength * audioData[i]);
+                            var barSize = new Vector2(size * MathF.Sqrt(2 * (1 - MathF.Cos(MathUtils.DegreesToRadians(360f / bars_per_visualiser)))) / 2f, bar_length * audioData[i]);
                             // The distance between the position and the sides of the bar.
                             var bottomOffset = new Vector2(-rotationSin * barSize.X / 2, rotationCos * barSize.X / 2);
                             // The distance between the bottom side of the bar and the top side.

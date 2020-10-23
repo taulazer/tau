@@ -14,10 +14,7 @@ namespace osu.Game.Rulesets.Tau.Tests
 
             Add(cursor = new TauCursor(CreateBeatmap(new TauRuleset().RulesetInfo).BeatmapInfo.BaseDifficulty));
 
-            AddStep("Reset cursor", () =>
-            {
-                InputManager.MoveMouseTo(cursor, new Vector2(0, -50));
-            });
+            AddStep("Reset cursor", () => { InputManager.MoveMouseTo(cursor, new Vector2(0, -50)); });
         }
     }
 }

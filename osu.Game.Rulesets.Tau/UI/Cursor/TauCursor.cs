@@ -1,3 +1,4 @@
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -10,7 +11,6 @@ using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
 using osuTK.Graphics;
-using System;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
@@ -48,6 +48,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             {
                 case DrawableBeat beat:
                     var angleDiff = Extensions.GetDeltaAngle(paddle.Rotation, beat.HitObject.Angle);
+
                     return Math.Abs(angleDiff) <= angleRange / 2;
 
                 default:
@@ -70,6 +71,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             private readonly Box topLine;
             private readonly Box bottomLine;
             private readonly CircularContainer circle;
+
             public Paddle(float angleRange)
             {
                 RelativeSizeAxes = Axes.Both;
@@ -94,18 +96,20 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
-                                Current = new BindableDouble(angleRange/360),
+                                Current = new BindableDouble(angleRange / 360),
                                 InnerRadius = 0.05f,
-                                Rotation = -angleRange/2
+                                Rotation = -angleRange / 2
                             },
-                            bottomLine = new Box{
+                            bottomLine = new Box
+                            {
                                 EdgeSmoothness = new Vector2(1f),
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.BottomCentre,
                                 RelativeSizeAxes = Axes.Y,
                                 Size = new Vector2(1.25f, 0.235f)
                             },
-                            topLine = new Box{
+                            topLine = new Box
+                            {
                                 EdgeSmoothness = new Vector2(1f),
                                 Anchor = Anchor.TopCentre,
                                 Origin = Anchor.TopCentre,
@@ -140,6 +144,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / DrawHeight, .015f, .45f);
                 bottomLine.Height = -circle.Y - .015f;
                 topLine.Height = .5f + circle.Y - .015f;
+
                 return base.OnMouseMove(e);
             }
         }

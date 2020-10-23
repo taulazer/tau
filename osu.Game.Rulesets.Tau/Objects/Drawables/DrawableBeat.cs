@@ -67,10 +67,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             config?.BindWith(TauRulesetSettings.BeatSize, size);
             size.BindValueChanged(value => Box.Size = new Vector2(value.NewValue), true);
 
-            HitObject.AngleBindable.BindValueChanged(a =>
-            {
-                Rotation = a.NewValue;
-            }, true);
+            HitObject.AngleBindable.BindValueChanged(a => { Rotation = a.NewValue; }, true);
         }
 
         protected override void UpdateInitialTransforms()

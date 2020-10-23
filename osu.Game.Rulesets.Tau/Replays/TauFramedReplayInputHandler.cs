@@ -39,6 +39,7 @@ namespace osu.Game.Rulesets.Tau.Replays
             {
                 Position = GamefieldToScreenSpace(Position),
             });
+
             inputs.Add(new ReplayState<TauAction>
             {
                 PressedActions = CurrentFrame?.Actions ?? new List<TauAction>(),
