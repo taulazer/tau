@@ -35,6 +35,9 @@ namespace osu.Game.Rulesets.Tau.UI
                 case Beat beat:
                     return new DrawableBeat(beat);
 
+                case Slider slider:
+                    return new DrawableSlider(slider);
+
                 default:
                     return null;
             }
