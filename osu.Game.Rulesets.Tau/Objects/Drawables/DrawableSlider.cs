@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -18,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableSlider(TauHitObject obj)
             : base(obj)
         {
-            RelativeSizeAxes = Axes.Both;
+            Size = new Vector2(768);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
@@ -40,11 +43,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         },
                         path = new SmoothPath
                         {
-                            RelativePositionAxes = Axes.Both,
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Y = 0.5f,
-                            PathRadius = 5
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            PathRadius = 5,
                         }
                     }
                 },
@@ -55,15 +56,40 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.UpdateAfterChildren();
             path.ClearVertices();
-            path.AddVertex(Vector2.Zero);
 
-            foreach (var node in HitObject.Nodes.Reverse())
+            bool ShouldBeCulled(SliderNode node)
             {
-                var distanceFromCenter = (float)Math.Max(0, Time.Current - (HitObject.StartTime + node.Time) - HitObject.TimePreempt);
-                path.AddVertex(Extensions.GetCircularPosition(distanceFromCenter, node.Angle));
+                return Time.Current > HitObject.StartTime + node.Time;
             }
 
-            path.OriginPosition = path.PositionInBoundingBox(path.Vertices[0]);
+            var cullPivot = HitObject.Nodes.LastOrDefault(x => ShouldBeCulled(x));
+            var cullAmount = cullPivot is null ? 0 : HitObject.Nodes.IndexOf(cullPivot);
+
+            Console.WriteLine(cullAmount.ToString());
+
+            foreach (var node in HitObject.Nodes.Reverse().SkipLast(cullAmount))
+            {
+                double intersectTime = HitObject.StartTime + node.Time;
+                float targetAngle = node.Angle;
+
+                // This is oob
+                if (node == cullPivot)
+                {
+                    var nextNode = HitObject.Nodes.GetNext(node);
+                    if (nextNode == null)
+                        break;
+
+                    float difference = (nextNode.Angle - node.Angle) % 360;
+                    if (difference > 180) difference -= 360;
+                    else if (difference < -180) difference += 360;
+                    targetAngle = (float)Interpolation.Lerp(node.Angle, node.Angle + difference, (Time.Current - intersectTime) / (nextNode.Time - node.Time));
+                }
+
+                float distanceFromCentre = (float)Math.Clamp((Time.Current - (intersectTime - HitObject.TimePreempt)) / HitObject.TimePreempt, 0, 1) * 384;
+                path.AddVertex(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
+            }
+            path.Position = path.Vertices.Any() ? path.Vertices.Last() : new Vector2(0);
+            path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.Last()) : base.OriginPosition;
         }
     }
 }
