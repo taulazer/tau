@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             foreach (var node in HitObject.Nodes.Reverse())
             {
-                var distanceFromCenter = (float)Math.Max(0, Time.Current - node.Time - HitObject.TimePreempt);
+                var distanceFromCenter = (float)Math.Max(0, Time.Current - (HitObject.StartTime + node.Time) - HitObject.TimePreempt);
                 path.AddVertex(Extensions.GetCircularPosition(distanceFromCenter, node.Angle));
             }
 
