@@ -56,6 +56,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
                     new SliderNode(500, 25),
                     new SliderNode(1000, 270),
                     new SliderNode(1500, 180),
+                    new SliderNode(2000, 190),
                 }
             };
 

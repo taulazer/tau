@@ -1,30 +1,53 @@
-﻿using osu.Framework.Graphics;
+﻿using System;
+using System.Linq;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
+using osu.Framework.Graphics.Shapes;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableSlider : DrawableTauHitObject
     {
-        private SmoothPath path;
+        private readonly Path path;
 
         public new Slider HitObject => base.HitObject as Slider;
 
         public DrawableSlider(TauHitObject obj)
             : base(obj)
         {
+            RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            RelativeSizeAxes = Axes.Both;
-            Size = Vector2.One;
 
-            AddInternal(path = new SmoothPath
+            AddRangeInternal(new Drawable[]
             {
-                RelativePositionAxes = Axes.Both,
-                Anchor = Anchor.TopCentre,
-                Origin = Anchor.TopCentre,
-                Y = 0.5f,
-                PathRadius = 5
+                new CircularContainer
+                {
+                    Masking = true,
+                    BorderThickness = 5,
+                    BorderColour = Color4.White,
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Alpha = 0,
+                            AlwaysPresent = true
+                        },
+                        path = new SmoothPath
+                        {
+                            RelativePositionAxes = Axes.Both,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Y = 0.5f,
+                            PathRadius = 5
+                        }
+                    }
+                },
             });
         }
 
@@ -34,9 +57,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             path.ClearVertices();
             path.AddVertex(Vector2.Zero);
 
-            foreach (var node in HitObject.Nodes)
+            foreach (var node in HitObject.Nodes.Reverse())
             {
-                path.AddVertex(Extensions.GetCircularPosition(node.Time * 0.1f, node.Angle));
+                var distanceFromCenter = (float)Math.Max(0, Time.Current - node.Time - HitObject.TimePreempt);
+                path.AddVertex(Extensions.GetCircularPosition(distanceFromCenter, node.Angle));
             }
 
             path.OriginPosition = path.PositionInBoundingBox(path.Vertices[0]);
