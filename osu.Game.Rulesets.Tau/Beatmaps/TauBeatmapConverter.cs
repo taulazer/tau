@@ -24,14 +24,33 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             var position = ((IHasPosition)original).Position;
             var comboData = original as IHasCombo;
             bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
+            var sample = original is IHasPathWithRepeats c ? c.NodeSamples[0] : original.Samples;
 
             switch (original)
             {
+                case IHasPath pathData:
+                    var nodes = new List<SliderNode>();
+
+                    foreach (var point in pathData.Path.ControlPoints)
+                    {
+                        var time = pathData.Duration / pathData.Path.ControlPoints.Count * pathData.Path.ControlPoints.IndexOf(point);
+                        nodes.Add(new SliderNode((float)time, (position + point.Position.Value).GetHitObjectAngle()));
+                    }
+
+                    return new Slider
+                    {
+                        Samples = sample,
+                        StartTime = original.StartTime,
+                        NewCombo = comboData?.NewCombo ?? false,
+                        ComboOffset = comboData?.ComboOffset ?? 0,
+                        Nodes = nodes.ToArray(),
+                    }.Yield();
+
                 default:
                     if (isHard)
                         return new HardBeat
                         {
-                            Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
+                            Samples = sample,
                             StartTime = original.StartTime,
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
@@ -39,7 +58,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     else
                         return new Beat
                         {
-                            Samples = original is IHasPathWithRepeats curve ? curve.NodeSamples[0] : original.Samples,
+                            Samples = sample,
                             StartTime = original.StartTime,
                             Angle = position.GetHitObjectAngle(),
                             NewCombo = comboData?.NewCombo ?? false,

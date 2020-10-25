@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Internal;
 using osu.Framework.Extensions.IEnumerableExtensions;
@@ -7,8 +8,8 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
+using osu.Game.Rulesets.Scoring;
 using osuTK;
-using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -30,8 +31,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 new CircularContainer
                 {
                     Masking = true,
-                    BorderThickness = 5,
-                    BorderColour = Color4.White,
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
@@ -50,6 +49,26 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
             });
+        }
+
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        {
+            Debug.Assert(HitObject.HitWindows != null);
+
+            if (!userTriggered)
+            {
+                if (!HitObject.HitWindows.CanBeHit(timeOffset))
+                    ApplyResult(r => r.Type = HitResult.Great);
+
+                return;
+            }
+
+            var result = HitObject.HitWindows.ResultFor(timeOffset);
+
+            if (result == HitResult.None)
+                return;
+
+            ApplyResult(r => r.Type = result);
         }
 
         protected override void UpdateAfterChildren()
