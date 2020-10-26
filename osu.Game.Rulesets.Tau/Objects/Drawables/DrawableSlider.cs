@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
+using osu.Game.Rulesets.Objects;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -55,21 +56,21 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             Debug.Assert(HitObject.HitWindows != null);
 
-            if (!userTriggered)
+            if (Time.Current > HitObject.GetEndTime())
             {
-                if (!HitObject.HitWindows.CanBeHit(timeOffset))
-                    ApplyResult(r => r.Type = HitResult.Great);
+                double percentage = totalTimeHeld / HitObject.Duration;
 
-                return;
+                HitResult result;
+
+                if (percentage > .66) result = HitResult.Great;
+                else if (percentage > .33) result = HitResult.Ok;
+                else result = HitResult.Miss;
+
+                ApplyResult(r => r.Type = result);
             }
-
-            var result = HitObject.HitWindows.ResultFor(timeOffset);
-
-            if (result == HitResult.None)
-                return;
-
-            ApplyResult(r => r.Type = result);
         }
+
+        double totalTimeHeld = 0;
 
         protected override void UpdateAfterChildren()
         {
@@ -117,6 +118,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             path.Position = path.Vertices.Any() ? path.Vertices.Last() : new Vector2(0);
             path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.Last()) : base.OriginPosition;
+
+            if ((CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)) ?? false) && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
+            {
+                totalTimeHeld += Time.Elapsed;
+            }
         }
+
+        private TauInputManager tauActionInputManager;
+        internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
     }
 }
