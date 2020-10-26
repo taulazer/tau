@@ -4,6 +4,7 @@ using System.Threading;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
+using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Objects;
@@ -28,14 +29,15 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             switch (original)
             {
-                case IHasPath pathData:
+                case IHasPathWithRepeats pathData:
                     var nodes = new List<SliderNode>();
 
-                    foreach (var point in pathData.Path.ControlPoints)
+                    for (double t = 0; t < pathData.Duration; t += 20)
                     {
-                        var time = pathData.Duration / pathData.Path.ControlPoints.Count * pathData.Path.ControlPoints.IndexOf(point);
-                        nodes.Add(new SliderNode((float)time, (position + point.Position.Value).GetHitObjectAngle()));
+                        nodes.Add(new SliderNode((float)t, ((original as IHasPosition).Position + pathData.CurvePositionAt(t / pathData.Duration)).GetHitObjectAngle()));
                     }
+                    nodes.Add(new SliderNode((float)pathData.Duration, ((original as IHasPosition).Position + pathData.CurvePositionAt(1)).GetHitObjectAngle()));
+
 
                     return new Slider
                     {
@@ -68,5 +70,38 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         }
 
         protected override Beatmap<TauHitObject> CreateBeatmap() => new TauBeatmap();
+
+        private IEnumerable<SliderNode> createNodeFromTicks(HitObject original)
+        {
+            var curve = original as IHasPathWithRepeats;
+            double spanDuration = curve.Duration / (curve.RepeatCount + 1);
+            bool isRepeatSpam = spanDuration < 75 && curve.RepeatCount > 0;
+
+            if (isRepeatSpam)
+                yield break;
+
+            var difficulty = Beatmap.BeatmapInfo.BaseDifficulty;
+
+            var controlPointInfo = Beatmap.ControlPointInfo;
+            TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(original.StartTime);
+            DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(original.StartTime);
+
+            double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
+
+            var velocity = scoringDistance / timingPoint.BeatLength;
+            var tickDistance = scoringDistance / difficulty.SliderTickRate;
+
+            double legacyLastTickOffset = (original as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
+
+            foreach (var e in SliderEventGenerator.Generate(original.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, CancellationToken.None))
+            {
+                switch (e.Type)
+                {
+                    case SliderEventType.Repeat:
+                        yield return new SliderNode((float)(e.Time - original.StartTime), Extensions.GetHitObjectAngle(curve.CurvePositionAt(e.PathProgress)));
+                        break;
+                }
+            }
+        }
     }
 }
