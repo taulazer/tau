@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Internal;
+using System.Diagnostics;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -76,38 +76,39 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateAfterChildren();
             path.ClearVertices();
 
-            bool shouldBeCulled(SliderNode node) =>
-                Time.Current > HitObject.StartTime + node.Time;
+            // Anything before Time.Current is NOT VISIBLE
+            List<Vector2> vertices = new List<Vector2>();
 
-            var cullPivot = HitObject.Nodes.LastOrDefault(shouldBeCulled);
-            var cullAmount = cullPivot is null ? 0 : HitObject.Nodes.IndexOf(cullPivot);
-
-            Console.WriteLine(cullAmount.ToString());
-
-            foreach (var node in HitObject.Nodes.Reverse().SkipLast(cullAmount))
+            for (double t = Time.Current; t < Time.Current + HitObject.TimePreempt; t += 20) // Generate vertex every 20ms
             {
-                double intersectTime = HitObject.StartTime + node.Time;
-                float targetAngle = node.Angle;
+                var currentNode = HitObject.Nodes.LastOrDefault(x => t >= HitObject.StartTime + x.Time);
+                if (currentNode == null) continue; // This is to ensure shit breaks... Because at least it is a controlled breakage ;)
 
-                // This is oob
-                if (node == cullPivot)
-                {
-                    var nextNode = HitObject.Nodes.GetNext(node);
+                var nextNode = HitObject.Nodes.GetNext(currentNode);
+                if (nextNode == null) break; // Can't break if you break it yourself. <Insert big brain meme here>
 
-                    if (nextNode == null)
-                        break;
 
-                    float difference = (nextNode.Angle - node.Angle) % 360;
+                double nodeStart = HitObject.StartTime + currentNode.Time;
+                double nodeEnd = HitObject.StartTime + nextNode.Time;
+                double duration = nodeEnd - nodeStart;
 
-                    if (difference > 180) difference -= 360;
-                    else if (difference < -180) difference += 360;
+                float ActualProgress = (float)((t - nodeStart) / duration);
 
-                    targetAngle = (float)Interpolation.Lerp(node.Angle, node.Angle + difference, (Time.Current - intersectTime) / (nextNode.Time - node.Time));
-                }
+                // Larger the time, the further in it is.
+                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * 384;
 
-                float distanceFromCentre = (float)Math.Clamp((Time.Current - (intersectTime - HitObject.TimePreempt)) / HitObject.TimePreempt, 0, 1) * 384;
-                path.AddVertex(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
+                // Angle calc
+                float difference = (nextNode.Angle - currentNode.Angle) % 360;
+                if (difference > 180) difference -= 360;
+                else if (difference < -180) difference += 360;
+
+                float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, ActualProgress);
+
+                vertices.Add(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
             }
+
+            foreach (var v in vertices)
+                path.AddVertex(v);
 
             path.Position = path.Vertices.Any() ? path.Vertices.Last() : new Vector2(0);
             path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.Last()) : base.OriginPosition;
