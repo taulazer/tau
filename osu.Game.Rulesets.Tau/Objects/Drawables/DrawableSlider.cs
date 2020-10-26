@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Alpha = 0,
                             AlwaysPresent = true
                         },
-                        path = new SmoothPath
+                        path = new Path
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
@@ -118,6 +118,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             path.Position = path.Vertices.Any() ? path.Vertices.Last() : new Vector2(0);
             path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.Last()) : base.OriginPosition;
+
+            if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
 
             if ((CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)) ?? false) && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
