@@ -119,7 +119,7 @@ namespace osu.Game.Rulesets.Tau.UI
             playfieldBackground.FadeTo(PlayfieldDimLevel.Value, 100);
         }
 
-        public bool CheckIfWeCanValidate(DrawableTauHitObject obj) => cursor.CheckForValidation(obj);
+        public bool CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
 
         public override void Add(DrawableHitObject h)
         {

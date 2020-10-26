@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                     var play = (TauPlayfield)playfield;
 
-                    if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit))
+                    if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit.HitObject.Angle))
                         requiresHit = true;
                 }
                 else if (tauHit is DrawableHardBeat)

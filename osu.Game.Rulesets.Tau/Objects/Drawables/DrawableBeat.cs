@@ -92,7 +92,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 return;
             }
 
-            if (CheckValidation.Invoke(this))
+            if (CheckValidation.Invoke(HitObject.Angle))
             {
                 var result = HitObject.HitWindows.ResultFor(timeOffset);
 
