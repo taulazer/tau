@@ -74,7 +74,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void UpdateAfterChildren()
         {
             base.UpdateAfterChildren();
-            path.ClearVertices();
 
             // Anything before Time.Current is NOT VISIBLE
             List<Vector2> vertices = new List<Vector2>();
@@ -113,9 +112,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 vertices.Add(Extensions.GetCircularPosition((float)(progress * 384), HitObject.Nodes.Last().Angle));
             }
-
-            foreach (var v in vertices)
-                path.AddVertex(v);
+            vertices.Reverse();
+            path.Vertices = vertices;
 
             path.Position = path.Vertices.Any() ? path.Vertices.Last() : new Vector2(0);
             path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.Last()) : base.OriginPosition;
