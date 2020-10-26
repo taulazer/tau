@@ -79,7 +79,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             // Anything before Time.Current is NOT VISIBLE
             List<Vector2> vertices = new List<Vector2>();
 
-            for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time); t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time); t += 20) // Generate vertex every 1ms
+            for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
+                t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
+                t += 20) // Generate vertex every 1ms
             {
                 var currentNode = HitObject.Nodes.LastOrDefault(x => t >= HitObject.StartTime + x.Time);
                 var nextNode = HitObject.Nodes.GetNext(currentNode);

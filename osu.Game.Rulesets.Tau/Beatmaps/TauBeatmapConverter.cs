@@ -30,6 +30,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             switch (original)
             {
                 case IHasPathWithRepeats pathData:
+
+                    if (pathData.Duration < BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
+                        goto default;
                     var nodes = new List<SliderNode>();
 
                     for (double t = 0; t < pathData.Duration; t += 20)
