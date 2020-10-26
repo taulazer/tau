@@ -53,10 +53,22 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
                 StartTime = Time.Current + 1000,
                 Nodes = new[]
                 {
-                    new SliderNode(0, 25),
-                    new SliderNode(500, 270),
+                    new SliderNode(0, 0),
+                    new SliderNode(500, 90),
                     new SliderNode(1000, 180),
-                    new SliderNode(1500, 190),
+                    new SliderNode(1500, 270),
+                    new SliderNode(2000, 0),
+                    new SliderNode(2500, 90),
+                    new SliderNode(3000, 180),
+                    new SliderNode(3500, 270),
+                    new SliderNode(4000, 0),
+                    new SliderNode(4500, 90),
+                    new SliderNode(5000, 180),
+                    new SliderNode(5500, 270),
+                    new SliderNode(6000, 0),
+                    new SliderNode(6500, 90),
+                    new SliderNode(7000, 180),
+                    new SliderNode(7500, 270),
                 }
             };
 

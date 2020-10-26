@@ -79,14 +79,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             // Anything before Time.Current is NOT VISIBLE
             List<Vector2> vertices = new List<Vector2>();
 
-            for (double t = Time.Current; t < Time.Current + HitObject.TimePreempt; t += 20) // Generate vertex every 20ms
+            for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time); t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time); t += 20) // Generate vertex every 1ms
             {
                 var currentNode = HitObject.Nodes.LastOrDefault(x => t >= HitObject.StartTime + x.Time);
-                if (currentNode == null) continue; // This is to ensure shit breaks... Because at least it is a controlled breakage ;)
-
                 var nextNode = HitObject.Nodes.GetNext(currentNode);
-                if (nextNode == null) break; // Can't break if you break it yourself. <Insert big brain meme here>
-
 
                 double nodeStart = HitObject.StartTime + currentNode.Time;
                 double nodeEnd = HitObject.StartTime + nextNode.Time;
@@ -105,6 +101,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, ActualProgress);
 
                 vertices.Add(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
+            }
+
+            //Check if the last node is visible
+            if (Time.Current + HitObject.TimePreempt > HitObject.StartTime + HitObject.Nodes.Last().Time)
+            {
+                double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
+                double progress = 1 - (timeDiff / HitObject.TimePreempt);
+
+                vertices.Add(Extensions.GetCircularPosition((float)(progress * 384), HitObject.Nodes.Last().Angle));
             }
 
             foreach (var v in vertices)
