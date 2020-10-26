@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -153,6 +154,20 @@ namespace osu.Game.Rulesets.Tau.UI
 
             switch (judgedObject)
             {
+                case DrawableSlider slider:
+                    var sAngle = slider.HitObject.Nodes.Last().Angle;
+                    explosion.Position = Extensions.GetCircularPosition(.6f, sAngle);
+                    explosion.Rotation = sAngle;
+
+                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type))
+                        {
+                            Position = Extensions.GetCircularPosition(.5f, sAngle),
+                            Angle = sAngle,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre
+                        });
+                    break;
                 case DrawableBeat beat:
                     var angle = beat.HitObject.Angle;
                     explosion.Position = Extensions.GetCircularPosition(.6f, angle);
