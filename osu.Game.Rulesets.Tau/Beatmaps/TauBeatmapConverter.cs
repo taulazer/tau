@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using osu.Framework.Extensions.IEnumerableExtensions;
@@ -35,9 +36,19 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         goto default;
                     var nodes = new List<SliderNode>();
 
+                    float? lastAngle = null;
+                    double? lastTime = null;
+
                     for (double t = 0; t < pathData.Duration; t += 20)
                     {
-                        nodes.Add(new SliderNode((float)t, ((original as IHasPosition).Position + pathData.CurvePositionAt(t / pathData.Duration)).GetHitObjectAngle()));
+                        float angle = ((original as IHasPosition).Position + pathData.CurvePositionAt(t / pathData.Duration)).GetHitObjectAngle();
+                        if (lastAngle.HasValue && (Math.Abs(Extensions.GetDeltaAngle(lastAngle.Value, angle)) / (float)Math.Abs(lastTime.Value - t)) > 0.9)
+                        {
+                            goto default;
+                        }
+                        lastAngle = angle;
+                        lastTime = t;
+                        nodes.Add(new SliderNode((float)t, angle));
                     }
                     nodes.Add(new SliderNode((float)pathData.Duration, ((original as IHasPosition).Position + pathData.CurvePositionAt(1)).GetHitObjectAngle()));
 
