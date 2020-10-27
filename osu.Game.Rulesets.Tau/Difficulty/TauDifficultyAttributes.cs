@@ -9,6 +9,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         public double SpeedStrain;
         public double ApproachRate;
         public double OverallDifficulty;
+        public IReadOnlyList<double> AimPeaks;
 
     }
 }
