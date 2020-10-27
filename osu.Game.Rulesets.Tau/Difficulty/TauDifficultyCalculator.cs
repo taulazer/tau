@@ -45,8 +45,7 @@ namespace osu.Game.Rulesets.Tau
 
             int maxCombo = beatmap.HitObjects.Count;
 
-            IReadOnlyList<double> aimPeaks = skills[0].StrainPeaks;
-
+            // IReadOnlyList<double> aimPeaks = skills[0].StrainPeaks;
 
             // Add the ticks + tail of the slider. 1 is subtracted because the head circle would be counted twice (once for the slider itself in the line above)
             // maxCombo += beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
@@ -61,7 +60,6 @@ namespace osu.Game.Rulesets.Tau
                 OverallDifficulty = (80 - hitWindowGreat) / 6,
                 MaxCombo = maxCombo,
                 Skills = skills,
-                AimPeaks = aimPeaks,
             };
         }
 
