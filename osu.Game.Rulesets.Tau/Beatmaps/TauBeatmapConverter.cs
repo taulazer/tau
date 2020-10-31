@@ -42,10 +42,11 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     for (double t = 0; t < pathData.Duration; t += 20)
                     {
                         float angle = ((original as IHasPosition).Position + pathData.CurvePositionAt(t / pathData.Duration)).GetHitObjectAngle();
-                        if (lastAngle.HasValue && (Math.Abs(Extensions.GetDeltaAngle(lastAngle.Value, angle)) / (float)Math.Abs(lastTime.Value - t)) > 0.9)
-                        {
+
+                        // We don't want sliders that switch angles too fast. We would default to a normal note in this case
+                        if (lastAngle.HasValue && (Math.Abs(Extensions.GetDeltaAngle(lastAngle.Value, angle)) / (float)Math.Abs(lastTime.Value - t)) > 0.6)
                             goto default;
-                        }
+
                         lastAngle = angle;
                         lastTime = t;
                         nodes.Add(new SliderNode((float)t, angle));
