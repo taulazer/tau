@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau
             double starRating = aimRating + speedRating + Math.Abs(aimRating - speedRating) / 2;
             
             // Uncomment to see aimrating vs speedrating of a map: if aim rating is 3.5 and speed rating is 2.6 then sr will be 352.6
-            // double starRating = Math.Round(aimRating,1)*100 + Math.Round(speedRating,1);
+            // starRating = Math.Round(aimRating,1)*100 + Math.Round(speedRating,1);
 
             HitWindows hitWindows = new TauHitWindows();
             hitWindows.SetDifficulty(beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty);

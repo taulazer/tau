@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private const double timing_threshold = 107;
 
         // public List<Double> strainPeaks = new List<Double>();
-        protected override double SkillMultiplier => 60;//26.25;
+        protected override double SkillMultiplier => 70;//26.25;
         protected override double StrainDecayBase => 0.15;
 
         protected override double StrainValueOf(DifficultyHitObject current)
@@ -41,10 +41,14 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             
             double result = 0;
             double angleBonus;
+
+            double speedmult = 1;
             if (Previous.Count > 0)
             {
                 var tauPrevious = (TauDifficultyHitObject)Previous[0];
-
+                var x = tauPrevious.StrainTime;
+                var y = -Math.Log10(tauPrevious.StrainTime);
+                speedmult = Math.Max(y + 3.2,0);
                 if (tauCurrent.Angle != null && tauCurrent.Angle.Value > angle_bonus_begin)
                 {
                     const double min_jump = 5;
@@ -67,7 +71,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             return Math.Max(
                 angle_strain * paddle_size_bonus,
                 flat_strain * paddle_size_bonus
-            );
+            ) * speedmult;
         }
 
         private double applyDiminishingExp(double val) => Math.Pow(val, 0.99);
