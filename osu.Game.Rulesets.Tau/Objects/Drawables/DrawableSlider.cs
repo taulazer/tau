@@ -41,11 +41,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Alpha = 0,
                             AlwaysPresent = true
                         },
-                        path = new Path
+                        path = new SmoothPath
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             PathRadius = 5,
+                            AutoSizeAxes = Axes.None,
+                            Size = new Vector2(768)
                         }
                     }
                 },
