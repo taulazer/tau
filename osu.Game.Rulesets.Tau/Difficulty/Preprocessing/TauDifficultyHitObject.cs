@@ -35,8 +35,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         public IBeatmap beatmap;
 
-        private readonly TauHitObject lastLastObject;
-        private readonly TauHitObject lastObject;
+        public readonly TauHitObject lastLastObject;
+        public readonly TauHitObject lastObject;
 
         public TauDifficultyHitObject(HitObject hitObject, HitObject lastLastObject, HitObject lastObject, double clockRate, IBeatmap bm)
             : base(hitObject, lastObject, clockRate)
