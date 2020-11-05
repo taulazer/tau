@@ -54,8 +54,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
                         angleBonus += (1 - angleBonus) * Math.Min((90 - distance) / 10, 1) * Math.Sin((pi_over_2 - tauCurrent.Angle.Value) / pi_over_4);
                 }
             }
+            
             speedBonus*=NoteMultiplier;
-
             return (1 + (speedBonus - 1) * 0.75) * angleBonus * (0.95 + speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5)) / tauCurrent.StrainTime;
         }
     }
