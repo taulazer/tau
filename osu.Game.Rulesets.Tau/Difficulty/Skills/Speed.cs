@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             }
             else if (tauCurrent.Angle != null && tauCurrent.Angle.Value < angle_bonus_begin)
             {
-                angleBonus = 1 + Math.Pow(Math.Sin(1.5 * (angle_bonus_begin - tauCurrent.Angle.Value)), 2) / 3.57;
+                angleBonus = 1 + (Math.Pow(Math.Sin(1.5 * (angle_bonus_begin - tauCurrent.Angle.Value)), 2) / 3.57);
 
                 if (tauCurrent.Angle.Value < pi_over_2)
                 {
@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             }
 
             speedBonus*=NoteMultiplier;
-            return (1 + (speedBonus - 1) * 0.75) * angleBonus * (0.95 + speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5)) / tauCurrent.StrainTime;
+            return (1 + ((speedBonus - 1) * 0.75)) * angleBonus * (0.95 + (speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5))) / tauCurrent.StrainTime;
         }
     }
 }

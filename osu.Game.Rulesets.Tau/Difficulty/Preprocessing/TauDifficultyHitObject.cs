@@ -53,7 +53,6 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         private void setDistances()
         {
-
             JumpDistance = (getEndCursorPosition(BaseObject) - getEndCursorPosition(lastObject)).Length;
 
             if (lastLastObject != null)
@@ -71,8 +70,6 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
                 Angle = 0.5f * (lastLastObject.Angle - BaseObject.Angle);
             }
         }
-
-        
 
         private Vector2 getEndCursorPosition(TauHitObject hitObject)
         {

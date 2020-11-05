@@ -11,11 +11,9 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Scoring;
 
-
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
 
 namespace osu.Game.Rulesets.Tau
 {
@@ -31,7 +29,7 @@ namespace osu.Game.Rulesets.Tau
 
             double aimRating = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
             double speedRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
-            double starRating = aimRating + speedRating + Math.Abs(aimRating - speedRating) / 2;
+            double starRating = aimRating + speedRating + (Math.Abs(aimRating - speedRating) / 2);
             
             // Uncomment to see aimrating vs speedrating of a map: if aim rating is 3.5 and speed rating is 2.6 then sr will be 352.6
             // starRating = Math.Round(aimRating,1)*100 + Math.Round(speedRating,1);
@@ -56,7 +54,7 @@ namespace osu.Game.Rulesets.Tau
                 Mods = mods,
                 AimStrain = aimRating,
                 SpeedStrain = speedRating,
-                ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5,
+                ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : ((1200 - preempt) / 150) + 5,
                 OverallDifficulty = (80 - hitWindowGreat) / 6,
                 MaxCombo = maxCombo,
                 Skills = skills,

@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private const double timing_threshold = 107;
 
         // public List<Double> strainPeaks = new List<Double>();
-        protected override double SkillMultiplier => 70;//26.25;
+        protected override double SkillMultiplier => 70; //26.25;
         protected override double StrainDecayBase => 0.15;
 
         protected override double StrainValueOf(DifficultyHitObject current)
@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double jumpDistanceExp = applyDiminishingExp(tauCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(tauCurrent.TravelDistance);
 
-            double angle_strain = (result + (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold));
+            double angle_strain = result + (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold);
             double flat_strain = (Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / tauCurrent.StrainTime;
 
             // strainPeaks.Add(Math.Max(option1,option2));
@@ -75,7 +75,5 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         }
 
         private double applyDiminishingExp(double val) => Math.Pow(val, 0.99);
-
-    
     }
 }
