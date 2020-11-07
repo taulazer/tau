@@ -11,10 +11,11 @@ using osu.Framework.Utils;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 using osu.Game.Rulesets.Objects;
+using osu.Framework.Input.Bindings;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableSlider : DrawableTauHitObject
+    public class DrawableSlider : DrawableTauHitObject, IKeyBindingHandler<TauAction>
     {
         private readonly Path path;
 
@@ -121,13 +122,21 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             path.Position = path.Vertices.Any() ? path.Vertices.Last() : new Vector2(0);
             path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.Last()) : base.OriginPosition;
 
+            isBeingHit = false;
+
             if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
 
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
                 totalTimeHeld += Time.Elapsed;
+                isBeingHit = true;
             }
         }
+
+        private bool isBeingHit;
+
+        public bool OnPressed(TauAction action) => HitActions.Contains(action) && !isBeingHit;
+        public void OnReleased(TauAction action) { }
 
         public bool IsWithinPaddle => CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)) ?? false;
 
