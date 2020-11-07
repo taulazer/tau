@@ -173,10 +173,10 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 }
             };
 
-            protected override void LoadComplete()
+            protected override void UpdateAfterChildren()
             {
-                base.LoadComplete();
-                ActiveCursor.Spin(3000, RotationDirection.Clockwise).Loop();
+                base.UpdateAfterChildren();
+                ActiveCursor.Rotation += (float)Clock.ElapsedFrameTime / 5;
             }
         }
     }
