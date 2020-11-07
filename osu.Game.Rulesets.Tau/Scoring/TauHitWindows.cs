@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.Scoring
         {
             new DifficultyRange(HitResult.Great, 140, 100, 60),
             new DifficultyRange(HitResult.Ok, 200, 150, 100),
-            new DifficultyRange(HitResult.Miss, 400, 400, 400),
+            new DifficultyRange(HitResult.Miss, 200, 150, 100),
         };
     }
 }
