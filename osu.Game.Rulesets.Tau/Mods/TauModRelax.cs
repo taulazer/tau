@@ -53,21 +53,28 @@ namespace osu.Game.Rulesets.Tau.Mods
                 if (tauHit.HitObject is IHasDuration hasEnd && time > hasEnd.EndTime || tauHit.IsHit)
                     continue;
 
-                if (tauHit is DrawableBeat)
+                switch (tauHit)
                 {
-                    Debug.Assert(tauHit.HitObject.HitWindows != null);
+                    case DrawableBeat _:
+                        Debug.Assert(tauHit.HitObject.HitWindows != null);
 
-                    var play = (TauPlayfield)playfield;
+                        var play = (TauPlayfield)playfield;
 
-                    if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit.HitObject.Angle))
+                        if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit.HitObject.Angle))
+                            requiresHit = true;
+                        break;
+
+                    case DrawableHardBeat _:
+                        if (!tauHit.HitObject.HitWindows.CanBeHit(relativetime)) continue;
+
                         requiresHit = true;
-                }
-                else if (tauHit is DrawableHardBeat)
-                {
-                    if (!tauHit.HitObject.HitWindows.CanBeHit(relativetime)) continue;
+                        requiresHardHit = true;
+                        break;
 
-                    requiresHit = true;
-                    requiresHardHit = true;
+                    case DrawableSlider slider:
+                        if (slider.IsWithinPaddle)
+                            requiresHold = true;
+                        break;
                 }
             }
 

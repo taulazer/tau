@@ -123,11 +123,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
 
-            if ((CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)) ?? false) && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
+            if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
                 totalTimeHeld += Time.Elapsed;
             }
         }
+
+        public bool IsWithinPaddle => CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)) ?? false;
 
         private TauInputManager tauActionInputManager;
         internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
