@@ -29,6 +29,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly TauCursor cursor;
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
+        private readonly OrderedHitPolicy hitPolicy;
 
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
@@ -97,6 +98,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Anchor = Anchor.Centre,
                 },
             });
+            hitPolicy = new OrderedHitPolicy(HitObjectContainer);
         }
 
         protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
@@ -127,9 +129,9 @@ namespace osu.Game.Rulesets.Tau.UI
 
             switch (h)
             {
-                case DrawableTauHitObject _:
-                    var obj = (DrawableTauHitObject)h;
+                case DrawableTauHitObject obj:
                     obj.CheckValidation = CheckIfWeCanValidate;
+                    obj.CheckHittable = hitPolicy.IsHittable;
 
                     break;
             }
