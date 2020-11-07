@@ -144,6 +144,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
+            hitPolicy.HandleHit(judgedObject);
+
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 

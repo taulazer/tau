@@ -80,7 +80,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             var result = HitObject.HitWindows.ResultFor(timeOffset);
 
-            if (result == HitResult.None)
+            if (result == HitResult.None || CheckHittable?.Invoke(this, Time.Current) == false)
                 return;
 
             ApplyResult(r => r.Type = result);
