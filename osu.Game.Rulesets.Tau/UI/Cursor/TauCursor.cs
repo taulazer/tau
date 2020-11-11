@@ -59,7 +59,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             paddle.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
-            cursor.ActiveCursor.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
 
             return base.OnMouseMove(e);
         }
@@ -183,7 +182,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             protected override void UpdateAfterChildren()
             {
                 base.UpdateAfterChildren();
-                ActiveCursor.Rotation += (float)Clock.ElapsedFrameTime / 5;
+                ActiveCursor.Rotation += (float)Time.Elapsed / 5;
             }
         }
     }
