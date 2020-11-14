@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             base.ApplyToDrawableHitObjects(drawables);
         }
 
-        protected override void ApplyHiddenState(DrawableHitObject drawable, ArmedState state)
+        protected override void ApplyNormalVisibilityState(DrawableHitObject drawable, ArmedState state)
         {
             if (!(drawable is DrawableTauHitObject d))
                 return;
@@ -54,7 +54,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                     break;
             }
 
-            base.ApplyHiddenState(drawable, state);
+            base.ApplyNormalVisibilityState(drawable, state);
         }
     }
 }

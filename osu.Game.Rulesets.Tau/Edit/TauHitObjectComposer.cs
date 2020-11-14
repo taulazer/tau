@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Tau.Edit
             new HardBeatCompositionTool(),
         };
 
-        protected override ComposeBlueprintContainer CreateBlueprintContainer(IEnumerable<DrawableHitObject> hitObjects) =>
-            new TauBlueprintContainer(hitObjects);
+        protected override ComposeBlueprintContainer CreateBlueprintContainer() =>
+            new TauBlueprintContainer(this);
     }
 }
