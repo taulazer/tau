@@ -9,8 +9,8 @@ namespace osu.Game.Rulesets.Tau.Edit
 {
     public class TauBlueprintContainer : ComposeBlueprintContainer
     {
-        public TauBlueprintContainer(IEnumerable<DrawableHitObject> hitObjects)
-            : base(hitObjects)
+        public TauBlueprintContainer(HitObjectComposer composer)
+            : base(composer)
         {
         }
 

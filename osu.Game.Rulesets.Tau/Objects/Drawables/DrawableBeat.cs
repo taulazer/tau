@@ -109,9 +109,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [Resolved]
         private OsuColour colour { get; set; }
 
-        protected override void UpdateStateTransforms(ArmedState state)
+        protected override void UpdateHitStateTransforms(ArmedState state)
         {
-            base.UpdateStateTransforms(state);
+            base.UpdateHitStateTransforms(state);
 
             const double time_fade_hit = 250, time_fade_miss = 400;
 
