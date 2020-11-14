@@ -12,6 +12,7 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 using osu.Game.Rulesets.Objects;
 using osu.Framework.Input.Bindings;
+using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -137,6 +138,24 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public bool OnPressed(TauAction action) => HitActions.Contains(action) && !isBeingHit;
         public void OnReleased(TauAction action) { }
+
+        protected override void UpdateHitStateTransforms(ArmedState state)
+        {
+            base.UpdateHitStateTransforms(state);
+
+            switch (state)
+            {
+                case ArmedState.Idle:
+                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
+
+                    break;
+
+                case ArmedState.Hit:
+                case ArmedState.Miss:
+                    Expire();
+                    break;
+            }
+        }
 
         public bool IsWithinPaddle => CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)) ?? false;
 
