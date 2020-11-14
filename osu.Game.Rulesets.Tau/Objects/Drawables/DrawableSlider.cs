@@ -79,15 +79,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void UpdateAfterChildren()
         {
             base.UpdateAfterChildren();
-
-            // Anything before Time.Current is NOT VISIBLE
-            List<Vector2> vertices = new List<Vector2>();
+            path.ClearVertices();
 
             for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
                 t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
-                t += 20) // Generate vertex every 1ms
+                t += 20) // Generate vertex every 20ms
             {
-                var currentNode = HitObject.Nodes.LastOrDefault(x => t >= HitObject.StartTime + x.Time);
+                var currentNode = HitObject.Nodes.Last(x => t >= HitObject.StartTime + x.Time);
                 var nextNode = HitObject.Nodes.GetNext(currentNode);
 
                 double nodeStart = HitObject.StartTime + currentNode.Time;
@@ -106,7 +104,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, ActualProgress);
 
-                vertices.Add(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
+                path.AddVertex(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
             }
 
             //Check if the last node is visible
@@ -115,13 +113,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
                 double progress = 1 - (timeDiff / HitObject.TimePreempt);
 
-                vertices.Add(Extensions.GetCircularPosition((float)(progress * 384), HitObject.Nodes.Last().Angle));
+                path.AddVertex(Extensions.GetCircularPosition((float)(progress * 384), HitObject.Nodes.Last().Angle));
             }
-            vertices.Reverse();
-            path.Vertices = vertices;
 
-            path.Position = path.Vertices.Any() ? path.Vertices.Last() : new Vector2(0);
-            path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.Last()) : base.OriginPosition;
+
+            path.Position = path.Vertices.Any() ? path.Vertices.First() : new Vector2(0);
+            path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.First()) : base.OriginPosition;
 
             isBeingHit = false;
 
