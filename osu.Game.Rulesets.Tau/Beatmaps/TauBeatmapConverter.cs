@@ -51,8 +51,12 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         lastTime = t;
                         nodes.Add(new SliderNode((float)t, angle));
                     }
-                    nodes.Add(new SliderNode((float)pathData.Duration, ((original as IHasPosition).Position + pathData.CurvePositionAt(1)).GetHitObjectAngle()));
 
+                    float finalAngle = ((original as IHasPosition).Position + pathData.CurvePositionAt(1)).GetHitObjectAngle();
+                    if (lastAngle.HasValue && (Math.Abs(Extensions.GetDeltaAngle(lastAngle.Value, finalAngle)) / (float)Math.Abs(lastTime.Value - pathData.Duration)) > 0.6)
+                        goto default;
+
+                    nodes.Add(new SliderNode((float)pathData.Duration, finalAngle));
 
                     return new Slider
                     {
