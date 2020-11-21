@@ -27,8 +27,8 @@ namespace osu.Game.Rulesets.Tau.Replays
         {
             Position = currentFrame.Position;
 
-            if (currentFrame.MouseLeft) Actions.Add(TauAction.LeftButton);
-            if (currentFrame.MouseRight) Actions.Add(TauAction.RightButton);
+            if (currentFrame.MouseLeft1) Actions.Add(TauAction.LeftButton);
+            if (currentFrame.MouseRight1) Actions.Add(TauAction.RightButton);
             if (currentFrame.MouseLeft2) Actions.Add(TauAction.HardButton);
         }
 
