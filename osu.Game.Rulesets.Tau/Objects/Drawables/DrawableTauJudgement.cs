@@ -23,6 +23,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Scale = new Vector2(1.66f);
         }
 
+        protected override Drawable CreateDefaultJudgement(HitResult result) => new TauJudgementPiece(result);
+
         [BackgroundDependencyLoader]
         private void load(OsuConfigManager config)
         {
@@ -48,20 +50,33 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
         }
 
-        protected override double FadeOutDelay => lighting == null ? base.FadeOutDelay : 1400;
-
         protected override void ApplyHitAnimations()
         {
             if (lighting != null)
             {
-                JudgementBody.Delay(FadeInDuration).FadeOut(400);
+                JudgementBody.Delay(100).FadeOut(400);
 
                 lighting.ScaleTo(0.8f).ScaleTo(1.2f, 600, Easing.Out);
                 lighting.FadeIn(200).Then().Delay(200).FadeOut(1000);
             }
 
-            JudgementText?.TransformSpacingTo(new Vector2(14, 0), 1800, Easing.OutQuint);
             base.ApplyHitAnimations();
+        }
+
+        private class TauJudgementPiece : DefaultJudgementPiece
+        {
+            public TauJudgementPiece(HitResult result)
+                : base(result)
+            {
+            }
+
+            public override void PlayAnimation()
+            {
+                base.PlayAnimation();
+
+                if (Result != HitResult.Miss)
+                    JudgementText.TransformSpacingTo(Vector2.Zero).Then().TransformSpacingTo(new Vector2(14, 0), 1800, Easing.OutQuint);
+            }
         }
     }
 }
