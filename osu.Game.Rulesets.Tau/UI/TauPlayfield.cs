@@ -4,15 +4,18 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
@@ -108,7 +111,21 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
             PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
+
+            registerPool<Beat, DrawableBeat>(10);
+            registerPool<HardBeat, DrawableHardBeat>(5);
         }
+
+        private void registerPool<TObject, TDrawable>(int initialSize, int? maximumSize = null)
+            where TObject : HitObject
+            where TDrawable : DrawableHitObject, new()
+            => RegisterPool<TObject, TDrawable>(CreatePool<TDrawable>(initialSize, maximumSize));
+
+        protected virtual DrawablePool<TDrawable> CreatePool<TDrawable>(int initialSize, int? maximumSize = null)
+            where TDrawable : DrawableHitObject, new()
+            => new DrawableTauPool<TDrawable>(CheckIfWeCanValidate, hitPolicy.IsHittable, initialSize, maximumSize);
+
+        protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
 
         protected override void LoadComplete()
         {
