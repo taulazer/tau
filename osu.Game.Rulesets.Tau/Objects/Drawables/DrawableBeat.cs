@@ -74,16 +74,16 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private readonly BindableFloat angleBindable = new BindableFloat();
 
-        protected override void OnApply(HitObject hitObject)
+        protected override void OnApply()
         {
-            base.OnApply(hitObject);
-            angleBindable.BindTo(((TauHitObject)hitObject).AngleBindable);
+            base.OnApply();
+            angleBindable.BindTo(HitObject.AngleBindable);
         }
 
-        protected override void OnFree(HitObject hitObject)
+        protected override void OnFree()
         {
-            base.OnFree(hitObject);
-            angleBindable.UnbindFrom(((TauHitObject)hitObject).AngleBindable);
+            base.OnFree();
+            angleBindable.UnbindFrom(HitObject.AngleBindable);
         }
 
         protected override void UpdateInitialTransforms()
