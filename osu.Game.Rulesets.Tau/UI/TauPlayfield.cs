@@ -112,18 +112,19 @@ namespace osu.Game.Rulesets.Tau.UI
             config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
             PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
 
-            registerPool<Beat, DrawableBeat>(10);
-            registerPool<HardBeat, DrawableHardBeat>(5);
+            RegisterPool<Beat, DrawableBeat>(10);
+            RegisterPool<HardBeat, DrawableHardBeat>(5);
         }
 
-        private void registerPool<TObject, TDrawable>(int initialSize, int? maximumSize = null)
-            where TObject : HitObject
-            where TDrawable : DrawableHitObject, new()
-            => RegisterPool<TObject, TDrawable>(CreatePool<TDrawable>(initialSize, maximumSize));
-
-        protected virtual DrawablePool<TDrawable> CreatePool<TDrawable>(int initialSize, int? maximumSize = null)
-            where TDrawable : DrawableHitObject, new()
-            => new DrawableTauPool<TDrawable>(CheckIfWeCanValidate, hitPolicy.IsHittable, initialSize, maximumSize);
+        protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
+        {
+            base.OnNewDrawableHitObject(drawableHitObject);
+            if (drawableHitObject is DrawableTauHitObject t)
+            {
+                t.CheckHittable = hitPolicy.IsHittable;
+                t.CheckValidation = CheckIfWeCanValidate;
+            }
+        }
 
         protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
 
