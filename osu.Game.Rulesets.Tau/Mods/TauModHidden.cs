@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
@@ -21,18 +22,23 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public override void ApplyToDrawableHitObjects(IEnumerable<DrawableHitObject> drawables)
         {
-            static void adjustFadeIn(TauHitObject h) => h.TimeFadeIn = h.TimePreempt * fade_in_duration_multiplier;
-
-            foreach (var d in drawables.OfType<DrawableTauHitObject>())
-            {
-                adjustFadeIn(d.HitObject);
-
-                foreach (var h in d.HitObject.NestedHitObjects.OfType<TauHitObject>())
-                    adjustFadeIn(h); // future proofing
-            }
+            foreach (var d in drawables)
+                d.HitObjectApplied += applyFadeInAdjustment;
 
             base.ApplyToDrawableHitObjects(drawables);
         }
+
+        private void applyFadeInAdjustment(DrawableHitObject hitObject)
+        {
+            if (!(hitObject is DrawableTauHitObject d))
+                return;
+
+            d.HitObject.TimeFadeIn = d.HitObject.TimePreempt * fade_in_duration_multiplier;
+
+            foreach (var nested in d.NestedHitObjects)
+                applyFadeInAdjustment(nested);
+        }
+
 
         protected override void ApplyNormalVisibilityState(DrawableHitObject drawable, ArmedState state)
         {
