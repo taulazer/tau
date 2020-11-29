@@ -142,22 +142,6 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public bool CheckIfWeCanValidate(DrawableTauHitObject obj) => cursor.CheckForValidation(obj);
 
-        public override void Add(DrawableHitObject h)
-        {
-            base.Add(h);
-
-            switch (h)
-            {
-                case DrawableTauHitObject obj:
-                    obj.CheckValidation = CheckIfWeCanValidate;
-                    obj.CheckHittable = hitPolicy.IsHittable;
-
-                    break;
-            }
-
-            h.OnNewResult += onNewResult;
-        }
-
         [Resolved]
         private OsuColour colour { get; set; }
 
