@@ -102,6 +102,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 },
             });
             hitPolicy = new OrderedHitPolicy(HitObjectContainer);
+            NewResult += onNewResult;
         }
 
         protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
