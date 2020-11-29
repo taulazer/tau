@@ -39,7 +39,6 @@ namespace osu.Game.Rulesets.Tau.Mods
                 applyFadeInAdjustment(nested);
         }
 
-
         protected override void ApplyNormalVisibilityState(DrawableHitObject drawable, ArmedState state)
         {
             if (!(drawable is DrawableTauHitObject d))
