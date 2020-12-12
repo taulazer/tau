@@ -55,9 +55,9 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
             return base.OnMouseDown(e);
         }
 
-        public override void UpdatePosition(SnapResult result)
+        public override void UpdateTimeAndPosition(SnapResult result)
         {
-            base.UpdatePosition(result);
+            base.UpdateTimeAndPosition(result);
 
             var angle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(result.ScreenSpacePosition);
             HitObject.Angle = angle;
