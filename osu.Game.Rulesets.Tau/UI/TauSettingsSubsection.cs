@@ -41,6 +41,11 @@ namespace osu.Game.Rulesets.Tau.UI
                     LabelText = "Beat Size",
                     Current = config.GetBindable<float>(TauRulesetSettings.BeatSize),
                     KeyboardStep = 1f
+                },
+                new SettingsEnumDropdown<KiaiType>
+                {
+                    LabelText = "Kiai Effect",
+                    Current = config.GetBindable<KiaiType>(TauRulesetSettings.KiaiEffect),
                 }
             };
         }
