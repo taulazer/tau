@@ -254,7 +254,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         switch (effect.Value)
                         {
                             case KiaiType.Turbulent:
-                                for (int i = 0; i < 100; i++)
+                                for (int i = 0; i < 50; i++)
                                 {
                                     var randomAngle = RNG.NextSingle(0, 360);
 
