@@ -194,21 +194,7 @@ namespace osu.Game.Rulesets.Tau.UI
                             case KiaiType.Turbulent:
                                 for (int i = 0; i < 20; i++)
                                 {
-                                    var particle = new Particle
-                                    {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), sAngle),
-                                        Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), randomBetween(sAngle - 40, sAngle + 40)),
-                                        Size = new Vector2(RNG.NextSingle(1, 3)),
-                                        Blending = BlendingParameters.Additive,
-                                        Rotation = RNG.NextSingle(0, 360),
-                                        Colour = colour.ForHitResult(judgedObject.Result.Type),
-                                        Clock = new FramedClock()
-                                    };
-
-                                    particle.FadeOut(1500).Then().Expire();
-                                    SliderParticleEmitter.Add(particle);
+                                    SliderParticleEmitter.AddParticle(sAngle, result.Type);
                                 }
 
                                 break;
@@ -240,21 +226,7 @@ namespace osu.Game.Rulesets.Tau.UI
                             case KiaiType.Turbulent:
                                 for (int i = 0; i < 20; i++)
                                 {
-                                    var particle = new Particle
-                                    {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), angle),
-                                        Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), randomBetween(angle - 40, angle + 40)),
-                                        Size = new Vector2(RNG.NextSingle(1, 3)),
-                                        Blending = BlendingParameters.Additive,
-                                        Rotation = RNG.NextSingle(0, 360),
-                                        Colour = colour.ForHitResult(judgedObject.Result.Type),
-                                        Clock = new FramedClock()
-                                    };
-
-                                    particle.FadeOut(1500).Then().Expire();
-                                    SliderParticleEmitter.Add(particle);
+                                    SliderParticleEmitter.AddParticle(angle, result.Type);
                                 }
 
                                 break;
@@ -286,21 +258,7 @@ namespace osu.Game.Rulesets.Tau.UI
                                 {
                                     var randomAngle = RNG.NextSingle(0, 360);
 
-                                    var particle = new Particle
-                                    {
-                                        Anchor = Anchor.Centre,
-                                        Origin = Anchor.Centre,
-                                        Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), randomAngle),
-                                        Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), randomBetween(randomAngle - 40, randomAngle + 40)),
-                                        Size = new Vector2(RNG.NextSingle(1, 3)),
-                                        Blending = BlendingParameters.Additive,
-                                        Rotation = RNG.NextSingle(0, 360),
-                                        Colour = colour.ForHitResult(judgedObject.Result.Type),
-                                        Clock = new FramedClock()
-                                    };
-
-                                    particle.FadeOut(1500).Then().Expire();
-                                    SliderParticleEmitter.Add(particle);
+                                    SliderParticleEmitter.AddParticle(randomAngle, result.Type);
                                 }
 
                                 break;
@@ -317,13 +275,6 @@ namespace osu.Game.Rulesets.Tau.UI
                     }
 
                     break;
-            }
-
-            float randomBetween(float smallNumber, float bigNumber)
-            {
-                float diff = bigNumber - smallNumber;
-
-                return ((float)RNG.NextDouble() * diff) + smallNumber;
             }
 
             judgementLayer.Add(explosion);

@@ -160,25 +160,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                    {
-                        for (int i = 0; i < 3; i++)
                         {
-                            particle = new Particle
+                            for (int i = 0; i < 3; i++)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                Position = Extensions.GetCircularPosition(380, angle),
-                                Velocity = Extensions.GetCircularPosition(380, randomBetween(angle - 40, angle + 40)),
-                                Size = new Vector2(RNG.NextSingle(1, 3)),
-                                Blending = BlendingParameters.Additive,
-                                Rotation = RNG.NextSingle(0, 360),
-                                Colour = TauPlayfield.ACCENT_COLOR,
-                                Clock = new FramedClock()
-                            };
-                        }
+                                playfield.SliderParticleEmitter.AddParticle(angle);
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
 
                     case KiaiType.Classic:
                         particle = new Box
@@ -194,19 +183,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         };
 
                         particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * 50 + 390, angle), duration, Easing.OutQuint)
-                                .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint);
+                                .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
+                        playfield.SliderParticleEmitter.Add(particle);
 
                         break;
-                }
-
-                particle.FadeOut(duration).Then().Expire();
-                playfield.SliderParticleEmitter.Add(particle);
-
-                float randomBetween(float smallNumber, float bigNumber)
-                {
-                    float diff = bigNumber - smallNumber;
-
-                    return ((float)RNG.NextDouble() * diff) + smallNumber;
                 }
             }
         }
