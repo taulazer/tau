@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
@@ -7,6 +8,9 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Timing;
+using osu.Framework.Utils;
 using osu.Framework.Graphics.Pooling;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
@@ -25,6 +29,7 @@ using osu.Game.Rulesets.Tau.Skinning;
 using osu.Game.Rulesets.Tau.Skinning.Default;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
+using osu.Game.Rulesets.Tau.UI.Particles;
 using osu.Game.Rulesets.UI;
 using osu.Game.Skinning;
 using osuTK;
@@ -41,8 +46,9 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly OrderedHitPolicy hitPolicy;
         private readonly IDictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new Dictionary<HitResult, DrawablePool<DrawableTauJudgement>>();
 
-        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
+        public readonly ParticleEmitter SliderParticleEmitter;
 
+        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
         public static readonly Bindable<Color4> ACCENT_COLOR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
@@ -79,6 +85,11 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Anchor = Anchor.Centre,
                 },
+                SliderParticleEmitter = new ParticleEmitter
+                {
+                    Name = "Slider particle emitter",
+                    RelativeSizeAxes = Axes.Both,
+                }
             });
 
             hitPolicy = new OrderedHitPolicy(HitObjectContainer);
@@ -90,6 +101,19 @@ namespace osu.Game.Rulesets.Tau.UI
                 poolDictionary.Add(result, new DrawableJudgementPool(result, onJudgmentLoaded));
 
             AddRangeInternal(poolDictionary.Values);
+
+            for (int i = 0; i < 8; i++)
+            {
+                SliderParticleEmitter.Vortices.Add(new Vortex
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Speed = RNG.NextSingle() * 10.5f + 2,
+                    Scale = new Vector2(50),
+                    Position = Extensions.GetCircularPosition(500f, (360 / 8) * i),
+                    Velocity = Extensions.GetCircularPosition(50, (360 / 8) * i)
+                });
+            }
         }
 
         private void onJudgmentLoaded(DrawableTauJudgement judgement)
@@ -97,9 +121,15 @@ namespace osu.Game.Rulesets.Tau.UI
             judgementLayer.Add(judgement.GetProxyAboveHitObjectsContent());
         }
 
-        [BackgroundDependencyLoader]
-        private void load(ISkinSource skin)
+        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
+        protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config, ISkinSource skin)
         {
+            config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
+            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
+
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
             RegisterPool<Slider, DrawableSlider>(3);
@@ -169,22 +199,57 @@ namespace osu.Game.Rulesets.Tau.UI
             if (judgedObject is DrawableSlider)
                 cursor.PaddleDrawable.Glow.FadeOut(200);
 
+            float angle = judgedObject switch
+            {
+                DrawableBeat b => b.HitObject.Angle,
+                DrawableSlider s => s.HitObject.Nodes.Last().Angle,
+                _ => 0
+            };
+
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
             {
-                float angle = judgedObject switch
+                switch (effect.Value)
                 {
-                    DrawableBeat b => b.HitObject.Angle,
-                    DrawableSlider s => s.HitObject.Nodes.Last().Angle,
-                    _ => 0
-                };
+                    case KiaiType.Turbulent:
+                        for (int i = 0; i < 20; i++)
+                        {
+                            var particle = new Particle
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), angle),
+                                Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), randomBetween(angle - 40, angle + 40)),
+                                Size = new Vector2(RNG.NextSingle(1, 3)),
+                                Blending = BlendingParameters.Additive,
+                                Rotation = RNG.NextSingle(0, 360),
+                                Colour = colour.ForHitResult(judgedObject.Result.Type),
+                                Clock = new FramedClock()
+                            };
 
-                kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat)
+                            particle.FadeOut(1500).Then().Expire();
+                            SliderParticleEmitter.Add(particle);
+                        }
+
+                        break;
+
+                    case KiaiType.Classic:
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type))
+                        {
+                            Position = Extensions.GetCircularPosition(.5f, angle),
+                            Angle = angle,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre
+                        });
+
+                        break;
+                }
+
+                float randomBetween(float smallNumber, float bigNumber)
                 {
-                    Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
-                    Angle = angle,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
-                });
+                    float diff = bigNumber - smallNumber;
+
+                    return ((float)RNG.NextDouble() * diff) + smallNumber;
+                }
             }
         }
 

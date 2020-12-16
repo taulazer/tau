@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -10,6 +11,9 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Objects;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Timing;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Skinning;
@@ -17,6 +21,9 @@ using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
+using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Rulesets.Tau.UI.Particles;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -25,6 +32,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private readonly Path path;
 
         public new Slider HitObject => base.HitObject as Slider;
+
+        [Resolved]
+        private OsuColour colour { get; set; }
 
         [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
@@ -67,13 +77,16 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 },
             });
         }
+        
+        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
 
-        [BackgroundDependencyLoader]
-        private void load(ISkinSource skin)
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config, ISkinSource skin)
         {
+            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
             path.Colour = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Slider)?.Value ?? Color4.White;
         }
-
+        
         protected override void OnApply()
         {
             base.OnApply();
@@ -153,6 +166,65 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
                 totalTimeHeld += Time.Elapsed;
                 isBeingHit = true;
+
+                if (!HitObject.Kiai)
+                    return;
+
+                var angle = Vector2.Zero.GetDegreesFromPosition(path.Position);
+                Drawable particle = Empty();
+                const int duration = 1500;
+
+                switch (effect.Value)
+                {
+                    case KiaiType.Turbulent:
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            particle = new Particle
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Position = Extensions.GetCircularPosition(380, angle),
+                                Velocity = Extensions.GetCircularPosition(380, randomBetween(angle - 40, angle + 40)),
+                                Size = new Vector2(RNG.NextSingle(1, 3)),
+                                Blending = BlendingParameters.Additive,
+                                Rotation = RNG.NextSingle(0, 360),
+                                Colour = TauPlayfield.ACCENT_COLOR,
+                                Clock = new FramedClock()
+                            };
+                        }
+
+                        break;
+                    }
+
+                    case KiaiType.Classic:
+                        particle = new Box
+                        {
+                            Position = Extensions.GetCircularPosition(380, angle),
+                            Rotation = (float)RNG.NextDouble() * 360f,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.BottomCentre,
+                            Size = new Vector2(RNG.Next(1, 10)),
+                            Clock = new FramedClock(),
+                            Blending = BlendingParameters.Additive,
+                            Colour = TauPlayfield.ACCENT_COLOR
+                        };
+
+                        particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * 50 + 390, angle), duration, Easing.OutQuint)
+                                .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint);
+
+                        break;
+                }
+
+                particle.FadeOut(duration).Then().Expire();
+                playfield.SliderParticleEmitter.Add(particle);
+
+                float randomBetween(float smallNumber, float bigNumber)
+                {
+                    float diff = bigNumber - smallNumber;
+
+                    return ((float)RNG.NextDouble() * diff) + smallNumber;
+                }
             }
 
             if (AllJudged) return;
@@ -185,7 +257,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case ArmedState.Hit:
                 case ArmedState.Miss:
                     Expire();
-
                     break;
             }
         }
