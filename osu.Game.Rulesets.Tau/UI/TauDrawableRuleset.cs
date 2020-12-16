@@ -27,20 +27,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h)
         {
-            switch (h)
-            {
-                case HardBeat _:
-                    return new DrawableHardBeat(h);
-
-                case Beat beat:
-                    return new DrawableBeat(beat);
-
-                case Slider slider:
-                    return new DrawableSlider(slider);
-
-                default:
-                    return null;
-            }
+            if (h is Slider) return new DrawableSlider(h);
+            return null;
         }
 
         protected override PassThroughInputManager CreateInputManager() => new TauInputManager(Ruleset?.RulesetInfo);
