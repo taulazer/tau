@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
         {
             Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), angle);
             Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), RNG.NextSingle(angle - 40, angle + 40));
-            Size = new Vector2(RNG.NextSingle(1, 3));
+            Size = new Vector2(RNG.NextSingle(1, 10));
             Rotation = RNG.NextSingle(0, 360);
             Colour = result.HasValue ? colour.ForHitResult(result.Value) : TauPlayfield.ACCENT_COLOR;
         }
