@@ -20,10 +20,20 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.HardButton
         };
 
-        public readonly CircularContainer Circle;
+        public CircularContainer Circle;
+
+        public DrawableHardBeat()
+            : this(null)
+        {
+        }
 
         public DrawableHardBeat(TauHitObject hitObject)
             : base(hitObject)
+        {
+        }
+
+        [BackgroundDependencyLoader]
+        private void load()
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;

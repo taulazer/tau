@@ -4,15 +4,18 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
@@ -98,7 +101,9 @@ namespace osu.Game.Rulesets.Tau.UI
                     Anchor = Anchor.Centre,
                 },
             });
+
             hitPolicy = new OrderedHitPolicy(HitObjectContainer);
+            NewResult += onNewResult;
         }
 
         protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
@@ -108,7 +113,23 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
             PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
+
+            RegisterPool<Beat, DrawableBeat>(10);
+            RegisterPool<HardBeat, DrawableHardBeat>(5);
         }
+
+        protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
+        {
+            base.OnNewDrawableHitObject(drawableHitObject);
+
+            if (drawableHitObject is DrawableTauHitObject t)
+            {
+                t.CheckHittable = hitPolicy.IsHittable;
+                t.CheckValidation = CheckIfWeCanValidate;
+            }
+        }
+
+        protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
 
         protected override void LoadComplete()
         {
@@ -122,22 +143,6 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         public bool CheckIfWeCanValidate(DrawableTauHitObject obj) => cursor.CheckForValidation(obj);
-
-        public override void Add(DrawableHitObject h)
-        {
-            base.Add(h);
-
-            switch (h)
-            {
-                case DrawableTauHitObject obj:
-                    obj.CheckValidation = CheckIfWeCanValidate;
-                    obj.CheckHittable = hitPolicy.IsHittable;
-
-                    break;
-            }
-
-            h.OnNewResult += onNewResult;
-        }
 
         [Resolved]
         private OsuColour colour { get; set; }

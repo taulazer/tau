@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
 using osu.Game.Graphics;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
@@ -22,9 +23,23 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private bool validActionPressed;
 
+        public DrawableBeat()
+            : this(null)
+        {
+        }
+
         public DrawableBeat(Beat hitObject)
             : base(hitObject)
         {
+        }
+
+        private readonly Bindable<float> size = new Bindable<float>(16); // Change as you see fit.
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.BeatSize, size);
+
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
             RelativeSizeAxes = Axes.Both;
@@ -57,17 +72,23 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             });
 
             Position = Vector2.Zero;
+
+            angleBindable.BindValueChanged(r => Rotation = r.NewValue);
+            size.BindValueChanged(value => Box.Size = new Vector2(value.NewValue), true);
         }
 
-        private readonly Bindable<float> size = new Bindable<float>(16); // Change as you see fit.
+        private readonly BindableFloat angleBindable = new BindableFloat();
 
-        [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
+        protected override void OnApply()
         {
-            config?.BindWith(TauRulesetSettings.BeatSize, size);
-            size.BindValueChanged(value => Box.Size = new Vector2(value.NewValue), true);
+            base.OnApply();
+            angleBindable.BindTo(HitObject.AngleBindable);
+        }
 
-            HitObject.AngleBindable.BindValueChanged(a => { Rotation = a.NewValue; }, true);
+        protected override void OnFree()
+        {
+            base.OnFree();
+            angleBindable.UnbindFrom(HitObject.AngleBindable);
         }
 
         protected override void UpdateInitialTransforms()
@@ -82,7 +103,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             Debug.Assert(HitObject.HitWindows != null);
 
-            if (CheckValidation == null) return;
+            if (CheckValidation == null)
+                return;
 
             if (!userTriggered)
             {
@@ -117,19 +139,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             switch (state)
             {
-                case ArmedState.Idle:
-                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-                    HitAction = null;
-
-                    break;
-
                 case ArmedState.Hit:
                     Box.ScaleTo(2f, time_fade_hit, Easing.OutQuint)
                        .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
                        .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
                        .FadeOut(time_fade_hit);
 
-                    this.FadeOut(time_fade_hit);
+                    this.Delay(time_fade_hit).Expire();
 
                     break;
 
@@ -139,7 +155,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                        .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
                        .FadeOut(time_fade_miss);
 
-                    this.FadeOut(time_fade_miss);
+                    this.Delay(time_fade_miss).Expire();
 
                     break;
             }
