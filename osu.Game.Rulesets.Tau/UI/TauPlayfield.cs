@@ -117,6 +117,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
+            RegisterPool<Slider, DrawableSlider>(3);
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)

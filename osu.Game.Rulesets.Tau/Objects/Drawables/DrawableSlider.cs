@@ -22,6 +22,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public new Slider HitObject => base.HitObject as Slider;
 
+        public DrawableSlider() : this(null)
+        {
+        }
+
         public DrawableSlider(TauHitObject obj)
             : base(obj)
         {
@@ -54,6 +58,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
             });
+        }
+
+        protected override void OnApply()
+        {
+            base.OnApply();
+            totalTimeHeld = 0;
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -144,7 +154,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 case ArmedState.Idle:
                     LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-
                     break;
 
                 case ArmedState.Hit:

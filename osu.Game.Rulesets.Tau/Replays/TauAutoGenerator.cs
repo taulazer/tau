@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                 {
                     case Slider slider:
                         //Make the cursor stay at the last note's position if there's enough time between the notes
-                        if (i > 0 && h.StartTime - Beatmap.HitObjects[i - 1].GetEndTime() > reaction_time)
+                        if (i > 0 && h.StartTime - lastTime > reaction_time)
                         {
                             Replay.Frames.Add(new TauReplayFrame(h.StartTime - reaction_time, Extensions.GetCircularPosition(cursor_distance, prevAngle) + new Vector2(offset)));
 
@@ -71,6 +71,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                         }
                         Replay.Frames.Add(new TauReplayFrame(h.GetEndTime() + releaseDelay, ((TauReplayFrame)Replay.Frames.Last()).Position));
                         prevAngle = slider.Nodes.Last().Angle;
+                        lastTime = h.GetEndTime() + releaseDelay;
 
                         break;
 
