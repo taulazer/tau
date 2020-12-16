@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
 
             foreach (var vortex in Vortices)
             {
-                var (dx, dy) = (X - vortex.DrawPosition.X, Y - vortex.DrawPosition.Y);
+                var (dx, dy) = (X - vortex.Position.X, Y - vortex.Position.Y);
 
                 var speed = vortex.Speed;
                 var (vx, vy) = (dy * speed + vortex.Velocity.X, dx * speed + vortex.Velocity.Y);
