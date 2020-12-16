@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Utils;
+using osu.Game.Graphics;
+using osu.Game.Rulesets.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Particles
 {
-    public class Particle : Box
+    public class Particle : PoolableDrawable
     {
         public Vector2 Velocity
         {
@@ -19,9 +25,39 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
         public ParticleEmitter Emitter => Parent as ParticleEmitter;
         public List<Vortex> Vortices => Emitter.Vortices;
 
+        public override bool RemoveCompletedTransforms => false;
+
+        [Resolved]
+        private OsuColour colour { get; set; }
+
         public Particle()
         {
-            Velocity = Velocity;
+            Blending = BlendingParameters.Additive;
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+            InternalChild = new Box
+            {
+                RelativeSizeAxes = Axes.Both
+            };
+        }
+
+        public void Apply(float angle, HitResult? result = null)
+        {
+            Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), angle);
+            Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), RNG.NextSingle(angle - 40, angle + 40));
+            Size = new Vector2(RNG.NextSingle(1, 3));
+            Rotation = RNG.NextSingle(0, 360);
+            Colour = result.HasValue ? colour.ForHitResult(result.Value) : TauPlayfield.ACCENT_COLOR;
+        }
+
+        protected override void PrepareForUse()
+        {
+            base.PrepareForUse();
+
+            ApplyTransformsAt(double.MinValue, true);
+            ClearTransforms();
+
+            this.FadeOut(1500).Expire(true);
         }
 
         protected override void Update()
