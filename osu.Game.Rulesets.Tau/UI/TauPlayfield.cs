@@ -101,6 +101,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Anchor = Anchor.Centre,
                 },
             });
+
             hitPolicy = new OrderedHitPolicy(HitObjectContainer);
             NewResult += onNewResult;
         }
@@ -120,6 +121,7 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
         {
             base.OnNewDrawableHitObject(drawableHitObject);
+
             if (drawableHitObject is DrawableTauHitObject t)
             {
                 t.CheckHittable = hitPolicy.IsHittable;

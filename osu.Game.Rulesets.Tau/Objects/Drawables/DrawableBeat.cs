@@ -23,10 +23,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private bool validActionPressed;
 
-        public DrawableBeat() : this(null) { }
+        public DrawableBeat()
+            : this(null)
+        {
+        }
+
         public DrawableBeat(Beat hitObject)
             : base(hitObject)
-        { }
+        {
+        }
 
         private readonly Bindable<float> size = new Bindable<float>(16); // Change as you see fit.
 
@@ -141,6 +146,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                        .FadeOut(time_fade_hit);
 
                     this.Delay(time_fade_hit).Expire();
+
                     break;
 
                 case ArmedState.Miss:

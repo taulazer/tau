@@ -7,7 +7,8 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         protected override double InitialLifetimeOffset => ((TauHitObject)HitObject).TimePreempt;
 
-        public TauHitObjectLifetimeEntry(HitObject hitObject) : base(hitObject)
+        public TauHitObjectLifetimeEntry(HitObject hitObject)
+            : base(hitObject)
         {
         }
     }

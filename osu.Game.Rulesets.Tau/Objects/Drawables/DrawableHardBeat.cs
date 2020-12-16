@@ -22,11 +22,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public CircularContainer Circle;
 
-        public DrawableHardBeat() : this(null) { }
+        public DrawableHardBeat()
+            : this(null)
+        {
+        }
 
         public DrawableHardBeat(TauHitObject hitObject)
             : base(hitObject)
-        { }
+        {
+        }
 
         [BackgroundDependencyLoader]
         private void load()
