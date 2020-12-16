@@ -192,7 +192,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         switch (effect.Value)
                         {
                             case KiaiType.Turbulent:
-                                for (int i = 0; i < 20; i++)
+                                for (int i = 0; i < 10; i++)
                                 {
                                     SliderParticleEmitter.AddParticle(sAngle, result.Type);
                                 }
@@ -224,7 +224,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         switch (effect.Value)
                         {
                             case KiaiType.Turbulent:
-                                for (int i = 0; i < 20; i++)
+                                for (int i = 0; i < 10; i++)
                                 {
                                     SliderParticleEmitter.AddParticle(angle, result.Type);
                                 }
@@ -254,7 +254,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         switch (effect.Value)
                         {
                             case KiaiType.Turbulent:
-                                for (int i = 0; i < 300; i++)
+                                for (int i = 0; i < 100; i++)
                                 {
                                     var randomAngle = RNG.NextSingle(0, 360);
 
