@@ -30,9 +30,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                     new Vortex
                     {
                         Speed = 5,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.Centre,
-                        Y = 200
+                        Position = new Vector2(0,200)
                     }
                 }
             };

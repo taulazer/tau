@@ -9,17 +9,10 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         public List<Vortex> Vortices = new List<Vortex>();
 
-        protected override void LoadComplete()
+        public ParticleEmitter()
         {
-            base.LoadComplete();
-
-            foreach (var vortex in Vortices)
-            {
-                Add(vortex.With(v =>
-                {
-                    v.AlwaysPresent = true;
-                }));
-            }
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
         }
     }
 }
