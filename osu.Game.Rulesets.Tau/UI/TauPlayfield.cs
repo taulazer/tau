@@ -5,6 +5,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
@@ -41,6 +42,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
+        private readonly CircularContainer ring;
+
         public TauPlayfield(BeatmapDifficulty difficulty)
         {
             RelativeSizeAxes = Axes.None;
@@ -73,7 +76,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
                     {
-                        new CircularContainer
+                        ring= new CircularContainer
                         {
                             RelativeSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,
@@ -81,6 +84,12 @@ namespace osu.Game.Rulesets.Tau.UI
                             Masking = true,
                             BorderThickness = 3,
                             BorderColour = ACCENT_COLOR.Opacity(0.5f),
+                            EdgeEffect = new EdgeEffectParameters{
+                                Hollow = true,
+                                Colour = Color4.Transparent,
+                                Radius = 20,
+                                Type = EdgeEffectType.Glow,
+                            },
                             Child = new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
@@ -149,6 +158,28 @@ namespace osu.Game.Rulesets.Tau.UI
         [Resolved]
         private OsuColour colour { get; set; }
 
+        public void CreateSliderEffect(float angle, bool kiai)
+        {
+            if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
+            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR, particleAmount: 1)
+            {
+                Position = Extensions.GetCircularPosition(.5f, angle),
+                Angle = angle,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre
+            });
+        }
+
+        private float cacheProgress;
+        public void AdjustRingGlow(float progress)
+        {
+            if (cacheProgress == progress) return;
+            cacheProgress = progress;
+            ring.FinishTransforms();
+            ring.FadeEdgeEffectTo(ACCENT_COLOR.Opacity(progress), progress == 0 ? 200 : 0);
+        }
+
+
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             hitPolicy.HandleHit(judgedObject);
@@ -165,6 +196,7 @@ namespace osu.Game.Rulesets.Tau.UI
             switch (judgedObject)
             {
                 case DrawableSlider slider:
+                    ring.FadeEdgeEffectTo(ACCENT_COLOR.Opacity(0), 200);
                     var sAngle = slider.HitObject.Nodes.Last().Angle;
                     explosion.Position = Extensions.GetCircularPosition(.6f, sAngle);
                     explosion.Rotation = sAngle;

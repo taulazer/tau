@@ -13,6 +13,8 @@ using osuTK;
 using osu.Game.Rulesets.Objects;
 using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Framework.Allocation;
+using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -21,6 +23,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private readonly Path path;
 
         public new Slider HitObject => base.HitObject as Slider;
+
+        [Resolved]
+        private TauPlayfield playfield { get; set; }
 
         public DrawableSlider() : this(null)
         {
@@ -136,9 +141,17 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
+                playfield.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
                 totalTimeHeld += Time.Elapsed;
                 isBeingHit = true;
             }
+
+            if (AllJudged) return;
+
+            if (isBeingHit)
+                playfield.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration));
+            else
+                playfield.AdjustRingGlow(0);
         }
 
         private bool isBeingHit;
