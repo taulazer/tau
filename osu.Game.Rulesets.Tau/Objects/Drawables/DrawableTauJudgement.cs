@@ -40,9 +40,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             lighting.SetColourFrom(JudgedObject, Result);
 
             var angle = 0f;
-
-            if (JudgedObject?.HitObject is Beat b)
-                angle = b.Angle;
+            if (JudgedObject is DrawableBeat b)
+                angle = b.HitObject.Angle;
 
             Position = Extensions.GetCircularPosition(.6f, angle);
             Rotation = angle;

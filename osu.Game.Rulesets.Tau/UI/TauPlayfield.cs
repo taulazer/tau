@@ -171,34 +171,19 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
-            DrawableTauJudgement explosion = poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject));
-            judgementLayer.Add(explosion);
+            judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
 
-            switch (judgedObject)
+            if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
             {
-                case DrawableBeat beat:
-                    var angle = beat.HitObject.Angle;
-
-                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type))
-                        {
-                            Position = Extensions.GetCircularPosition(.5f, angle),
-                            Angle = angle,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        });
-
-                    break;
-
-                case DrawableHardBeat _:
-                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), true)
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        });
-
-                    break;
+                float angle = 0;
+                if (judgedObject is DrawableBeat b) angle = b.HitObject.Angle;
+                kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat)
+                {
+                    Position = Extensions.GetCircularPosition(.5f, angle),
+                    Angle = angle,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre
+                });
             }
         }
 
