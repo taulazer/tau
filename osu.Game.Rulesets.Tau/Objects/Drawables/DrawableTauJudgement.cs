@@ -17,6 +17,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [BackgroundDependencyLoader]
         private void load()
         {
+            RelativePositionAxes = Axes.Both;
+            Scale = new Vector2(1.66f);
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+
             AddInternal(lighting = new SkinnableLighting
             {
                 Anchor = Anchor.Centre,
@@ -33,6 +38,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             lighting.ResetAnimation();
             lighting.SetColourFrom(JudgedObject, Result);
+
+            var angle = 0f;
+
+            if (JudgedObject?.HitObject is Beat b)
+                angle = b.Angle;
+
+            Position = Extensions.GetCircularPosition(.6f, angle);
+            Rotation = angle;
         }
 
         protected override void ApplyHitAnimations()
