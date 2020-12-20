@@ -84,12 +84,6 @@ namespace osu.Game.Rulesets.Tau.UI
                             Masking = true,
                             BorderThickness = 3,
                             BorderColour = ACCENT_COLOR.Opacity(0.5f),
-                            EdgeEffect = new EdgeEffectParameters{
-                                Hollow = true,
-                                Colour = Color4.Transparent,
-                                Radius = 20,
-                                Type = EdgeEffectType.Glow,
-                            },
                             Child = new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
@@ -171,12 +165,13 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         private float cacheProgress;
-        public void AdjustRingGlow(float progress)
+        public void AdjustRingGlow(float progress, float angle)
         {
             if (cacheProgress == progress) return;
             cacheProgress = progress;
-            ring.FinishTransforms();
-            ring.FadeEdgeEffectTo(ACCENT_COLOR.Opacity(progress), progress == 0 ? 200 : 0);
+            cursor.PaddleDrawable.Glow.FinishTransforms();
+            cursor.PaddleDrawable.Glow.FadeTo(progress, progress == 0 ? 200 : 0);
+            cursor.PaddleDrawable.Glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
         }
 
 
@@ -196,7 +191,7 @@ namespace osu.Game.Rulesets.Tau.UI
             switch (judgedObject)
             {
                 case DrawableSlider slider:
-                    ring.FadeEdgeEffectTo(ACCENT_COLOR.Opacity(0), 200);
+                    cursor.PaddleDrawable.Glow.FadeOut(200);
                     var sAngle = slider.HitObject.Nodes.Last().Angle;
                     explosion.Position = Extensions.GetCircularPosition(.6f, sAngle);
                     explosion.Rotation = sAngle;
