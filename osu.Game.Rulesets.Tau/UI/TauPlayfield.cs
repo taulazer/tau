@@ -5,6 +5,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
@@ -41,6 +42,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
+        private readonly CircularContainer ring;
+
         public TauPlayfield(BeatmapDifficulty difficulty)
         {
             RelativeSizeAxes = Axes.None;
@@ -73,7 +76,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
                     {
-                        new CircularContainer
+                        ring= new CircularContainer
                         {
                             RelativeSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,
@@ -149,6 +152,29 @@ namespace osu.Game.Rulesets.Tau.UI
         [Resolved]
         private OsuColour colour { get; set; }
 
+        public void CreateSliderEffect(float angle, bool kiai)
+        {
+            if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
+            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR, particleAmount: 1)
+            {
+                Position = Extensions.GetCircularPosition(.5f, angle),
+                Angle = angle,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre
+            });
+        }
+
+        private float cacheProgress;
+        public void AdjustRingGlow(float progress, float angle)
+        {
+            if (cacheProgress == progress) return;
+            cacheProgress = progress;
+            cursor.PaddleDrawable.Glow.FinishTransforms();
+            cursor.PaddleDrawable.Glow.FadeTo(progress, progress == 0 ? 200 : 0);
+            cursor.PaddleDrawable.Glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
+        }
+
+
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             hitPolicy.HandleHit(judgedObject);
@@ -165,6 +191,7 @@ namespace osu.Game.Rulesets.Tau.UI
             switch (judgedObject)
             {
                 case DrawableSlider slider:
+                    cursor.PaddleDrawable.Glow.FadeOut(200);
                     var sAngle = slider.HitObject.Nodes.Last().Angle;
                     explosion.Position = Extensions.GetCircularPosition(.6f, sAngle);
                     explosion.Rotation = sAngle;
