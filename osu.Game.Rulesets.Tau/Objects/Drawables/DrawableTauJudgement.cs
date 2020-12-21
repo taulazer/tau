@@ -1,67 +1,70 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Skinning;
 using osuTK;
-using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableTauJudgement : DrawableJudgement
     {
-        private SkinnableSprite lighting;
-        private Bindable<Color4> lightingColour;
+        private SkinnableLighting lighting;
 
-        public DrawableTauJudgement(JudgementResult result, DrawableHitObject judgedObject)
-            : base(result, judgedObject)
+        [Resolved]
+        private OsuConfigManager config { get; set; }
+
+        [BackgroundDependencyLoader]
+        private void load()
         {
             RelativePositionAxes = Axes.Both;
             Scale = new Vector2(1.66f);
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+
+            AddInternal(lighting = new SkinnableLighting
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Blending = BlendingParameters.Additive,
+                Depth = float.MaxValue,
+                Alpha = 0
+            });
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result) => new TauJudgementPiece(result);
-
-        [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config)
+        protected override void PrepareForUse()
         {
-            if (config.Get<bool>(OsuSetting.HitLighting) && Result.Type != HitResult.Miss)
-            {
-                AddInternal(lighting = new SkinnableSprite("lighting")
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Blending = BlendingParameters.Additive,
-                    Depth = float.MaxValue
-                });
+            base.PrepareForUse();
 
-                if (JudgedObject != null)
-                {
-                    lightingColour = JudgedObject.AccentColour.GetBoundCopy();
-                    lightingColour.BindValueChanged(colour => lighting.Colour = colour.NewValue, true);
-                }
-                else
-                {
-                    lighting.Colour = Color4.White;
-                }
-            }
+            lighting.ResetAnimation();
+            lighting.SetColourFrom(JudgedObject, Result);
+
+            var angle = 0f;
+            if (JudgedObject is DrawableBeat b)
+                angle = b.HitObject.Angle;
+
+            Position = Extensions.GetCircularPosition(.6f, angle);
+            Rotation = angle;
         }
 
         protected override void ApplyHitAnimations()
         {
-            if (lighting != null)
-            {
-                JudgementBody.Delay(100).FadeOut(400);
+            var hitLightingEnabled = config.Get<bool>(OsuSetting.HitLighting);
 
+            lighting.Alpha = 0;
+
+            if (hitLightingEnabled && lighting.Drawable != null)
+            {
                 lighting.ScaleTo(0.8f).ScaleTo(1.2f, 600, Easing.Out);
                 lighting.FadeIn(200).Then().Delay(200).FadeOut(1000);
+
+                LifetimeEnd = lighting.LatestTransformEndTime;
             }
 
             base.ApplyHitAnimations();
         }
+
+        protected override Drawable CreateDefaultJudgement(HitResult result) => new TauJudgementPiece(result);
 
         private class TauJudgementPiece : DefaultJudgementPiece
         {

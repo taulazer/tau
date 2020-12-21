@@ -1,4 +1,7 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -17,6 +20,7 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
@@ -30,9 +34,10 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         private readonly Circle playfieldBackground;
         private readonly TauCursor cursor;
-        private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
+        private readonly Container judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
         private readonly OrderedHitPolicy hitPolicy;
+        private readonly IDictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new Dictionary<HitResult, DrawablePool<DrawableTauJudgement>>();
 
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
@@ -50,7 +55,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             AddRangeInternal(new Drawable[]
             {
-                judgementLayer = new JudgementContainer<DrawableTauJudgement>
+                judgementLayer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Depth = 1,
@@ -104,6 +109,18 @@ namespace osu.Game.Rulesets.Tau.UI
 
             hitPolicy = new OrderedHitPolicy(HitObjectContainer);
             NewResult += onNewResult;
+
+            var hitWindows = new TauHitWindows();
+
+            foreach (var result in Enum.GetValues(typeof(HitResult)).OfType<HitResult>().Where(r => r > HitResult.None && hitWindows.IsHitResultAllowed(r)))
+                poolDictionary.Add(result, new DrawableJudgementPool(result, onJudgmentLoaded));
+
+            AddRangeInternal(poolDictionary.Values);
+        }
+
+        private void onJudgmentLoaded(DrawableTauJudgement judgement)
+        {
+            judgementLayer.Add(judgement.GetProxyAboveHitObjectsContent());
         }
 
         protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
@@ -154,44 +171,44 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
-            DrawableTauJudgement explosion = new DrawableTauJudgement(result, judgedObject)
+            judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
+
+            if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
             {
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-            };
+                float angle = 0;
+                if (judgedObject is DrawableBeat b) angle = b.HitObject.Angle;
+                kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat)
+                {
+                    Position = Extensions.GetCircularPosition(.5f, angle),
+                    Angle = angle,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre
+                });
+            }
+        }
 
-            switch (judgedObject)
+        private class DrawableJudgementPool : DrawablePool<DrawableTauJudgement>
+        {
+            private readonly HitResult result;
+            private readonly Action<DrawableTauJudgement> onLoaded;
+
+            public DrawableJudgementPool(HitResult result, Action<DrawableTauJudgement> onLoaded)
+                : base(10)
             {
-                case DrawableBeat beat:
-                    var angle = beat.HitObject.Angle;
-                    explosion.Position = Extensions.GetCircularPosition(.6f, angle);
-                    explosion.Rotation = angle;
-
-                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type))
-                        {
-                            Position = Extensions.GetCircularPosition(.5f, angle),
-                            Angle = angle,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        });
-
-                    break;
-
-                case DrawableHardBeat _:
-                    explosion.Position = Extensions.GetCircularPosition(.6f, 0);
-
-                    if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), true)
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                        });
-
-                    break;
+                this.result = result;
+                this.onLoaded = onLoaded;
             }
 
-            judgementLayer.Add(explosion);
+            protected override DrawableTauJudgement CreateNewDrawable()
+            {
+                var judgement = base.CreateNewDrawable();
+
+                judgement.Apply(new JudgementResult(new HitObject(), new Judgement()) { Type = result }, null);
+
+                onLoaded?.Invoke(judgement);
+
+                return judgement;
+            }
         }
 
         private class VisualisationContainer : BeatSyncedContainer
