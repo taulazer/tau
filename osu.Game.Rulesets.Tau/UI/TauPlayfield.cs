@@ -5,9 +5,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Effects;
-using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics;
@@ -76,7 +75,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
                     {
-                        ring= new CircularContainer
+                        ring = new CircularContainer
                         {
                             RelativeSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,
@@ -155,6 +154,7 @@ namespace osu.Game.Rulesets.Tau.UI
         public void CreateSliderEffect(float angle, bool kiai)
         {
             if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
+
             kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR, particleAmount: 1)
             {
                 Position = Extensions.GetCircularPosition(.5f, angle),
@@ -165,15 +165,23 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         private float cacheProgress;
+
         public void AdjustRingGlow(float progress, float angle)
         {
             if (cacheProgress == progress) return;
             cacheProgress = progress;
-            cursor.PaddleDrawable.Glow.FinishTransforms();
-            cursor.PaddleDrawable.Glow.FadeTo(progress, progress == 0 ? 200 : 0);
-            cursor.PaddleDrawable.Glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
-        }
 
+            var glow = cursor.PaddleDrawable.Glow;
+            glow.FinishTransforms();
+
+            glow.FadeTo(progress, progress == 0 ? 200 : 0);
+            glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
+
+            glow.Line.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
+            glow.Glow.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
+            glow.Glow.Size = Interpolation.ValueAt(progress, new Vector2(0.6f), new Vector2(1.01f), 0, 1, Easing.In);
+            glow.Glow.InnerRadius = Interpolation.ValueAt(progress, 0, 0.325f, 0, 1, Easing.In);
+        }
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
@@ -204,7 +212,9 @@ namespace osu.Game.Rulesets.Tau.UI
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre
                         });
+
                     break;
+
                 case DrawableBeat beat:
                     var angle = beat.HitObject.Angle;
                     explosion.Position = Extensions.GetCircularPosition(.6f, angle);

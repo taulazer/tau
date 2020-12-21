@@ -87,7 +87,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         Colour = TauPlayfield.ACCENT_COLOR,
                         Children = new Drawable[]
                         {
-                            Glow = new PaddleGlow(angleRange){
+                            Glow = new PaddleGlow(angleRange)
+                            {
                                 Alpha = 0
                             },
                             new CircularProgress
@@ -188,14 +189,13 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public class PaddleGlow : CompositeDrawable
         {
-            private readonly Texture gradientTextureBoth;
             public PaddleGlow(float angleRange)
             {
                 const int width = 128;
 
                 var image = new Image<Rgba32>(width, width);
 
-                gradientTextureBoth = new Texture(width, width, true);
+                var gradientTextureBoth = new Texture(width, width, true);
 
                 for (int i = 0; i < width; ++i)
                 {
@@ -203,6 +203,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     {
                         float brightness = (float)i / (width - 1);
                         float brightness2 = (float)j / (width - 1);
+
                         image[i, j] = new Rgba32(
                             255,
                             255,
@@ -217,17 +218,20 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 Size = new Vector2(1.5f);
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
-                InternalChildren = new Drawable[]{
-                    new CircularProgress{
+
+                InternalChildren = new Drawable[]
+                {
+                    Line = new CircularProgress
+                    {
                         RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(.675f),
-                        InnerRadius = 0.005f,
+                        Size = new Vector2(.68f),
+                        InnerRadius = 0.01f,
                         Rotation = -5f,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Current = new BindableDouble(10f/ 360),
+                        Current = new BindableDouble(8f / 360),
                     },
-                    new CircularProgress
+                    Glow = new CircularProgress
                     {
                         RelativeSizeAxes = Axes.Both,
                         InnerRadius = 0.325f,
@@ -235,10 +239,13 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         Texture = gradientTextureBoth,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Current = new BindableDouble(10f / 360),
+                        Current = new BindableDouble(8f / 360),
                     }
                 };
             }
+
+            public CircularProgress Line;
+            public CircularProgress Glow;
         }
     }
 }
