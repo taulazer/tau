@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
@@ -40,8 +41,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             lighting.SetColourFrom(JudgedObject, Result);
 
             var angle = 0f;
+
             if (JudgedObject is DrawableBeat b)
                 angle = b.HitObject.Angle;
+
+            if (JudgedObject is DrawableSlider s)
+                angle = s.HitObject.Nodes.Last().Angle;
 
             Position = Extensions.GetCircularPosition(.6f, angle);
             Rotation = angle;

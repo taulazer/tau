@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Graphics.Pooling;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Logging;
+using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics;
@@ -45,6 +47,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
+        private readonly CircularContainer ring;
+
         public TauPlayfield(BeatmapDifficulty difficulty)
         {
             RelativeSizeAxes = Axes.None;
@@ -77,7 +81,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Children = new Drawable[]
                     {
-                        new CircularContainer
+                        ring = new CircularContainer
                         {
                             RelativeSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,
@@ -133,6 +137,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
+            RegisterPool<Slider, DrawableSlider>(3);
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
@@ -159,10 +164,42 @@ namespace osu.Game.Rulesets.Tau.UI
             playfieldBackground.FadeTo(PlayfieldDimLevel.Value, 100);
         }
 
-        public bool CheckIfWeCanValidate(DrawableTauHitObject obj) => cursor.CheckForValidation(obj);
+        public bool CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
 
         [Resolved]
         private OsuColour colour { get; set; }
+
+        public void CreateSliderEffect(float angle, bool kiai)
+        {
+            if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
+
+            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR, particleAmount: 1)
+            {
+                Position = Extensions.GetCircularPosition(.5f, angle),
+                Angle = angle,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre
+            });
+        }
+
+        private float cacheProgress;
+
+        public void AdjustRingGlow(float progress, float angle)
+        {
+            if (cacheProgress == progress) return;
+            cacheProgress = progress;
+
+            var glow = cursor.PaddleDrawable.Glow;
+            glow.FinishTransforms();
+
+            glow.FadeTo(progress, progress == 0 ? 200 : 0);
+            glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
+
+            glow.Line.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
+            glow.Glow.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
+            glow.Glow.Size = Interpolation.ValueAt(progress, new Vector2(0.6f), new Vector2(1.01f), 0, 1, Easing.In);
+            glow.Glow.InnerRadius = Interpolation.ValueAt(progress, 0, 0.325f, 0, 1, Easing.In);
+        }
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
@@ -173,13 +210,21 @@ namespace osu.Game.Rulesets.Tau.UI
 
             judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
 
+            if (judgedObject is DrawableSlider)
+                cursor.PaddleDrawable.Glow.FadeOut(200);
+
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
             {
-                float angle = 0;
-                if (judgedObject is DrawableBeat b) angle = b.HitObject.Angle;
+                float angle = judgedObject switch
+                {
+                    DrawableBeat b => b.HitObject.Angle,
+                    DrawableSlider s => s.HitObject.Nodes.Last().Angle,
+                    _ => 0
+                };
+
                 kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat)
                 {
-                    Position = Extensions.GetCircularPosition(.5f, angle),
+                    Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
                     Angle = angle,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
