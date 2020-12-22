@@ -1,5 +1,4 @@
-﻿using System;
-using osu.Framework.Bindables;
+﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Skinning;
 
@@ -7,18 +6,9 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
 {
     public class TauLegacySkinTransformer : LegacySkinTransformer
     {
-        private Lazy<bool> hasBeat;
-
         public TauLegacySkinTransformer(ISkinSource source)
             : base(source)
         {
-            source.SourceChanged += sourceChanged;
-            sourceChanged();
-        }
-
-        private void sourceChanged()
-        {
-            hasBeat = new Lazy<bool>(() => Source.GetTexture("beat") != null);
         }
 
         public override Drawable GetDrawableComponent(ISkinComponent component)
@@ -29,7 +19,10 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
             switch (tauComponent.Component)
             {
                 case TauSkinComponents.Beat:
-                    return hasBeat.Value ? new LegacyBeat() : null;
+                    return Source.GetTexture("beat") != null ? new LegacyBeat() : null;
+
+                case TauSkinComponents.Playfield:
+                    return Source.GetTexture("field-overlay") != null ? new LegacyPlayfield() : null;
             }
 
             return null;

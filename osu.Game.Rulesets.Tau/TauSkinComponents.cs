@@ -2,6 +2,7 @@
 {
     public enum TauSkinComponents
     {
-        Beat
+        Beat,
+        Playfield
     }
 }

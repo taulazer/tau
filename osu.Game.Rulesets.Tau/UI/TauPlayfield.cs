@@ -9,7 +9,6 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Logging;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -23,9 +22,11 @@ using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
+using osu.Game.Rulesets.Tau.Skinning.Default;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
+using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
 
@@ -34,7 +35,6 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        private readonly Circle playfieldBackground;
         private readonly TauCursor cursor;
         private readonly Container judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
@@ -67,37 +67,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                 },
                 new VisualisationContainer(),
-                playfieldBackground = new Circle
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
-                    {
-                        ring = new CircularContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Masking = true,
-                            BorderThickness = 3,
-                            BorderColour = ACCENT_COLOR.Opacity(0.5f),
-                            Child = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                AlwaysPresent = true,
-                                Alpha = 0,
-                            }
-                        },
-                    }
-                },
+                new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Playfield), _ => new PlayfieldPiece()),
                 HitObjectContainer,
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
@@ -127,14 +97,9 @@ namespace osu.Game.Rulesets.Tau.UI
             judgementLayer.Add(judgement.GetProxyAboveHitObjectsContent());
         }
 
-        protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
-
-        [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
+        [BackgroundDependencyLoader]
+        private void load()
         {
-            config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
-            PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
-
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
             RegisterPool<Slider, DrawableSlider>(3);
@@ -152,17 +117,6 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-            updateVisuals();
-        }
-
-        private void updateVisuals()
-        {
-            playfieldBackground.FadeTo(PlayfieldDimLevel.Value, 100);
-        }
 
         public bool CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
 
