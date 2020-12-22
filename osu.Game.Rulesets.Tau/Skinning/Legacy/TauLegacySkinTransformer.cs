@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Game.Screens.Ranking.Statistics;
 using osu.Game.Skinning;
 
 namespace osu.Game.Rulesets.Tau.Skinning.Legacy
@@ -20,6 +21,9 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
             {
                 case TauSkinComponents.Beat:
                     return Source.GetTexture("beat") != null ? new LegacyBeat() : null;
+
+                case TauSkinComponents.HardBeat:
+                    return Source.GetTexture("hard-beat") != null ? new LegacyHardBeat() : null;
 
                 case TauSkinComponents.Playfield:
                     return Source.GetTexture("field-overlay") != null ? new LegacyPlayfield() : null;

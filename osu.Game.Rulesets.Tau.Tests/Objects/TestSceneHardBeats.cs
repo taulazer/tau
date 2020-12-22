@@ -7,36 +7,23 @@ using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
-using osu.Game.Tests.Visual;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneHardBeat : OsuTestScene
+    public class TestSceneHardBeat : TauSkinnableTestScene
     {
-        private readonly Container content;
-        protected override Container<Drawable> Content => content;
-
         private int depthIndex;
 
         public TestSceneHardBeat()
         {
-            base.Content.Add(content = new TauInputManager(new RulesetInfo { ID = 0 })
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(768),
-                RelativeSizeAxes = Axes.None,
-                Scale = new Vector2(.6f)
-            });
-
-            AddStep("Miss Single", () => testSingle());
-            AddStep("Hit Single", () => testSingle(true));
+            AddStep("Miss Single", () => SetContents(() => testSingle()));
+            AddStep("Hit Single", () => SetContents(() => testSingle(true)));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject && (h as DrawableTauHitObject).AllJudged == false));
         }
 
-        private void testSingle(bool auto = false)
+        private Drawable testSingle(bool auto = false)
         {
             var circle = new HardBeat
             {
@@ -45,12 +32,19 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
 
             circle.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty { });
 
-            Add(new TestDrawableHardBeat(circle, auto)
+            return new Container
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Depth = depthIndex++,
-            });
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(0.6f),
+                Child = new TestDrawableHardBeat(circle, auto)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Depth = depthIndex++,
+                }
+            };
         }
 
         private class TestDrawableHardBeat : DrawableHardBeat
