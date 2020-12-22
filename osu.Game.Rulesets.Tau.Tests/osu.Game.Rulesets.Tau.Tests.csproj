@@ -25,4 +25,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>osu.Game.Rulesets.Tau.Tests</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**\*" />
+  </ItemGroup>
 </Project>

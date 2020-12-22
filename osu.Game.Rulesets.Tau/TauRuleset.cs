@@ -19,17 +19,20 @@ using osu.Game.Rulesets.Tau.Edit;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
+using osu.Game.Rulesets.Tau.Skinning.Legacy;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
 using osu.Game.Screens.Ranking.Statistics;
+using osu.Game.Skinning;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau
 {
     public class TauRuleset : Ruleset
     {
-        public override string Description => "tau";
+        public const string SHORT_NAME = "tau";
+        public override string Description => SHORT_NAME;
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
             new DrawableTauRuleset(this, beatmap, mods);
@@ -87,7 +90,7 @@ namespace osu.Game.Rulesets.Tau
             }
         }
 
-        public override string ShortName => "tau";
+        public override string ShortName => SHORT_NAME;
 
         public override string PlayingVerb => "Hitting beats";
 
@@ -159,6 +162,8 @@ namespace osu.Game.Rulesets.Tau
         public override HitObjectComposer CreateHitObjectComposer() => new TauHitObjectComposer(this);
 
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
+
+        public override ISkin CreateLegacySkinProvider(ISkinSource source, IBeatmap beatmap) => new TauLegacySkinTransformer(source);
 
         protected override IEnumerable<HitResult> GetValidHitResults()
         {

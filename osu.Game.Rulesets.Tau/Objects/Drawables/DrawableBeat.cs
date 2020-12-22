@@ -11,6 +11,8 @@ using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Skinning.Default;
+using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
 
@@ -18,7 +20,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableBeat : DrawableTauHitObject, IKeyBindingHandler<TauAction>
     {
-        public Container Box;
+        public CompositeDrawable Box;
         public Container IntersectArea;
 
         private bool validActionPressed;
@@ -55,10 +57,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     Alpha = 0.05f,
                     Children = new Drawable[]
                     {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both
-                        },
+                        new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Beat), _ => new BeatPiece(), null, ConfineMode.ScaleToFit),
                         IntersectArea = new Container
                         {
                             Size = new Vector2(16),
