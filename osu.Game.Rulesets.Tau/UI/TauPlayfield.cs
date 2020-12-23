@@ -22,6 +22,7 @@ using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
+using osu.Game.Rulesets.Tau.Skinning;
 using osu.Game.Rulesets.Tau.Skinning.Default;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
@@ -43,7 +44,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
-        public static readonly Color4 ACCENT_COLOR = Color4Extensions.FromHex(@"FF0040");
+        public static readonly Bindable<Color4> ACCENT_COLOR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
@@ -98,11 +99,13 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(ISkinSource skin)
         {
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
             RegisterPool<Slider, DrawableSlider>(3);
+
+            ACCENT_COLOR.Value = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Accent)?.Value ?? Color4Extensions.FromHex(@"FF0040");
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
@@ -127,7 +130,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
 
-            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR, particleAmount: 1)
+            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR.Value, particleAmount: 1)
             {
                 Position = Extensions.GetCircularPosition(.5f, angle),
                 Angle = angle,
@@ -242,7 +245,7 @@ namespace osu.Game.Rulesets.Tau.UI
             protected override void LoadComplete()
             {
                 base.LoadComplete();
-                visualisation.AccentColour = ACCENT_COLOR.Opacity(0.5f);
+                visualisation.AccentColour = ACCENT_COLOR.Value.Opacity(0.5f);
                 showVisualisation.TriggerChange();
             }
 
@@ -254,14 +257,14 @@ namespace osu.Game.Rulesets.Tau.UI
 
                     if (firstKiaiBeat)
                     {
-                        visualisation.FlashColour(ACCENT_COLOR.Opacity(0.5f), timingPoint.BeatLength * 4, Easing.In);
+                        visualisation.FlashColour(visualisation.AccentColour.Opacity(0.5f), timingPoint.BeatLength * 4, Easing.In);
                         firstKiaiBeat = false;
 
                         return;
                     }
 
                     if (kiaiBeatIndex >= 5)
-                        visualisation.FlashColour(ACCENT_COLOR.Opacity(0.25f), timingPoint.BeatLength, Easing.In);
+                        visualisation.FlashColour(visualisation.AccentColour.Opacity(0.25f), timingPoint.BeatLength, Easing.In);
                 }
                 else
                 {

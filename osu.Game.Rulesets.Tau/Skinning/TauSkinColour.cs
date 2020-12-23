@@ -2,6 +2,7 @@
 {
     public enum TauSkinColour
     {
-        
+        Slider,
+        Accent
     }
 }

@@ -1,4 +1,6 @@
-﻿using osu.Framework.Graphics;
+﻿using System;
+using osu.Framework.Graphics;
+using osu.Framework.IO.Stores;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Tau.Beatmaps;
 using osu.Game.Rulesets.Tau.UI;
@@ -28,6 +30,13 @@ namespace osu.Game.Rulesets.Tau.Tests
                 FillAspectRatio = 1,
                 FillMode = FillMode.Fit
             }));
+
+            DllResourceStore dllResourceStore = new DllResourceStore(DynamicCompilationOriginal.GetType().Assembly);
+
+            foreach (var resource in dllResourceStore.GetAvailableResources())
+            {
+                Console.WriteLine(resource);
+            }
         }
     }
 }

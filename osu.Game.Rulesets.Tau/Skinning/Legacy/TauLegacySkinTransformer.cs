@@ -1,6 +1,5 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Game.Screens.Ranking.Statistics;
 using osu.Game.Skinning;
 
 namespace osu.Game.Rulesets.Tau.Skinning.Legacy

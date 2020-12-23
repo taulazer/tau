@@ -14,7 +14,10 @@ using osu.Game.Rulesets.Objects;
 using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Framework.Allocation;
+using osu.Game.Rulesets.Tau.Skinning;
 using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Skinning;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -63,6 +66,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
             });
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(ISkinSource skin)
+        {
+            path.Colour = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Slider)?.Value ?? Color4.White;
         }
 
         protected override void OnApply()

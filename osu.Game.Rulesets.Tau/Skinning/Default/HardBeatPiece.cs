@@ -20,6 +20,8 @@ namespace osu.Game.Rulesets.Tau.Skinning.Default
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+            FillAspectRatio = 1;
+            FillMode = FillMode.Fit;
 
             Child = new Box
             {

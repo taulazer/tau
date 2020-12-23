@@ -65,6 +65,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             private readonly Box topLine;
             private readonly Box bottomLine;
             private readonly CircularContainer circle;
+            private readonly CircularContainer border;
 
             public readonly PaddleGlow Glow;
 
@@ -78,13 +79,12 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
                 InternalChildren = new Drawable[]
                 {
-                    new CircularContainer
+                    border = new CircularContainer
                     {
                         RelativeSizeAxes = Axes.Both,
                         //Masking = true,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Colour = TauPlayfield.ACCENT_COLOR,
                         Children = new Drawable[]
                         {
                             Glow = new PaddleGlow(angleRange)
@@ -137,6 +137,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         }
                     }
                 };
+
+                border.Colour = TauPlayfield.ACCENT_COLOR.Value;
             }
 
             protected override bool OnMouseMove(MouseMoveEvent e)

@@ -13,6 +13,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Default
     public class PlayfieldPiece : CompositeDrawable
     {
         private readonly Circle background;
+        private readonly CircularContainer border;
 
         public PlayfieldPiece()
         {
@@ -30,14 +31,13 @@ namespace osu.Game.Rulesets.Tau.Skinning.Default
                     Colour = Color4.Black,
                     Alpha = 0.3f
                 },
-                new CircularContainer
+                border = new CircularContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Masking = true,
                     BorderThickness = 3,
-                    BorderColour = TauPlayfield.ACCENT_COLOR.Opacity(0.5f),
                     Child = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -46,6 +46,8 @@ namespace osu.Game.Rulesets.Tau.Skinning.Default
                     }
                 },
             });
+
+            border.BorderColour = TauPlayfield.ACCENT_COLOR.Value;
         }
 
         private readonly Bindable<float> playfieldDimLevel = new Bindable<float>(0.3f);
