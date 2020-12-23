@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double jumpDistanceExp = applyDiminishingExp(tauCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(tauCurrent.TravelDistance);
 
-            double angleStrain = result + (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold);
+            double angleStrain = result + ((jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold));
             double flatStrain = (Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / tauCurrent.StrainTime;
 
             return Math.Max(
