@@ -4,6 +4,7 @@
     {
         Beat,
         Playfield,
-        HardBeat
+        HardBeat,
+        Handle
     }
 }

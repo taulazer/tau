@@ -24,6 +24,9 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
                 case TauSkinComponents.HardBeat:
                     return Source.GetTexture("hard-beat") != null ? new LegacyHardBeat() : null;
 
+                case TauSkinComponents.Handle:
+                    return Source.GetTexture("handle") != null ? new LegacyHandle() : null;
+
                 case TauSkinComponents.Playfield:
                     return Source.GetTexture("field-overlay") != null ? new LegacyPlayfield() : null;
             }
