@@ -1,16 +1,11 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
-using osu.Game.Tests.Visual;
-using osuTK;
-using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {

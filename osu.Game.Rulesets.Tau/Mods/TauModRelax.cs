@@ -62,6 +62,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                         if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit.HitObject.Angle))
                             requiresHit = true;
+
                         break;
 
                     case DrawableHardBeat _:
@@ -69,11 +70,13 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                         requiresHit = true;
                         requiresHardHit = true;
+
                         break;
 
                     case DrawableSlider slider:
                         if (slider.IsWithinPaddle)
                             requiresHold = true;
+
                         break;
                 }
             }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects;
-using System.Linq;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Beatmaps
