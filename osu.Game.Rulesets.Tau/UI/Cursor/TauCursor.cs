@@ -5,12 +5,14 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
 using osuTK.Graphics;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
@@ -21,8 +23,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         private readonly float angleRange;
 
-        private readonly Paddle paddle;
-        private readonly AbsoluteCursor cursor;
+        public readonly Paddle PaddleDrawable;
 
         public TauCursor(BeatmapDifficulty difficulty)
         {
@@ -32,8 +33,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             Anchor = Anchor.Centre;
 
             RelativeSizeAxes = Axes.Both;
-            AddInternal(paddle = new Paddle(angleRange));
-            AddInternal(cursor = new AbsoluteCursor());
+            AddInternal(PaddleDrawable = new Paddle(angleRange));
+            AddInternal(new AbsoluteCursor());
         }
 
         [BackgroundDependencyLoader]
@@ -44,14 +45,14 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public bool CheckForValidation(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(paddle.Rotation, angle);
+            var angleDiff = Extensions.GetDeltaAngle(PaddleDrawable.Rotation, angle);
 
             return Math.Abs(angleDiff) <= angleRange / 2;
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            paddle.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+            PaddleDrawable.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
 
             return base.OnMouseMove(e);
         }
@@ -63,6 +64,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             private readonly Box topLine;
             private readonly Box bottomLine;
             private readonly CircularContainer circle;
+
+            public readonly PaddleGlow Glow;
 
             public Paddle(float angleRange)
             {
@@ -77,12 +80,16 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     new CircularContainer
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Masking = true,
+                        //Masking = true,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Colour = TauPlayfield.ACCENT_COLOR,
                         Children = new Drawable[]
                         {
+                            Glow = new PaddleGlow(angleRange)
+                            {
+                                Alpha = 0
+                            },
                             new CircularProgress
                             {
                                 RelativeSizeAxes = Axes.Both,
@@ -90,7 +97,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                                 Origin = Anchor.Centre,
                                 Current = new BindableDouble(angleRange / 360),
                                 InnerRadius = 0.05f,
-                                Rotation = -angleRange / 2
+                                Rotation = -angleRange / 2,
                             },
                             bottomLine = new Box
                             {
@@ -177,6 +184,67 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 base.UpdateAfterChildren();
                 ActiveCursor.Rotation += (float)Time.Elapsed / 5;
             }
+        }
+
+        public class PaddleGlow : CompositeDrawable
+        {
+            public PaddleGlow(float angleRange)
+            {
+                const int width = 128;
+
+                var image = new Image<Rgba32>(width, width);
+
+                var gradientTextureBoth = new Texture(width, width, true);
+
+                for (int i = 0; i < width; ++i)
+                {
+                    for (int j = 0; j < width; ++j)
+                    {
+                        float brightness = (float)i / (width - 1);
+                        float brightness2 = (float)j / (width - 1);
+
+                        image[i, j] = new Rgba32(
+                            255,
+                            255,
+                            255,
+                            (byte)(255 - (1 + brightness2 - brightness) / 2 * 255));
+                    }
+                }
+
+                gradientTextureBoth.SetData(new TextureUpload(image));
+
+                RelativeSizeAxes = Axes.Both;
+                Size = new Vector2(1.5f);
+                Anchor = Anchor.Centre;
+                Origin = Anchor.Centre;
+
+                InternalChildren = new Drawable[]
+                {
+                    Line = new CircularProgress
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(.68f),
+                        InnerRadius = 0.01f,
+                        Rotation = -5f,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Current = new BindableDouble(8f / 360),
+                    },
+                    Glow = new CircularProgress
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        InnerRadius = 0.325f,
+                        Rotation = -5f,
+                        Texture = gradientTextureBoth,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Current = new BindableDouble(8f / 360),
+                    }
+                };
+            }
+
+            public CircularProgress Line;
+            public CircularProgress Glow;
         }
     }
 }

@@ -165,7 +165,7 @@ namespace osu.Game.Rulesets.Tau
             return new[]
             {
                 HitResult.Great,
-                HitResult.Good,
+                HitResult.Ok,
                 HitResult.Miss,
             };
         }

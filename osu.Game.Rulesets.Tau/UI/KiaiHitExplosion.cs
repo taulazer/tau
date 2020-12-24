@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.UI
         /// </summary>
         public float Angle;
 
-        public KiaiHitExplosion(Color4 colour, bool circular = false)
+        public KiaiHitExplosion(Color4 colour, bool circular = false, int particleAmount = 10)
         {
             this.circular = circular;
             var rng = new Random();
@@ -30,9 +30,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             if (circular)
             {
-                const int particle_count = 50;
-
-                for (int i = 0; i < particle_count; i++)
+                for (int i = 0; i < particleAmount; i++)
                 {
                     particles.Add(new Box
                     {
@@ -48,9 +46,7 @@ namespace osu.Game.Rulesets.Tau.UI
             }
             else
             {
-                const int particle_count = 10;
-
-                for (int i = 0; i < particle_count; i++)
+                for (int i = 0; i < particleAmount; i++)
                 {
                     particles.Add(new Box
                     {

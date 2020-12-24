@@ -17,6 +17,8 @@ using osu.Framework.Input.Bindings;
 using osu.Framework.Timing;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Framework.Allocation;
+using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.Tau.UI.Particles;
@@ -31,6 +33,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         [Resolved]
         private TauPlayfield playfield { get; set; }
+
+        public DrawableSlider() : this(null)
+        {
+        }
 
         [Resolved]
         private OsuColour colour { get; set; }
@@ -67,6 +73,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
             });
+        }
+
+        protected override void OnApply()
+        {
+            base.OnApply();
+            totalTimeHeld = 0;
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
@@ -147,6 +159,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
+                playfield.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
                 totalTimeHeld += Time.Elapsed;
                 isBeingHit = true;
 
@@ -187,6 +200,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         break;
                 }
             }
+
+            if (AllJudged) return;
+
+            if (isBeingHit)
+                playfield.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration), Vector2.Zero.GetDegreesFromPosition(path.Position));
+            else
+                playfield.AdjustRingGlow(0, Vector2.Zero.GetDegreesFromPosition(path.Position));
         }
 
         private bool isBeingHit;
@@ -205,7 +225,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 case ArmedState.Idle:
                     LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-
                     break;
 
                 case ArmedState.Hit:
