@@ -1,4 +1,5 @@
 ﻿using System;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
@@ -14,7 +15,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private const double angle_bonus_begin = Math.PI / 6;
         private const double timing_threshold = 107;
 
-        protected override double SkillMultiplier => 70;
+        protected override double SkillMultiplier => 370;
         protected override double StrainDecayBase => 0.15;
 
         protected override double StrainValueOf(DifficultyHitObject current)
@@ -29,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             var noteDif = (TauDifficultyHitObject)current;
 
-            var paddleSize = noteDif.Beatmap.BeatmapInfo.BaseDifficulty.CircleSize;
+            var paddleSize = BeatmapDifficulty.DifficultyRange(noteDif.Beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 1, 4, 8);
             var jumpAngle = Math.Abs(note.Angle - notePrev.Angle) * 0.5f;
 
             var paddleSizeBonus = 0.01f * (Math.Pow(paddleSize - 4, 3) + 1);
