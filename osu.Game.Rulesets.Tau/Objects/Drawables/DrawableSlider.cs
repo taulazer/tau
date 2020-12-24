@@ -179,7 +179,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Colour = TauPlayfield.ACCENT_COLOR
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * 50 + 390, angle), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * (50 + 390), angle), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);

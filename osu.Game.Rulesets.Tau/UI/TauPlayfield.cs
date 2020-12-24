@@ -116,7 +116,7 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 SliderParticleEmitter.Vortices.Add(new Vortex
                 {
-                    Speed = RNG.NextSingle() * 10.5f + 2,
+                    Speed = RNG.NextSingle() * (10.5f + 2),
                     Scale = new Vector2(50),
                     Position = Extensions.GetCircularPosition(500f, (360 / 8) * i),
                     Velocity = Extensions.GetCircularPosition(50, (360 / 8) * i)
