@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                         Velocity = new Vector2
                         {
                             X = (RNG.NextSingle(0, 3f) - 1.5f) * 50,
-                            Y = -(RNG.NextSingle(0, 2) + 4 * 20)
+                            Y = -(RNG.NextSingle(0, 2) + (4 * 20))
                         }
                     });
                 }, i * 5);

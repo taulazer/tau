@@ -69,9 +69,9 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
                 var (dx, dy) = (X - vortex.Position.X, Y - vortex.Position.Y);
 
                 var speed = vortex.Speed;
-                var (vx, vy) = (dy * speed + vortex.Velocity.X, dx * speed + vortex.Velocity.Y);
+                var (vx, vy) = (dy * (speed + vortex.Velocity.X), dx * (speed + vortex.Velocity.Y));
 
-                double factor = 1 / (1 + (dx * dx + dy * dy) / vortex.Scale.X);
+                double factor = 1 / (1 + ((dx * dx) + (dy * dy)) / vortex.Scale.X);
                 const float f = 0.5f;
                 factor *= (1 - f) * f * 4;
 
