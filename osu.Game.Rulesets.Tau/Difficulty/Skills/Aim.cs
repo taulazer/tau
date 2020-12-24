@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿using System;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
@@ -18,8 +15,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private const double angle_bonus_begin = Math.PI / 6;
         private const double timing_threshold = 107;
 
-        // public List<Double> strainPeaks = new List<Double>();
-        protected override double SkillMultiplier => 70; //26.25;
+        protected override double SkillMultiplier => 370;
         protected override double StrainDecayBase => 0.15;
 
         protected override double StrainValueOf(DifficultyHitObject current)
@@ -34,10 +30,10 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             var noteDif = (TauDifficultyHitObject)current;
 
-            var paddle_size = noteDif.beatmap.BeatmapInfo.BaseDifficulty.CircleSize;
-            var jumpAngle = Math.Abs(note.Angle - notePrev.Angle) * 0.5;
+            var paddleSize = BeatmapDifficulty.DifficultyRange(noteDif.Beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 1, 4, 8);
+            var jumpAngle = Math.Abs(note.Angle - notePrev.Angle) * 0.5f;
 
-            var paddle_size_bonus = (0.01f * Math.Pow(paddle_size - 4, 3)) + 1;
+            var paddleSizeBonus = (0.01f * Math.Pow(paddleSize - 4, 3)) + 1;
 
             double result = 0;
             double angleBonus;
@@ -64,13 +60,13 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double jumpDistanceExp = applyDiminishingExp(tauCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(tauCurrent.TravelDistance);
 
-            double angle_strain = result + ((jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold));
-            double flat_strain = (Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / tauCurrent.StrainTime;
+            double angleStrain = result + ((jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold));
+            double flatStrain = (Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / tauCurrent.StrainTime;
 
             // strainPeaks.Add(Math.Max(option1,option2));
             return Math.Max(
-                angle_strain * paddle_size_bonus,
-                flat_strain * paddle_size_bonus
+                angleStrain * paddleSizeBonus,
+                flatStrain * paddleSizeBonus
             ) * speedmult;
         }
 

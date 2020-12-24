@@ -33,17 +33,16 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         /// </summary>
         public readonly double StrainTime;
 
-        public IBeatmap beatmap;
+        public IBeatmap Beatmap;
 
-        public readonly TauHitObject lastLastObject;
-        public readonly TauHitObject lastObject;
+        public readonly TauHitObject LastLastObject;
+        public new TauHitObject LastObject => (TauHitObject)base.LastObject;
 
-        public TauDifficultyHitObject(HitObject hitObject, HitObject lastLastObject, HitObject lastObject, double clockRate, IBeatmap bm)
+        public TauDifficultyHitObject(HitObject hitObject, HitObject lastLastObject, HitObject lastObject, double clockRate, IBeatmap beatmap)
             : base(hitObject, lastObject, clockRate)
         {
-            this.lastLastObject = (TauHitObject)lastLastObject;
-            this.lastObject = (TauHitObject)lastObject;
-            this.beatmap = bm;
+            LastLastObject = (TauHitObject)lastLastObject;
+            Beatmap = beatmap;
 
             setDistances();
 
@@ -53,10 +52,10 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         private void setDistances()
         {
-            JumpDistance = (getEndCursorPosition(BaseObject) - getEndCursorPosition(lastObject)).Length;
+            JumpDistance = (getEndCursorPosition(BaseObject) - getEndCursorPosition(LastObject)).Length;
 
-            if (lastLastObject != null)
-            {  
+            if (LastLastObject != null)
+            {
                 // Vector2 lastLastCursorPosition = getEndCursorPosition(lastLastObject);
 
                 // Vector2 v1 = lastLastCursorPosition - getEndCursorPosition(lastObject);
@@ -67,7 +66,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
                 // Angle = Math.Abs(Math.Atan2(det, dot));
 
                 // Inscribed angle
-                Angle = 0.5f * (lastLastObject.Angle - BaseObject.Angle);
+                Angle = 0.5f * (LastLastObject.Angle - BaseObject.Angle);
             }
         }
 

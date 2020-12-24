@@ -38,12 +38,12 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double NoteMultiplier = 1;
             double angleBonus = 1.0;
             if (current.BaseObject is HardBeat)
-            { 
+            {
                 NoteMultiplier = 1.5;
 
                 // Increase Multiplier for alternating from beats to hardbeats and back
-                if (tauCurrent.lastObject is Beat) { NoteMultiplier *= 1.25; }
-                if (tauCurrent.lastLastObject is HardBeat && tauCurrent.lastObject is Beat) { NoteMultiplier *= 1.1; }
+                if (tauCurrent.LastObject is Beat) { NoteMultiplier *= 1.25; }
+                if (tauCurrent.LastLastObject is HardBeat && tauCurrent.LastObject is Beat) { NoteMultiplier *= 1.1; }
             }
             else if (tauCurrent.Angle != null && tauCurrent.Angle.Value < angle_bonus_begin)
             {
@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
                 }
             }
 
-            speedBonus*=NoteMultiplier;
+            speedBonus *= NoteMultiplier;
             return (1 + ((speedBonus - 1) * 0.75)) * angleBonus * (0.95 + (speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5))) / tauCurrent.StrainTime;
         }
     }
