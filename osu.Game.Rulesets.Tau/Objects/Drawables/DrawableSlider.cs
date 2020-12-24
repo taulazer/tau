@@ -160,14 +160,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        {
-                            for (int i = 0; i < 3; i++)
-                            {
-                                playfield.SliderParticleEmitter.AddParticle(angle);
-                            }
+                    {
+                        playfield.SliderParticleEmitter.AddParticle(angle, slider: true);
 
-                            break;
-                        }
+                        break;
+                    }
 
                     case KiaiType.Classic:
                         particle = new Box
@@ -184,6 +181,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                         particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * 50 + 390, angle), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
+
                         playfield.SliderParticleEmitter.Add(particle);
 
                         break;
