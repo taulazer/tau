@@ -33,12 +33,6 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             double speedRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double starRating = aimRating + speedRating + (Math.Abs(aimRating - speedRating) / 2);
 
-            Console.WriteLine(starRating);
-            Console.WriteLine(aimRating);
-            Console.WriteLine(speedRating);
-
-            //starRating = Math.Round(aimRating, 1) * 100 + Math.Round(speedRating, 1);
-
             var hitWindows = new TauHitWindows();
             hitWindows.SetDifficulty(beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty);
 
