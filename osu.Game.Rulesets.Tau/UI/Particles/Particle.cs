@@ -41,11 +41,11 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             };
         }
 
-        public void Apply(float angle, HitResult? result = null)
+        public void Apply(float angle, HitResult? result = null, bool slider = false)
         {
             Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), angle);
             Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), RNG.NextSingle(angle - 40, angle + 40));
-            Size = new Vector2(RNG.NextSingle(1, 10));
+            Size = new Vector2(RNG.NextSingle(1, slider ? 3 : 10));
             Rotation = RNG.NextSingle(0, 360);
             Colour = result.HasValue ? colour.ForHitResult(result.Value) : TauPlayfield.ACCENT_COLOR;
         }
@@ -80,12 +80,10 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             }
 
             const float damping = 1 - 0.001f;
-            velocity.X *= damping;
-            velocity.Y *= damping;
+            velocity *= new Vector2(damping);
 
-            var deltaTime = (float)TimeSpan.FromMilliseconds(Time.Elapsed).TotalSeconds;
-            X += velocity.X * deltaTime;
-            Y += velocity.Y * deltaTime;
+            var deltaTime = (float)(Time.Elapsed * 0.001);
+            Position += new Vector2(velocity.X * deltaTime, velocity.Y * deltaTime);
         }
     }
 }
