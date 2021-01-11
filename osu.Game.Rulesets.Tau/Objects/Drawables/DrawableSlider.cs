@@ -74,10 +74,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             });
         }
 
-        [BackgroundDependencyLoader]
-        private void load(ISkinSource skin)
+        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
+        [BackgroundDependencyLoader(true)]
+        private void load(ISkinSource skin, TauRulesetConfigManager config)
         {
             path.Colour = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Slider)?.Value ?? Color4.White;
+            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
         }
 
         protected override void OnApply()
@@ -86,13 +88,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             totalTimeHeld = 0;
         }
 
-        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
-
-        [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
-        {
-            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
-        }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
@@ -180,7 +175,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     case KiaiType.Turbulent:
                         {
                             playfield.SliderParticleEmitter.AddParticle(angle, slider: true);
-
                             break;
                         }
 
@@ -194,7 +188,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Size = new Vector2(RNG.Next(1, 10)),
                             Clock = new FramedClock(),
                             Blending = BlendingParameters.Additive,
-                            Colour = TauPlayfield.ACCENT_COLOR
+                            Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
                         particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * (50 + 390), angle), duration, Easing.OutQuint)

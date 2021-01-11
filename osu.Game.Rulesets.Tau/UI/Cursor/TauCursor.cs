@@ -61,10 +61,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         public class Paddle : CompositeDrawable
         {
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
-
-            private readonly Box topLine;
-            private readonly Box bottomLine;
-            private readonly CircularContainer circle;
             private readonly CircularContainer border;
             private readonly CircularProgress paddle;
 
