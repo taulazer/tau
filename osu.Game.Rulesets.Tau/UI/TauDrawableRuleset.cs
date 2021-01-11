@@ -7,9 +7,9 @@ using osu.Game.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
@@ -31,6 +31,6 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new TauPlayfieldAdjustmentContainer();
 
-        protected override ReplayRecorder CreateReplayRecorder(Replay replay) => new TauReplayRecorder(replay);
+        protected override ReplayRecorder CreateReplayRecorder(Score score) => new TauReplayRecorder(score);
     }
 }
