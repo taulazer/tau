@@ -9,7 +9,6 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Logging;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -25,6 +24,7 @@ using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
+using osu.Game.Rulesets.Tau.UI.Particles;
 using osu.Game.Rulesets.UI;
 using osuTK;
 using osuTK.Graphics;
@@ -41,8 +41,9 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly OrderedHitPolicy hitPolicy;
         private readonly IDictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new Dictionary<HitResult, DrawablePool<DrawableTauJudgement>>();
 
-        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
+        public readonly ParticleEmitter SliderParticleEmitter;
 
+        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
         public static readonly Color4 ACCENT_COLOR = Color4Extensions.FromHex(@"FF0040");
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
@@ -109,6 +110,11 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                     Anchor = Anchor.Centre,
                 },
+                SliderParticleEmitter = new ParticleEmitter
+                {
+                    Name = "Slider particle emitter",
+                    RelativeSizeAxes = Axes.Both,
+                }
             });
 
             hitPolicy = new OrderedHitPolicy(HitObjectContainer);
@@ -120,6 +126,17 @@ namespace osu.Game.Rulesets.Tau.UI
                 poolDictionary.Add(result, new DrawableJudgementPool(result, onJudgmentLoaded));
 
             AddRangeInternal(poolDictionary.Values);
+
+            for (int i = 0; i < 8; i++)
+            {
+                SliderParticleEmitter.Vortices.Add(new Vortex
+                {
+                    Speed = RNG.NextSingle() * (10.5f + 2),
+                    Scale = new Vector2(50),
+                    Position = Extensions.GetCircularPosition(500f, (360 / 8) * i),
+                    Velocity = Extensions.GetCircularPosition(50, (360 / 8) * i)
+                });
+            }
         }
 
         private void onJudgmentLoaded(DrawableTauJudgement judgement)
@@ -127,12 +144,14 @@ namespace osu.Game.Rulesets.Tau.UI
             judgementLayer.Add(judgement.GetProxyAboveHitObjectsContent());
         }
 
+        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
         protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
 
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
         {
             config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
+            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
             PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
 
             RegisterPool<Beat, DrawableBeat>(10);
@@ -222,13 +241,29 @@ namespace osu.Game.Rulesets.Tau.UI
                     _ => 0
                 };
 
-                kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat)
+                var isHardBeat = judgedObject is DrawableHardBeat;
+
+                switch (effect.Value)
                 {
-                    Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
-                    Angle = angle,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
-                });
+                    case KiaiType.Turbulent:
+                        for (int i = 0; i < (isHardBeat ? 50 : 10); i++)
+                        {
+                            SliderParticleEmitter.AddParticle((isHardBeat ? RNG.NextSingle(0, 360) : angle), result.Type);
+                        }
+
+                        break;
+
+                    case KiaiType.Classic:
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat)
+                        {
+                            Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
+                            Angle = angle,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre
+                        });
+
+                        break;
+                }
             }
         }
 

@@ -9,7 +9,6 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osuTK;
 using osuTK.Graphics;
 using SixLabors.ImageSharp;
