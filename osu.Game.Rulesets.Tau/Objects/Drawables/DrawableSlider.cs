@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
@@ -8,19 +9,16 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input.Bindings;
 using osu.Framework.Utils;
+using osu.Game.Rulesets.Scoring;
+using osuTK;
 using osu.Game.Rulesets.Objects;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Timing;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Skinning;
+using osu.Framework.Allocation;
 using osu.Game.Rulesets.Tau.UI;
-using osu.Game.Skinning;
-using osuTK;
-using osuTK.Graphics;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.Tau.UI.Particles;
@@ -34,15 +32,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public new Slider HitObject => base.HitObject as Slider;
 
         [Resolved]
-        private OsuColour colour { get; set; }
-
-        [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
 
-        public DrawableSlider()
-            : this(null)
+        public DrawableSlider() : this(null)
         {
         }
+
+        [Resolved]
+        private OsuColour colour { get; set; }
 
         public DrawableSlider(TauHitObject obj)
             : base(obj)
@@ -77,20 +74,19 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 },
             });
         }
-        
-        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
 
-        [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config, ISkinSource skin)
-        {
-            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
-            path.Colour = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Slider)?.Value ?? Color4.White;
-        }
-        
         protected override void OnApply()
         {
             base.OnApply();
             totalTimeHeld = 0;
+        }
+
+        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -129,7 +125,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 double nodeEnd = HitObject.StartTime + nextNode.Time;
                 double duration = nodeEnd - nodeStart;
 
-                float actualProgress = (float)((t - nodeStart) / duration);
+                float ActualProgress = (float)((t - nodeStart) / duration);
 
                 // Larger the time, the further in it is.
                 float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * 384;
@@ -140,7 +136,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 if (difference > 180) difference -= 360;
                 else if (difference < -180) difference += 360;
 
-                float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, actualProgress);
+                float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, ActualProgress);
 
                 path.AddVertex(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
             }
@@ -163,7 +159,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
-                playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
+                playfield.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
                 totalTimeHeld += Time.Elapsed;
                 isBeingHit = true;
 
@@ -208,9 +204,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (AllJudged) return;
 
             if (isBeingHit)
-                playfield?.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration), Vector2.Zero.GetDegreesFromPosition(path.Position));
+                playfield.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration), Vector2.Zero.GetDegreesFromPosition(path.Position));
             else
-                playfield?.AdjustRingGlow(0, Vector2.Zero.GetDegreesFromPosition(path.Position));
+                playfield.AdjustRingGlow(0, Vector2.Zero.GetDegreesFromPosition(path.Position));
         }
 
         private bool isBeingHit;
@@ -229,12 +225,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 case ArmedState.Idle:
                     LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-
                     break;
 
                 case ArmedState.Hit:
                 case ArmedState.Miss:
                     Expire();
+
                     break;
             }
         }

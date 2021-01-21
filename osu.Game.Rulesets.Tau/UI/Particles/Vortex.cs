@@ -1,5 +1,4 @@
-﻿using osu.Framework.Graphics.Shapes;
-using osuTK;
+﻿using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Particles
 {

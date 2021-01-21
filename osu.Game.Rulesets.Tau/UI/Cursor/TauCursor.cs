@@ -9,9 +9,8 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Tau.Skinning.Default;
-using osu.Game.Skinning;
 using osuTK;
+using osuTK.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -65,8 +64,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             private readonly Box topLine;
             private readonly Box bottomLine;
             private readonly CircularContainer circle;
-            private readonly CircularContainer border;
-            private readonly CircularProgress paddle;
 
             public readonly PaddleGlow Glow;
 
@@ -80,19 +77,20 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
                 InternalChildren = new Drawable[]
                 {
-                    border = new CircularContainer
+                    new CircularContainer
                     {
                         RelativeSizeAxes = Axes.Both,
                         //Masking = true,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
+                        Colour = TauPlayfield.ACCENT_COLOR,
                         Children = new Drawable[]
                         {
                             Glow = new PaddleGlow(angleRange)
                             {
                                 Alpha = 0
                             },
-                            paddle = new CircularProgress
+                            new CircularProgress
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,
@@ -101,21 +99,52 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                                 InnerRadius = 0.05f,
                                 Rotation = -angleRange / 2,
                             },
-                            new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Handle), _ => new HandlePiece(), null, ConfineMode.ScaleToFit)
+                            bottomLine = new Box
+                            {
+                                EdgeSmoothness = new Vector2(1f),
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.BottomCentre,
+                                RelativeSizeAxes = Axes.Y,
+                                Size = new Vector2(1.25f, 0.235f)
+                            },
+                            topLine = new Box
+                            {
+                                EdgeSmoothness = new Vector2(1f),
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                RelativeSizeAxes = Axes.Y,
+                                Size = new Vector2(1.25f, 0.235f)
+                            },
+                            circle = new CircularContainer
+                            {
+                                RelativePositionAxes = Axes.Both,
+                                RelativeSizeAxes = Axes.Both,
+                                Y = -.25f,
+                                Size = new Vector2(.03f),
+                                Origin = Anchor.Centre,
+                                Anchor = Anchor.Centre,
+                                Masking = true,
+                                BorderColour = Color4.White,
+                                BorderThickness = 4,
+                                Child = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    AlwaysPresent = true,
+                                    Alpha = 0,
+                                }
+                            }
                         }
                     }
                 };
-
-                border.Colour = TauPlayfield.ACCENT_COLOR.Value;
             }
 
-            [BackgroundDependencyLoader]
-            private void load(ISkinSource skin)
+            protected override bool OnMouseMove(MouseMoveEvent e)
             {
-                Texture texture;
+                circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / DrawHeight, .015f, .45f);
+                bottomLine.Height = -circle.Y - .015f;
+                topLine.Height = .5f + circle.Y - .015f;
 
-                if ((texture = skin.GetTexture("paddle")) != null)
-                    paddle.Texture = texture;
+                return base.OnMouseMove(e);
             }
         }
 
