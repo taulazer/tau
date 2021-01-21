@@ -7,38 +7,24 @@ using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
-using osu.Game.Tests.Visual;
-using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneBeat : OsuTestScene
+    public class TestSceneBeat : TauSkinnableTestScene
     {
-        private readonly Container content;
-        protected override Container<Drawable> Content => content;
-
         private int depthIndex;
 
         public TestSceneBeat()
         {
-            base.Content.Add(content = new TauInputManager(new RulesetInfo { ID = 0 })
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Size = new Vector2(768),
-                RelativeSizeAxes = Axes.None,
-                Scale = new Vector2(.6f)
-            });
-
-            AddStep("Miss Single", () => testSingle());
-            AddStep("Hit Single", () => testSingle(true));
-            AddStep("Miss Stream", () => testStream());
-            AddStep("Hit Stream", () => testStream(true));
+            AddStep("Miss Single", () => SetContents(() => testSingle()));
+            AddStep("Hit Single", () => SetContents(() => testSingle(true)));
+            AddStep("Miss Stream", () => SetContents(() => testStream()));
+            AddStep("Hit Stream", () => SetContents(() => testStream(true)));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject hitObject && hitObject.AllJudged == false));
         }
 
-        private void testSingle(bool auto = false, double timeOffset = 0, float angle = 0)
+        private Drawable testSingle(bool auto = false, double timeOffset = 0, float angle = 0)
         {
             var beat = new Beat
             {
@@ -48,20 +34,27 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
 
             beat.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
-            Add(new TestDrawableBeat(beat, auto)
+            return new TestDrawableBeat(beat, auto)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Depth = depthIndex++
-            });
+            };
         }
 
-        private void testStream(bool auto = false)
+        private Drawable testStream(bool auto = false)
         {
+            var playfield = new Container
+            {
+                RelativeSizeAxes = Axes.Both,
+            };
+
             for (int i = 0; i <= 1000; i += 100)
             {
-                testSingle(auto, i, i / 10f);
+                playfield.Add(testSingle(auto, i, i / 10f));
             }
+
+            return playfield;
         }
 
         private class TestDrawableBeat : DrawableBeat

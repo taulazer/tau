@@ -34,6 +34,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
                     if (pathData.Duration < BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
+
                     var nodes = new List<SliderNode>();
 
                     float? lastAngle = null;
@@ -53,6 +54,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     }
 
                     float finalAngle = ((original as IHasPosition).Position + pathData.CurvePositionAt(1)).GetHitObjectAngle();
+
                     if (lastAngle.HasValue && (Math.Abs(Extensions.GetDeltaAngle(lastAngle.Value, finalAngle)) / (float)Math.Abs(lastTime.Value - pathData.Duration)) > 0.6)
                         goto default;
 
@@ -112,12 +114,14 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             double legacyLastTickOffset = (original as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
 
-            foreach (var e in SliderEventGenerator.Generate(original.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, CancellationToken.None))
+            foreach (var e in SliderEventGenerator.Generate(original.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset,
+                CancellationToken.None))
             {
                 switch (e.Type)
                 {
                     case SliderEventType.Repeat:
                         yield return new SliderNode((float)(e.Time - original.StartTime), Extensions.GetHitObjectAngle(curve.CurvePositionAt(e.PathProgress)));
+
                         break;
                 }
             }

@@ -65,10 +65,12 @@ namespace osu.Game.Rulesets.Tau.Replays
                         }
 
                         var buttonUsed = (TauAction)(buttonIndex++ % 2);
+
                         foreach (var node in slider.Nodes)
                         {
                             Replay.Frames.Add(new TauReplayFrame(h.StartTime + node.Time, Extensions.GetCircularPosition(cursor_distance, node.Angle) + new Vector2(offset), buttonUsed));
                         }
+
                         Replay.Frames.Add(new TauReplayFrame(h.GetEndTime() + releaseDelay, ((TauReplayFrame)Replay.Frames.Last()).Position));
                         prevAngle = slider.Nodes.Last().Angle;
                         lastTime = h.GetEndTime() + releaseDelay;

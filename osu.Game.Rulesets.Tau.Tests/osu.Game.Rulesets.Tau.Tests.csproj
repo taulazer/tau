@@ -24,4 +24,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>osu.Game.Rulesets.Tau.Tests</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+   <EmbeddedResource Include="Resources\**\*" />
+  </ItemGroup>
 </Project>
