@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
@@ -134,28 +137,7 @@ namespace osu.Game.Rulesets.Tau
             }
         };
 
-        public override Drawable CreateIcon() => new Container
-        {
-            AutoSizeAxes = Axes.Both,
-            Children = new Drawable[]
-            {
-                new SpriteIcon
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Icon = FontAwesome.Regular.Circle,
-                },
-                new Sprite
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1),
-                    Scale = new Vector2(.625f),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau")
-                }
-            }
-        };
+        public override Drawable CreateIcon() => new TauIcon(this);
 
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
 
@@ -173,6 +155,42 @@ namespace osu.Game.Rulesets.Tau
                 HitResult.Ok,
                 HitResult.Miss,
             };
+        }
+
+        private class TauIcon : CompositeDrawable
+        {
+            private readonly Ruleset ruleset;
+            public TauIcon(Ruleset ruleset)
+            {
+                this.ruleset = ruleset;
+                AutoSizeAxes = Axes.Both;
+            }
+
+            [BackgroundDependencyLoader]
+            private void load(TextureStore textures, GameHost host)
+            {
+                if (!textures.GetAvailableResources().Contains("Textures/tau.png"))
+                    textures.AddStore(host.CreateTextureLoaderStore(ruleset.CreateResourceStore()));
+
+                AddRangeInternal(new Drawable[]
+                {
+                    new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Icon = FontAwesome.Regular.Circle,
+                    },
+                    new Sprite
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1),
+                        Scale = new Vector2(.625f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Texture = textures.Get("Textures/tau")
+                    }
+                });
+            }
         }
     }
 }

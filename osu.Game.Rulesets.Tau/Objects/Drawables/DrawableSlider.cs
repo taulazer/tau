@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public new Slider HitObject => base.HitObject as Slider;
 
-        [Resolved(CanBeNull = true)]
+        [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
 
         public DrawableSlider()
