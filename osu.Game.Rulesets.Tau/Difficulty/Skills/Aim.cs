@@ -25,20 +25,20 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         protected override double StrainValueOf(DifficultyHitObject current)
         {
             // No need to aim HardBeat
-            if (current.BaseObject is HardBeat){ return 0; }
-            
+            if (current.BaseObject is HardBeat) { return 0; }
+
             var tauCurrent = (TauDifficultyHitObject)current;
-            
+
             var note = (TauHitObject)current.BaseObject;
             var notePrev = (TauHitObject)current.LastObject;
-            
+
             var noteDif = (TauDifficultyHitObject)current;
 
             var paddle_size = noteDif.beatmap.BeatmapInfo.BaseDifficulty.CircleSize;
-            var jumpAngle = Math.Abs(note.Angle - notePrev.Angle)*0.5;
+            var jumpAngle = Math.Abs(note.Angle - notePrev.Angle) * 0.5;
 
-            var paddle_size_bonus = 0.01f*Math.Pow(paddle_size -4,3) +1;
-            
+            var paddle_size_bonus = (0.01f * Math.Pow(paddle_size - 4, 3)) + 1;
+
             double result = 0;
             double angleBonus;
 
@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
                 var tauPrevious = (TauDifficultyHitObject)Previous[0];
                 var x = tauPrevious.StrainTime;
                 var y = -Math.Log10(tauPrevious.StrainTime);
-                speedmult = Math.Max(y + 3.2,0);
+                speedmult = Math.Max(y + 3.2, 0);
                 if (tauCurrent.Angle != null && tauCurrent.Angle.Value > angle_bonus_begin)
                 {
                     const double min_jump = 5;
@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double jumpDistanceExp = applyDiminishingExp(tauCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(tauCurrent.TravelDistance);
 
-            double angle_strain = result + (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold);
+            double angle_strain = result + ((jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(tauCurrent.StrainTime, timing_threshold));
             double flat_strain = (Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / tauCurrent.StrainTime;
 
             // strainPeaks.Add(Math.Max(option1,option2));
