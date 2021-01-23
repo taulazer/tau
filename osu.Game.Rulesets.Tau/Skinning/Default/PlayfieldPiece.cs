@@ -55,7 +55,13 @@ namespace osu.Game.Rulesets.Tau.Skinning.Default
         private void load(TauRulesetConfigManager config)
         {
             config?.BindWith(TauRulesetSettings.PlayfieldDim, playfieldDimLevel);
-            playfieldDimLevel.BindValueChanged(v => { background.FadeTo(v.NewValue, 100); }, true);
+            playfieldDimLevel.BindValueChanged(v => { background.FadeTo(v.NewValue, 100); });
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            playfieldDimLevel.TriggerChange();
         }
     }
 }
