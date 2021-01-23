@@ -34,6 +34,7 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             Blending = BlendingParameters.Additive;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+
             InternalChild = new Box
             {
                 RelativeSizeAxes = Axes.Both
@@ -46,7 +47,7 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), RNG.NextSingle(angle - 40, angle + 40));
             Size = new Vector2(RNG.NextSingle(1, slider ? 3 : 10));
             Rotation = RNG.NextSingle(0, 360);
-            Colour = result.HasValue ? colour.ForHitResult(result.Value) : TauPlayfield.ACCENT_COLOR;
+            Colour = result.HasValue ? colour.ForHitResult(result.Value) : TauPlayfield.ACCENT_COLOR.Value;
         }
 
         protected override void PrepareForUse()

@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using osu.Framework.Graphics.Pooling;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Pooling;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -22,10 +21,13 @@ using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
+using osu.Game.Rulesets.Tau.Skinning;
+using osu.Game.Rulesets.Tau.Skinning.Default;
 using osu.Game.Rulesets.Tau.UI.Components;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.Tau.UI.Particles;
 using osu.Game.Rulesets.UI;
+using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
 
@@ -34,7 +36,6 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        private readonly Circle playfieldBackground;
         private readonly TauCursor cursor;
         private readonly Container judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
@@ -44,7 +45,8 @@ namespace osu.Game.Rulesets.Tau.UI
         public readonly ParticleEmitter SliderParticleEmitter;
 
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
-        public static readonly Color4 ACCENT_COLOR = Color4Extensions.FromHex(@"FF0040");
+
+        public static readonly Bindable<Color4> ACCENT_COLOR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
@@ -68,37 +70,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                 },
                 new VisualisationContainer(),
-                playfieldBackground = new Circle
-                {
-                    Colour = Color4.Black,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
-                    {
-                        ring = new CircularContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Masking = true,
-                            BorderThickness = 3,
-                            BorderColour = ACCENT_COLOR.Opacity(0.5f),
-                            Child = new Box
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                AlwaysPresent = true,
-                                Alpha = 0,
-                            }
-                        },
-                    }
-                },
+                new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Playfield), _ => new PlayfieldPiece()),
                 HitObjectContainer,
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
@@ -147,16 +119,14 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
         protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
 
-        [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
+        [BackgroundDependencyLoader]
+        private void load(ISkinSource skin)
         {
-            config?.BindWith(TauRulesetSettings.PlayfieldDim, PlayfieldDimLevel);
-            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
-            PlayfieldDimLevel.ValueChanged += _ => updateVisuals();
-
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
             RegisterPool<Slider, DrawableSlider>(3);
+
+            ACCENT_COLOR.Value = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Accent)?.Value ?? Color4Extensions.FromHex(@"FF0040");
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
@@ -172,17 +142,6 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
 
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-            updateVisuals();
-        }
-
-        private void updateVisuals()
-        {
-            playfieldBackground.FadeTo(PlayfieldDimLevel.Value, 100);
-        }
-
         public bool CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
 
         [Resolved]
@@ -192,7 +151,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
 
-            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR, particleAmount: 1)
+            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR.Value, particleAmount: 1)
             {
                 Position = Extensions.GetCircularPosition(.5f, angle),
                 Angle = angle,
@@ -323,7 +282,7 @@ namespace osu.Game.Rulesets.Tau.UI
             protected override void LoadComplete()
             {
                 base.LoadComplete();
-                visualisation.AccentColour = ACCENT_COLOR.Opacity(0.5f);
+                visualisation.AccentColour = ACCENT_COLOR.Value.Opacity(0.5f);
                 showVisualisation.TriggerChange();
             }
 
@@ -335,14 +294,14 @@ namespace osu.Game.Rulesets.Tau.UI
 
                     if (firstKiaiBeat)
                     {
-                        visualisation.FlashColour(ACCENT_COLOR.Opacity(0.5f), timingPoint.BeatLength * 4, Easing.In);
+                        visualisation.FlashColour(visualisation.AccentColour.Opacity(0.5f), timingPoint.BeatLength * 4, Easing.In);
                         firstKiaiBeat = false;
 
                         return;
                     }
 
                     if (kiaiBeatIndex >= 5)
-                        visualisation.FlashColour(ACCENT_COLOR.Opacity(0.25f), timingPoint.BeatLength, Easing.In);
+                        visualisation.FlashColour(visualisation.AccentColour.Opacity(0.25f), timingPoint.BeatLength, Easing.In);
                 }
                 else
                 {
