@@ -7,6 +7,7 @@ using osu.Framework.Utils;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Particles
 {
@@ -26,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
 
         public override bool RemoveCompletedTransforms => false;
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private OsuColour colour { get; set; }
 
         public Particle()
@@ -47,7 +48,7 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), RNG.NextSingle(angle - 40, angle + 40));
             Size = new Vector2(RNG.NextSingle(1, slider ? 3 : 10));
             Rotation = RNG.NextSingle(0, 360);
-            Colour = result.HasValue ? colour.ForHitResult(result.Value) : TauPlayfield.ACCENT_COLOR.Value;
+            Colour = result.HasValue ? colour?.ForHitResult(result.Value) ?? Color4.White : TauPlayfield.ACCENT_COLOR.Value;
         }
 
         protected override void PrepareForUse()
