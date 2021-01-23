@@ -62,7 +62,8 @@ namespace osu.Game.Rulesets.Tau.Tests
             for (int i = 0; i <= 1000; i += 100)
             {
                 var angle = i / 5f;
-                Scheduler.AddDelayed(() => container.Add(testSingle(angle)), i);
+                // TODO: Return to original test behavior
+                container.Add(testSingle(angle));
             }
 
             return container;
