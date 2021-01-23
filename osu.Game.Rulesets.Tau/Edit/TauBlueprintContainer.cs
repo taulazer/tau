@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using osu.Game.Rulesets.Edit;
+﻿using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Edit.Blueprints;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
@@ -9,8 +8,8 @@ namespace osu.Game.Rulesets.Tau.Edit
 {
     public class TauBlueprintContainer : ComposeBlueprintContainer
     {
-        public TauBlueprintContainer(IEnumerable<DrawableHitObject> hitObjects)
-            : base(hitObjects)
+        public TauBlueprintContainer(HitObjectComposer composer)
+            : base(composer)
         {
         }
 

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
@@ -20,17 +23,20 @@ using osu.Game.Rulesets.Tau.Edit;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
+using osu.Game.Rulesets.Tau.Skinning.Legacy;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
 using osu.Game.Screens.Ranking.Statistics;
+using osu.Game.Skinning;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau
 {
     public class TauRuleset : Ruleset
     {
-        public override string Description => "tau";
+        public const string SHORT_NAME = "tau";
+        public override string Description => SHORT_NAME;
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
             new DrawableTauRuleset(this, beatmap, mods);
@@ -90,7 +96,7 @@ namespace osu.Game.Rulesets.Tau
             }
         }
 
-        public override string ShortName => "tau";
+        public override string ShortName => SHORT_NAME;
 
         public override string PlayingVerb => "Hitting beats";
 
@@ -134,28 +140,7 @@ namespace osu.Game.Rulesets.Tau
             }
         };
 
-        public override Drawable CreateIcon() => new Container
-        {
-            AutoSizeAxes = Axes.Both,
-            Children = new Drawable[]
-            {
-                new SpriteIcon
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Icon = FontAwesome.Regular.Circle,
-                },
-                new Sprite
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1),
-                    Scale = new Vector2(.625f),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/tau")
-                }
-            }
-        };
+        public override Drawable CreateIcon() => new TauIcon(this);
 
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
 
@@ -163,14 +148,52 @@ namespace osu.Game.Rulesets.Tau
 
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
 
+        public override ISkin CreateLegacySkinProvider(ISkinSource source, IBeatmap beatmap) => new TauLegacySkinTransformer(source);
+
         protected override IEnumerable<HitResult> GetValidHitResults()
         {
             return new[]
             {
                 HitResult.Great,
-                HitResult.Good,
+                HitResult.Ok,
                 HitResult.Miss,
             };
+        }
+
+        private class TauIcon : CompositeDrawable
+        {
+            private readonly Ruleset ruleset;
+            public TauIcon(Ruleset ruleset)
+            {
+                this.ruleset = ruleset;
+                AutoSizeAxes = Axes.Both;
+            }
+
+            [BackgroundDependencyLoader]
+            private void load(TextureStore textures, GameHost host)
+            {
+                if (!textures.GetAvailableResources().Contains("Textures/tau.png"))
+                    textures.AddStore(host.CreateTextureLoaderStore(ruleset.CreateResourceStore()));
+
+                AddRangeInternal(new Drawable[]
+                {
+                    new SpriteIcon
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Icon = FontAwesome.Regular.Circle,
+                    },
+                    new Sprite
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1),
+                        Scale = new Vector2(.625f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Texture = textures.Get("Textures/tau")
+                    }
+                });
+            }
         }
     }
 }

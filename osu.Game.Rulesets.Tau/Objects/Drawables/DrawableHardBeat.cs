@@ -2,12 +2,12 @@ using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Skinning.Default;
+using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
 
@@ -20,10 +20,20 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.HardButton
         };
 
-        public readonly CircularContainer Circle;
+        public SkinnableDrawable Circle;
+
+        public DrawableHardBeat()
+            : this(null)
+        {
+        }
 
         public DrawableHardBeat(TauHitObject hitObject)
             : base(hitObject)
+        {
+        }
+
+        [BackgroundDependencyLoader]
+        private void load()
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
@@ -31,29 +41,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Size = Vector2.Zero;
             Alpha = 0f;
 
-            AddRangeInternal(new Drawable[]
-            {
-                Circle = new CircularContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1),
-                    Masking = true,
-                    BorderThickness = 5,
-                    BorderColour = Color4.White,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Alpha = 1f,
-                    Children = new Drawable[]
-                    {
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Alpha = 0,
-                            AlwaysPresent = true
-                        },
-                    }
-                },
-            });
+            AddInternal(Circle = new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.HardBeat), _ => new HardBeatPiece(), null, ConfineMode.ScaleToFit));
 
             Position = Vector2.Zero;
         }
@@ -80,7 +68,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             var result = HitObject.HitWindows.ResultFor(timeOffset);
 
-            if (result == HitResult.None)
+            if (result == HitResult.None || CheckHittable?.Invoke(this, Time.Current) == false)
                 return;
 
             ApplyResult(r => r.Type = result);
@@ -89,9 +77,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [Resolved]
         private OsuColour colour { get; set; }
 
-        protected override void UpdateStateTransforms(ArmedState state)
+        protected override void UpdateHitStateTransforms(ArmedState state)
         {
-            base.UpdateStateTransforms(state);
+            base.UpdateHitStateTransforms(state);
 
             const double time_fade_hit = 250, time_fade_miss = 400;
 
@@ -108,16 +96,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_hit);
 
-                    Circle.TransformTo(nameof(Circle.BorderThickness), 0f, time_fade_hit);
-
                     break;
 
                 case ArmedState.Miss:
                     this.FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
                         .ResizeTo(1.1f, time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_miss);
-
-                    Circle.TransformTo(nameof(Circle.BorderThickness), 0f, time_fade_miss, Easing.OutQuint);
 
                     break;
             }

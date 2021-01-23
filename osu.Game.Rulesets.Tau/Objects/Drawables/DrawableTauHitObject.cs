@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
         }
 
-        public Func<DrawableTauHitObject, bool> CheckValidation;
+        public Func<float, bool> CheckValidation;
 
         /// <summary>
         /// A list of keys which can result in hits for this HitObject.
@@ -27,5 +27,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected TauAction? HitAction { get; set; }
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
+
+        public Func<DrawableHitObject, double, bool> CheckHittable;
+
+        public void MissForcefully() => ApplyResult(r => r.Type = r.Judgement.MinResult);
     }
 }

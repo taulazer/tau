@@ -1,16 +1,16 @@
 using System.Collections.Generic;
-using osu.Game.Replays;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
     public class TauReplayRecorder : ReplayRecorder<TauAction>
     {
-        public TauReplayRecorder(Replay replay)
-            : base(replay)
+        public TauReplayRecorder(Score score)
+            : base(score)
         {
         }
 

@@ -6,7 +6,7 @@
 </div>
 
 [![release](https://img.shields.io/badge/build-2020.403.6B3-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
-[![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE) 
+[![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/network)
 [![GitHub issues](https://img.shields.io/github/issues/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/issues)
@@ -64,7 +64,7 @@ When developing or debugging the tau codebase, a few prerequisites are required 
 * An IDE that supports the C# language in automatic completion, and syntax highlighting; examples of such being [Visual Studio 2019](https://visualstudio.microsoft.com/vs/) and above, or [JetBrains Rider](https://www.jetbrains.com/rider/).
 * The [osu!framework](https://github.com/ppy/osu-framework/tree/master/osu.Framework), and [osu!](https://github.com/ppy/osu) codebases are added as dependencies for building
 
-### Source Code 
+### Source Code
 You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the tau directory.
 ```sh
 git clone https://github.com/Altenhh/tau.git
@@ -72,7 +72,7 @@ cd tau
 ```
 
 ### Building the Gamemode From Source
-To build Tau, you will need to have [.NET Core](https://dotnet.microsoft.com/download) installed on your computer.
+To build Tau, you will need to have [.NET 5](https://dotnet.microsoft.com/download) installed on your computer.
 
 First, open a terminal and navigate to wherever you have the Tau source code downloaded. Once you are in the root of the repository, enter the directory named `osu.Game.Rulesets.Tau`.
 

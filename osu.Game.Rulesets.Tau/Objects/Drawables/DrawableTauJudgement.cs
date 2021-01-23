@@ -1,67 +1,90 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
+﻿using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Skinning;
 using osuTK;
-using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableTauJudgement : DrawableJudgement
     {
-        private SkinnableSprite lighting;
-        private Bindable<Color4> lightingColour;
+        private SkinnableLighting lighting;
 
-        public DrawableTauJudgement(JudgementResult result, DrawableHitObject judgedObject)
-            : base(result, judgedObject)
+        [Resolved]
+        private OsuConfigManager config { get; set; }
+
+        [BackgroundDependencyLoader]
+        private void load()
         {
             RelativePositionAxes = Axes.Both;
             Scale = new Vector2(1.66f);
-        }
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
 
-        [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config)
-        {
-            if (config.Get<bool>(OsuSetting.HitLighting) && Result.Type != HitResult.Miss)
+            AddInternal(lighting = new SkinnableLighting
             {
-                AddInternal(lighting = new SkinnableSprite("lighting")
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Blending = BlendingParameters.Additive,
-                    Depth = float.MaxValue
-                });
-
-                if (JudgedObject != null)
-                {
-                    lightingColour = JudgedObject.AccentColour.GetBoundCopy();
-                    lightingColour.BindValueChanged(colour => lighting.Colour = colour.NewValue, true);
-                }
-                else
-                {
-                    lighting.Colour = Color4.White;
-                }
-            }
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Blending = BlendingParameters.Additive,
+                Depth = float.MaxValue,
+                Alpha = 0
+            });
         }
 
-        protected override double FadeOutDelay => lighting == null ? base.FadeOutDelay : 1400;
+        protected override void PrepareForUse()
+        {
+            base.PrepareForUse();
+
+            lighting.ResetAnimation();
+            lighting.SetColourFrom(JudgedObject, Result);
+
+            var angle = 0f;
+
+            if (JudgedObject is DrawableBeat b)
+                angle = b.HitObject.Angle;
+
+            if (JudgedObject is DrawableSlider s)
+                angle = s.HitObject.Nodes.Last().Angle;
+
+            Position = Extensions.GetCircularPosition(.6f, angle);
+            Rotation = angle;
+        }
 
         protected override void ApplyHitAnimations()
         {
-            if (lighting != null)
-            {
-                JudgementBody.Delay(FadeInDuration).FadeOut(400);
+            var hitLightingEnabled = config.Get<bool>(OsuSetting.HitLighting);
 
+            lighting.Alpha = 0;
+
+            if (hitLightingEnabled && lighting.Drawable != null)
+            {
                 lighting.ScaleTo(0.8f).ScaleTo(1.2f, 600, Easing.Out);
                 lighting.FadeIn(200).Then().Delay(200).FadeOut(1000);
+
+                LifetimeEnd = lighting.LatestTransformEndTime;
             }
 
-            JudgementText?.TransformSpacingTo(new Vector2(14, 0), 1800, Easing.OutQuint);
             base.ApplyHitAnimations();
+        }
+
+        protected override Drawable CreateDefaultJudgement(HitResult result) => new TauJudgementPiece(result);
+
+        private class TauJudgementPiece : DefaultJudgementPiece
+        {
+            public TauJudgementPiece(HitResult result)
+                : base(result)
+            {
+            }
+
+            public override void PlayAnimation()
+            {
+                base.PlayAnimation();
+
+                if (Result != HitResult.Miss)
+                    JudgementText.TransformSpacingTo(Vector2.Zero).Then().TransformSpacingTo(new Vector2(14, 0), 1800, Easing.OutQuint);
+            }
         }
     }
 }

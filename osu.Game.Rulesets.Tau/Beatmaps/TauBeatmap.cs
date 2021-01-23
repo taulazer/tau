@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects;
-using System.Linq;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Beatmaps
@@ -12,6 +12,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         public override IEnumerable<BeatmapStatistic> GetStatistics()
         {
             int beats = HitObjects.Count(b => b is Beat);
+            int sliders = HitObjects.Count(b => b is Slider);
             int hardbeats = HitObjects.Count(b => b is HardBeat);
 
             return new[]
@@ -25,6 +26,12 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         Icon = FontAwesome.Solid.Square,
                         Scale = new Vector2(.7f)
                     },
+                },
+                new BeatmapStatistic
+                {
+                    Name = "Slider count",
+                    Content = sliders.ToString(),
+                    CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders)
                 },
                 new BeatmapStatistic
                 {
