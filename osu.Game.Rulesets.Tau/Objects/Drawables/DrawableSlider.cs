@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using System.Linq;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -10,14 +11,16 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Objects;
+using osu.Framework.Timing;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Skinning;
 using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
-
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableSlider : DrawableTauHitObject, IKeyBindingHandler<TauAction>
@@ -33,6 +36,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             : this(null)
         {
         }
+
+        [Resolved]
+        private OsuColour colour { get; set; }
 
         public DrawableSlider(TauHitObject obj)
             : base(obj)
@@ -68,10 +74,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             });
         }
 
-        [BackgroundDependencyLoader]
-        private void load(ISkinSource skin)
+        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
+        [BackgroundDependencyLoader(true)]
+        private void load(ISkinSource skin, TauRulesetConfigManager config)
         {
             path.Colour = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Slider)?.Value ?? Color4.White;
+            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
         }
 
         protected override void OnApply()
@@ -79,6 +87,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.OnApply();
             totalTimeHeld = 0;
         }
+
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
@@ -153,6 +162,42 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
                 totalTimeHeld += Time.Elapsed;
                 isBeingHit = true;
+
+                if (!HitObject.Kiai)
+                    return;
+
+                var angle = Vector2.Zero.GetDegreesFromPosition(path.Position);
+                Drawable particle = Empty();
+                const int duration = 1500;
+
+                switch (effect.Value)
+                {
+                    case KiaiType.Turbulent:
+                        {
+                            playfield.SliderParticleEmitter.AddParticle(angle, slider: true);
+                            break;
+                        }
+
+                    case KiaiType.Classic:
+                        particle = new Box
+                        {
+                            Position = Extensions.GetCircularPosition(380, angle),
+                            Rotation = (float)RNG.NextDouble() * 360f,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.BottomCentre,
+                            Size = new Vector2(RNG.Next(1, 10)),
+                            Clock = new FramedClock(),
+                            Blending = BlendingParameters.Additive,
+                            Colour = TauPlayfield.ACCENT_COLOR.Value
+                        };
+
+                        particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * (50 + 390), angle), duration, Easing.OutQuint)
+                                .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
+
+                        playfield.SliderParticleEmitter.Add(particle);
+
+                        break;
+                }
             }
 
             if (AllJudged) return;

@@ -20,7 +20,7 @@
     <ProjectReference Include="..\osu.Game.Rulesets.Tau\osu.Game.Rulesets.Tau.csproj" />
   </ItemGroup>
   <PropertyGroup Label="Project">
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>osu.Game.Rulesets.Tau.Tests</RootNamespace>
   </PropertyGroup>

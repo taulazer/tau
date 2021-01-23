@@ -4,7 +4,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
@@ -61,10 +60,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         public class Paddle : CompositeDrawable
         {
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
-
-            private readonly Box topLine;
-            private readonly Box bottomLine;
-            private readonly CircularContainer circle;
             private readonly CircularContainer border;
             private readonly CircularProgress paddle;
 
