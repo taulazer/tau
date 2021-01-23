@@ -117,16 +117,16 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
-        protected Bindable<float> PlayfieldDimLevel = new Bindable<float>(0.3f); // Change the default as you see fit
 
-        [BackgroundDependencyLoader]
-        private void load(ISkinSource skin)
+        [BackgroundDependencyLoader(true)]
+        private void load(ISkinSource skin, TauRulesetConfigManager config)
         {
+            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
+            ACCENT_COLOR.Value = skin?.GetConfig<TauSkinColour, Color4>(TauSkinColour.Accent)?.Value ?? Color4Extensions.FromHex(@"FF0040");
+
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
             RegisterPool<Slider, DrawableSlider>(3);
-
-            ACCENT_COLOR.Value = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Accent)?.Value ?? Color4Extensions.FromHex(@"FF0040");
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
