@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Objects;
@@ -54,6 +55,12 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         {
             JumpDistance = (getEndCursorPosition(BaseObject) - getEndCursorPosition(LastObject)).Length;
 
+            if (LastObject is Slider lastSlider)
+            {
+                computeSliderCursorPosition(lastSlider);
+                TravelDistance = lastSlider.LazyTravelDistance;
+            }
+
             if (LastLastObject != null)
             {
                 // Vector2 lastLastCursorPosition = getEndCursorPosition(lastLastObject);
@@ -68,6 +75,45 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
                 // Inscribed angle
                 Angle = 0.5f * (LastLastObject.Angle - BaseObject.Angle);
             }
+        }
+
+        private void computeSliderCursorPosition(Slider slider)
+        {
+            if (slider.EndPosition != null)
+                return;
+
+            slider.EndPosition = Extensions.GetCircularPosition(30, slider.Nodes.Last().Angle);
+
+            float approxFollowRadius = (float)BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
+
+            var computeVertex = new Action<double>(t =>
+            {
+                try
+                {
+                    var currentNode = slider.Nodes.Last(x => t >= x.Time);
+                    var previousNode = slider.Nodes.GetPrevious(currentNode);
+
+                    var diff = previousNode.GetCircularPosition(30) + currentNode.GetCircularPosition(30) - slider.EndPosition.Value;
+                    var dist = diff.Length;
+
+                    if (dist > approxFollowRadius)
+                    {
+                        // The cursor would be outside the follow radius, we need to move it
+                        diff.Normalize(); // Obtain direction of diff
+                        dist -= approxFollowRadius;
+                        slider.LazyTravelDistance += dist;
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            });
+
+            var scoringTimes = slider.Nodes.Select(t => t.Time);
+
+            foreach (var time in scoringTimes)
+                computeVertex(time);
         }
 
         private Vector2 getEndCursorPosition(TauHitObject hitObject)
