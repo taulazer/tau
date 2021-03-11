@@ -1,4 +1,5 @@
-﻿using osu.Game.Beatmaps;
+﻿using System.Collections.Generic;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Replays;
@@ -9,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModAutoplay : ModAutoplay<TauHitObject>
     {
-        public override Score CreateReplayScore(IBeatmap beatmap) => new Score
+        public override Score CreateReplayScore(IBeatmap beatmap, IReadOnlyList<Mod> mods) => new Score
         {
             ScoreInfo = new ScoreInfo
             {
