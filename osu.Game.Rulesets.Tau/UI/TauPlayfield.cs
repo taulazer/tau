@@ -231,7 +231,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        for (int i = 0; i < (isHardBeat ? 150 : 15); i++)
+                        for (int i = 0; i < (isHardBeat ? 100 : 15); i++)
                         {
                             SliderParticleEmitter.AddParticle((isHardBeat ? RNG.NextSingle(0, 360) : angle), result.Type);
                         }
