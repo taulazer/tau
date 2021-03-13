@@ -8,7 +8,6 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -37,7 +36,6 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        private readonly Circle debugCircle;
         private readonly TauCursor cursor;
         private readonly Container judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
@@ -101,29 +99,11 @@ namespace osu.Game.Rulesets.Tau.UI
 
             AddRangeInternal(poolDictionary.Values);
 
-            /*for (int i = 0; i < 8; i++)
-            {
-                SliderParticleEmitter.Vortices.Add(new Vortex
-                {
-                    Speed = RNG.NextSingle() * (10.5f + 2),
-                    Scale = new Vector2(50),
-                    Position = Extensions.GetCircularPosition(500f, (360 / 8) * i),
-                    Velocity = Extensions.GetCircularPosition(50, (360 / 8) * i)
-                });
-            }*/
-
             SliderParticleEmitter.Vortices.Add(new Vortex
             {
                 Speed = 10,
                 Scale = new Vector2(10),
                 Position = Extensions.GetCircularPosition(-40, 0),
-            });
-
-            SliderParticleEmitter.Add(debugCircle = new Circle
-            {
-                Size = SliderParticleEmitter.Vortices[0].Scale,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
             });
         }
 
@@ -131,8 +111,6 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(420, cursor.PaddleDrawable.Rotation);
             SliderParticleEmitter.Vortices[0].Velocity = new Vector2(20, -20);
-
-            debugCircle.Position = SliderParticleEmitter.Vortices[0].Position;
 
             base.Update();
         }

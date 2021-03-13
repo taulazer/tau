@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             };
         }
 
-        public void Apply(float angle, HitResult? result = null, bool slider = false)
+        public void Apply(float angle, HitResult? result = null)
         {
             Position = Extensions.GetCircularPosition(RNG.NextSingle(360, 380), angle);
             Velocity = Extensions.GetCircularPosition(RNG.NextSingle(200, 400), RNG.NextSingle(angle - 40, angle + 40));
