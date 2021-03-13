@@ -175,7 +175,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     case KiaiType.Turbulent:
                     {
-                        playfield.SliderParticleEmitter.AddParticle(angle, slider: true);
+                        playfield.SliderParticleEmitter.AddParticle(angle);
 
                         break;
                     }
