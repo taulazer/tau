@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Tau.Tests
             get
             {
                 if (content == null)
-                    base.Content.Add(content = new TauInputManager(new RulesetInfo { ID = 5 }));
+                    base.Content.Add(content = new TauInputManager(new TauRuleset().RulesetInfo));
 
                 return content;
             }
