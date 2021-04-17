@@ -21,6 +21,7 @@ using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
+
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableSlider : DrawableTauHitObject, IKeyBindingHandler<TauAction>
@@ -75,6 +76,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
+
         [BackgroundDependencyLoader(true)]
         private void load(ISkinSource skin, TauRulesetConfigManager config)
         {
@@ -87,7 +89,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.OnApply();
             totalTimeHeld = 0;
         }
-
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
@@ -173,25 +174,29 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        {
-                            playfield.SliderParticleEmitter.AddParticle(angle, slider: true);
-                            break;
-                        }
+                    {
+                        playfield.SliderParticleEmitter.AddParticle(angle);
+
+                        break;
+                    }
 
                     case KiaiType.Classic:
+                        if ((int)Time.Current % 8 != 0)
+                            break;
+
                         particle = new Box
                         {
                             Position = Extensions.GetCircularPosition(380, angle),
                             Rotation = (float)RNG.NextDouble() * 360f,
                             Anchor = Anchor.Centre,
-                            Origin = Anchor.BottomCentre,
+                            Origin = Anchor.Centre,
                             Size = new Vector2(RNG.Next(1, 10)),
                             Clock = new FramedClock(),
                             Blending = BlendingParameters.Additive,
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(RNG.NextSingle() * (50 + 390), angle), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);
