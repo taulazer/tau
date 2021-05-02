@@ -1,4 +1,4 @@
-[![tau](https://cdn.discordapp.com/attachments/678814085063901196/700162953101574144/tau-banner.png)](https://github.com/Altenhh/tau "tau")
+[![tau](https://alten.s-ul.eu/rdXkomwh.png)](https://github.com/Altenhh/tau "tau")
 # tau for osu!
 
 <div>
