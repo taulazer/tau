@@ -1,4 +1,5 @@
 ﻿using osu.Game.Rulesets.Edit;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Edit.Blueprints;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
@@ -13,7 +14,7 @@ namespace osu.Game.Rulesets.Tau.Edit
         {
         }
 
-        protected override SelectionHandler CreateSelectionHandler() => new TauSelectionHandler();
+        protected override SelectionHandler<HitObject> CreateSelectionHandler() => new TauSelectionHandler();
 
         public override OverlaySelectionBlueprint CreateBlueprintFor(DrawableHitObject hitObject)
         {
