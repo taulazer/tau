@@ -110,6 +110,7 @@ namespace osu.Game.Rulesets.Tau
             new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
             new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
             new KeyBinding(InputKey.Space, TauAction.HardButton),
+            new KeyBinding(InputKey.LShift, TauAction.HardButton),
         };
 
         public override StatisticRow[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
