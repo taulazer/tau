@@ -70,7 +70,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     Origin = Anchor.Centre,
                 },
                 new VisualisationContainer(),
-                new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Playfield), _ => new PlayfieldPiece()),
+                new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Ring), _ => new PlayfieldPiece()),
                 HitObjectContainer,
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>

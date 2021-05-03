@@ -27,8 +27,8 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
                 case TauSkinComponents.Handle:
                     return Source.GetTexture("handle") != null ? new LegacyHandle() : null;
 
-                case TauSkinComponents.Playfield:
-                    return Source.GetTexture("field-overlay") != null ? new LegacyPlayfield() : null;
+                case TauSkinComponents.Ring:
+                    return Source.GetTexture("ring-overlay") != null ? new LegacyPlayfield() : null;
             }
 
             return null;
