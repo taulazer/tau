@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Tau
             => new TauKeyBindingContainer(ruleset, variant, unique);
 
         public TauInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.Unique)
+            : base(ruleset, 0, SimultaneousBindingMode.All)
         {
         }
 
