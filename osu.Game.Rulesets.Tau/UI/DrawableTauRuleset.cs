@@ -10,6 +10,7 @@ using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
+using osu.Game.Screens.Play;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
@@ -20,6 +21,8 @@ namespace osu.Game.Rulesets.Tau.UI
             : base(ruleset, beatmap, mods)
         {
         }
+
+        protected override ResumeOverlay CreateResumeOverlay() => new TauResumeOverlay(Beatmap.BeatmapInfo.BaseDifficulty);
 
         protected override Playfield CreatePlayfield() => new TauPlayfield(Beatmap.BeatmapInfo.BaseDifficulty);
 
