@@ -3,7 +3,7 @@
     public enum TauSkinComponents
     {
         Beat,
-        Playfield,
+        Ring,
         HardBeat,
         Handle
     }

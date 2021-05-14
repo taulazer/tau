@@ -111,7 +111,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             {
                 if (hardhit)
                 {
-                    state.PressedActions.Add(TauAction.HardButton);
+                    state.PressedActions.Add(TauAction.HardButton1);
                 }
                 else
                 {

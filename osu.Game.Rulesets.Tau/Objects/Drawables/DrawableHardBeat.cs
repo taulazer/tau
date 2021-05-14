@@ -17,7 +17,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     {
         protected override TauAction[] HitActions { get; set; } = new[]
         {
-            TauAction.HardButton
+            TauAction.HardButton1,
+            TauAction.HardButton2
         };
 
         public SkinnableDrawable Circle;
