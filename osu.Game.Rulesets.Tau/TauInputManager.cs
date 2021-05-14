@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Tau
             => new TauKeyBindingContainer(ruleset, variant, unique);
 
         public TauInputManager(RulesetInfo ruleset)
-            : base(ruleset, 0, SimultaneousBindingMode.All)
+            : base(ruleset, 0, SimultaneousBindingMode.Unique)
         {
         }
 
@@ -62,7 +62,10 @@ namespace osu.Game.Rulesets.Tau
         [Description("Right tick button")]
         RightButton,
 
-        [Description("Hard beat button")]
-        HardButton
+        [Description("Hard beat button 1")]
+        HardButton1,
+
+        [Description("Hard beat button 2")]
+        HardButton2,
     }
 }
