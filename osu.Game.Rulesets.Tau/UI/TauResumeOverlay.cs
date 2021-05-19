@@ -1,24 +1,27 @@
 ﻿using System;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Screens.Play;
 using osuTK;
 using osuTK.Graphics;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
     public class TauResumeOverlay : ResumeOverlay
     {
         private readonly float angleRange;
+        private TauClickToResumeContainer clickContainer;
+        private Container container;
+        private TauCursor.AbsoluteCursor absoluteCursor;
 
-        protected override string Message => "Move the paddle to the highlighted area.";
+        protected override string Message => "Move the cursor to the highlighted area.";
 
         public TauResumeOverlay(BeatmapDifficulty difficulty)
         {
@@ -28,81 +31,99 @@ namespace osu.Game.Rulesets.Tau.UI
         [BackgroundDependencyLoader]
         private void load()
         {
+            Add(container = new Container
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(4),
+                FillAspectRatio = 1, // 1:1
+                FillMode = FillMode.Fit,
+                Alpha = 0f,
+                Children = new Drawable[]
+                {
+                    clickContainer = new TauClickToResumeContainer(angleRange)
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Colour = Color4.Orange,
+                        Current = new BindableDouble((angleRange / 360) * 0.25f),
+                        ResumeRequested = Resume
+                    }
+                }
+            });
+            
+            Add(absoluteCursor = new TauCursor.AbsoluteCursor
+            {
+                Alpha = 0
+            });
         }
 
         protected override void PopIn()
         {
             base.PopIn();
 
-            TauClickToResumeContainer t;
-
-            Add(new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.63f),
-                FillAspectRatio = 1, // 1:1
-                FillMode = FillMode.Fit,
-                Children = new Drawable[]
-                {
-                    t = new TauClickToResumeContainer
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Texture = createTexture(),
-                        Colour = Color4.Orange,
-                        InnerRadius = 0.4f,
-                        Current =
-                        {
-                            Value = .5f
-                        }
-                    }
-                }
-            });
+            absoluteCursor.Show();
+            clickContainer.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(ToScreenSpace(GameplayCursor.ActiveCursor.DrawPosition)) - ((angleRange * 0.25f) / 2);
+            container.FadeIn(200);
         }
 
-        private Texture createTexture()
+        protected override void PopOut()
         {
-            const int width = 128;
-            const int border_thickness = 15;
-
-            var image = new Image<Rgba32>(width, width);
-
-            var gradientTextureBoth = new Texture(width, width, true);
-
-            for (int i = 0; i < width; ++i)
-            {
-                for (int j = 0; j < width; ++j)
-                {
-                    byte brightness = (byte)(0.25f * 255); // 25%
-
-                    if (j < border_thickness || j > (width - border_thickness))
-                        brightness = 255;
-
-                    image[i, j] = new Rgba32(
-                        255,
-                        255,
-                        255,
-                        brightness);
-                }
-            }
-
-            gradientTextureBoth.SetData(new TextureUpload(image));
-
-            return gradientTextureBoth;
+            base.PopOut();
+            container.FadeOut(200);
+            absoluteCursor.Hide();
         }
 
         private class TauClickToResumeContainer : CircularProgress, IKeyBindingHandler<TauAction>
         {
-            public override bool HandlePositionalInput => true;
+            public override bool Contains(Vector2 screenSpacePos) => CheckForValidation(ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(screenSpacePos) - 90);
+
+            public bool CheckForValidation(float angle)
+            {
+                var rotation = Rotation + 270;
+
+                if (rotation >= 360)
+                    rotation -= 360;
+
+                if (angle < rotation)
+                    return false;
+
+                var range = Rotation + 270 + (AngleRange * 0.25f);
+
+                if (range >= 360)
+                    range -= 360;
+
+                if (angle > range)
+                    return false;
+
+                return true;
+            }
 
             public Action ResumeRequested;
+            public readonly float AngleRange;
 
-            public TauClickToResumeContainer()
+            public TauClickToResumeContainer(float angleRange)
             {
+                AngleRange = angleRange;
                 RelativeSizeAxes = Axes.Both;
+
+                Alpha = 0.25f;
+            }
+
+            protected override bool OnHover(HoverEvent e)
+            {
+                this.FadeTo(0.5f, 200);
+
+                return base.OnHover(e);
+            }
+
+            protected override void OnHoverLost(HoverLostEvent e)
+            {
+                this.FadeTo(0.25f, 200);
+
+                base.OnHoverLost(e);
             }
 
             public bool OnPressed(TauAction action)
@@ -111,6 +132,8 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     case TauAction.LeftButton:
                     case TauAction.RightButton:
+                        if (!IsHovered)
+                            return false;
 
                         ResumeRequested?.Invoke();
 
