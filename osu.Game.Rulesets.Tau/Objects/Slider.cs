@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         public double Duration
         {
             get => Nodes.Max(n => n.Time);
-            set => throw new NotSupportedException();
+            set { }
         }
 
         public double EndTime => StartTime + Duration;

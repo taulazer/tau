@@ -5,7 +5,7 @@ using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Edit.Blueprints
 {
-    public class TauSelectionBlueprint<T> : OverlaySelectionBlueprint
+    public class TauSelectionBlueprint<T> : HitObjectSelectionBlueprint<T>
         where T : TauHitObject
     {
         protected new T HitObject => (T)DrawableObject.HitObject;
@@ -15,8 +15,8 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
         protected override bool ShouldBeAlive =>
             (DrawableObject.IsAlive && DrawableObject.IsPresent) || (AlwaysShowWhenSelected && State == SelectionState.Selected);
 
-        protected TauSelectionBlueprint(DrawableHitObject drawableObject)
-            : base(drawableObject)
+        protected TauSelectionBlueprint(T hitObject)
+            : base(hitObject)
         {
         }
     }

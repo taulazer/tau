@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
 
         protected readonly HitPiece SelectionPiece;
 
-        public HardBeatSelectionBlueprint(DrawableHardBeat hitObject)
+        public HardBeatSelectionBlueprint(HardBeat hitObject)
             : base(hitObject)
         {
             InternalChild = SelectionPiece = new HitPiece();
