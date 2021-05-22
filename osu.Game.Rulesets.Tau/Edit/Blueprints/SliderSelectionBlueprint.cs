@@ -9,7 +9,6 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
     {
         protected new DrawableSlider DrawableObject => (DrawableSlider)base.DrawableObject;
 
-
         public SliderSelectionBlueprint(Slider hitObject)
             : base(hitObject)
         {
