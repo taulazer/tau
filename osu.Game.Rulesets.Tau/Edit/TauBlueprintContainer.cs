@@ -2,6 +2,7 @@
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Edit.Blueprints;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Screens.Edit.Compose.Components;
 
@@ -16,18 +17,18 @@ namespace osu.Game.Rulesets.Tau.Edit
 
         protected override SelectionHandler<HitObject> CreateSelectionHandler() => new TauSelectionHandler();
 
-        public override OverlaySelectionBlueprint CreateBlueprintFor(DrawableHitObject hitObject)
+        public override HitObjectSelectionBlueprint CreateHitObjectBlueprintFor(HitObject hitObject)
         {
             switch (hitObject)
             {
-                case DrawableBeat beat:
+                case Beat beat:
                     return new BeatSelectionBlueprint(beat);
 
-                case DrawableHardBeat hardBeat:
+                case HardBeat hardBeat:
                     return new HardBeatSelectionBlueprint(hardBeat);
             }
 
-            return base.CreateBlueprintFor(hitObject);
+            return base.CreateHitObjectBlueprintFor(hitObject);
         }
     }
 }

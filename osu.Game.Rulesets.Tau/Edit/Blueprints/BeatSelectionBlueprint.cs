@@ -12,11 +12,10 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
     public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
     {
         protected new DrawableBeat DrawableObject => (DrawableBeat)base.DrawableObject;
-
         protected readonly HitPiece SelectionPiece;
         protected readonly Box Distance;
 
-        public BeatSelectionBlueprint(DrawableBeat hitObject)
+        public BeatSelectionBlueprint(Beat hitObject)
             : base(hitObject)
         {
             InternalChildren = new Drawable[]

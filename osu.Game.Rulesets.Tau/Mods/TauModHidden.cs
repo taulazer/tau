@@ -57,8 +57,9 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                     break;
             }
-
-            base.ApplyNormalVisibilityState(drawable, state);
+        }
+        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
+        {
         }
     }
 }
