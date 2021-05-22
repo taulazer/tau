@@ -26,6 +26,9 @@ namespace osu.Game.Rulesets.Tau.Edit
 
                 case HardBeat hardBeat:
                     return new HardBeatSelectionBlueprint(hardBeat);
+
+                case Slider slider:
+                    return new SliderSelectionBlueprint(slider);
             }
 
             return base.CreateHitObjectBlueprintFor(hitObject);
