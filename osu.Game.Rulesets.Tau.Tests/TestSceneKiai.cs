@@ -10,10 +10,10 @@ namespace osu.Game.Rulesets.Tau.Tests
     {
         public TestSceneKiai()
         {
-            AddStep("Hit Single", () => SetContents(() => testSingle()));
-            AddStep("Hit Stream", () => SetContents(testMultiple));
+            AddStep("Hit Single", () => SetContents(_ => testSingle()));
+            AddStep("Hit Stream", () => SetContents(_ => testMultiple()));
 
-            AddStep("Hit hard beat", () => SetContents(() => new Container
+            AddStep("Hit hard beat", () => SetContents(_ => new Container
             {
                 RelativeSizeAxes = Axes.Both,
                 FillAspectRatio = 1,

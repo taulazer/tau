@@ -16,8 +16,8 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
 
         public TestSceneSlider()
         {
-            AddStep("Miss Single", () => SetContents(() => testSingle()));
-            AddStep("Hit Single", () => SetContents(() => testSingle(true)));
+            AddStep("Miss Single", () => SetContents(_ => testSingle()));
+            AddStep("Hit Single", () => SetContents(_ => testSingle(true)));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject hitObject && hitObject.AllJudged == false));
         }
 

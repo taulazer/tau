@@ -17,10 +17,10 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
 
         public TestSceneBeat()
         {
-            AddStep("Miss Single", () => SetContents(() => testSingle()));
-            AddStep("Hit Single", () => SetContents(() => testSingle(true)));
-            AddStep("Miss Stream", () => SetContents(() => testStream()));
-            AddStep("Hit Stream", () => SetContents(() => testStream(true)));
+            AddStep("Miss Single", () => SetContents(_ => testSingle()));
+            AddStep("Hit Single", () => SetContents(_ => testSingle(true)));
+            AddStep("Miss Stream", () => SetContents(_ => testStream()));
+            AddStep("Hit Stream", () => SetContents(_ => testStream(true)));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject hitObject && hitObject.AllJudged == false));
         }
 
