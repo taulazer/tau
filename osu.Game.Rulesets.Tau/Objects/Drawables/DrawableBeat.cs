@@ -55,7 +55,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     Alpha = 0.05f,
                     Children = new Drawable[]
                     {
-                        new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Beat), _ => new BeatPiece(), null, ConfineMode.ScaleToFit),
+                        new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Beat), _ => new BeatPiece(), ConfineMode.ScaleToFit),
                         IntersectArea = new Container
                         {
                             Size = new Vector2(16),
