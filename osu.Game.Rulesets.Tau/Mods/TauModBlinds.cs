@@ -24,8 +24,6 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override IconUsage? Icon => FontAwesome.Solid.Adjust;
         public override ModType Type => ModType.DifficultyIncrease;
 
-        public override bool Ranked => false;
-
         public override double ScoreMultiplier => 1.12;
         private DrawableTauBlinds blinds;
 
