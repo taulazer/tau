@@ -146,7 +146,7 @@ namespace osu.Game.Rulesets.Tau
 
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
 
-        public override ISkin CreateLegacySkinProvider(ISkinSource source, IBeatmap beatmap) => new TauLegacySkinTransformer(source);
+        public override ISkin CreateLegacySkinProvider(ISkin source, IBeatmap beatmap) => new TauLegacySkinTransformer(source);
 
         protected override IEnumerable<HitResult> GetValidHitResults()
         {
