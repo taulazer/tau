@@ -27,14 +27,6 @@ namespace osu.Game.Rulesets.Tau.Mods
             Value = 5,
         };
 
-        protected override void TransferSettings(BeatmapDifficulty difficulty)
-        {
-            base.TransferSettings(difficulty);
-
-            TransferSetting(PaddleSize, difficulty.CircleSize);
-            TransferSetting(ApproachRate, difficulty.ApproachRate);
-        }
-
         protected override void ApplySettings(BeatmapDifficulty difficulty)
         {
             base.ApplySettings(difficulty);
