@@ -36,6 +36,14 @@ namespace osu.Game.Rulesets.Tau.Objects
             set => ComboOffsetBindable.Value = value;
         }
 
+        public Bindable<int> ComboIndexWithOffsetsBindable { get; } = new Bindable<int>();
+
+        public int ComboIndexWithOffsets
+        {
+            get => ComboIndexWithOffsetsBindable.Value;
+            set => ComboIndexWithOffsetsBindable.Value = value;
+        }
+
         public Bindable<int> IndexInCurrentComboBindable { get; } = new Bindable<int>();
 
         public virtual int IndexInCurrentCombo
