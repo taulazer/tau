@@ -54,6 +54,6 @@ namespace osu.Game.Rulesets.Tau.Objects
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;
 
         public int RepeatCount { get; set; }
-        public List<IList<HitSampleInfo>> NodeSamples { get; set; }
+        public List<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();
     }
 }
