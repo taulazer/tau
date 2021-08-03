@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Size = Vector2.Zero;
             Alpha = 0f;
 
-            AddInternal(Circle = new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.HardBeat), _ => new HardBeatPiece(), null, ConfineMode.ScaleToFit));
+            AddInternal(Circle = new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.HardBeat), _ => new HardBeatPiece(), ConfineMode.ScaleToFit));
 
             Position = Vector2.Zero;
         }

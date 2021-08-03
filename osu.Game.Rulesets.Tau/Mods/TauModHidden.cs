@@ -21,12 +21,11 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         protected override bool IsFirstAdjustableObject(HitObject hitObject) => !(hitObject is HardBeat);
 
-        public override void ApplyToDrawableHitObjects(IEnumerable<DrawableHitObject> drawables)
+        public override void ApplyToDrawableHitObject(DrawableHitObject drawableHitObject)
         {
-            foreach (var d in drawables)
-                d.HitObjectApplied += applyFadeInAdjustment;
+            drawableHitObject.HitObjectApplied += applyFadeInAdjustment;
 
-            base.ApplyToDrawableHitObjects(drawables);
+            base.ApplyToDrawableHitObject(drawableHitObject);
         }
 
         private void applyFadeInAdjustment(DrawableHitObject hitObject)

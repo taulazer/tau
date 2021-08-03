@@ -96,7 +96,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                                 InnerRadius = 0.05f,
                                 Rotation = -angleRange / 2,
                             },
-                            new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Handle), _ => new HandlePiece(), null, ConfineMode.ScaleToFit)
+                            new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Handle), _ => new HandlePiece(), ConfineMode.ScaleToFit)
                         }
                     }
                 };
