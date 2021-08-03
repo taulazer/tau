@@ -19,8 +19,6 @@ namespace osu.Game.Rulesets.Tau.Mods
         private const double fade_in_duration_multiplier = 0.4;
         private const double fade_out_duration_multiplier = 0.3;
 
-        protected override bool IsFirstAdjustableObject(HitObject hitObject) => !(hitObject is HardBeat);
-
         public override void ApplyToDrawableHitObject(DrawableHitObject drawableHitObject)
         {
             drawableHitObject.HitObjectApplied += applyFadeInAdjustment;
