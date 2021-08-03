@@ -54,7 +54,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             switch (drawable)
             {
                 case DrawableSlider slider:
-                    fadeOutDuration = (h.TimePreempt + slider.HitObject.Duration) * fade_out_duration_multiplier;
+                    fadeOutDuration = (h.TimePreempt + slider.HitObject.Duration) * 0.5;
 
                     using (drawable.BeginAbsoluteSequence(fadeOutStartTime))
                         slider.FadeOut(fadeOutDuration);
