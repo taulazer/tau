@@ -175,6 +175,11 @@ namespace osu.Game.Rulesets.Tau
                 if (!textures.GetAvailableResources().Contains("Textures/tau.png"))
                     textures.AddStore(host.CreateTextureLoaderStore(ruleset.CreateResourceStore()));
 
+                // Note to new ruleset creators:
+                // This is definitely something you should try to avoid.
+                // Typically resources would only be loaded inside of gameplay, NOT anywhere else.
+                // Until the osu! team figures out a safe way for you to use resources out of the gameplay area (e.g mods icon),
+                // Please try to avoid this at all costs.
                 store.AddStore(new GlyphStore(
                     new ResourceStore<byte[]>(ruleset.CreateResourceStore()),
                     "Fonts/tauFont",
