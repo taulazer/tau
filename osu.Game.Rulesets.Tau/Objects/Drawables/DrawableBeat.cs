@@ -55,7 +55,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     Alpha = 0.05f,
                     Children = new Drawable[]
                     {
-                        new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Beat), _ => new BeatPiece(), ConfineMode.ScaleToFit),
+                        new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Beat), _ => new BeatPiece(), ConfineMode.ScaleToFit)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
                         IntersectArea = new Container
                         {
                             Size = new Vector2(16),
@@ -93,7 +97,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateInitialTransforms();
 
             Box.FadeIn(HitObject.TimeFadeIn);
-            Box.MoveToY(-0.485f, HitObject.TimePreempt);
+            Box.MoveToY(-0.47f, HitObject.TimePreempt);
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
