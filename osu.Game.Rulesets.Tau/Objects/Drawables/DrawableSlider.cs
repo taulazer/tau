@@ -219,7 +219,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 float actualProgress = (float)((t - nodeStart) / duration);
 
                 // Larger the time, the further in it is.
-                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * 384;
+                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * 376;
 
                 // Angle calc
                 float difference = (nextNode.Angle - currentNode.Angle) % 360;
