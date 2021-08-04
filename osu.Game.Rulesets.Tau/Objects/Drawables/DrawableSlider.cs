@@ -244,7 +244,16 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             path.Position = path.Vertices.Any() ? path.Vertices.First() : new Vector2(0);
             path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.First()) : base.OriginPosition;
 
-            Tracking.Value = false;
+            if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
+            {
+                if (Tracking.Value == false)
+                    Tracking.Value = true;
+            }
+            else
+            {
+                if (Tracking.Value)
+                    Tracking.Value = false;
+            }
 
             if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
 
@@ -252,7 +261,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
                 totalTimeHeld += Time.Elapsed;
-                Tracking.Value = true;
 
                 if (!HitObject.Kiai)
                     return;
