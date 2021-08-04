@@ -1,3 +1,4 @@
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Mods
@@ -7,6 +8,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override string Name => "Fade in";
         public override string Acronym => "FI";
         public override string Description => @"Beats and sliders fade in";
+        public override IconUsage? Icon => TauIcon.ModFadeIn;
 
         protected override MaskingMode Mode => MaskingMode.FadeIn;
 

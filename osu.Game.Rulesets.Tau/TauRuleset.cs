@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
+using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -169,10 +170,15 @@ namespace osu.Game.Rulesets.Tau
             }
 
             [BackgroundDependencyLoader]
-            private void load(TextureStore textures, GameHost host)
+            private void load(TextureStore textures, FontStore store, GameHost host)
             {
                 if (!textures.GetAvailableResources().Contains("Textures/tau.png"))
                     textures.AddStore(host.CreateTextureLoaderStore(ruleset.CreateResourceStore()));
+
+                store.AddStore(new GlyphStore(
+                    new ResourceStore<byte[]>(ruleset.CreateResourceStore()),
+                    "Fonts/tauFont",
+                    host.CreateTextureLoaderStore(ruleset.CreateResourceStore())));
 
                 AddRangeInternal(new Drawable[]
                 {

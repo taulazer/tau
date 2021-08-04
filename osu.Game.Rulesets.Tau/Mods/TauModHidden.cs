@@ -1,4 +1,5 @@
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
@@ -11,6 +12,7 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override string Description => @"Play with no beats and fading sliders.";
         public override double ScoreMultiplier => 1.06;
+        public override IconUsage? Icon => TauIcon.ModHidden;
 
         public virtual void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {
