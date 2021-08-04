@@ -161,6 +161,7 @@ namespace osu.Game.Rulesets.Tau
         private class TauIcon : CompositeDrawable
         {
             private readonly Ruleset ruleset;
+
             public TauIcon(Ruleset ruleset)
             {
                 this.ruleset = ruleset;

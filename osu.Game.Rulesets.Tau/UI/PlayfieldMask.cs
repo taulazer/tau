@@ -32,11 +32,11 @@ namespace osu.Game.Rulesets.Tau.UI
                 Size = new Vector2(1.5f),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-
                 Children = new[]
                 {
-                    new Container{
-                        Size= TauPlayfield.BASE_SIZE,
+                    new Container
+                    {
+                        Size = TauPlayfield.BASE_SIZE,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Child = content
@@ -69,10 +69,7 @@ namespace osu.Game.Rulesets.Tau.UI
         /// </summary>
         public float Coverage
         {
-            set
-            {
-                cover.ApertureSize = new Vector2(0, TauPlayfield.BASE_SIZE.Y / 2 * value);
-            }
+            set => cover.ApertureSize = new Vector2(0, TauPlayfield.BASE_SIZE.Y / 2 * value);
         }
 
         public class PlayfieldMaskDrawable : Drawable
@@ -80,6 +77,7 @@ namespace osu.Game.Rulesets.Tau.UI
             private IShader shader;
 
             protected override DrawNode CreateDrawNode() => new PlayfieldMaskDrawNode(this);
+
             [BackgroundDependencyLoader]
             private void load(ShaderManager shaderManager)
             {

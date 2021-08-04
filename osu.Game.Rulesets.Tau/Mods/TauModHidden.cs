@@ -4,6 +4,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
+
 namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModHidden : ModHidden, IApplicableToDrawableRuleset<TauHitObject>
@@ -19,11 +20,13 @@ namespace osu.Game.Rulesets.Tau.Mods
             Container HOCParent = (Container)tauPlayfield.HitObjectContainer.Parent;
 
             HOCParent.Remove(HOC);
+
             HOCParent.Add(new PlayfieldMaskingContainer(HOC, Mode)
             {
                 Coverage = InitialCoverage,
             });
         }
+
         protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
         {
         }
