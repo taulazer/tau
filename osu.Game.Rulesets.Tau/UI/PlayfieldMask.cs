@@ -65,7 +65,7 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         /// <summary>
-        /// The relative area that should be completely covered. This does not include the fade.
+        /// The relative area that should be completely covered if it is FadingIn, or the visible area if it is FadingOut.
         /// </summary>
         public float Coverage
         {

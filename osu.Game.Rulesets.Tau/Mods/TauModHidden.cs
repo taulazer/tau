@@ -34,6 +34,6 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         protected virtual MaskingMode Mode => MaskingMode.FadeOut;
 
-        protected virtual float InitialCoverage => 0.5f;
+        protected virtual float InitialCoverage => 0.4f;
     }
 }
