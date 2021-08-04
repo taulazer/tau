@@ -7,30 +7,45 @@ using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Input.Events;
 using osu.Game.Graphics.OpenGL.Vertices;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
+    public enum MaskingMode
+    {
+        FadeOut,
+        FadeIn,
+    }
+
     public class PlayfieldMaskingContainer : CompositeDrawable
     {
         private readonly PlayfieldMaskDrawable cover;
 
-        public PlayfieldMaskingContainer(Drawable content)
+        public PlayfieldMaskingContainer(Drawable content, MaskingMode mode)
         {
             RelativeSizeAxes = Axes.Both;
 
             InternalChild = new BufferedContainer
             {
                 RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(1.5f),
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+
                 Children = new[]
                 {
-                    content,
+                    new Container{
+                        Size= TauPlayfield.BASE_SIZE,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Child = content
+                    },
                     new Container
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
+                        Size = new Vector2(2f),
                         RelativeSizeAxes = Axes.Both,
                         Blending = new BlendingParameters
                         {
@@ -41,42 +56,12 @@ namespace osu.Game.Rulesets.Tau.UI
                             // Subtract the cover's alpha from the destination (points with alpha 1 should make the destination completely transparent).
                             AlphaEquation = BlendingEquation.Add,
                             SourceAlpha = BlendingType.Zero,
-                            DestinationAlpha = BlendingType.OneMinusSrcAlpha
+                            DestinationAlpha = mode == MaskingMode.FadeOut ? BlendingType.OneMinusSrcAlpha : BlendingType.SrcAlpha
                         },
-                        Child = cover = new PlayfieldMaskDrawable(){
-                            Coverage = 0.5f
-                        }
+                        Child = cover = new PlayfieldMaskDrawable()
                     }
                 }
             };
-        }
-    }
-    public class PlayfieldMaskDrawable : Drawable
-    {
-        private IShader shader;
-
-        protected override DrawNode CreateDrawNode() => new PlayfieldMaskDrawNode(this);
-
-        [BackgroundDependencyLoader]
-        private void load(ShaderManager shaderManager)
-        {
-            RelativeSizeAxes = Axes.Both;
-            Anchor = Origin = Anchor.Centre;
-            shader = shaderManager.Load("PositionAndColour", "PlayfieldMask");
-        }
-
-        private Vector2 apertureSize;
-
-        protected Vector2 ApertureSize
-        {
-            get => apertureSize;
-            set
-            {
-                if (apertureSize == value) return;
-
-                apertureSize = value;
-                Invalidate(Invalidation.DrawNode);
-            }
         }
 
         /// <summary>
@@ -86,63 +71,91 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             set
             {
-                ApertureSize = new Vector2(0, TauPlayfield.BASE_SIZE.Y / 2 * value);
+                cover.ApertureSize = new Vector2(0, TauPlayfield.BASE_SIZE.Y / 2 * value);
             }
         }
 
-        public Vector2 AperturePosition => ToParentSpace(OriginPosition);
-
-        private class PlayfieldMaskDrawNode : DrawNode
+        public class PlayfieldMaskDrawable : Drawable
         {
-            protected new PlayfieldMaskDrawable Source => (PlayfieldMaskDrawable)base.Source;
-
             private IShader shader;
-            private Quad screenSpaceDrawQuad;
 
-            private Vector2 aperturePosition;
+            protected override DrawNode CreateDrawNode() => new PlayfieldMaskDrawNode(this);
+            [BackgroundDependencyLoader]
+            private void load(ShaderManager shaderManager)
+            {
+                RelativeSizeAxes = Axes.Both;
+                Anchor = Origin = Anchor.Centre;
+                shader = shaderManager.Load("PositionAndColour", "PlayfieldMask");
+            }
+
             private Vector2 apertureSize;
 
-            private readonly VertexBatch<PositionAndColourVertex> quadBatch = new QuadBatch<PositionAndColourVertex>(1, 1);
-            private readonly Action<TexturedVertex2D> addAction;
-
-            public PlayfieldMaskDrawNode(PlayfieldMaskDrawable source)
-                : base(source)
+            public Vector2 ApertureSize
             {
-                addAction = v => quadBatch.Add(new PositionAndColourVertex
+                get => apertureSize;
+                set
                 {
-                    Position = v.Position,
-                    Colour = v.Colour
-                });
+                    if (apertureSize == value) return;
+
+                    apertureSize = value;
+                    Invalidate(Invalidation.DrawNode);
+                }
             }
 
-            public override void ApplyState()
+            public Vector2 AperturePosition => ToParentSpace(OriginPosition);
+
+            private class PlayfieldMaskDrawNode : DrawNode
             {
-                base.ApplyState();
+                protected new PlayfieldMaskDrawable Source => (PlayfieldMaskDrawable)base.Source;
 
-                shader = Source.shader;
-                screenSpaceDrawQuad = Source.ScreenSpaceDrawQuad;
-                aperturePosition = Vector2Extensions.Transform(Source.AperturePosition, DrawInfo.Matrix);
-                apertureSize = Source.ApertureSize * DrawInfo.Matrix.ExtractScale().Xy;
-            }
+                private IShader shader;
+                private Quad screenSpaceDrawQuad;
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
-            {
-                base.Draw(vertexAction);
+                private Vector2 aperturePosition;
+                private Vector2 apertureSize;
 
-                shader.Bind();
+                private readonly VertexBatch<PositionAndColourVertex> quadBatch = new QuadBatch<PositionAndColourVertex>(1, 1);
+                private readonly Action<TexturedVertex2D> addAction;
 
-                shader.GetUniform<Vector2>("aperturePos").UpdateValue(ref aperturePosition);
-                shader.GetUniform<Vector2>("apertureSize").UpdateValue(ref apertureSize);
+                public PlayfieldMaskDrawNode(PlayfieldMaskDrawable source)
+                    : base(source)
+                {
+                    addAction = v => quadBatch.Add(new PositionAndColourVertex
+                    {
+                        Position = v.Position,
+                        Colour = v.Colour
+                    });
+                }
 
-                DrawQuad(Texture.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
+                public override void ApplyState()
+                {
+                    base.ApplyState();
 
-                shader.Unbind();
-            }
+                    shader = Source.shader;
+                    screenSpaceDrawQuad = Source.ScreenSpaceDrawQuad;
+                    aperturePosition = Vector2Extensions.Transform(Source.AperturePosition, DrawInfo.Matrix);
+                    apertureSize = Source.ApertureSize * DrawInfo.Matrix.ExtractScale().Xy;
+                }
 
-            protected override void Dispose(bool isDisposing)
-            {
-                base.Dispose(isDisposing);
-                quadBatch?.Dispose();
+                public override void Draw(Action<TexturedVertex2D> vertexAction)
+                {
+                    base.Draw(vertexAction);
+
+                    shader.Bind();
+
+                    shader.GetUniform<Vector2>("aperturePos").UpdateValue(ref aperturePosition);
+                    shader.GetUniform<Vector2>("apertureSize").UpdateValue(ref apertureSize);
+
+                    DrawQuad(Texture.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
+
+                    shader.Unbind();
+                }
+
+                protected override void Dispose(bool isDisposing)
+                {
+                    base.Dispose(isDisposing);
+                    quadBatch?.Dispose();
+                }
             }
         }
     }
