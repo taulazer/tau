@@ -71,7 +71,11 @@ namespace osu.Game.Rulesets.Tau.UI
                 },
                 new VisualisationContainer(),
                 new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Ring), _ => new PlayfieldPiece()),
-                HitObjectContainer,
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = HitObjectContainer
+                },
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {

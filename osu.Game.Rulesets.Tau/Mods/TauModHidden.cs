@@ -1,75 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.Tau.Objects.Drawables;
-
+using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Rulesets.UI;
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModHidden : ModHidden
+    public class TauModHidden : ModHidden, IApplicableToDrawableRuleset<TauHitObject>
     {
         public override string Description => @"Play with no beats and fading sliders.";
         public override double ScoreMultiplier => 1.06;
 
-        public override Type[] IncompatibleMods => new[] { typeof(TauModAutoHold) };
-
-        private const double fade_in_duration_multiplier = 0.4;
-        private const double fade_out_duration_multiplier = 0.3;
-
-        public override void ApplyToDrawableHitObject(DrawableHitObject drawableHitObject)
+        public virtual void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {
-            drawableHitObject.HitObjectApplied += applyFadeInAdjustment;
+            TauPlayfield tauPlayfield = (TauPlayfield)drawableRuleset.Playfield;
 
-            base.ApplyToDrawableHitObject(drawableHitObject);
-        }
+            var HOC = tauPlayfield.HitObjectContainer;
+            Container HOCParent = (Container)tauPlayfield.HitObjectContainer.Parent;
 
-        private void applyFadeInAdjustment(DrawableHitObject hitObject)
-        {
-            if (!(hitObject is DrawableTauHitObject d))
-                return;
-
-            d.HitObject.TimeFadeIn = d.HitObject.TimePreempt * fade_in_duration_multiplier;
-
-            foreach (var nested in d.NestedHitObjects)
-                applyFadeInAdjustment(nested);
-        }
-
-        protected override void ApplyNormalVisibilityState(DrawableHitObject drawable, ArmedState state)
-        {
-            if (!(drawable is DrawableTauHitObject d))
-                return;
-
-            var h = d.HitObject;
-
-            var fadeOutStartTime = h.StartTime - h.TimePreempt + h.TimeFadeIn;
-            double fadeOutDuration = 0;
-
-            // future proofing yet again.
-            switch (drawable)
+            HOCParent.Remove(HOC);
+            HOCParent.Add(new PlayfieldMaskingContainer(HOC, Mode)
             {
-                case DrawableSlider slider:
-                    fadeOutDuration = (h.TimePreempt + slider.HitObject.Duration) * 0.5;
-
-                    using (drawable.BeginAbsoluteSequence(fadeOutStartTime))
-                        slider.FadeOut(fadeOutDuration);
-
-                    break;
-
-                case DrawableTauHitObject beat:
-                    fadeOutDuration = h.TimePreempt * fade_out_duration_multiplier;
-
-                    using (drawable.BeginAbsoluteSequence(fadeOutStartTime, true))
-                        beat.FadeOut(fadeOutDuration);
-
-                    break;
-            }
+                Coverage = InitialCoverage,
+            });
         }
-
         protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
         {
         }
+
+        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state)
+        {
+        }
+
+        protected virtual MaskingMode Mode => MaskingMode.FadeOut;
+
+        protected virtual float InitialCoverage => 0.5f;
     }
 }
