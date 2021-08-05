@@ -1,13 +1,15 @@
 ﻿using osu.Framework.Graphics;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModInverse : Mod, IApplicableToDrawableHitObject, IUpdatableByPlayfield
+    public class TauModInverse : Mod, IApplicableToDrawableHitObject, IApplicableToDrawableRuleset<TauHitObject>
     {
         public override string Name => "Inverse";
         public override string Acronym => "IN";
@@ -57,10 +59,10 @@ namespace osu.Game.Rulesets.Tau.Mods
             };
         }
 
-        public void Update(Playfield playfield)
+        public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {
-            var field = (TauPlayfield)playfield;
-            field.Inversed = true;
+            var playfield = (TauPlayfield)drawableRuleset.Playfield;
+            playfield.Inversed = true;
         }
     }
 }
