@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using System.Linq;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
-using osu.Framework.Utils;
-using osu.Game.Rulesets.Objects;
 using osu.Framework.Timing;
+using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Graphics;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Skinning;
 using osu.Game.Rulesets.Tau.UI;
-using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
@@ -205,6 +205,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateAfterChildren();
             path.ClearVertices();
 
+            const float maxDistance = 376;
+
             for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
                  t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
                  t += 20) // Generate vertex every 20ms
@@ -219,7 +221,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 float actualProgress = (float)((t - nodeStart) / duration);
 
                 // Larger the time, the further in it is.
-                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * 376;
+                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * maxDistance;
 
                 // Angle calc
                 float difference = (nextNode.Angle - currentNode.Angle) % 360;
@@ -238,7 +240,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
                 double progress = 1 - (timeDiff / HitObject.TimePreempt);
 
-                path.AddVertex(Extensions.GetCircularPosition((float)(progress * 384), HitObject.Nodes.Last().Angle));
+                path.AddVertex(Extensions.GetCircularPosition((float)(progress * maxDistance), HitObject.Nodes.Last().Angle));
             }
 
             path.Position = path.Vertices.Any() ? path.Vertices.First() : new Vector2(0);
@@ -272,11 +274,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                    {
-                        playfield.SliderParticleEmitter.AddParticle(angle);
+                        {
+                            playfield.SliderParticleEmitter.AddParticle(angle);
 
-                        break;
-                    }
+                            break;
+                        }
 
                     case KiaiType.Classic:
                         if ((int)Time.Current % 8 != 0)
