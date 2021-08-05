@@ -16,6 +16,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
     {
         public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition);
 
+        public bool CanConvertToSliders = true;
+        public bool CanConvertToHardBeats = true;
+
         public TauBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
         {
@@ -31,6 +34,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             switch (original)
             {
                 case IHasPathWithRepeats pathData:
+                    if (!CanConvertToSliders)
+                        goto default;
 
                     if (pathData.Duration < BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
@@ -70,7 +75,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     }.Yield();
 
                 default:
-                    if (isHard)
+                    if (isHard && CanConvertToHardBeats)
                         return new HardBeat
                         {
                             Samples = sample,
