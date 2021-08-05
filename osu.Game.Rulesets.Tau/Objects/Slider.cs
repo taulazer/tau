@@ -34,7 +34,6 @@ namespace osu.Game.Rulesets.Tau.Objects
             {
                 StartTime = StartTime,
                 Angle = Nodes[0].Angle,
-                SampleControlPoint = SampleControlPoint
             });
 
             updateNestedSamples();
