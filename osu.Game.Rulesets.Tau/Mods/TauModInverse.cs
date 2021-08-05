@@ -62,6 +62,9 @@ namespace osu.Game.Rulesets.Tau.Mods
         {
             var playfield = (TauPlayfield)drawableRuleset.Playfield;
             playfield.Inversed = true;
+
+            // This is to make Inverse more enjoyable to play, without tweaking everything to accommodate a smaller playfield.
+            playfield.Scale = new Vector2(0.75f);
         }
     }
 }
