@@ -169,7 +169,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 if (inversed)
                     endNodeDistanceFromCentre = (384 * 2) - endNodeDistanceFromCentre;
 
-
                 path.AddVertex(Extensions.GetCircularPosition(endNodeDistanceFromCentre, HitObject.Nodes.Last().Angle));
             }
 
