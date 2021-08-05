@@ -30,6 +30,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public new Slider HitObject => base.HitObject as Slider;
 
+        public bool Inversed;
+        public CircularContainer MaskingContainer;
+
         [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
 
@@ -50,7 +53,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             AddRangeInternal(new Drawable[]
             {
-                new CircularContainer
+                MaskingContainer = new CircularContainer
                 {
                     Masking = true,
                     RelativeSizeAxes = Axes.Both,
@@ -175,7 +178,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     case KiaiType.Turbulent:
                     {
-                        playfield.SliderParticleEmitter.AddParticle(angle);
+                        playfield.SliderParticleEmitter.AddParticle(angle, Inversed);
 
                         break;
                     }
@@ -196,7 +199,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(Inversed ? -((RNG.NextSingle() * 50) + 390) : ((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);

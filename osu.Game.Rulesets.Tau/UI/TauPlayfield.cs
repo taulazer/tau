@@ -44,6 +44,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public readonly ParticleEmitter SliderParticleEmitter;
 
+        public bool Inversed;
+
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
 
         public static readonly Bindable<Color4> ACCENT_COLOR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
@@ -109,7 +111,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override void Update()
         {
-            SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(420, cursor.PaddleDrawable.Rotation);
+            SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(Inversed ? 120 : 420, cursor.PaddleDrawable.Rotation);
             SliderParticleEmitter.Vortices[0].Velocity = new Vector2(20, -20);
 
             base.Update();
@@ -211,13 +213,13 @@ namespace osu.Game.Rulesets.Tau.UI
                     case KiaiType.Turbulent:
                         for (int i = 0; i < (isHardBeat ? 100 : 15); i++)
                         {
-                            SliderParticleEmitter.AddParticle((isHardBeat ? RNG.NextSingle(0, 360) : angle), result.Type);
+                            SliderParticleEmitter.AddParticle((isHardBeat ? RNG.NextSingle(0, 360) : angle), Inversed, result.Type);
                         }
 
                         break;
 
                     case KiaiType.Classic:
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed)
                         {
                             Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
                             Angle = angle,

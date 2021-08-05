@@ -67,6 +67,7 @@ namespace osu.Game.Rulesets.Tau
                         new MultiMod(new TauModDoubleTime(), new TauModNightcore()),
                         new TauModHidden(),
                         new MultiMod(new TauModFlashlight(), new TauModBlinds()),
+                        new TauModInverse()
                     };
 
                 case ModType.Automation:
