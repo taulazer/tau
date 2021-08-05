@@ -22,9 +22,6 @@ namespace osu.Game.Rulesets.Tau.Objects
         public BindableList<SliderNode> Nodes { get; set; }
 
         [JsonIgnore]
-        public IList<HitSampleInfo> TailSamples { get; private set; }
-
-        [JsonIgnore]
         public SliderHeadBeat HeadBeat { get; protected set; }
 
         protected override void CreateNestedHitObjects(CancellationToken cancellationToken)
@@ -48,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.Objects
             if (HeadBeat != null)
                 HeadBeat.Samples = this.GetNodeSamples(0);
 
-            TailSamples = this.GetNodeSamples(RepeatCount + 1);
+            Samples = this.GetNodeSamples(RepeatCount + 1);
         }
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;

@@ -110,13 +110,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override void LoadSamples()
         {
+            base.LoadSamples();
+
             if (HitObject.SampleControlPoint == null)
             {
                 throw new InvalidOperationException($"{nameof(HitObject)}s must always have an attached {nameof(HitObject.SampleControlPoint)}."
                                                     + $" This is an indication that {nameof(HitObject.ApplyDefaults)} has not been invoked on {this}.");
             }
-
-            Samples.Samples = HitObject.TailSamples.Select(s => HitObject.SampleControlPoint.ApplyTo(s)).Cast<ISampleInfo>().ToArray();
 
             var slidingSamples = new List<ISampleInfo>();
 
