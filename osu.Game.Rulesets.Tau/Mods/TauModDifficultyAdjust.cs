@@ -1,4 +1,4 @@
-﻿using osu.Framework.Bindables;
+﻿using System.Linq;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Mods;
@@ -7,32 +7,48 @@ namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModDifficultyAdjust : ModDifficultyAdjust
     {
-        [SettingSource("Paddle Size", "Override a beatmap's set PS.")]
-        public BindableNumber<float> PaddleSize { get; } = new BindableFloat
+        [SettingSource("Paddle Size", "Override a beatmap's set PS.", FIRST_SETTING_ORDER - 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
+        public DifficultyBindable PaddleSize { get; } = new DifficultyBindable
         {
             Precision = 0.1f,
-            MinValue = 1,
+            MinValue = 0,
             MaxValue = 10,
-            Default = 5,
-            Value = 5,
+            ExtendedMaxValue = 11,
+            ReadCurrentFromDifficulty = diff => diff.CircleSize
         };
 
-        [SettingSource("Approach Rate", "Override a beatmap's set AR.")]
-        public BindableNumber<float> ApproachRate { get; } = new BindableFloat
+        [SettingSource("Approach Rate", "Override a beatmap's set AR.", LAST_SETTING_ORDER + 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
+        public DifficultyBindable ApproachRate { get; } = new DifficultyBindable
         {
             Precision = 0.1f,
-            MinValue = 1,
+            MinValue = 0,
             MaxValue = 10,
-            Default = 5,
-            Value = 5,
+            ExtendedMaxValue = 11,
+            ReadCurrentFromDifficulty = diff => diff.ApproachRate,
         };
+
+        public override string SettingDescription
+        {
+            get
+            {
+                string paddleSize = PaddleSize.IsDefault ? string.Empty : $"PS {PaddleSize.Value:N1}";
+                string approachRate = ApproachRate.IsDefault ? string.Empty : $"AR {ApproachRate.Value:N1}";
+
+                return string.Join(", ", new[]
+                {
+                    paddleSize,
+                    base.SettingDescription,
+                    approachRate
+                }.Where(s => !string.IsNullOrEmpty(s)));
+            }
+        }
 
         protected override void ApplySettings(BeatmapDifficulty difficulty)
         {
             base.ApplySettings(difficulty);
 
-            difficulty.CircleSize = PaddleSize.Value;
-            difficulty.ApproachRate = ApproachRate.Value;
+            if (PaddleSize.Value != null) difficulty.CircleSize = PaddleSize.Value.Value;
+            if (ApproachRate.Value != null) difficulty.ApproachRate = ApproachRate.Value.Value;
         }
     }
 }
