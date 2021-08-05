@@ -51,8 +51,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                         break;
 
                     case DrawableSlider slider:
-                        slider.Inversed = true;
-                        slider.MaskingContainer.Masking = false;
+                        slider.ApplyInverseChanges();
 
                         break;
                 }

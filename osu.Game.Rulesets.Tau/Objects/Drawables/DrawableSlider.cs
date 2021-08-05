@@ -30,8 +30,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public new Slider HitObject => base.HitObject as Slider;
 
-        public bool Inversed;
-        public CircularContainer MaskingContainer;
+        private CircularContainer maskingContainer;
+
+        private bool inversed;
 
         [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
@@ -53,7 +54,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             AddRangeInternal(new Drawable[]
             {
-                MaskingContainer = new CircularContainer
+                maskingContainer = new CircularContainer
                 {
                     Masking = true,
                     RelativeSizeAxes = Axes.Both,
@@ -76,6 +77,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
             });
+        }
+
+        public void ApplyInverseChanges()
+        {
+            inversed = true;
+            maskingContainer.Masking = false;
+
+            // Max diameter of paths are much larger when they come from outside the ring, so we need extra canvas space
+            path.Size = new Vector2(768 * 2);
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
@@ -134,7 +144,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 // Larger the time, the further in it is.
                 float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * 384;
 
-                if (Inversed)
+                if (inversed)
                     distanceFromCentre = (384 * 2) - distanceFromCentre;
 
                 // Angle calc
@@ -156,7 +166,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 float endNodeDistanceFromCentre = (float)(progress * 384);
 
-                if (Inversed)
+                if (inversed)
                     endNodeDistanceFromCentre = (384 * 2) - endNodeDistanceFromCentre;
 
 
@@ -187,7 +197,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     case KiaiType.Turbulent:
                         {
-                            playfield.SliderParticleEmitter.AddParticle(angle, Inversed);
+                            playfield.SliderParticleEmitter.AddParticle(angle, inversed);
 
                             break;
                         }
@@ -208,7 +218,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(Inversed ? -((RNG.NextSingle() * 50) + 390) : ((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 50) + 390) : ((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);
