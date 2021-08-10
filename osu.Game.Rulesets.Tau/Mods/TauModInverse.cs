@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override string Acronym => "IN";
         public override ModType Type => ModType.DifficultyIncrease;
         public override string Description => @"Beats will appear outside of the playfield.";
-        public override double ScoreMultiplier => 1.2;
+        public override double ScoreMultiplier => 1.09;
         public override Type[] IncompatibleMods => new[] { typeof(TauModHidden), typeof(TauModFadeIn) };
 
         public void ApplyToDrawableHitObject(DrawableHitObject drawable)
