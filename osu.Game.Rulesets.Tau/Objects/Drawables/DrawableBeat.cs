@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     {
         public CompositeDrawable Box;
         public Container IntersectArea;
+        public float HitDistance = -.1f;
 
         private bool validActionPressed;
 
@@ -139,7 +140,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case ArmedState.Hit:
                     Box.ScaleTo(2f, time_fade_hit, Easing.OutQuint)
                        .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
-                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
+                       .MoveToOffset(new Vector2(0, HitDistance), time_fade_hit, Easing.OutQuint)
                        .FadeOut(time_fade_hit);
 
                     this.Delay(time_fade_hit).Expire();
@@ -149,7 +150,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case ArmedState.Miss:
                     Box.ScaleTo(0.5f, time_fade_miss, Easing.InQuint)
                        .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
-                       .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
+                       .MoveToOffset(new Vector2(0, HitDistance), time_fade_hit, Easing.OutQuint)
                        .FadeOut(time_fade_miss);
 
                     this.Delay(time_fade_miss).Expire();

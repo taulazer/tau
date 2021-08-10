@@ -26,12 +26,12 @@ namespace osu.Game.Rulesets.Tau.Mods
                 switch (drawableObject)
                 {
                     case DrawableSliderHead head:
-                        applyInverseToBeat(head, -0.484f, -0.984f);
+                        applyInverseToBeat(head, state, -0.484f, -0.984f);
 
                         break;
 
                     case DrawableBeat beat:
-                        applyInverseToBeat(beat, -0.516f);
+                        applyInverseToBeat(beat, state, -0.516f);
 
                         break;
 
@@ -39,6 +39,8 @@ namespace osu.Game.Rulesets.Tau.Mods
                         var hardBeatObject = hardBeat.HitObject;
 
                         hardBeat.ClearTransforms();
+                        hardBeat.HitScale = .75f;
+                        hardBeat.MissScale = .9f;
 
                         using (hardBeat.BeginAbsoluteSequence(hardBeatObject.StartTime - hardBeatObject.TimePreempt))
                         {
@@ -56,17 +58,22 @@ namespace osu.Game.Rulesets.Tau.Mods
             };
         }
 
-        private void applyInverseToBeat(DrawableBeat beat, float finalDistance, float startingDistance = -1)
+        private void applyInverseToBeat(DrawableBeat beat, ArmedState state, float finalDistance, float startingDistance = -1)
         {
             var box = beat.Box;
             var hitObject = beat.HitObject;
 
-            box.ClearTransforms(targetMember: "Y");
+            beat.HitDistance = .1f;
 
-            using (beat.BeginAbsoluteSequence(hitObject.StartTime, false))
+            if (state == ArmedState.Idle)
             {
-                box.MoveToY(startingDistance);
-                box.MoveToY(finalDistance, hitObject.TimePreempt);
+                box.ClearTransforms(targetMember: "Y");
+
+                using (beat.BeginAbsoluteSequence(hitObject.StartTime, false))
+                {
+                    box.MoveToY(startingDistance);
+                    box.MoveToY(finalDistance, hitObject.TimePreempt);
+                }
             }
         }
 
