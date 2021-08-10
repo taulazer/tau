@@ -81,6 +81,7 @@ namespace osu.Game.Rulesets.Tau
                     return new Mod[]
                     {
                         new TauModDifficultyAdjust(),
+                        new TauModClassic()
                     };
 
                 case ModType.Fun:
