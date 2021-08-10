@@ -121,7 +121,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private void onJudgmentLoaded(DrawableTauJudgement judgement)
         {
-            judgementLayer.Add(judgement.GetProxyAboveHitObjectsContent());
+            judgementLayer.Add(judgement.ProxiedAboveHitObjectsContent);
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
