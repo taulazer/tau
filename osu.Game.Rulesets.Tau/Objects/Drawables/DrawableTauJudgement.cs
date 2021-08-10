@@ -4,6 +4,7 @@ using osu.Framework.Graphics;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -14,6 +15,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         [Resolved]
         private OsuConfigManager config { get; set; }
+
+        [Resolved]
+        private TauPlayfield playfield { get; set; }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -48,7 +52,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (JudgedObject is DrawableSlider s)
                 angle = s.HitObject.Nodes.Last().Angle;
 
-            Position = Extensions.GetCircularPosition(.6f, angle);
+            Position = Extensions.GetCircularPosition(playfield.Inversed ? .3f : .6f, angle);
             Rotation = angle;
         }
 
