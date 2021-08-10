@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override string Name => "Inverse";
         public override string Acronym => "IN";
         public override ModType Type => ModType.DifficultyIncrease;
-        public override string Description => @"Hit objects will come outside of the playfield.";
+        public override string Description => @"Beats will appear outside of the playfield.";
         public override double ScoreMultiplier => 1.2;
         public override Type[] IncompatibleMods => new[] { typeof(TauModHidden), typeof(TauModFadeIn) };
 
@@ -44,8 +44,8 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                         using (hardBeat.BeginAbsoluteSequence(hardBeatObject.StartTime - hardBeatObject.TimePreempt))
                         {
-                            hardBeat.ResizeTo(2);
-                            hardBeat.ResizeTo(1, hardBeatObject.TimePreempt);
+                            hardBeat.ResizeTo(2)
+                                    .ResizeTo(1, hardBeatObject.TimePreempt);
                         }
 
                         break;
@@ -63,7 +63,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             var box = beat.Box;
             var hitObject = beat.HitObject;
 
-            beat.HitDistance = .1f;
+            beat.HitDistance = -beat.HitDistance;
 
             if (state == ArmedState.Idle)
             {
@@ -71,8 +71,8 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                 using (beat.BeginAbsoluteSequence(hitObject.StartTime, false))
                 {
-                    box.MoveToY(startingDistance);
-                    box.MoveToY(finalDistance, hitObject.TimePreempt);
+                    box.MoveToY(startingDistance)
+                       .MoveToY(finalDistance, hitObject.TimePreempt);
                 }
             }
         }
