@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics;
+﻿using System;
+using osu.Framework.Graphics;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
@@ -16,6 +17,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override ModType Type => ModType.DifficultyIncrease;
         public override string Description => @"Hit objects will come outside of the playfield.";
         public override double ScoreMultiplier => 1.2;
+        public override Type[] IncompatibleMods => new[] { typeof(TauModHidden), typeof(TauModFadeIn) };
 
         public void ApplyToDrawableHitObject(DrawableHitObject drawable)
         {
