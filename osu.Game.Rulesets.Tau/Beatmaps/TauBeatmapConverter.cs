@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
@@ -64,9 +65,10 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     {
                         Samples = sample,
                         StartTime = original.StartTime,
+                        NodeSamples = pathData.NodeSamples,
                         NewCombo = comboData?.NewCombo ?? false,
                         ComboOffset = comboData?.ComboOffset ?? 0,
-                        Nodes = nodes.ToArray(),
+                        Nodes = new BindableList<SliderNode>(nodes),
                     }.Yield();
 
                 default:
