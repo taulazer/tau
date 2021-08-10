@@ -73,7 +73,11 @@ namespace osu.Game.Rulesets.Tau.UI
                 },
                 new VisualisationContainer(),
                 new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Ring), _ => new PlayfieldPiece()),
-                HitObjectContainer,
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = HitObjectContainer
+                },
                 cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
@@ -119,7 +123,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private void onJudgmentLoaded(DrawableTauJudgement judgement)
         {
-            judgementLayer.Add(judgement.GetProxyAboveHitObjectsContent());
+            judgementLayer.Add(judgement.ProxiedAboveHitObjectsContent);
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
@@ -132,7 +136,9 @@ namespace osu.Game.Rulesets.Tau.UI
 
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
+
             RegisterPool<Slider, DrawableSlider>(3);
+            RegisterPool<SliderHeadBeat, DrawableSliderHead>(3);
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)

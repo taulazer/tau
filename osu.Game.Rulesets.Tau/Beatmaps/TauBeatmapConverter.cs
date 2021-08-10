@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
@@ -15,6 +16,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
     public class TauBeatmapConverter : BeatmapConverter<TauHitObject>
     {
         public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition);
+
+        public bool CanConvertToSliders = true;
+        public bool CanConvertToHardBeats = true;
 
         public TauBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -31,6 +35,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             switch (original)
             {
                 case IHasPathWithRepeats pathData:
+                    if (!CanConvertToSliders)
+                        goto default;
 
                     if (pathData.Duration < BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
@@ -64,13 +70,14 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     {
                         Samples = sample,
                         StartTime = original.StartTime,
+                        NodeSamples = pathData.NodeSamples,
                         NewCombo = comboData?.NewCombo ?? false,
                         ComboOffset = comboData?.ComboOffset ?? 0,
-                        Nodes = nodes.ToArray(),
+                        Nodes = new BindableList<SliderNode>(nodes),
                     }.Yield();
 
                 default:
-                    if (isHard)
+                    if (isHard && CanConvertToHardBeats)
                         return new HardBeat
                         {
                             Samples = sample,

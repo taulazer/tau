@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
+using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -65,7 +66,7 @@ namespace osu.Game.Rulesets.Tau
                         new TauModHardRock(),
                         new TauModSuddenDeath(),
                         new MultiMod(new TauModDoubleTime(), new TauModNightcore()),
-                        new TauModHidden(),
+                        new MultiMod(new TauModHidden(), new TauModFadeIn()),
                         new MultiMod(new TauModFlashlight(), new TauModBlinds()),
                         new TauModInverse()
                     };
@@ -81,6 +82,7 @@ namespace osu.Game.Rulesets.Tau
                     return new Mod[]
                     {
                         new TauModDifficultyAdjust(),
+                        new TauModLite()
                     };
 
                 case ModType.Fun:
@@ -162,6 +164,7 @@ namespace osu.Game.Rulesets.Tau
         private class TauIcon : CompositeDrawable
         {
             private readonly Ruleset ruleset;
+
             public TauIcon(Ruleset ruleset)
             {
                 this.ruleset = ruleset;
@@ -169,10 +172,20 @@ namespace osu.Game.Rulesets.Tau
             }
 
             [BackgroundDependencyLoader]
-            private void load(TextureStore textures, GameHost host)
+            private void load(TextureStore textures, FontStore store, GameHost host)
             {
                 if (!textures.GetAvailableResources().Contains("Textures/tau.png"))
                     textures.AddStore(host.CreateTextureLoaderStore(ruleset.CreateResourceStore()));
+
+                // Note to new ruleset creators:
+                // This is definitely something you should try to avoid.
+                // Typically resources would only be loaded inside of gameplay, NOT anywhere else.
+                // Until the osu! team figures out a safe way for you to use resources out of the gameplay area (e.g mods icon),
+                // Please try to avoid this at all costs.
+                store.AddStore(new GlyphStore(
+                    new ResourceStore<byte[]>(ruleset.CreateResourceStore()),
+                    "Fonts/tauFont",
+                    host.CreateTextureLoaderStore(ruleset.CreateResourceStore())));
 
                 AddRangeInternal(new Drawable[]
                 {
