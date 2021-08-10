@@ -23,17 +23,13 @@ namespace osu.Game.Rulesets.Tau.Mods
             {
                 switch (drawableObject)
                 {
+                    case DrawableSliderHead head:
+                        applyInverseToBeat(head, -0.484f, -0.984f);
+
+                        break;
+
                     case DrawableBeat beat:
-                        var box = beat.Box;
-                        var beatObject = beat.HitObject;
-
-                        box.ClearTransforms(targetMember: "Y");
-
-                        using (beat.BeginAbsoluteSequence(beatObject.StartTime, false))
-                        {
-                            box.MoveToY(-1);
-                            box.MoveToY(-0.516f, beatObject.TimePreempt);
-                        }
+                        applyInverseToBeat(beat, -0.516f);
 
                         break;
 
@@ -56,6 +52,20 @@ namespace osu.Game.Rulesets.Tau.Mods
                         break;
                 }
             };
+        }
+
+        private void applyInverseToBeat(DrawableBeat beat, float finalDistance, float startingDistance = -1)
+        {
+            var box = beat.Box;
+            var hitObject = beat.HitObject;
+
+            box.ClearTransforms(targetMember: "Y");
+
+            using (beat.BeginAbsoluteSequence(hitObject.StartTime, false))
+            {
+                box.MoveToY(startingDistance);
+                box.MoveToY(finalDistance, hitObject.TimePreempt);
+            }
         }
 
         public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
