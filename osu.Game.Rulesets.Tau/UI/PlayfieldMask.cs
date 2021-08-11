@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             RelativeSizeAxes = Axes.Both;
 
-            InternalChild = new BufferedContainer
+            InternalChild = new FixedSizeBufferedContainer
             {
                 RelativeSizeAxes = Axes.Both,
                 Size = new Vector2(1.5f),
@@ -70,6 +70,22 @@ namespace osu.Game.Rulesets.Tau.UI
         public float Coverage
         {
             set => cover.ApertureSize = new Vector2(0, TauPlayfield.BASE_SIZE.Y / 2 * value);
+        }
+
+        private class FixedSizeBufferedContainer : BufferedContainer
+        {
+            [Resolved]
+            private TauPlayfield tauPlayfield { get; set; }
+
+            protected override Quad ComputeScreenSpaceDrawQuad()
+            {
+                var SSDQDrawinfo = DrawInfo;
+
+                // We apply a counter rotation so that the SSDQ retains the non-rotated Quad
+                SSDQDrawinfo.ApplyTransform(AnchorPosition, Vector2.One, -tauPlayfield.Rotation, Vector2.Zero, OriginPosition);
+
+                return Quad.FromRectangle(DrawRectangle) * SSDQDrawinfo.Matrix;
+            }
         }
 
         public class PlayfieldMaskDrawable : Drawable
