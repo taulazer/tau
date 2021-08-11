@@ -132,6 +132,17 @@ namespace osu.Game.Rulesets.Tau
             {
                 Columns = new[]
                 {
+                    new StatisticItem("Paddle Distribution", new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 250,
+                    })
+                }
+            },
+            new StatisticRow
+            {
+                Columns = new[]
+                {
                     new StatisticItem(string.Empty, new SimpleStatisticTable(3, new SimpleStatisticItem[]
                     {
                         new UnstableRate(score.HitEvents)
