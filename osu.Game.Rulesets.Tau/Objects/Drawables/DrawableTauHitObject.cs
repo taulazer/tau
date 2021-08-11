@@ -1,5 +1,7 @@
 using System;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Judgements;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -29,6 +31,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
 
         public Func<DrawableHitObject, double, bool> CheckHittable;
+
+        protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);
 
         public void MissForcefully() => ApplyResult(r => r.Type = r.Judgement.MinResult);
     }
