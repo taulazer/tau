@@ -201,10 +201,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public readonly Bindable<bool> Tracking = new Bindable<bool>();
 
+        private float firstNodeAngle;
+
         protected override void UpdateAfterChildren()
         {
             base.UpdateAfterChildren();
             path.ClearVertices();
+
+            void createVertex(float distance, float angle)
+                => path.AddVertex(Extensions.GetCircularPosition(distance, angle) + OriginPosition);
 
             const float maxDistance = 376;
 
@@ -232,7 +237,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, actualProgress);
 
-                path.AddVertex(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
+                createVertex(distanceFromCentre, targetAngle);
             }
 
             //Check if the last node is visible
@@ -241,34 +246,23 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
                 double progress = 1 - (timeDiff / HitObject.TimePreempt);
 
-                path.AddVertex(Extensions.GetCircularPosition((float)(progress * maxDistance), HitObject.Nodes.Last().Angle));
+                createVertex((float)(progress * maxDistance), HitObject.Nodes.Last().Angle);
             }
 
-            path.Position = path.Vertices.Any() ? path.Vertices.First() : new Vector2(0);
-            path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.First()) : base.OriginPosition;
-
-            if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
-            {
-                if (Tracking.Value == false)
-                    Tracking.Value = true;
-            }
-            else
-            {
-                if (Tracking.Value)
-                    Tracking.Value = false;
-            }
+            Tracking.Value = IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x));
 
             if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
 
+            firstNodeAngle = Vector2.Zero.GetDegreesFromPosition(path.Vertices.FirstOrDefault() - OriginPosition);
+
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
-                playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
+                playfield?.CreateSliderEffect(firstNodeAngle, HitObject.Kiai);
                 totalTimeHeld += Time.Elapsed;
 
                 if (!HitObject.Kiai)
                     return;
 
-                var angle = Vector2.Zero.GetDegreesFromPosition(path.Position);
                 Drawable particle = Empty();
                 const int duration = 1500;
 
@@ -276,7 +270,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     case KiaiType.Turbulent:
                         {
-                            playfield.SliderParticleEmitter.AddParticle(angle);
+                            playfield.SliderParticleEmitter.AddParticle(firstNodeAngle);
 
                             break;
                         }
@@ -287,7 +281,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                         particle = new Box
                         {
-                            Position = Extensions.GetCircularPosition(380, angle),
+                            Position = Extensions.GetCircularPosition(380, firstNodeAngle),
                             Rotation = (float)RNG.NextDouble() * 360f,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
@@ -297,7 +291,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(((RNG.NextSingle() * 50) + 390), firstNodeAngle), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);
@@ -309,9 +303,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (AllJudged) return;
 
             if (Tracking.Value)
-                playfield?.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration), Vector2.Zero.GetDegreesFromPosition(path.Position));
+                playfield?.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration), firstNodeAngle);
             else
-                playfield?.AdjustRingGlow(0, Vector2.Zero.GetDegreesFromPosition(path.Position));
+                playfield?.AdjustRingGlow(0, firstNodeAngle);
         }
 
         public bool OnPressed(TauAction action) => HitActions.Contains(action) && !Tracking.Value;
@@ -339,7 +333,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
         }
 
-        public bool IsWithinPaddle => CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)) ?? false;
+        public bool IsWithinPaddle => CheckValidation?.Invoke(firstNodeAngle) ?? false;
 
         private TauInputManager tauActionInputManager;
         internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
