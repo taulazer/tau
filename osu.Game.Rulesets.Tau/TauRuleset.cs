@@ -88,6 +88,7 @@ namespace osu.Game.Rulesets.Tau
                     return new Mod[]
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
+                        new TauModRotate()
                     };
 
                 default:

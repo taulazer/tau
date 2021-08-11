@@ -45,7 +45,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public bool CheckForValidation(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(PaddleDrawable.Rotation, angle);
+            var tempRot = Rotation % 360;
+            var angleDiff = Extensions.GetDeltaAngle(PaddleDrawable.Rotation + tempRot, angle);
 
             return Math.Abs(angleDiff) <= angleRange / 2;
         }
