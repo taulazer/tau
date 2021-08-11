@@ -340,11 +340,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private class FixedBufferSmoothPath : SmoothPath
         {
-            [Resolved]
+            [Resolved(canBeNull: true)]
             private TauPlayfield tauPlayfield { get; set; }
 
             protected override Quad ComputeScreenSpaceDrawQuad()
             {
+                if (tauPlayfield == null)
+                    return base.ComputeScreenSpaceDrawQuad();
+
                 var SSDQDrawinfo = DrawInfo;
 
                 // We apply a counter rotation so that the SSDQ retains the non-rotated Quad
