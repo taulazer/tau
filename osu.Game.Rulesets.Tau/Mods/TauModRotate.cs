@@ -55,7 +55,6 @@ namespace osu.Game.Rulesets.Tau.Mods
             var interpolated = Interpolation.ValueAt(progress, Rate.Value, FinalRate.Value, 0.0, 1.0);
 
             field.Rotation = (float)(currentTime / (interpolated * 1000) * 360 % 360) * (Direction.Value == Mods.Direction.Clockwise ? 1 : -1);
-            field.Cursor.Rotation = -field.Rotation;
         }
 
         public void ApplyToBeatmap(IBeatmap beatmap)
