@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
         }
 
-        public Func<float, bool> CheckValidation;
+        public Func<float, (bool, float)> CheckValidation;
 
         /// <summary>
         /// A list of keys which can result in hits for this HitObject.
