@@ -25,6 +25,7 @@ namespace osu.Game.Rulesets.Tau.UI
         public PlayfieldMaskingContainer(Drawable content, MaskingMode mode)
         {
             RelativeSizeAxes = Axes.Both;
+            Anchor = Origin = Anchor.Centre;
 
             InternalChild = new FixedSizeBufferedContainer
             {
@@ -82,7 +83,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 var SSDQDrawinfo = DrawInfo;
 
                 // We apply a counter rotation so that the SSDQ retains the non-rotated Quad
-                SSDQDrawinfo.ApplyTransform(AnchorPosition, Vector2.One, -tauPlayfield.Rotation, Vector2.Zero, OriginPosition);
+                SSDQDrawinfo.ApplyTransform(DrawSize / 2, Vector2.One, -tauPlayfield.Rotation, Vector2.Zero, OriginPosition);
 
                 return Quad.FromRectangle(DrawRectangle) * SSDQDrawinfo.Matrix;
             }

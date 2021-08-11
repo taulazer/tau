@@ -8,6 +8,7 @@ using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Timing;
@@ -69,7 +70,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Alpha = 0,
                             AlwaysPresent = true
                         },
-                        path = new SmoothPath
+                        path = new FixedBufferSmoothPath
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
@@ -342,5 +343,21 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private TauInputManager tauActionInputManager;
         internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
+
+        private class FixedBufferSmoothPath : SmoothPath
+        {
+            [Resolved]
+            private TauPlayfield tauPlayfield { get; set; }
+
+            protected override Quad ComputeScreenSpaceDrawQuad()
+            {
+                var SSDQDrawinfo = DrawInfo;
+
+                // We apply a counter rotation so that the SSDQ retains the non-rotated Quad
+                SSDQDrawinfo.ApplyTransform(AnchorPosition, Vector2.One, -tauPlayfield.Rotation, Vector2.Zero, OriginPosition);
+
+                return Quad.FromRectangle(DrawRectangle) * SSDQDrawinfo.Matrix;
+            }
+        }
     }
 }
