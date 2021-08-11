@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
@@ -54,7 +54,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             var progress = currentTime / endTime;
             var interpolated = Interpolation.ValueAt(progress, Rate.Value, FinalRate.Value, 0.0, 1.0);
 
-            field.Rotation = (float)(currentTime / (interpolated * 500)) * (Direction.Value == Mods.Direction.Clockwise ? 360 : -360);
+            field.Rotation = (float)(currentTime / (interpolated * 1000) * 360 % 360) * (Direction.Value == Mods.Direction.Clockwise ? 1 : -1);
             field.Cursor.Rotation = -field.Rotation;
         }
 

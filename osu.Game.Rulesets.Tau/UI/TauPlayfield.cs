@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        public readonly TauCursor Cursor;
+        private readonly TauCursor cursor;
         private readonly Container judgementLayer;
         private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
         private readonly OrderedHitPolicy hitPolicy;
@@ -55,7 +55,7 @@ namespace osu.Game.Rulesets.Tau.UI
         public TauPlayfield(BeatmapDifficulty difficulty)
         {
             RelativeSizeAxes = Axes.None;
-            Cursor = new TauCursor(difficulty);
+            cursor = new TauCursor(difficulty);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
             Size = new Vector2(768);
@@ -76,7 +76,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
-                Cursor,
+                cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
                     Name = "Kiai hit explosions",
@@ -113,7 +113,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override void Update()
         {
-            SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(420, Cursor.PaddleDrawable.Rotation);
+            SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(420, cursor.PaddleDrawable.Rotation);
             SliderParticleEmitter.Vortices[0].Velocity = new Vector2(20, -20);
 
             base.Update();
@@ -152,7 +152,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
 
-        public bool CheckIfWeCanValidate(float angle) => Cursor.CheckForValidation(angle);
+        public bool CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
 
         [Resolved]
         private OsuColour colour { get; set; }
@@ -177,11 +177,11 @@ namespace osu.Game.Rulesets.Tau.UI
             if (cacheProgress == progress) return;
             cacheProgress = progress;
 
-            var glow = Cursor.PaddleDrawable.Glow;
+            var glow = cursor.PaddleDrawable.Glow;
             glow.FinishTransforms();
 
             glow.FadeTo(progress, progress == 0 ? 200 : 0);
-            glow.Rotation = angle - Cursor.PaddleDrawable.Rotation;
+            glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
 
             glow.Line.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
             glow.Glow.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
@@ -199,7 +199,7 @@ namespace osu.Game.Rulesets.Tau.UI
             judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
 
             if (judgedObject is DrawableSlider)
-                Cursor.PaddleDrawable.Glow.FadeOut(200);
+                cursor.PaddleDrawable.Glow.FadeOut(200);
 
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
             {

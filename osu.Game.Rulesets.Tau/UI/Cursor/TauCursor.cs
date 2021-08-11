@@ -18,6 +18,9 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
     public class TauCursor : CompositeDrawable
     {
+        [Resolved]
+        private TauPlayfield playfield { get; set; }
+
         private readonly IBindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
@@ -45,15 +48,14 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public bool CheckForValidation(float angle)
         {
-            var tempRot = Rotation % 360;
-            var angleDiff = Extensions.GetDeltaAngle(PaddleDrawable.Rotation + tempRot, angle);
+            var angleDiff = Extensions.GetDeltaAngle(PaddleDrawable.Rotation, angle);
 
             return Math.Abs(angleDiff) <= angleRange / 2;
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            PaddleDrawable.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+            PaddleDrawable.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition) - playfield.Rotation;
 
             return base.OnMouseMove(e);
         }
