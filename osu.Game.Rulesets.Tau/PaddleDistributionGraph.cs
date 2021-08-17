@@ -7,13 +7,12 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Layout;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
-using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau
@@ -22,17 +21,19 @@ namespace osu.Game.Rulesets.Tau
     {
         private readonly IReadOnlyList<HitEvent> hitEvents;
 
-        private const float scale = 2f;
-        private const float bin_per_angle = 0.5f;
-        private float radius => (Math.Max(DrawHeight, DrawWidth)) * scale;
+        private const float bin_per_angle = 1f;
+        private float radius => DrawWidth / 2;
         private float angleRange;
         private Container barsContainer;
+        private readonly LayoutValue layout = new LayoutValue(Invalidation.DrawSize);
 
         public PaddleDistributionGraph(IReadOnlyList<HitEvent> hitEvents, IBeatmap beatmap)
         {
             this.hitEvents = hitEvents.Where(e => !(e.HitObject.HitWindows is HitWindows.EmptyHitWindows) && e.HitObject is Beat && e.Result.IsHit()).ToList();
 
             angleRange = (float)BeatmapDifficulty.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
+
+            AddLayout(layout);
         }
 
         [BackgroundDependencyLoader]
@@ -41,30 +42,6 @@ namespace osu.Game.Rulesets.Tau
             if (hitEvents == null || hitEvents.Count == 0)
                 return;
 
-            int totalDistributionBins = (int)(angleRange / bin_per_angle) + 1;
-
-            int[] bins = new int[totalDistributionBins];
-
-            foreach (var hit in hitEvents)
-            {
-                var angle = hit.Position?.X ?? 0;
-                angle += angleRange / 2;
-
-                var index = MathF.Round((int)(angle / bin_per_angle), MidpointRounding.AwayFromZero);
-
-                bins[(int)index]++;
-            }
-
-            int maxCount = bins.Max();
-            var bars = new Bar[totalDistributionBins];
-
-            for (int i = 0; i < bars.Length; i++)
-                bars[i] = new Bar
-                {
-                    Height = Math.Max(0.05f, (float)bins[i] / maxCount),
-                    Index = i
-                };
-
             var paddedAngleRange = angleRange + (1 * 2); // 3° padding horizontally
 
             InternalChildren = new Drawable[]
@@ -72,6 +49,7 @@ namespace osu.Game.Rulesets.Tau
                 barsContainer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
+                    FillMode = FillMode.Fill,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                 },
@@ -82,7 +60,6 @@ namespace osu.Game.Rulesets.Tau
                     FillMode = FillMode.Fill,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
-                    Scale = new Vector2(scale),
                     Children = new Drawable[]
                     {
                         new Container
@@ -98,7 +75,7 @@ namespace osu.Game.Rulesets.Tau
                                 Origin = Anchor.TopCentre,
                                 RelativeSizeAxes = Axes.Both,
                                 Masking = true,
-                                BorderThickness = 2,
+                                BorderThickness = 4,
                                 BorderColour = Color4.White,
                                 Height = 4,
                                 Child = new Box
@@ -138,7 +115,6 @@ namespace osu.Game.Rulesets.Tau
                     FillMode = FillMode.Fill,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
-                    Scale = new Vector2(scale),
                     Children = new Drawable[]
                     {
                         new Box
@@ -161,20 +137,63 @@ namespace osu.Game.Rulesets.Tau
                     }
                 }
             };
+        }
 
-            var barRadius = radius - (17 * scale);
+        protected override void Update()
+        {
+            base.Update();
 
-            foreach (var bar in bars)
+            if (hitEvents == null || hitEvents.Count == 0)
+                return;
+
+            if (!layout.IsValid)
             {
-                var pos = Extensions.GetCircularPosition(barRadius, (bar.Index * bin_per_angle) - (angleRange / 2));
-                pos.Y += radius;
+                barsContainer.Clear();
+                var bars = calculateBars();
 
-                barsContainer.Add(bar.With(b =>
+                foreach (var bar in bars)
                 {
-                    b.Position = pos;
-                    b.Height /= 2;
-                }));
+                    var pos = Extensions.GetCircularPosition(radius - 30, (bar.Index * bin_per_angle) - (angleRange / 2));
+                    pos.Y += radius;
+
+                    barsContainer.Add(bar.With(b =>
+                    {
+                        b.Position = pos;
+                        b.Height *= 0.15f;
+                    }));
+                }
+
+                layout.Validate();
             }
+        }
+
+        private Bar[] calculateBars()
+        {
+            int totalDistributionBins = (int)(angleRange / bin_per_angle) + 1;
+
+            int[] bins = new int[totalDistributionBins];
+
+            foreach (var hit in hitEvents)
+            {
+                var angle = hit.Position?.X ?? 0;
+                angle += angleRange / 2;
+
+                var index = MathF.Round((int)(angle / bin_per_angle), MidpointRounding.AwayFromZero);
+
+                bins[(int)index]++;
+            }
+
+            int maxCount = bins.Max();
+            var bars = new Bar[totalDistributionBins];
+
+            for (int i = 0; i < bars.Length; i++)
+                bars[i] = new Bar
+                {
+                    Height = Math.Max(0.05f, (float)bins[i] / maxCount),
+                    Index = i
+                };
+
+            return bars;
         }
 
         private class Bar : CompositeDrawable
