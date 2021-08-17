@@ -153,7 +153,7 @@ namespace osu.Game.Rulesets.Tau
 
                 foreach (var bar in bars)
                 {
-                    var pos = Extensions.GetCircularPosition(radius - 30, (bar.Index * bin_per_angle) - (angleRange / 2));
+                    var pos = Extensions.GetCircularPosition(radius - 13, (bar.Index * bin_per_angle) - (angleRange / 2));
                     pos.Y += radius;
 
                     barsContainer.Add(bar.With(b =>
