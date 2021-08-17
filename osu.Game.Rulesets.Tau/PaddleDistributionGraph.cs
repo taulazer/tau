@@ -5,7 +5,9 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Game.Beatmaps;
@@ -73,12 +75,65 @@ namespace osu.Game.Rulesets.Tau
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                 },
+                new BufferedContainer
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    FillAspectRatio = 1,
+                    FillMode = FillMode.Fill,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    Scale = new Vector2(scale),
+                    Children = new Drawable[]
+                    {
+                        new Container
+                        {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            RelativeSizeAxes = Axes.Both,
+                            Masking = true,
+                            Height = 0.25f,
+                            Child = new CircularContainer
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                RelativeSizeAxes = Axes.Both,
+                                Masking = true,
+                                BorderThickness = 2,
+                                BorderColour = Color4.White,
+                                Height = 4,
+                                Child = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Alpha = 0,
+                                    AlwaysPresent = true,
+                                }
+                            },
+                        },
+                        new Box
+                        {
+                            Blending = new BlendingParameters
+                            {
+                                // Don't change the destination colour.
+                                RGBEquation = BlendingEquation.Add,
+                                Source = BlendingType.Zero,
+                                Destination = BlendingType.One,
+                                // Subtract the cover's alpha from the destination (points with alpha 1 should make the destination completely transparent).
+                                AlphaEquation = BlendingEquation.Add,
+                                SourceAlpha = BlendingType.Zero,
+                                DestinationAlpha = BlendingType.SrcAlpha,
+                            },
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Height = 0.26f,
+                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.Transparent),
+                        }
+                    }
+                },
                 new CircularContainer
                 {
-                    Masking = true,
-                    BorderColour = Colour4.White,
-                    BorderThickness = 2,
                     RelativeSizeAxes = Axes.Both,
+                    Masking = true,
                     FillAspectRatio = 1,
                     FillMode = FillMode.Fill,
                     Anchor = Anchor.TopCentre,
@@ -88,8 +143,11 @@ namespace osu.Game.Rulesets.Tau
                     {
                         new Box
                         {
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
                             RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.White.Opacity(0.25f)
+                            Colour = Color4.DarkGray.Darken(0.5f).Opacity(0.2f),
+                            Height = 0.25f,
                         },
                         new CircularProgress
                         {
