@@ -44,7 +44,8 @@ namespace osu.Game.Rulesets.Tau.Tests
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Size = new Vector2(600, 350)
+                    RelativeSizeAxes = Axes.X,
+                    Height = 250,
                 }
             };
         });

@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau
         private readonly IReadOnlyList<HitEvent> hitEvents;
 
         private const float bin_per_angle = 1f;
-        private float radius => DrawWidth / 2;
+        private float radius;
         private float angleRange;
         private Container barsContainer;
         private readonly LayoutValue layout = new LayoutValue(Invalidation.DrawSize);
@@ -49,6 +49,8 @@ namespace osu.Game.Rulesets.Tau
                 barsContainer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Y,
+                    Y = 0.1f,
                     FillMode = FillMode.Fill,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
@@ -149,11 +151,12 @@ namespace osu.Game.Rulesets.Tau
             if (!layout.IsValid)
             {
                 barsContainer.Clear();
+                radius = DrawWidth / 2;
                 var bars = calculateBars();
 
                 foreach (var bar in bars)
                 {
-                    var pos = Extensions.GetCircularPosition(radius - 13, (bar.Index * bin_per_angle) - (angleRange / 2));
+                    var pos = Extensions.GetCircularPosition(radius - 17, (bar.Index * bin_per_angle) - (angleRange / 2));
                     pos.Y += radius;
 
                     barsContainer.Add(bar.With(b =>
@@ -207,8 +210,6 @@ namespace osu.Game.Rulesets.Tau
 
                 RelativeSizeAxes = Axes.Y;
                 Width = 5;
-
-                Padding = new MarginPadding { Horizontal = 1 };
 
                 InternalChild = new Circle
                 {
