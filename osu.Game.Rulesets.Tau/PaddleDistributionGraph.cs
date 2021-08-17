@@ -126,7 +126,7 @@ namespace osu.Game.Rulesets.Tau
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Height = 0.26f,
-                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.Transparent),
+                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(-0.2f)),
                         }
                     }
                 },
@@ -146,7 +146,7 @@ namespace osu.Game.Rulesets.Tau
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.DarkGray.Darken(0.5f).Opacity(0.2f),
+                            Colour = ColourInfo.GradientVertical(Color4.DarkGray.Darken(0.5f).Opacity(0.3f), Color4.DarkGray.Darken(0.5f).Opacity(0f)),
                             Height = 0.25f,
                         },
                         new CircularProgress

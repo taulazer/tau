@@ -40,11 +40,6 @@ namespace osu.Game.Rulesets.Tau.Tests
         {
             Children = new Drawable[]
             {
-                new Box
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4Extensions.FromHex("#333")
-                },
                 new PaddleDistributionGraph(events, new TestBeatmap(new TauRuleset().RulesetInfo))
                 {
                     Anchor = Anchor.Centre,
