@@ -1,5 +1,6 @@
 ﻿using System;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
@@ -17,6 +18,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override ModType Type => ModType.DifficultyIncrease;
         public override string Description => @"Beats will appear outside of the playfield.";
         public override double ScoreMultiplier => 1.09;
+        public override IconUsage? Icon => TauIcon.ModInverse;
         public override Type[] IncompatibleMods => new[] { typeof(TauModHidden), typeof(TauModFadeIn) };
 
         public void ApplyToDrawableHitObject(DrawableHitObject drawable)
