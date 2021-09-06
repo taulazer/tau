@@ -24,6 +24,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         private readonly IBindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
+        private float gameCursorAngle;
         private readonly float angleRange;
 
         public readonly Paddle PaddleDrawable;
@@ -55,9 +56,15 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            PaddleDrawable.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition) - playfield?.Rotation ?? 0;
+            gameCursorAngle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
 
             return base.OnMouseMove(e);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            PaddleDrawable.Rotation = gameCursorAngle - playfield?.Rotation ?? 0;
         }
 
         public class Paddle : CompositeDrawable
