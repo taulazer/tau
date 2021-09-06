@@ -13,6 +13,7 @@ using osu.Framework.Layout;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau
@@ -42,7 +43,9 @@ namespace osu.Game.Rulesets.Tau
             if (hitEvents == null || hitEvents.Count == 0)
                 return;
 
-            var paddedAngleRange = angleRange + (1 * 2); // 3° padding horizontally
+            var paddedAngleRange = angleRange + (1 * 2); // 2° padding horizontally
+
+            FillMode = FillMode.Fit;
 
             InternalChildren = new Drawable[]
             {
@@ -50,8 +53,10 @@ namespace osu.Game.Rulesets.Tau
                 {
                     RelativeSizeAxes = Axes.Both,
                     RelativePositionAxes = Axes.Y,
-                    Y = 0.1f,
-                    FillMode = FillMode.Fill,
+                    Y = 0.06f,
+                    Scale = new Vector2(1),
+                    FillAspectRatio = 1,
+                    FillMode = FillMode.Fit,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                 },
@@ -59,7 +64,8 @@ namespace osu.Game.Rulesets.Tau
                 {
                     RelativeSizeAxes = Axes.Both,
                     FillAspectRatio = 1,
-                    FillMode = FillMode.Fill,
+                    FillMode = FillMode.Fit,
+                    Scale = new Vector2(4),
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Children = new Drawable[]
@@ -77,7 +83,7 @@ namespace osu.Game.Rulesets.Tau
                                 Origin = Anchor.TopCentre,
                                 RelativeSizeAxes = Axes.Both,
                                 Masking = true,
-                                BorderThickness = 4,
+                                BorderThickness = 2,
                                 BorderColour = Color4.White,
                                 Height = 4,
                                 Child = new Box
@@ -114,7 +120,8 @@ namespace osu.Game.Rulesets.Tau
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
                     FillAspectRatio = 1,
-                    FillMode = FillMode.Fill,
+                    FillMode = FillMode.Fit,
+                    Scale = new Vector2(4),
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Children = new Drawable[]
@@ -151,7 +158,7 @@ namespace osu.Game.Rulesets.Tau
             if (!layout.IsValid)
             {
                 barsContainer.Clear();
-                radius = DrawWidth / 2;
+                radius = (Height * 4) / 2;
                 var bars = calculateBars();
 
                 foreach (var bar in bars)
@@ -162,7 +169,7 @@ namespace osu.Game.Rulesets.Tau
                     barsContainer.Add(bar.With(b =>
                     {
                         b.Position = pos;
-                        b.Height *= 0.15f;
+                        b.Height *= 0.3f;
                     }));
                 }
 
@@ -192,7 +199,7 @@ namespace osu.Game.Rulesets.Tau
             for (int i = 0; i < bars.Length; i++)
                 bars[i] = new Bar
                 {
-                    Height = Math.Max(0.05f, (float)bins[i] / maxCount),
+                    Height = Math.Max(0.075f, (float)bins[i] / maxCount),
                     Index = i
                 };
 

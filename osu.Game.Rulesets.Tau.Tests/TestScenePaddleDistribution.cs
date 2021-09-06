@@ -11,6 +11,7 @@ using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Tests.Beatmaps;
 using osu.Game.Tests.Visual;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
@@ -40,6 +41,15 @@ namespace osu.Game.Rulesets.Tau.Tests
         {
             Children = new Drawable[]
             {
+                new Box
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.X,
+                    Height = 250,
+                    Colour = Color4.Red,
+                    Alpha = 0.25f
+                },
                 new PaddleDistributionGraph(events, new TestBeatmap(new TauRuleset().RulesetInfo))
                 {
                     Anchor = Anchor.Centre,
