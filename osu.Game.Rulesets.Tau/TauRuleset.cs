@@ -24,6 +24,7 @@ using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.Skinning.Legacy;
+using osu.Game.Rulesets.Tau.Statistics;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
@@ -126,6 +127,17 @@ namespace osu.Game.Rulesets.Tau
                         RelativeSizeAxes = Axes.X,
                         Height = 250
                     }),
+                }
+            },
+            new StatisticRow
+            {
+                Columns = new[]
+                {
+                    new StatisticItem("Paddle Distribution", new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 250,
+                    })
                 }
             },
             new StatisticRow

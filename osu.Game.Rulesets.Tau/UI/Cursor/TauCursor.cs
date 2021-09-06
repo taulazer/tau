@@ -43,11 +43,11 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             this.beatmap.BindTo(beatmap);
         }
 
-        public bool CheckForValidation(float angle)
+        public (bool, float) CheckForValidation(float angle)
         {
             var angleDiff = Extensions.GetDeltaAngle(PaddleDrawable.Rotation, angle);
 
-            return Math.Abs(angleDiff) <= angleRange / 2;
+            return (Math.Abs(angleDiff) <= angleRange / 2, angleDiff);
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
