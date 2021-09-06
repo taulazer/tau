@@ -34,6 +34,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public DrawableSliderHead HeadBeat => headContainer.Child;
 
+        private CircularContainer maskingContainer;
+
+        private bool inversed;
+
         [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
 
@@ -57,7 +61,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             AddRangeInternal(new Drawable[]
             {
-                new CircularContainer
+                maskingContainer = new CircularContainer
                 {
                     Masking = true,
                     RelativeSizeAxes = Axes.Both,
@@ -82,6 +86,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
             });
+        }
+
+        public void ApplyInverseChanges()
+        {
+            inversed = true;
+            maskingContainer.Masking = false;
+
+            // Max diameter of paths are much larger when they come from outside the ring, so we need extra canvas space
+            path.Size = new Vector2(768 * 2);
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
@@ -197,7 +210,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         double totalTimeHeld = 0;
-
+        
         public readonly Bindable<bool> Tracking = new Bindable<bool>();
 
         protected override void UpdateAfterChildren()
@@ -205,7 +218,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateAfterChildren();
             path.ClearVertices();
 
-            const float maxDistance = 376;
+            float maxDistance = TauPlayfield.BASE_SIZE.X / 2;
 
             for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
                  t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
@@ -222,6 +235,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 // Larger the time, the further in it is.
                 float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * maxDistance;
+
+                if (inversed)
+                    distanceFromCentre = (maxDistance * 2) - distanceFromCentre;
 
                 // Angle calc
                 float difference = (nextNode.Angle - currentNode.Angle) % 360;
@@ -240,7 +256,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
                 double progress = 1 - (timeDiff / HitObject.TimePreempt);
 
-                path.AddVertex(Extensions.GetCircularPosition((float)(progress * maxDistance), HitObject.Nodes.Last().Angle));
+                float endNodeDistanceFromCentre = (float)(progress * maxDistance);
+
+                if (inversed)
+                    endNodeDistanceFromCentre = (maxDistance * 2) - endNodeDistanceFromCentre;
+
+                path.AddVertex(Extensions.GetCircularPosition(endNodeDistanceFromCentre, HitObject.Nodes.Last().Angle));
             }
 
             path.Position = path.Vertices.Any() ? path.Vertices.First() : new Vector2(0);
@@ -274,11 +295,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        {
-                            playfield.SliderParticleEmitter.AddParticle(angle);
+                    {
+                        playfield.SliderParticleEmitter.AddParticle(angle, inversed);
 
-                            break;
-                        }
+                        break;
+                    }
 
                     case KiaiType.Classic:
                         if ((int)Time.Current % 8 != 0)
@@ -296,7 +317,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 50) + 390) : ((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);

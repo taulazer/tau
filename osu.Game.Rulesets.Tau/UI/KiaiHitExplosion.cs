@@ -18,6 +18,7 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         public override bool RemoveWhenNotAlive => true;
         private readonly bool circular;
+        private readonly bool inversed;
         private readonly Color4 colour;
         private readonly int particleAmount;
 
@@ -26,10 +27,11 @@ namespace osu.Game.Rulesets.Tau.UI
         /// </summary>
         public float Angle;
 
-        public KiaiHitExplosion(Color4 colour, bool circular = false, int particleAmount = 10)
+        public KiaiHitExplosion(Color4 colour, bool circular = false, bool inversed = false, int particleAmount = 10)
         {
             this.colour = colour;
             this.circular = circular;
+            this.inversed = inversed;
             this.particleAmount = particleAmount;
 
             RelativePositionAxes = Axes.Both;
@@ -65,7 +67,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 AddInternal(container);
             }
             else
-                AddInternal(new KiaiHitExplosionEmitter(colour, circular, particleAmount) { Angle = Angle });
+                AddInternal(new KiaiHitExplosionEmitter(colour, circular, inversed, particleAmount) { Angle = Angle });
         }
 
         private class KiaiHitExplosionEmitter : CompositeDrawable
@@ -73,14 +75,16 @@ namespace osu.Game.Rulesets.Tau.UI
             public override bool RemoveWhenNotAlive => true;
             private readonly List<Drawable> particles;
             private readonly bool circular;
+            private readonly bool inversed;
             private readonly Color4 colour;
             private readonly int particleAmount;
             public float Angle;
 
-            public KiaiHitExplosionEmitter(Color4 colour, bool circular, int particleAmount)
+            public KiaiHitExplosionEmitter(Color4 colour, bool circular, bool inversed, int particleAmount)
             {
                 this.colour = colour;
                 this.circular = circular;
+                this.inversed = inversed;
                 this.particleAmount = particleAmount;
                 particles = new List<Drawable>();
 
@@ -108,7 +112,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         particles.Add(new Sprite
                         {
                             RelativePositionAxes = Axes.Both,
-                            Position = Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 0.15f) + 0.5f, (float)rng.NextDouble() * 360f),
+                            Position = Extensions.GetCircularPosition(inversed ? (((float)(rng.NextDouble() * 0.15f) * 0.15f) + 0.5f) : ((float)(rng.NextDouble() * 0.15f) * 0.15f) + 0.5f, (float)rng.NextDouble() * 360f),
                             Rotation = (float)rng.NextDouble() * 360f,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.BottomCentre,
@@ -150,14 +154,14 @@ namespace osu.Game.Rulesets.Tau.UI
 
                     if (circular)
                     {
-                        particle.MoveTo(Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f, Vector2.Zero.GetDegreesFromPosition(particle.Position)), duration,
+                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? ((float)(rng.NextDouble() * 0.15f) * -2f) + 0.5f : ((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f, Vector2.Zero.GetDegreesFromPosition(particle.Position)), duration,
                                      Easing.OutQuint)
                                 .ScaleTo(new Vector2(rng.Next(1, 2)), duration, Easing.OutQuint)
                                 .FadeOut(duration, Easing.OutQuint);
                     }
                     else
                     {
-                        particle.MoveTo(Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 1f, randomBetween(Angle - 40, Angle + 40)), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? (float)(rng.NextDouble() * 0.15f) * -1f : (float)(rng.NextDouble() * 0.15f) * 1f, randomBetween(Angle - 40, Angle + 40)), duration, Easing.OutQuint)
                                 .ResizeTo(new Vector2(rng.Next(0, 5)), duration, Easing.OutQuint)
                                 .FadeOut(duration, Easing.OutQuint);
 
