@@ -172,14 +172,11 @@ namespace osu.Game.Rulesets.Tau
                 {
                     Height = Math.Max(0.075f, (float)bins[i] / maxCount) * 0.3f,
                     Position = Extensions.GetCircularPosition(radius - 17, (i * bin_per_angle) - (angleRange / 2)) + new Vector2(0, radius),
-                    Index = i
                 });
         }
 
         private class Bar : CompositeDrawable
         {
-            public float Index { get; set; }
-
             public Bar()
             {
                 Anchor = Anchor.TopCentre;
