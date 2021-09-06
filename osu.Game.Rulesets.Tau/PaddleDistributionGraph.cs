@@ -12,6 +12,7 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Screens.Ranking.Expanded.Accuracy;
 using osuTK;
 using osuTK.Graphics;
 
@@ -129,14 +130,16 @@ namespace osu.Game.Rulesets.Tau
                             Colour = ColourInfo.GradientVertical(Color4.DarkGray.Darken(0.5f).Opacity(0.3f), Color4.DarkGray.Darken(0.5f).Opacity(0f)),
                             Height = 0.25f,
                         },
-                        new CircularProgress
+                        new SmoothCircularProgress
                         {
                             RelativeSizeAxes = Axes.Both,
+                            RelativePositionAxes = Axes.Both,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Current = new BindableDouble(paddedAngleRange / 360),
                             InnerRadius = 0.05f,
                             Rotation = -paddedAngleRange / 2,
+                            Y = 0.0035f
                         }
                     }
                 }
