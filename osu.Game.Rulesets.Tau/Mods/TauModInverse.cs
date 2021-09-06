@@ -25,13 +25,8 @@ namespace osu.Game.Rulesets.Tau.Mods
             {
                 switch (drawableObject)
                 {
-                    case DrawableSliderHead head:
-                        applyInverseToBeat(head, state, -0.484f, -0.984f);
-
-                        break;
-
                     case DrawableBeat beat:
-                        applyInverseToBeat(beat, state, -0.516f);
+                        applyInverseToBeat(beat, state, -0.5f);
 
                         break;
 
@@ -58,7 +53,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             };
         }
 
-        private void applyInverseToBeat(DrawableBeat beat, ArmedState state, float finalDistance, float startingDistance = -1)
+        private void applyInverseToBeat(DrawableBeat beat, ArmedState state, float finalDistance)
         {
             var box = beat.Box;
             var hitObject = beat.HitObject;
@@ -71,7 +66,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                 using (beat.BeginAbsoluteSequence(hitObject.StartTime, false))
                 {
-                    box.MoveToY(startingDistance)
+                    box.MoveToY(-1)
                        .MoveToY(finalDistance, hitObject.TimePreempt);
                 }
             }

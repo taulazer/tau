@@ -218,7 +218,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateAfterChildren();
             path.ClearVertices();
 
-            const float max_distance = 376;
+            float maxDistance = TauPlayfield.BASE_SIZE.X / 2;
 
             for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
                  t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
@@ -234,10 +234,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 float actualProgress = (float)((t - nodeStart) / duration);
 
                 // Larger the time, the further in it is.
-                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * max_distance;
+                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * maxDistance;
 
                 if (inversed)
-                    distanceFromCentre = (max_distance * 2) - distanceFromCentre;
+                    distanceFromCentre = (maxDistance * 2) - distanceFromCentre;
 
                 // Angle calc
                 float difference = (nextNode.Angle - currentNode.Angle) % 360;
@@ -256,10 +256,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
                 double progress = 1 - (timeDiff / HitObject.TimePreempt);
 
-                float endNodeDistanceFromCentre = (float)(progress * max_distance);
+                float endNodeDistanceFromCentre = (float)(progress * maxDistance);
 
                 if (inversed)
-                    endNodeDistanceFromCentre = (max_distance * 2) - endNodeDistanceFromCentre;
+                    endNodeDistanceFromCentre = (maxDistance * 2) - endNodeDistanceFromCentre;
 
                 path.AddVertex(Extensions.GetCircularPosition(endNodeDistanceFromCentre, HitObject.Nodes.Last().Angle));
             }
