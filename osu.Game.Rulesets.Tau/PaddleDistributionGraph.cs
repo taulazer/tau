@@ -146,6 +146,9 @@ namespace osu.Game.Rulesets.Tau
                     }
                 }
             };
+
+            radius = (Height * 4) / 2;
+            barsContainer.AddRange(calculateBars());
         }
 
         protected override void Update()
@@ -157,20 +160,12 @@ namespace osu.Game.Rulesets.Tau
 
             if (!layout.IsValid)
             {
-                barsContainer.Clear();
-                radius = (Height * 4) / 2;
-                var bars = calculateBars();
-
-                foreach (var bar in bars)
+                foreach (Bar bar in barsContainer)
                 {
                     var pos = Extensions.GetCircularPosition(radius - 17, (bar.Index * bin_per_angle) - (angleRange / 2));
                     pos.Y += radius;
 
-                    barsContainer.Add(bar.With(b =>
-                    {
-                        b.Position = pos;
-                        b.Height *= 0.3f;
-                    }));
+                    bar.Position = pos;
                 }
 
                 layout.Validate();
@@ -199,7 +194,7 @@ namespace osu.Game.Rulesets.Tau
             for (int i = 0; i < bars.Length; i++)
                 bars[i] = new Bar
                 {
-                    Height = Math.Max(0.075f, (float)bins[i] / maxCount),
+                    Height = Math.Max(0.075f, (float)bins[i] / maxCount) * 0.3f,
                     Index = i
                 };
 
