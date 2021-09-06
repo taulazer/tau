@@ -333,7 +333,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
         }
 
-        public bool IsWithinPaddle => CheckValidation?.Invoke(firstNodeAngle) ?? false;
+        public bool IsWithinPaddle => CheckValidation?.Invoke(firstNodeAngle).Item1 ?? false;
 
         private TauInputManager tauActionInputManager;
         internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;

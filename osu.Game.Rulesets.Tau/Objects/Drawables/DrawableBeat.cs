@@ -9,6 +9,7 @@ using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Skinning.Default;
 using osu.Game.Skinning;
 using osuTK;
@@ -111,7 +112,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 return;
             }
 
-            if (CheckValidation.Invoke(HitObject.Angle))
+            var validation = CheckValidation.Invoke(HitObject.Angle);
+
+            if (validation.Item1)
             {
                 var result = HitObject.HitWindows.ResultFor(timeOffset);
 
@@ -121,7 +124,17 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 if (!validActionPressed)
                     ApplyResult(r => r.Type = HitResult.Miss);
                 else
-                    ApplyResult(r => r.Type = result);
+                    ApplyResult(r =>
+                    {
+                        var beatResult = (TauJudgementResult)r;
+
+                        if (result.IsHit())
+                        {
+                            beatResult.DeltaAngle = validation.Item2;
+                        }
+
+                        beatResult.Type = result;
+                    });
             }
         }
 

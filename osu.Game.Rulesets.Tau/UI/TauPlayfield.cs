@@ -152,7 +152,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
 
-        public bool CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
+        public (bool, float) CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
 
         [Resolved]
         private OsuColour colour { get; set; }
