@@ -9,7 +9,6 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.Layout;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
@@ -23,18 +22,14 @@ namespace osu.Game.Rulesets.Tau
         private readonly IReadOnlyList<HitEvent> hitEvents;
 
         private const float bin_per_angle = 1f;
-        private float radius;
-        private float angleRange;
+        private readonly float angleRange;
         private Container barsContainer;
-        private readonly LayoutValue layout = new LayoutValue(Invalidation.DrawSize);
 
         public PaddleDistributionGraph(IReadOnlyList<HitEvent> hitEvents, IBeatmap beatmap)
         {
             this.hitEvents = hitEvents.Where(e => !(e.HitObject.HitWindows is HitWindows.EmptyHitWindows) && e.HitObject is Beat && e.Result.IsHit()).ToList();
 
             angleRange = (float)BeatmapDifficulty.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
-
-            AddLayout(layout);
         }
 
         [BackgroundDependencyLoader]
@@ -147,33 +142,12 @@ namespace osu.Game.Rulesets.Tau
                 }
             };
 
-            radius = (Height * 4) / 2;
-            barsContainer.AddRange(calculateBars());
+            createBars();
         }
 
-        protected override void Update()
+        private void createBars()
         {
-            base.Update();
-
-            if (hitEvents == null || hitEvents.Count == 0)
-                return;
-
-            if (!layout.IsValid)
-            {
-                foreach (Bar bar in barsContainer)
-                {
-                    var pos = Extensions.GetCircularPosition(radius - 17, (bar.Index * bin_per_angle) - (angleRange / 2));
-                    pos.Y += radius;
-
-                    bar.Position = pos;
-                }
-
-                layout.Validate();
-            }
-        }
-
-        private Bar[] calculateBars()
-        {
+            float radius = Height * 2;
             int totalDistributionBins = (int)(angleRange / bin_per_angle) + 1;
 
             int[] bins = new int[totalDistributionBins];
@@ -189,16 +163,14 @@ namespace osu.Game.Rulesets.Tau
             }
 
             int maxCount = bins.Max();
-            var bars = new Bar[totalDistributionBins];
 
-            for (int i = 0; i < bars.Length; i++)
-                bars[i] = new Bar
+            for (int i = 0; i < bins.Length; i++)
+                barsContainer.Add(new Bar
                 {
                     Height = Math.Max(0.075f, (float)bins[i] / maxCount) * 0.3f,
+                    Position = Extensions.GetCircularPosition(radius - 17, (i * bin_per_angle) - (angleRange / 2)) + new Vector2(0, radius),
                     Index = i
-                };
-
-            return bars;
+                });
         }
 
         private class Bar : CompositeDrawable
