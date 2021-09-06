@@ -50,9 +50,8 @@ namespace osu.Game.Rulesets.Tau.Mods
         public void Update(Playfield playfield)
         {
             var field = (TauPlayfield)playfield;
-            var currentTime = Math.Max(playfield.Time.Current - startTime, 0);
-            var progress = currentTime / endTime;
-            var interpolated = Interpolation.ValueAt(progress, Rate.Value, FinalRate.Value, 0.0, 1.0);
+            var currentTime = Math.Max(playfield.Time.Current, 0);
+            var interpolated = Interpolation.ValueAt(currentTime, Rate.Value, FinalRate.Value, startTime, endTime);
 
             field.Rotation = (float)(currentTime / (interpolated * 1000) * 360 % 360) * (Direction.Value == Mods.Direction.Clockwise ? 1 : -1);
         }
