@@ -122,7 +122,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             return false;
         }
 
-        public void OnReleased(TauAction e)
+        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
         {
         }
     }
