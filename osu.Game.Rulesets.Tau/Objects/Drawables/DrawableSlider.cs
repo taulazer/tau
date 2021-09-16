@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Framework.Timing;
 using osu.Framework.Utils;
 using osu.Game.Audio;
@@ -210,7 +211,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         double totalTimeHeld = 0;
-        
+
         public readonly Bindable<bool> Tracking = new Bindable<bool>();
 
         protected override void UpdateAfterChildren()
@@ -295,11 +296,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                    {
-                        playfield.SliderParticleEmitter.AddParticle(angle, inversed);
+                        {
+                            playfield.SliderParticleEmitter.AddParticle(angle, inversed);
 
-                        break;
-                    }
+                            break;
+                        }
 
                     case KiaiType.Classic:
                         if ((int)Time.Current % 8 != 0)
@@ -334,9 +335,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 playfield?.AdjustRingGlow(0, Vector2.Zero.GetDegreesFromPosition(path.Position));
         }
 
-        public bool OnPressed(TauAction action) => HitActions.Contains(action) && !Tracking.Value;
+        public bool OnPressed(KeyBindingPressEvent<TauAction> e) => HitActions.Contains(e.Action) && !Tracking.Value;
 
-        public void OnReleased(TauAction action)
+        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
         {
         }
 

@@ -3,6 +3,7 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -110,18 +111,18 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
         }
 
-        public bool OnPressed(TauAction action)
+        public bool OnPressed(KeyBindingPressEvent<TauAction> e)
         {
             if (AllJudged)
                 return false;
 
-            if (HitActions.Contains(action))
+            if (HitActions.Contains(e.Action))
                 return UpdateResult(true);
 
             return false;
         }
 
-        public void OnReleased(TauAction action)
+        public void OnReleased(TauAction e)
         {
         }
     }
