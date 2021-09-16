@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     }
                 }
             });
-            
+
             Add(absoluteCursor = new TauCursor.AbsoluteCursor
             {
                 Alpha = 0
@@ -126,9 +126,9 @@ namespace osu.Game.Rulesets.Tau.UI
                 base.OnHoverLost(e);
             }
 
-            public bool OnPressed(TauAction action)
+            public bool OnPressed(KeyBindingPressEvent<TauAction> e)
             {
-                switch (action)
+                switch (e.Action)
                 {
                     case TauAction.LeftButton:
                     case TauAction.RightButton:
@@ -143,7 +143,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 return false;
             }
 
-            public void OnReleased(TauAction action)
+            public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
             {
             }
         }
