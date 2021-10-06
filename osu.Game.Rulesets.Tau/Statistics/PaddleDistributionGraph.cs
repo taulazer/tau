@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
         {
             this.hitEvents = hitEvents.Where(e => !(e.HitObject.HitWindows is HitWindows.EmptyHitWindows) && e.HitObject is Beat && e.Result.IsHit()).ToList();
 
-            angleRange = (float)BeatmapDifficulty.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
+            angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
         }
 
         [BackgroundDependencyLoader]

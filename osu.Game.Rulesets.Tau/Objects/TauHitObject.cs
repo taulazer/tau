@@ -70,11 +70,11 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         protected override HitWindows CreateHitWindows() => new TauHitWindows();
 
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, BeatmapDifficulty difficulty)
+        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
-            TimePreempt = (float)BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
+            TimePreempt = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
             TimeFadeIn = 100;
         }
 
