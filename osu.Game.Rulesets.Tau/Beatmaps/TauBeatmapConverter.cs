@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     if (!CanConvertToSliders)
                         goto default;
 
-                    if (pathData.Duration < BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
+                    if (pathData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
 
                     var nodes = new List<SliderNode>();
