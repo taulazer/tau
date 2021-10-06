@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public TauResumeOverlay(BeatmapDifficulty difficulty)
         {
-            angleRange = (float)BeatmapDifficulty.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
+            angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
         }
 
         [BackgroundDependencyLoader]
