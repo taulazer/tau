@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class DrawableTauRuleset : DrawableRuleset<TauHitObject>
     {
-        public DrawableTauRuleset(TauRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods)
+        public DrawableTauRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods)
             : base(ruleset, beatmap, mods)
         {
         }

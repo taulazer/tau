@@ -36,11 +36,13 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        private readonly TauCursor cursor;
         private readonly Container judgementLayer;
-        private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
         private readonly OrderedHitPolicy hitPolicy;
         private readonly IDictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new Dictionary<HitResult, DrawablePool<DrawableTauJudgement>>();
+
+        protected readonly TauCursor Cursor;
+        protected readonly Container<KiaiHitExplosion> KiaiExplosionContainer;
+        protected readonly VisualisationContainer KiaiVisualizer;
 
         public readonly ParticleEmitter SliderParticleEmitter;
 
@@ -56,11 +58,12 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public TauPlayfield(BeatmapDifficulty difficulty)
         {
-            RelativeSizeAxes = Axes.None;
-            cursor = new TauCursor(difficulty);
+            RelativeSizeAxes = Axes.Both;
+            FillMode = FillMode.Fit;
+            FillAspectRatio = 1;
+            Cursor = new TauCursor(difficulty);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Size = new Vector2(768);
 
             AddRangeInternal(new Drawable[]
             {
@@ -71,15 +74,15 @@ namespace osu.Game.Rulesets.Tau.UI
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                new VisualisationContainer(),
+                KiaiVisualizer = new VisualisationContainer(),
                 new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Ring), _ => new PlayfieldPiece()),
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
-                cursor,
-                kiaiExplosionContainer = new Container<KiaiHitExplosion>
+                Cursor,
+                KiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
                     Name = "Kiai hit explosions",
                     RelativeSizeAxes = Axes.Both,
@@ -115,7 +118,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override void Update()
         {
-            SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(Inversed ? 120 : 420, cursor.PaddleDrawable.Rotation);
+            SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(Inversed ? 120 : 420, Cursor.PaddleDrawable.Rotation);
             SliderParticleEmitter.Vortices[0].Velocity = new Vector2(20, -20);
 
             base.Update();
@@ -154,7 +157,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
 
-        public (bool, float) CheckIfWeCanValidate(float angle) => cursor.CheckForValidation(angle);
+        public (bool, float) CheckIfWeCanValidate(float angle) => Cursor.CheckForValidation(angle);
 
         [Resolved]
         private OsuColour colour { get; set; }
@@ -163,7 +166,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
 
-            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR.Value, particleAmount: 1)
+            KiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR.Value, particleAmount: 1)
             {
                 Position = Extensions.GetCircularPosition(.5f, angle),
                 Angle = angle,
@@ -179,11 +182,11 @@ namespace osu.Game.Rulesets.Tau.UI
             if (cacheProgress == progress) return;
             cacheProgress = progress;
 
-            var glow = cursor.PaddleDrawable.Glow;
+            var glow = Cursor.PaddleDrawable.Glow;
             glow.FinishTransforms();
 
             glow.FadeTo(progress, progress == 0 ? 200 : 0);
-            glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
+            glow.Rotation = angle - Cursor.PaddleDrawable.Rotation;
 
             glow.Line.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
             glow.Glow.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
@@ -201,7 +204,7 @@ namespace osu.Game.Rulesets.Tau.UI
             judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
 
             if (judgedObject is DrawableSlider)
-                cursor.PaddleDrawable.Glow.FadeOut(200);
+                Cursor.PaddleDrawable.Glow.FadeOut(200);
 
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
             {
@@ -225,7 +228,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         break;
 
                     case KiaiType.Classic:
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed)
+                        KiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed)
                         {
                             Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
                             Angle = angle,
@@ -262,7 +265,7 @@ namespace osu.Game.Rulesets.Tau.UI
             }
         }
 
-        private class VisualisationContainer : BeatSyncedContainer
+        protected class VisualisationContainer : BeatSyncedContainer
         {
             private PlayfieldVisualisation visualisation;
             private bool firstKiaiBeat = true;

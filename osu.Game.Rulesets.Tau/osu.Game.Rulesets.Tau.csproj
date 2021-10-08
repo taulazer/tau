@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <RootNamespace>osu.Game.Rulesets.Tau</RootNamespace>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyName>osu.Game.Rulesets.Tau</AssemblyName>
@@ -19,5 +19,13 @@
   <ItemGroup>
     <Folder Include="Resources\Samples\Gameplay" />
     <Folder Include="Resources\Textures" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Edit\BeatCompositionTool.cs" />
+    <Compile Remove="Edit\Blueprints\BeatPlacementBlueprint.cs" />
+    <Compile Remove="Edit\Blueprints\HitPiece.cs" />
+    <Compile Remove="Edit\Blueprints\SliderSelectionBlueprint.cs" />
+    <Compile Remove="Edit\Blueprints\HardBeatPlacementBlueprint.cs" />
+    <Compile Remove="Edit\HardBeatCompositionTool.cs" />
   </ItemGroup>
 </Project>

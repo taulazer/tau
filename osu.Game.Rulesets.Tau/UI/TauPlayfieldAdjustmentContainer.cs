@@ -10,13 +10,13 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override Container<Drawable> Content => content;
         private readonly Container content;
 
-        public TauPlayfieldAdjustmentContainer()
+        public TauPlayfieldAdjustmentContainer(float size = 0.6f)
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
             // Calculated from osu!stable as 512 (default gamefield size) / 640 (default window size)
-            Size = new Vector2(.6f);
+            Size = new Vector2(size);
 
             InternalChild = new Container
             {

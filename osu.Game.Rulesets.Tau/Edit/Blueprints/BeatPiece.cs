@@ -6,9 +6,9 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Edit.Blueprints
 {
-    public class HitPiece : CompositeDrawable
+    public class BeatPiece : CompositeDrawable
     {
-        public HitPiece()
+        public BeatPiece()
         {
             Size = new Vector2(16);
             Origin = Anchor.Centre;

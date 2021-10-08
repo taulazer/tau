@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
     public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
     {
         protected new DrawableBeat DrawableObject => (DrawableBeat)base.DrawableObject;
-        protected readonly HitPiece SelectionPiece;
+        protected readonly BeatPiece SelectionPiece;
         protected readonly Box Distance;
 
         public BeatSelectionBlueprint(Beat hitObject)
@@ -20,16 +20,16 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
         {
             InternalChildren = new Drawable[]
             {
-                SelectionPiece = new HitPiece(),
+                SelectionPiece = new BeatPiece(),
                 Distance = new Box
                 {
-                    Colour = Color4.Yellow.Opacity(.5f),
-                    RelativeSizeAxes = Axes.Y,
-                    Height = .5f,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.BottomCentre,
+                    RelativeSizeAxes = Axes.Y,
                     RelativePositionAxes = Axes.Both,
-                    Width = 5,
+                    Height = .5f,
+                    Width = 2.5f,
+                    Colour = Color4.Yellow.Opacity(.5f),
                     EdgeSmoothness = Vector2.One
                 }
             };
@@ -39,16 +39,15 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints
         {
             base.Update();
 
-            SelectionPiece.Rotation = DrawableObject.Rotation;
+            SelectionPiece.Rotation = Distance.Rotation = DrawableObject.Rotation;
             SelectionPiece.Position = Extensions.GetCircularPosition(-DrawableObject.Box.Y, DrawableObject.Rotation);
 
-            Distance.Rotation = DrawableObject.Rotation;
             Distance.Height = -DrawableObject.Box.Y;
         }
 
         public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.Box.ScreenSpaceDrawQuad.Centre;
 
-        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => DrawableObject.Box.ReceivePositionalInputAt(screenSpacePos);
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => SelectionPiece.ReceivePositionalInputAt(screenSpacePos);
 
         public override Quad SelectionQuad => DrawableObject.Box.ScreenSpaceDrawQuad.AABB;
     }

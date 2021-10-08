@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Screens.Edit.Compose.Components;
 
 namespace osu.Game.Rulesets.Tau.Edit
@@ -10,16 +9,23 @@ namespace osu.Game.Rulesets.Tau.Edit
     {
         public override bool HandleMovement(MoveSelectionEvent<HitObject> moveEvent)
         {
-            foreach (var h in EditorBeatmap.SelectedHitObjects.OfType<TauHitObject>())
+            var anchor = moveEvent.Blueprint;
+
+            var dragOrigin = anchor.ScreenSpaceSelectionPoint;
+            var currentMousePos = anchor.ScreenSpaceSelectionPoint + moveEvent.ScreenSpaceDelta;
+            var center = ScreenSpaceDrawQuad.Centre;
+
+            var angleDelta = center.GetDegreesFromPosition(currentMousePos) - center.GetDegreesFromPosition(dragOrigin);
+
+            if (SelectedBlueprints.All(b => b.Item is TauHitObject))
             {
-                if (h is HardBeat)
-                    continue;
+                foreach (var b in SelectedBlueprints.Where(b => b.Item is not HardBeat))
+                {
+                    var h = (TauHitObject)b.Item;
+                    h.Angle += angleDelta;
 
-                var currentMousePos = moveEvent.Blueprint.ScreenSpaceSelectionPoint + moveEvent.ScreenSpaceDelta;
-
-                h.Angle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(currentMousePos);
-
-                EditorBeatmap?.Update(h);
+                    EditorBeatmap?.Update(h);
+                }
             }
 
             return true;
