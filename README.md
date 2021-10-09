@@ -8,9 +8,11 @@
 [![GitHub issues](https://img.shields.io/github/issues/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/issues)
 [![community server](https://discordapp.com/api/guilds/689728872282849313/widget.png?style=shield)](https://discord.gg/7Y8GXAa)
 
+*A [osu!](https://github.com/ppy/osu) ruleset. Sweeping beats with your scythe.*
+
 </div>
 
-A [osu!](https://github.com/ppy/osu) ruleset surrounding a double scythe and beats. [Original](https://deadlysprinklez.itch.io/tau) idea belonging to *pizzapip* and *[DeadlySprinklez](https://github.com/DeadlySprinklez)*.
+[Original](https://deadlysprinklez.itch.io/tau) idea belonging to *pizzapip* and *[DeadlySprinklez](https://github.com/DeadlySprinklez)*.
 
 ## Running the Gamemode
 We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users looking to play the mode without creating a development environment. All releases will work on all operating systems that *osu!* supports.
