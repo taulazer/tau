@@ -99,7 +99,7 @@ namespace osu.Game.Rulesets.Tau
 
         public override string ShortName => SHORT_NAME;
 
-        public override string PlayingVerb => "Hitting beats";
+        public override string PlayingVerb => "Slicing beats";
 
         public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
 
