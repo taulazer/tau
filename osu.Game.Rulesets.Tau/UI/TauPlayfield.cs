@@ -172,25 +172,6 @@ namespace osu.Game.Rulesets.Tau.UI
             });
         }
 
-        private float cacheProgress;
-
-        public void AdjustRingGlow(float progress, float angle)
-        {
-            if (cacheProgress == progress) return;
-            cacheProgress = progress;
-
-            var glow = cursor.PaddleDrawable.Glow;
-            glow.FinishTransforms();
-
-            glow.FadeTo(progress, progress == 0 ? 200 : 0);
-            glow.Rotation = angle - cursor.PaddleDrawable.Rotation;
-
-            glow.Line.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
-            glow.Glow.Current.Value = Interpolation.ValueAt(progress, 0, 8f / 360, 0, 1, Easing.In);
-            glow.Glow.Size = Interpolation.ValueAt(progress, new Vector2(0.6f), new Vector2(1.01f), 0, 1, Easing.In);
-            glow.Glow.InnerRadius = Interpolation.ValueAt(progress, 0, 0.325f, 0, 1, Easing.In);
-        }
-
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             hitPolicy.HandleHit(judgedObject);
@@ -199,9 +180,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 return;
 
             judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
-
-            if (judgedObject is DrawableSlider)
-                cursor.PaddleDrawable.Glow.FadeOut(200);
 
             if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
             {
