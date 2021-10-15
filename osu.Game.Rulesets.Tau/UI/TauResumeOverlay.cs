@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly float angleRange;
         private TauClickToResumeContainer clickContainer;
         private Container container;
-        private TauCursor.AbsoluteCursor absoluteCursor;
+        private AbsoluteCursor absoluteCursor;
 
         protected override string Message => "Move the cursor to the highlighted area.";
 
@@ -54,7 +54,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 }
             });
 
-            Add(absoluteCursor = new TauCursor.AbsoluteCursor
+            Add(absoluteCursor = new AbsoluteCursor
             {
                 Alpha = 0
             });
