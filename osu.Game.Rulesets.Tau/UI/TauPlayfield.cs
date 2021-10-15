@@ -79,7 +79,6 @@ namespace osu.Game.Rulesets.Tau.UI
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
                     Name = "Kiai hit explosions",
