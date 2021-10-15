@@ -1,14 +1,13 @@
 [![tau](https://alten.s-ul.eu/rdXkomwh.png)](https://github.com/Altenhh/tau "tau")
 <div align="center">
 
-[![release](https://img.shields.io/badge/build-2020.403.6B3-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
+[![release](https://img.shields.io/github/v/release/naoei/tau?style=flat-square)](https://github.com/Altenhh/tau/releases)
 [![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/network)
-[![GitHub issues](https://img.shields.io/github/issues/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/issues)
+![GitHub all releases](https://img.shields.io/github/downloads/naoei/tau/total?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/downloads/naoei/tau/latest/total?style=flat-square)
 [![community server](https://discordapp.com/api/guilds/689728872282849313/widget.png?style=shield)](https://discord.gg/7Y8GXAa)
 
-*A [osu!](https://github.com/ppy/osu) ruleset. Sweeping beats with your scythe.*
+*An [osu!](https://github.com/ppy/osu) ruleset. Sweeping beats with your scythe.*
 
 </div>
 

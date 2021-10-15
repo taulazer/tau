@@ -66,13 +66,6 @@ namespace osu.Game.Rulesets.Tau.UI
 
             AddRangeInternal(new Drawable[]
             {
-                judgementLayer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
                 new VisualisationContainer(),
                 new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Ring), _ => new PlayfieldPiece()),
                 new Container
@@ -80,6 +73,13 @@ namespace osu.Game.Rulesets.Tau.UI
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
+                judgementLayer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
+                cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
                     Name = "Kiai hit explosions",
