@@ -42,6 +42,8 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly OrderedHitPolicy hitPolicy;
         private readonly IDictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new Dictionary<HitResult, DrawablePool<DrawableTauJudgement>>();
 
+        protected override GameplayCursorContainer CreateCursor() => cursor;
+
         public readonly ParticleEmitter SliderParticleEmitter;
 
         public bool Inversed;
@@ -78,7 +80,6 @@ namespace osu.Game.Rulesets.Tau.UI
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
-                cursor,
                 kiaiExplosionContainer = new Container<KiaiHitExplosion>
                 {
                     Name = "Kiai hit explosions",
@@ -139,6 +140,13 @@ namespace osu.Game.Rulesets.Tau.UI
 
             RegisterPool<Slider, DrawableSlider>(3);
             RegisterPool<SliderHeadBeat, DrawableSliderHead>(3);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            Scheduler.AddDelayed(cursor.Show, 50);
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)

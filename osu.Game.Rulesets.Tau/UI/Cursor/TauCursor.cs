@@ -5,10 +5,11 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
-    public class TauCursor : CursorContainer
+    public class TauCursor : GameplayCursorContainer
     {
         [Resolved]
         private IBindable<WorkingBeatmap> beatmap { get; set; }
