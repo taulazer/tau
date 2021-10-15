@@ -66,8 +66,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 leftExplosion.Rotation = -90 + -(angleRange / 2) + Rotation;
                 rightExplosion.Rotation = 90 + angleRange / 2 + Rotation;
 
-                leftExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - (0.025f)), -(angleRange / 2) + Rotation);
-                rightExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - 0.025f), angleRange / 2 + Rotation);
+                leftExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - 0.025f), -(angleRange / 2) + Rotation);
+                rightExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - 0.025f), (angleRange / 2) + Rotation);
 
                 leftExplosion.Show();
                 rightExplosion.Show();

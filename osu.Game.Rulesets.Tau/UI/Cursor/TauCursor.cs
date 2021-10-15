@@ -1,5 +1,3 @@
-using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
@@ -10,9 +8,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
     public class TauCursor : GameplayCursorContainer
     {
-        [Resolved]
-        private IBindable<WorkingBeatmap> beatmap { get; set; }
-
         public float AngleRange { get; }
 
         public readonly Paddle PaddleDrawable;
