@@ -52,19 +52,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         protected override void PopIn()
         {
-            var leftExplosion = new TriangleExplosion(RNG.Next(3, 5))
-            {
-                Rotation = -90 + -(angleRange / 2) + Rotation,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
-
-            var rightExplosion = new TriangleExplosion(RNG.Next(3, 5))
-            {
-                Rotation = 90 + angleRange / 2 + Rotation,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            };
+            var leftExplosion = new TriangleExplosion(RNG.Next(3, 5)) { Anchor = Anchor.Centre, Origin = Anchor.Centre };
+            var rightExplosion = new TriangleExplosion(RNG.Next(3, 5)) { Anchor = Anchor.Centre, Origin = Anchor.Centre };
 
             ((TauCursor)Parent).Add(leftExplosion);
             ((TauCursor)Parent).Add(rightExplosion);
@@ -75,8 +64,12 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             // We're using a scheduler here because we require Rotation to be up-to-date when we're setting the position.
             Scheduler.AddDelayed(() =>
             {
+                leftExplosion.Rotation = -90 + -(angleRange / 2) + Rotation;
+                rightExplosion.Rotation = 90 + angleRange / 2 + Rotation;
+
                 leftExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - (0.025f)), -(angleRange / 2) + Rotation);
                 rightExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - 0.025f), angleRange / 2 + Rotation);
+
                 leftExplosion.Show();
                 rightExplosion.Show();
             }, 500);
