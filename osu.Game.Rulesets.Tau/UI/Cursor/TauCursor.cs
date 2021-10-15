@@ -35,6 +35,14 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             State.Value = Visibility.Hidden;
         }
 
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            using (BeginDelayedSequence(50))
+                Show();
+        }
+
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             PaddleDrawable.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);

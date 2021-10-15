@@ -141,13 +141,6 @@ namespace osu.Game.Rulesets.Tau.UI
             RegisterPool<SliderHeadBeat, DrawableSliderHead>(3);
         }
 
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            Scheduler.AddDelayed(cursor.Show, 50);
-        }
-
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
         {
             base.OnNewDrawableHitObject(drawableHitObject);
