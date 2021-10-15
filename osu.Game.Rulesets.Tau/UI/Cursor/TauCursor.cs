@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public override void Show()
         {
-            this.FadeInFromZero(250);
+            this.FadeIn(250);
             PaddleDrawable.Show();
         }
 
