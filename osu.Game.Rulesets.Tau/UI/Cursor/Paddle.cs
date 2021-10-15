@@ -5,6 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Utils;
 using osu.Game.Rulesets.Tau.Skinning.Default;
 using osu.Game.Skinning;
 
@@ -36,7 +37,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     Current = new BindableDouble(),
                     InnerRadius = 0.05f,
                 },
-                new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Handle), _ => new HandlePiece(), ConfineMode.ScaleToFit)
+                new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Handle), _ => new HandlePiece(), ConfineMode.ScaleToFit),
             };
         }
 
@@ -51,14 +52,40 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         protected override void PopIn()
         {
-            paddle.TransformBindableTo(paddle.Current, angleRange / 360, 500, Easing.OutExpo);
-            paddle.RotateTo(-angleRange / 2, 500, Easing.OutExpo);
+            var leftExplosion = new TriangleExplosion(RNG.Next(3, 5))
+            {
+                Rotation = -90 + -(angleRange / 2) + Rotation,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+            };
+
+            var rightExplosion = new TriangleExplosion(RNG.Next(3, 5))
+            {
+                Rotation = 90 + angleRange / 2 + Rotation,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+            };
+
+            ((TauCursor)Parent).Add(leftExplosion);
+            ((TauCursor)Parent).Add(rightExplosion);
+
+            paddle.TransformBindableTo(paddle.Current, angleRange / 360, 500, Easing.InExpo);
+            paddle.RotateTo(-angleRange / 2, 500, Easing.InExpo);
+
+            // We're using a scheduler here because we require Rotation to be up-to-date when we're setting the position.
+            Scheduler.AddDelayed(() =>
+            {
+                leftExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - (0.025f)), -(angleRange / 2) + Rotation);
+                rightExplosion.Position = Extensions.GetCircularPosition(DrawHeight / 2 * (1 - 0.025f), angleRange / 2 + Rotation);
+                leftExplosion.Show();
+                rightExplosion.Show();
+            }, 500);
         }
 
         protected override void PopOut()
         {
-            paddle.TransformBindableTo(paddle.Current, 0, 500, Easing.OutExpo);
-            paddle.RotateTo(0, 500, Easing.OutExpo);
+            paddle.TransformBindableTo(paddle.Current, 0, 500, Easing.InExpo);
+            paddle.RotateTo(0, 500, Easing.InExpo);
         }
     }
 }
