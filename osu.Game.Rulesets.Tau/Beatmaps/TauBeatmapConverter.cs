@@ -87,8 +87,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
                     var sliderNodes = new List<SliderNode>();
                     // should go in direction of previous object, otherwise, go anti-clockwise.
-                    // True = clockwise, False = antiClockwise.
-                    bool direction = beatmap.HitObjects.GetPrevious(original) is IHasPosition previous && -1 * previous.Position.GetHitObjectAngle() > 0;
+
+                    int direction = beatmap.HitObjects.GetPrevious(original) is IHasPosition previous && previous.Position.GetHitObjectAngle() > 0 ? -1 : 1;
 
                     // amount of nodes should be dependent on how many quarter revolutions it can do.
                     // Let's do a sane one and make it change on bpm later on... (0.5x = 2 seconds)
@@ -98,7 +98,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     for (double time = 0; time < durationData.Duration; time += nodeDuration)
                     {
                         sliderNodes.Add(new SliderNode((float)time, currAngle));
-                        currAngle += direction ? 45 : -45;
+                        currAngle += direction * 45;
                     }
 
                     sliderNodes.Add(new SliderNode((float)durationData.Duration, currAngle));
