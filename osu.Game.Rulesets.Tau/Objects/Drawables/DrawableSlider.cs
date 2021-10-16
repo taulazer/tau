@@ -283,7 +283,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
-                playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
+                if (!HitObject.Kiai)
+                    playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position));
+
                 totalTimeHeld += Time.Elapsed;
 
                 if (!HitObject.Kiai)
@@ -296,11 +298,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        {
+                        if ((int)totalTimeHeld % 8 == 0)
                             playfield.SliderParticleEmitter.AddParticle(angle, inversed);
 
-                            break;
-                        }
+                        break;
 
                     case KiaiType.Classic:
                         if ((int)Time.Current % 8 != 0)
