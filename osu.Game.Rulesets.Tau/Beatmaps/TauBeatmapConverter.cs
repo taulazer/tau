@@ -112,9 +112,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             var controlPointInfo = Beatmap.ControlPointInfo;
             TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(original.StartTime);
-            DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(original.StartTime);
+            DifficultyControlPoint difficultyPoint = original.DifficultyControlPoint;
 
-            double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
+            double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SliderVelocity;
 
             var velocity = scoringDistance / timingPoint.BeatLength;
             var tickDistance = scoringDistance / difficulty.SliderTickRate;
