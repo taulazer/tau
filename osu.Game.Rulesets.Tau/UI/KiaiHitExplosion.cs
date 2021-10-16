@@ -155,6 +155,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     if (circular)
                     {
                         particle
+                           .RotateTo(RNG.NextSingle(-720, 720), duration)
                            .MoveTo(
                                 Extensions.GetCircularPosition(inversed ? ((float)(rng.NextDouble() * 0.15f) * -2f) + 0.5f : ((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f,
                                     Vector2.Zero.GetDegreesFromPosition(particle.Position)), duration,
@@ -165,6 +166,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     else
                     {
                         particle
+                           .RotateTo(RNG.NextSingle(-720, 720), duration)
                            .MoveTo(Extensions.GetCircularPosition(inversed ? (float)(rng.NextDouble() * 0.15f) * -1f : (float)(rng.NextDouble() * 0.15f) * 1f, randomBetween(Angle - 40, Angle + 40)),
                                 duration, Easing.OutQuint)
                            .ResizeTo(new Vector2(rng.Next(0, 5)), duration, Easing.OutQuint)

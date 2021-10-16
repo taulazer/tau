@@ -208,7 +208,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         break;
 
                     case KiaiType.Classic:
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed, judgedObject is DrawableHardBeat ? 32 : 10)
                         {
                             Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
                             Angle = angle,
