@@ -85,10 +85,6 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     if (durationData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
 
-                    // Please don't convert spinners that are negative..
-                    if (durationData.Duration <= 0)
-                        goto default;
-
                     var sliderNodes = new List<SliderNode>();
                     // should go in direction of previous object, otherwise, go anti-clockwise.
                     // True = clockwise, False = antiClockwise.
