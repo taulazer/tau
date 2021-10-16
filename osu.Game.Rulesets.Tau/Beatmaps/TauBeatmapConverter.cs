@@ -76,22 +76,21 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         Nodes = new BindableList<SliderNode>(nodes),
                     }.Yield();
 
+                // Convert spinners into sliders
                 case IHasDuration durationData:
-                    //Is a spinner, should use a slider.
                     if (!CanConvertToSliders)
                         goto default;
 
-                    // Should check if less than a desired time...
+                    // Spinners should only be converted to sliders if duration is sufficiently long
                     if (durationData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
 
                     var sliderNodes = new List<SliderNode>();
-                    // should go in direction of previous object, otherwise, go anti-clockwise.
 
+                    // Whether the spin should go in direction of previous object, otherwise, go anti-clockwise.
                     int direction = beatmap.HitObjects.GetPrevious(original) is IHasPosition previous && previous.Position.GetHitObjectAngle() > 0 ? -1 : 1;
 
-                    // amount of nodes should be dependent on how many quarter revolutions it can do.
-                    // Let's do a sane one and make it change on bpm later on... (0.5x = 2 seconds)
+                    // The amount of nodes should be dependent on how many quarter revolutions it can do.
                     double nodeDuration = 800 * original.DifficultyControlPoint.SliderVelocity;
                     float currAngle = 0;
 
@@ -102,6 +101,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     }
 
                     sliderNodes.Add(new SliderNode((float)durationData.Duration, currAngle));
+
                     return new Slider
                     {
                         Samples = sample,
