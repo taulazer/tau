@@ -326,13 +326,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         break;
                 }
             }
-
-            if (AllJudged) return;
-
-            if (Tracking.Value)
-                playfield?.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration), Vector2.Zero.GetDegreesFromPosition(path.Position));
-            else
-                playfield?.AdjustRingGlow(0, Vector2.Zero.GetDegreesFromPosition(path.Position));
         }
 
         public bool OnPressed(KeyBindingPressEvent<TauAction> e) => HitActions.Contains(e.Action) && !Tracking.Value;
