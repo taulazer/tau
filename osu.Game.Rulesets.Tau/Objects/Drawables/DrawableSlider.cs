@@ -283,7 +283,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
-                playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position), HitObject.Kiai);
+                if (!HitObject.Kiai)
+                    playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position));
+
                 totalTimeHeld += Time.Elapsed;
 
                 if (!HitObject.Kiai)
@@ -296,30 +298,30 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        {
+                        if ((int)totalTimeHeld % 8 == 0)
                             playfield.SliderParticleEmitter.AddParticle(angle, inversed);
 
-                            break;
-                        }
+                        break;
 
                     case KiaiType.Classic:
                         if ((int)Time.Current % 8 != 0)
                             break;
 
-                        particle = new Box
+                        particle = new Triangle
                         {
                             Position = Extensions.GetCircularPosition(380, angle),
                             Rotation = (float)RNG.NextDouble() * 360f,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Size = new Vector2(RNG.Next(1, 10)),
+                            Size = new Vector2(RNG.Next(5, 15)),
                             Clock = new FramedClock(),
+                            Alpha = RNG.NextSingle(0.25f, 1f),
                             Blending = BlendingParameters.Additive,
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 50) + 390) : ((RNG.NextSingle() * 50) + 390), angle), duration, Easing.OutQuint)
-                                .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
+                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 75) + 390) : ((RNG.NextSingle() * 75) + 390), angle), duration, Easing.OutQuint)
+                                .RotateTo(RNG.NextSingle(-720, 720), duration).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);
 

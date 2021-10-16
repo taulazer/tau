@@ -164,9 +164,9 @@ namespace osu.Game.Rulesets.Tau.UI
         [Resolved]
         private OsuColour colour { get; set; }
 
-        public void CreateSliderEffect(float angle, bool kiai)
+        public void CreateSliderEffect(float angle)
         {
-            if ((int)Time.Current % (kiai ? 8 : 16) != 0) return;
+            if ((int)Time.Current % 12 != 0) return;
 
             kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR.Value, particleAmount: 1)
             {
@@ -200,7 +200,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        for (int i = 0; i < (isHardBeat ? 100 : 15); i++)
+                        for (int i = 0; i < (isHardBeat ? RNG.Next(60, 100) : RNG.Next(3, 9)); i++)
                         {
                             SliderParticleEmitter.AddParticle((isHardBeat ? RNG.NextSingle(0, 360) : angle), Inversed, result.Type);
                         }
@@ -208,7 +208,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         break;
 
                     case KiaiType.Classic:
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed)
+                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed, judgedObject is DrawableHardBeat ? 32 : 10)
                         {
                             Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
                             Angle = angle,
