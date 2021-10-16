@@ -96,7 +96,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
                     // amount of nodes should be dependent on how many quarter revolutions it can do.
                     // Let's do a sane one and make it change on bpm later on... (0.5x = 2 seconds)
-                    double nodeDuration = (1000 * original.DifficultyControlPoint.SliderVelocity) / 4;
+                    double nodeDuration = 800 * original.DifficultyControlPoint.SliderVelocity;
                     float currAngle = 0;
 
                     for (double time = 0; time < durationData.Duration; time += nodeDuration)
@@ -105,6 +105,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         currAngle += direction ? 45 : -45;
                     }
 
+                    sliderNodes.Add(new SliderNode((float)durationData.Duration, currAngle));
                     return new Slider
                     {
                         Samples = sample,
