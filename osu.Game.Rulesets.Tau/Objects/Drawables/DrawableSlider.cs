@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,6 +25,7 @@ using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
+using Triangle = osu.Framework.Graphics.Shapes.Triangle;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -293,7 +294,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     case KiaiType.Turbulent:
                         if ((int)totalTimeHeld % 8 == 0)
-                            playfield.SliderParticleEmitter.AddParticle(angle, inversed);
+                            playfield.SliderParticleEmitter.AddParticle(firstNodeAngle, inversed);
 
                         break;
 
@@ -301,7 +302,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         if ((int)Time.Current % 8 != 0)
                             break;
 
-                        particle = new Triangle
+                        particle = new Triangle()
                         {
                             Position = Extensions.GetCircularPosition(380, firstNodeAngle),
                             Rotation = (float)RNG.NextDouble() * 360f,
@@ -314,7 +315,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 75) + 390) : ((RNG.NextSingle() * 75) + 390), angle), duration, Easing.OutQuint)
+                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 75) + 390) : ((RNG.NextSingle() * 75) + 390), firstNodeAngle), duration, Easing.OutQuint)
                                 .RotateTo(RNG.NextSingle(-720, 720), duration).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);

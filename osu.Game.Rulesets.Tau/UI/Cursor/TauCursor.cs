@@ -1,3 +1,4 @@
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
@@ -7,7 +8,10 @@ using osu.Game.Rulesets.UI;
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
     public class TauCursor : GameplayCursorContainer
-    {        
+    {
+        [Resolved(canBeNull: true)]
+        private TauPlayfield playfield { get; set; }
+
         private float gameCursorAngle;
         public float AngleRange { get; }
 
