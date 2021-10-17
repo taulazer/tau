@@ -7,12 +7,13 @@ using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModRotate : Mod, IUpdatableByPlayfield, IApplicableToBeatmap
+    public class TauModRotate : Mod, IUpdatableByPlayfield, IApplicableToBeatmap, IApplicableToDrawableRuleset<TauHitObject>
     {
         public override string Name => "Rotate";
         public override string Acronym => "RT";
@@ -46,6 +47,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         private double startTime;
         private double endTime;
+        private readonly BindableFloat rotation = new BindableFloat();
 
         public void Update(Playfield playfield)
         {
@@ -53,13 +55,20 @@ namespace osu.Game.Rulesets.Tau.Mods
             var currentTime = Math.Max(playfield.Time.Current, 0);
             var interpolated = Interpolation.ValueAt(currentTime, Rate.Value, FinalRate.Value, startTime, endTime);
 
-            field.Rotation = (float)(currentTime / (interpolated * 1000) * 360 % 360) * (Direction.Value == Mods.Direction.Clockwise ? 1 : -1);
+            rotation.Value = (float)(currentTime / (interpolated * 1000) * 360 % 360) * (Direction.Value == Mods.Direction.Clockwise ? 1 : -1);
+            field.Rotation = rotation.Value;
         }
 
         public void ApplyToBeatmap(IBeatmap beatmap)
         {
             startTime = beatmap.HitObjects.FirstOrDefault()?.StartTime ?? 0;
             endTime = beatmap.HitObjects.LastOrDefault()?.GetEndTime() ?? 0;
+        }
+
+        public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
+        {
+            var ruleset = (DrawableTauRuleset)drawableRuleset;
+            ruleset.RotationOffset.BindTo(rotation);
         }
     }
 

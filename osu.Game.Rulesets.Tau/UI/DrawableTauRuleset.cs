@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Input;
 using osu.Game.Beatmaps;
 using osu.Game.Input.Handlers;
@@ -22,7 +23,10 @@ namespace osu.Game.Rulesets.Tau.UI
         {
         }
 
-        protected override ResumeOverlay CreateResumeOverlay() => new TauResumeOverlay(Beatmap.BeatmapInfo.BaseDifficulty);
+        // This is required if we were to wish for ResumeOverlay to follow with the Rotation mod.
+        internal readonly BindableFloat RotationOffset = new BindableFloat();
+
+        protected override ResumeOverlay CreateResumeOverlay() => new TauResumeOverlay(Beatmap.BeatmapInfo.BaseDifficulty, RotationOffset);
 
         protected override Playfield CreatePlayfield() => new TauPlayfield(Beatmap.BeatmapInfo.BaseDifficulty);
 

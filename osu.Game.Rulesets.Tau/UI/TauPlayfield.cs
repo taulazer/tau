@@ -156,7 +156,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public (bool, float) CheckIfWeCanValidate(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(cursor.PaddleDrawable.Rotation, angle);
+            var tempRot = Rotation % 360;
+            var angleDiff = Extensions.GetDeltaAngle(cursor.PaddleDrawable.Rotation, angle + tempRot);
 
             return (Math.Abs(angleDiff) <= cursor.AngleRange / 2, angleDiff);
         }

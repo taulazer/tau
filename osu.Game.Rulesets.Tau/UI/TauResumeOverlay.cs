@@ -3,6 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
@@ -19,13 +20,19 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly float angleRange;
         private TauClickToResumeContainer clickContainer;
         private Container container;
-        private AbsoluteCursor absoluteCursor;
+        private AbsoluteCursorContainer absoluteCursor;
+
+        private readonly BindableFloat rotationalOffsetBindable = new BindableFloat();
 
         protected override string Message => "Move the cursor to the highlighted area.";
+        public override CursorContainer LocalCursor => State.Value == Visibility.Visible ? absoluteCursor : null;
 
-        public TauResumeOverlay(BeatmapDifficulty difficulty)
+        public TauResumeOverlay(BeatmapDifficulty difficulty, BindableFloat offset = null)
         {
             angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
+
+            if (offset != null)
+                rotationalOffsetBindable.BindTo(offset);
         }
 
         [BackgroundDependencyLoader]
@@ -39,7 +46,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 Size = new Vector2(4),
                 FillAspectRatio = 1, // 1:1
                 FillMode = FillMode.Fit,
-                Alpha = 0f,
                 Children = new Drawable[]
                 {
                     clickContainer = new TauClickToResumeContainer(angleRange)
@@ -54,10 +60,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 }
             });
 
-            Add(absoluteCursor = new AbsoluteCursor
-            {
-                Alpha = 0
-            });
+            Add(absoluteCursor = new AbsoluteCursorContainer());
         }
 
         protected override void PopIn()
@@ -65,7 +68,10 @@ namespace osu.Game.Rulesets.Tau.UI
             base.PopIn();
 
             absoluteCursor.Show();
-            clickContainer.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(ToScreenSpace(GameplayCursor.ActiveCursor.DrawPosition)) - ((angleRange * 0.25f) / 2);
+
+            clickContainer.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(ToScreenSpace(GameplayCursor.ActiveCursor.DrawPosition)) - ((angleRange * 0.25f) / 2)
+                                      + rotationalOffsetBindable.Value;
+
             container.FadeIn(200);
         }
 
@@ -74,6 +80,11 @@ namespace osu.Game.Rulesets.Tau.UI
             base.PopOut();
             container.FadeOut(200);
             absoluteCursor.Hide();
+        }
+
+        private class AbsoluteCursorContainer : CursorContainer
+        {
+            protected override Drawable CreateCursor() => new AbsoluteCursor();
         }
 
         private class TauClickToResumeContainer : CircularProgress, IKeyBindingHandler<TauAction>

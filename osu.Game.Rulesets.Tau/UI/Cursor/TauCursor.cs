@@ -1,6 +1,5 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.UI;
@@ -31,8 +30,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             Alpha = 0;
 
             Add(PaddleDrawable = new Paddle(AngleRange));
-
-            State.Value = Visibility.Hidden;
         }
 
         protected override void LoadComplete()
