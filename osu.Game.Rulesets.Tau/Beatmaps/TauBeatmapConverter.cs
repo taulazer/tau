@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     if (!CanConvertToSliders)
                         goto default;
 
-                    if (pathData.Duration < BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
+                    if (pathData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
 
                     var nodes = new List<SliderNode>();
@@ -74,6 +74,40 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         NewCombo = comboData?.NewCombo ?? false,
                         ComboOffset = comboData?.ComboOffset ?? 0,
                         Nodes = new BindableList<SliderNode>(nodes),
+                    }.Yield();
+
+                // Convert spinners into sliders
+                case IHasDuration durationData:
+                    if (!CanConvertToSliders)
+                        goto default;
+
+                    // Spinners should only be converted to sliders if duration is sufficiently long
+                    if (durationData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
+                        goto default;
+
+                    var sliderNodes = new List<SliderNode>();
+
+                    // Whether the spin should go in direction of previous object, otherwise, go anti-clockwise.
+                    int direction = beatmap.HitObjects.GetPrevious(original) is IHasPosition previous && previous.Position.GetHitObjectAngle() > 0 ? -1 : 1;
+
+                    // The amount of nodes should be dependent on how many quarter revolutions it can do.
+                    double nodeDuration = 800 * original.DifficultyControlPoint.SliderVelocity;
+                    float currAngle = 0;
+
+                    for (double time = 0; time < durationData.Duration; time += nodeDuration)
+                    {
+                        sliderNodes.Add(new SliderNode((float)time, currAngle));
+                        currAngle += direction * 45;
+                    }
+
+                    sliderNodes.Add(new SliderNode((float)durationData.Duration, currAngle));
+
+                    return new Slider
+                    {
+                        Samples = sample,
+                        StartTime = original.StartTime,
+                        NewCombo = true,
+                        Nodes = new BindableList<SliderNode>(sliderNodes),
                     }.Yield();
 
                 default:
@@ -112,9 +146,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             var controlPointInfo = Beatmap.ControlPointInfo;
             TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(original.StartTime);
-            DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(original.StartTime);
+            DifficultyControlPoint difficultyPoint = original.DifficultyControlPoint;
 
-            double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
+            double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SliderVelocity;
 
             var velocity = scoringDistance / timingPoint.BeatLength;
             var tickDistance = scoringDistance / difficulty.SliderTickRate;

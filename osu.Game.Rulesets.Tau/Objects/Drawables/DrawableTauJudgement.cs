@@ -4,16 +4,20 @@ using osu.Framework.Graphics;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public class DrawableTauJudgement : DrawableJudgement
     {
-        private SkinnableLighting lighting;
+        protected SkinnableLighting Lighting { get; private set; }
 
         [Resolved]
         private OsuConfigManager config { get; set; }
+
+        [Resolved(canBeNull: true)]
+        private TauPlayfield playfield { get; set; }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -23,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            AddInternal(lighting = new SkinnableLighting
+            AddInternal(Lighting = new SkinnableLighting
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -37,8 +41,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.PrepareForUse();
 
-            lighting.ResetAnimation();
-            lighting.SetColourFrom(JudgedObject, Result);
+            Lighting.ResetAnimation();
+            Lighting.SetColourFrom(JudgedObject, Result);
 
             var angle = 0f;
 
@@ -48,7 +52,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (JudgedObject is DrawableSlider s)
                 angle = s.HitObject.Nodes.Last().Angle;
 
-            Position = Extensions.GetCircularPosition(.6f, angle);
+            Position = Extensions.GetCircularPosition((playfield?.Inversed ?? false) ? .3f : .6f, angle);
             Rotation = angle;
         }
 
@@ -56,14 +60,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             var hitLightingEnabled = config.Get<bool>(OsuSetting.HitLighting);
 
-            lighting.Alpha = 0;
+            Lighting.Alpha = 0;
 
-            if (hitLightingEnabled && lighting.Drawable != null)
+            if (hitLightingEnabled && Lighting.Drawable != null)
             {
-                lighting.ScaleTo(0.8f).ScaleTo(1.2f, 600, Easing.Out);
-                lighting.FadeIn(200).Then().Delay(200).FadeOut(1000);
+                Lighting.ScaleTo(0.8f).ScaleTo(1.2f, 600, Easing.Out);
+                Lighting.FadeIn(200).Then().Delay(200).FadeOut(1000);
 
-                LifetimeEnd = lighting.LatestTransformEndTime;
+                LifetimeEnd = Lighting.LatestTransformEndTime;
             }
 
             base.ApplyHitAnimations();

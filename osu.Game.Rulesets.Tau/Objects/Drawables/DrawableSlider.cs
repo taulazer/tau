@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,6 +11,7 @@ using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Framework.Timing;
 using osu.Framework.Utils;
 using osu.Game.Audio;
@@ -35,6 +36,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public DrawableSliderHead HeadBeat => headContainer.Child;
 
+        private CircularContainer maskingContainer;
+
+        private bool inversed;
+
         [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
 
@@ -58,7 +63,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             AddRangeInternal(new Drawable[]
             {
-                new CircularContainer
+                maskingContainer = new CircularContainer
                 {
                     Masking = true,
                     RelativeSizeAxes = Axes.Both,
@@ -83,6 +88,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
             });
+        }
+
+        public void ApplyInverseChanges()
+        {
+            inversed = true;
+            maskingContainer.Masking = false;
+
+            // Max diameter of paths are much larger when they come from outside the ring, so we need extra canvas space
+            path.Size = new Vector2(768 * 2);
         }
 
         private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
@@ -211,7 +225,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             void createVertex(float distance, float angle)
                 => path.AddVertex(Extensions.GetCircularPosition(distance, angle) + OriginPosition);
 
-            const float maxDistance = 376;
+            float maxDistance = TauPlayfield.BASE_SIZE.X / 2;
 
             for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
                  t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
@@ -229,6 +243,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 // Larger the time, the further in it is.
                 float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * maxDistance;
 
+                if (inversed)
+                    distanceFromCentre = (maxDistance * 2) - distanceFromCentre;
+
                 // Angle calc
                 float difference = (nextNode.Angle - currentNode.Angle) % 360;
 
@@ -245,8 +262,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
                 double progress = 1 - (timeDiff / HitObject.TimePreempt);
+                float endNodeDistanceFromCentre = (float)(progress * maxDistance);
 
-                createVertex((float)(progress * maxDistance), HitObject.Nodes.Last().Angle);
+                if (inversed)
+                    endNodeDistanceFromCentre = (maxDistance * 2) - endNodeDistanceFromCentre;
+
+                createVertex(endNodeDistanceFromCentre, HitObject.Nodes.Last().Angle);
             }
 
             Tracking.Value = IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x));
@@ -257,7 +278,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
             {
-                playfield?.CreateSliderEffect(firstNodeAngle, HitObject.Kiai);
+                if (!HitObject.Kiai)
+                    playfield?.CreateSliderEffect(firstNodeAngle);
+
                 totalTimeHeld += Time.Elapsed;
 
                 if (!HitObject.Kiai)
@@ -269,48 +292,41 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 switch (effect.Value)
                 {
                     case KiaiType.Turbulent:
-                        {
-                            playfield.SliderParticleEmitter.AddParticle(firstNodeAngle);
+                        if ((int)totalTimeHeld % 8 == 0)
+                            playfield.SliderParticleEmitter.AddParticle(angle, inversed);
 
-                            break;
-                        }
+                        break;
 
                     case KiaiType.Classic:
                         if ((int)Time.Current % 8 != 0)
                             break;
 
-                        particle = new Box
+                        particle = new Triangle
                         {
                             Position = Extensions.GetCircularPosition(380, firstNodeAngle),
                             Rotation = (float)RNG.NextDouble() * 360f,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Size = new Vector2(RNG.Next(1, 10)),
+                            Size = new Vector2(RNG.Next(5, 15)),
                             Clock = new FramedClock(),
+                            Alpha = RNG.NextSingle(0.25f, 1f),
                             Blending = BlendingParameters.Additive,
                             Colour = TauPlayfield.ACCENT_COLOR.Value
                         };
 
-                        particle.MoveTo(Extensions.GetCircularPosition(((RNG.NextSingle() * 50) + 390), firstNodeAngle), duration, Easing.OutQuint)
-                                .ResizeTo(new Vector2(RNG.NextSingle(0, 5)), duration, Easing.OutQuint).FadeOut(duration).Expire();
+                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 75) + 390) : ((RNG.NextSingle() * 75) + 390), angle), duration, Easing.OutQuint)
+                                .RotateTo(RNG.NextSingle(-720, 720), duration).FadeOut(duration).Expire();
 
                         playfield.SliderParticleEmitter.Add(particle);
 
                         break;
                 }
             }
-
-            if (AllJudged) return;
-
-            if (Tracking.Value)
-                playfield?.AdjustRingGlow((float)(totalTimeHeld / HitObject.Duration), firstNodeAngle);
-            else
-                playfield?.AdjustRingGlow(0, firstNodeAngle);
         }
 
-        public bool OnPressed(TauAction action) => HitActions.Contains(action) && !Tracking.Value;
+        public bool OnPressed(KeyBindingPressEvent<TauAction> e) => HitActions.Contains(e.Action) && !Tracking.Value;
 
-        public void OnReleased(TauAction action)
+        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
         {
         }
 

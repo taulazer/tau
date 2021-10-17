@@ -19,13 +19,13 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly float angleRange;
         private TauClickToResumeContainer clickContainer;
         private Container container;
-        private TauCursor.AbsoluteCursor absoluteCursor;
+        private AbsoluteCursor absoluteCursor;
 
         protected override string Message => "Move the cursor to the highlighted area.";
 
         public TauResumeOverlay(BeatmapDifficulty difficulty)
         {
-            angleRange = (float)BeatmapDifficulty.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
+            angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
         }
 
         [BackgroundDependencyLoader]
@@ -53,8 +53,8 @@ namespace osu.Game.Rulesets.Tau.UI
                     }
                 }
             });
-            
-            Add(absoluteCursor = new TauCursor.AbsoluteCursor
+
+            Add(absoluteCursor = new AbsoluteCursor
             {
                 Alpha = 0
             });
@@ -126,9 +126,9 @@ namespace osu.Game.Rulesets.Tau.UI
                 base.OnHoverLost(e);
             }
 
-            public bool OnPressed(TauAction action)
+            public bool OnPressed(KeyBindingPressEvent<TauAction> e)
             {
-                switch (action)
+                switch (e.Action)
                 {
                     case TauAction.LeftButton:
                     case TauAction.RightButton:
@@ -143,7 +143,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 return false;
             }
 
-            public void OnReleased(TauAction action)
+            public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
             {
             }
         }
