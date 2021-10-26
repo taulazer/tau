@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         public TauCursor(BeatmapDifficulty difficulty)
         {
-            AngleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.CircleSize, 75, 25, 20);
+            AngleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
 
             FillAspectRatio = 1; // 1:1
             FillMode = FillMode.Fit;
