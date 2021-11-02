@@ -1,56 +1,28 @@
-[![tau](https://cdn.discordapp.com/attachments/678814085063901196/700162953101574144/tau-banner.png)](https://github.com/Altenhh/tau "tau")
-# tau for osu!
+[![tau](https://alten.s-ul.eu/rdXkomwh.png)](https://github.com/Altenhh/tau "tau")
+<div align="center">
 
-<div>
-    <a href="https://discord.gg/7Y8GXAa"><img src="https://canary.discordapp.com/api/guilds/689728872282849313/widget.png?style=banner2" alt="Join Discord Server"/></a>
+[![release](https://img.shields.io/github/v/release/naoei/tau?style=flat-square)](https://github.com/Altenhh/tau/releases)
+[![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE)
+![GitHub all releases](https://img.shields.io/github/downloads/naoei/tau/total?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/downloads/naoei/tau/latest/total?style=flat-square)
+[![community server](https://discordapp.com/api/guilds/689728872282849313/widget.png?style=shield)](https://discord.gg/7Y8GXAa)
+
+*An [osu!](https://github.com/ppy/osu) ruleset. Sweeping beats with your scythe.*
+
 </div>
 
-[![release](https://img.shields.io/badge/build-2020.403.6B3-brightgreen?style=flat-square)](https://github.com/Altenhh/tau/releases)
-[![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/network)
-[![GitHub issues](https://img.shields.io/github/issues/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/issues)
-
-A customized [osu!](https://github.com/ppy/osu) mode surrounding a paddle and some notes. [Original](https://deadlysprinklez.itch.io/tau) credit to the idea belonging to *pizzapip*.
+[Original](https://deadlysprinklez.itch.io/tau) idea belonging to *pizzapip* and *[DeadlySprinklez](https://github.com/DeadlySprinklez)*.
 
 ## Running the Gamemode
 We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users looking to play the mode without creating a development environment. All releases will work on all operating systems that *osu!* supports.
-### [Latest Releases](https://github.com/Altenhh/tau/releases)
+
+| [Latest Releases](https://github.com/Altenhh/tau/releases)
+| ------------- |
 
 ### Instructions
 
-Since version [2020.429.0](https://github.com/ppy/osu/releases/tag/2020.429.0) The installation method has now changed and is much more consistent than the old method. If you wish to see the old method of how to install this ruleset the please expand details below.
-
-<details>
-<summary><b>Old method</b></summary>
-<p>
-
-##### Windows
-On Windows, the library must be put in `%localappdata%\osulazer\app-(Current osu!lazer Version)`, inside the directory of the current osu!lazer version. osu!lazer will automatically work with the `.dll` when you open it, so nothing else needs to be done.
-
-##### Linux
-On Linux, you will need to extract the app image with the following command line:
-```sh
-./osu.AppImage --appimage-extract
-```
-This will extract all files to `squashfs-root`, in this folder go to `usr/bin` and put Tau's dll there.
-
-###### Special thanks to `Kotypey#9393` for figuring out how to install Tau on linux.
-
-##### macOS
-On macOS, the library must be put inside the osu!lazer app contents here `osu!.app/Contents/MacOS/`
-
-![Context menu](https://cdn.discordapp.com/attachments/699046236979986483/699060248391974982/tau.png)
-
-You can access the app contents by right-clicking on osu! and clicking "Show Package Contents"
-
-###### Special thanks to `sexnine#6969` for figuring out how to install Tau on macOS.
-
-</p>
-</details>
-
-##### New Method
 From the osu settings menu scroll down till you see `Open osu! folder`, that button should take you under `%appdata%/osu`.
+
 ![open osu! folder](https://github.com/LumpBloom7/sentakki/wiki/images/Instuction1.png)
 
 Copy the ruleset file into the `rulesets` directory, do make sure that duplicate copies of the ruleset is overwritten.

@@ -15,9 +15,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
         }
 
-        protected override void SkinChanged(ISkinSource skin, bool allowFallback)
+        protected override void SkinChanged(ISkinSource skin)
         {
-            base.SkinChanged(skin, allowFallback);
+            base.SkinChanged(skin);
             updateColour();
         }
 

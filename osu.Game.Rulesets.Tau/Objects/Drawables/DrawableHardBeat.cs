@@ -3,6 +3,7 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -17,10 +18,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     {
         protected override TauAction[] HitActions { get; set; } = new[]
         {
-            TauAction.HardButton
+            TauAction.HardButton1,
+            TauAction.HardButton2
         };
 
         public SkinnableDrawable Circle;
+        public float HitScale = 1.25f;
+        public float MissScale = 1.1f;
 
         public DrawableHardBeat()
             : this(null)
@@ -41,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Size = Vector2.Zero;
             Alpha = 0f;
 
-            AddInternal(Circle = new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.HardBeat), _ => new HardBeatPiece(), null, ConfineMode.ScaleToFit));
+            AddInternal(Circle = new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.HardBeat), _ => new HardBeatPiece(), ConfineMode.ScaleToFit));
 
             Position = Vector2.Zero;
         }
@@ -92,7 +96,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Hit:
-                    this.ScaleTo(1.25f, time_fade_hit, Easing.OutQuint)
+                    this.ScaleTo(HitScale, time_fade_hit, Easing.OutQuint)
                         .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_hit);
 
@@ -100,25 +104,25 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 case ArmedState.Miss:
                     this.FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
-                        .ResizeTo(1.1f, time_fade_hit, Easing.OutQuint)
+                        .ResizeTo(MissScale, time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_miss);
 
                     break;
             }
         }
 
-        public bool OnPressed(TauAction action)
+        public bool OnPressed(KeyBindingPressEvent<TauAction> e)
         {
             if (AllJudged)
                 return false;
 
-            if (HitActions.Contains(action))
+            if (HitActions.Contains(e.Action))
                 return UpdateResult(true);
 
             return false;
         }
 
-        public void OnReleased(TauAction action)
+        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
         {
         }
     }

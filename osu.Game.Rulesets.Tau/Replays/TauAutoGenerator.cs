@@ -78,7 +78,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                         break;
 
                     case HardBeat _:
-                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, ((TauReplayFrame)Replay.Frames.Last()).Position, TauAction.HardButton));
+                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, ((TauReplayFrame)Replay.Frames.Last()).Position, TauAction.HardButton1));
                         Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, ((TauReplayFrame)Replay.Frames.Last()).Position));
                         lastTime = h.GetEndTime() + releaseDelay;
 

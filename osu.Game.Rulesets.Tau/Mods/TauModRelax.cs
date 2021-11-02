@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                         var play = (TauPlayfield)playfield;
 
-                        if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit.HitObject.Angle))
+                        if (tauHit.HitObject.HitWindows.CanBeHit(relativetime) && play.CheckIfWeCanValidate(tauHit.HitObject.Angle).Item1)
                             requiresHit = true;
 
                         break;
@@ -111,7 +111,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             {
                 if (hardhit)
                 {
-                    state.PressedActions.Add(TauAction.HardButton);
+                    state.PressedActions.Add(TauAction.HardButton1);
                 }
                 else
                 {

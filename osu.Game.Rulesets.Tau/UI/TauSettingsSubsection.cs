@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Localisation;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Tau.Configuration;
 
@@ -7,7 +8,7 @@ namespace osu.Game.Rulesets.Tau.UI
 {
     public class TauSettingsSubsection : RulesetSettingsSubsection
     {
-        protected override string Header => "tau";
+        protected override LocalisableString Header => "tau";
 
         public TauSettingsSubsection(Ruleset ruleset)
             : base(ruleset)

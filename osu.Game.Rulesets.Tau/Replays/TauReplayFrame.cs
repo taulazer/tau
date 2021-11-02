@@ -29,7 +29,8 @@ namespace osu.Game.Rulesets.Tau.Replays
 
             if (currentFrame.MouseLeft1) Actions.Add(TauAction.LeftButton);
             if (currentFrame.MouseRight1) Actions.Add(TauAction.RightButton);
-            if (currentFrame.MouseLeft2) Actions.Add(TauAction.HardButton);
+            if (currentFrame.MouseLeft2) Actions.Add(TauAction.HardButton1);
+            if (currentFrame.MouseRight2) Actions.Add(TauAction.HardButton2);
         }
 
         public LegacyReplayFrame ToLegacy(IBeatmap beatmap)
@@ -38,7 +39,8 @@ namespace osu.Game.Rulesets.Tau.Replays
 
             if (Actions.Contains(TauAction.LeftButton)) state |= ReplayButtonState.Left1;
             if (Actions.Contains(TauAction.RightButton)) state |= ReplayButtonState.Right1;
-            if (Actions.Contains(TauAction.HardButton)) state |= ReplayButtonState.Left2;
+            if (Actions.Contains(TauAction.HardButton1)) state |= ReplayButtonState.Left2;
+            if (Actions.Contains(TauAction.HardButton2)) state |= ReplayButtonState.Right2;
 
             return new LegacyReplayFrame(Time, Position.X, Position.Y, state);
         }

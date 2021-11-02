@@ -14,10 +14,10 @@ namespace osu.Game.Rulesets.Tau.Configuration
         {
             base.InitialiseDefaults();
 
-            Set(TauRulesetSettings.ShowVisualizer, true);
-            Set(TauRulesetSettings.PlayfieldDim, 0.3f, 0, 1, 0.01f);
-            Set(TauRulesetSettings.BeatSize, 16f, 10, 25, 1f);
-            Set(TauRulesetSettings.KiaiEffect, KiaiType.Turbulent);
+            SetDefault(TauRulesetSettings.ShowVisualizer, true);
+            SetDefault(TauRulesetSettings.PlayfieldDim, 0.3f, 0, 1, 0.01f);
+            SetDefault(TauRulesetSettings.BeatSize, 16f, 10, 25, 1f);
+            SetDefault(TauRulesetSettings.KiaiEffect, KiaiType.Turbulent);
         }
     }
 

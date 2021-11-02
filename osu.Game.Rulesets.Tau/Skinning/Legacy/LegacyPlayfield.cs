@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     FillMode = FillMode.Fit,
-                    Texture = skin.GetTexture("field-overlay")
+                    Texture = skin.GetTexture("ring-overlay")
                 }
             });
 

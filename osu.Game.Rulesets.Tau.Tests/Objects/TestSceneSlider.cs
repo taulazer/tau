@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -16,8 +17,8 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
 
         public TestSceneSlider()
         {
-            AddStep("Miss Single", () => SetContents(() => testSingle()));
-            AddStep("Hit Single", () => SetContents(() => testSingle(true)));
+            AddStep("Miss Single", () => SetContents(_ => testSingle()));
+            AddStep("Hit Single", () => SetContents(_ => testSingle(true)));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject hitObject && hitObject.AllJudged == false));
         }
 
@@ -26,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             var slider = new Slider
             {
                 StartTime = Time.Current + 1000,
-                Nodes = new[]
+                Nodes = new BindableList<SliderNode>(new[]
                 {
                     new SliderNode(0, 0),
                     new SliderNode(500, 90),
@@ -44,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
                     new SliderNode(6500, 90),
                     new SliderNode(7000, 180),
                     new SliderNode(7500, 270),
-                }
+                })
             };
 
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());

@@ -25,9 +25,9 @@ namespace osu.Game.Rulesets.Tau.UI
             AddInternal(drawable);
         }
 
-        public void AddParticle(float angle, HitResult? result = null, bool slider = false)
+        public void AddParticle(float angle, bool inversed = false, HitResult? result = null)
         {
-            AddInternal(particlePool.Get(p => p.Apply(angle, result, slider)));
+            AddInternal(particlePool.Get(p => p.Apply(angle, inversed, result)));
         }
     }
 }

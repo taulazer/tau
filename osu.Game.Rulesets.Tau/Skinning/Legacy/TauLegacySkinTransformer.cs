@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
 {
     public class TauLegacySkinTransformer : LegacySkinTransformer
     {
-        public TauLegacySkinTransformer(ISkinSource source)
+        public TauLegacySkinTransformer(ISkin source)
             : base(source)
         {
         }
@@ -19,16 +19,16 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
             switch (tauComponent.Component)
             {
                 case TauSkinComponents.Beat:
-                    return Source.GetTexture("beat") != null ? new LegacyBeat() : null;
+                    return Skin.GetTexture("beat") != null ? new LegacyBeat() : null;
 
                 case TauSkinComponents.HardBeat:
-                    return Source.GetTexture("hard-beat") != null ? new LegacyHardBeat() : null;
+                    return Skin.GetTexture("hard-beat") != null ? new LegacyHardBeat() : null;
 
                 case TauSkinComponents.Handle:
-                    return Source.GetTexture("handle") != null ? new LegacyHandle() : null;
+                    return Skin.GetTexture("handle") != null ? new LegacyHandle() : null;
 
-                case TauSkinComponents.Playfield:
-                    return Source.GetTexture("field-overlay") != null ? new LegacyPlayfield() : null;
+                case TauSkinComponents.Ring:
+                    return Skin.GetTexture("ring-overlay") != null ? new LegacyPlayfield() : null;
             }
 
             return null;
@@ -39,10 +39,10 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
             switch (lookup)
             {
                 case TauSkinColour colour:
-                    return Source.GetConfig<SkinCustomColourLookup, TValue>(new SkinCustomColourLookup(colour));
+                    return Skin.GetConfig<SkinCustomColourLookup, TValue>(new SkinCustomColourLookup(colour));
             }
 
-            return Source.GetConfig<TLookup, TValue>(lookup);
+            return Skin.GetConfig<TLookup, TValue>(lookup);
         }
     }
 }

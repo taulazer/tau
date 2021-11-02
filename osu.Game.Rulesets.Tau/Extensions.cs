@@ -23,21 +23,9 @@ namespace osu.Game.Rulesets.Tau
 
         public static float GetDeltaAngle(float a, float b)
         {
-            float x = b;
-            float y = a;
+            var res = a - b;
 
-            if (a > b)
-            {
-                x = a;
-                y = b;
-            }
-
-            if (x - y < 180)
-                x -= y;
-            else
-                x = 360 - x + y;
-
-            return x;
+            return (res + 180) % 360 - 180;
         }
 
         public static float GetHitObjectAngle(this Vector2 target)

@@ -36,18 +36,19 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            InternalChild = new Box
+            InternalChild = new Triangle
             {
                 RelativeSizeAxes = Axes.Both
             };
         }
 
-        public void Apply(float angle, HitResult? result = null, bool slider = false)
+        public void Apply(float angle, bool inversed = false, HitResult? result = null)
         {
-            Position = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), angle);
-            Velocity = Extensions.GetCircularPosition(RNG.NextSingle(380, 400), RNG.NextSingle(angle - 40, angle + 40));
-            Size = new Vector2(RNG.NextSingle(1, slider ? 3 : 10));
+            Position = Extensions.GetCircularPosition(RNG.NextSingle(360, 380), angle);
+            Velocity = Extensions.GetCircularPosition(inversed ? -RNG.NextSingle(200, 400) : RNG.NextSingle(200, 400), RNG.NextSingle(angle - 40, angle + 40));
+            Size = new Vector2(RNG.NextSingle(3, 18));
             Rotation = RNG.NextSingle(0, 360);
+            Alpha = RNG.NextSingle(0.25f, 1f);
             Colour = result.HasValue ? colour?.ForHitResult(result.Value) ?? Color4.White : TauPlayfield.ACCENT_COLOR.Value;
         }
 
@@ -58,7 +59,9 @@ namespace osu.Game.Rulesets.Tau.UI.Particles
             ApplyTransformsAt(double.MinValue, true);
             ClearTransforms();
 
-            this.FadeOut(1500).Expire(true);
+            this.RotateTo(RNG.NextSingle(-720, 720), 1500)
+                .FadeOut(1500)
+                .Expire(true);
         }
 
         protected override void Update()

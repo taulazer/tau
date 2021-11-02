@@ -7,7 +7,6 @@ namespace osu.Game.Rulesets.Tau.Mods
     public class TauModHardRock : ModHardRock, IApplicableToHitObject
     {
         public override double ScoreMultiplier => 1.06;
-        public override bool Ranked => true;
 
         public void ApplyToHitObject(HitObject hitObject)
         {

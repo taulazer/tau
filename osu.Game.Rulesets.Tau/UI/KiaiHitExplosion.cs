@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Timing;
@@ -18,6 +19,7 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         public override bool RemoveWhenNotAlive => true;
         private readonly bool circular;
+        private readonly bool inversed;
         private readonly Color4 colour;
         private readonly int particleAmount;
 
@@ -26,10 +28,11 @@ namespace osu.Game.Rulesets.Tau.UI
         /// </summary>
         public float Angle;
 
-        public KiaiHitExplosion(Color4 colour, bool circular = false, int particleAmount = 10)
+        public KiaiHitExplosion(Color4 colour, bool circular = false, bool inversed = false, int particleAmount = 10)
         {
             this.colour = colour;
             this.circular = circular;
+            this.inversed = inversed;
             this.particleAmount = particleAmount;
 
             RelativePositionAxes = Axes.Both;
@@ -65,7 +68,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 AddInternal(container);
             }
             else
-                AddInternal(new KiaiHitExplosionEmitter(colour, circular, particleAmount) { Angle = Angle });
+                AddInternal(new KiaiHitExplosionEmitter(colour, circular, inversed, particleAmount) { Angle = Angle });
         }
 
         private class KiaiHitExplosionEmitter : CompositeDrawable
@@ -73,14 +76,16 @@ namespace osu.Game.Rulesets.Tau.UI
             public override bool RemoveWhenNotAlive => true;
             private readonly List<Drawable> particles;
             private readonly bool circular;
+            private readonly bool inversed;
             private readonly Color4 colour;
             private readonly int particleAmount;
             public float Angle;
 
-            public KiaiHitExplosionEmitter(Color4 colour, bool circular, int particleAmount)
+            public KiaiHitExplosionEmitter(Color4 colour, bool circular, bool inversed, int particleAmount)
             {
                 this.colour = colour;
                 this.circular = circular;
+                this.inversed = inversed;
                 this.particleAmount = particleAmount;
                 particles = new List<Drawable>();
 
@@ -92,47 +97,46 @@ namespace osu.Game.Rulesets.Tau.UI
             private void load(ISkinSource skin)
             {
                 var rng = new Random();
-                Texture kiai;
-                Texture kiaiBig;
-
-                if ((kiai = skin.GetTexture("kiai")) == null)
-                    kiai = Texture.WhitePixel;
-
-                if ((kiaiBig = skin.GetTexture("kiai-big")) == null)
-                    kiaiBig = Texture.WhitePixel;
+                var kiai = skin.GetTexture("kiai");
+                var kiaiBig = skin.GetTexture("kiai-big");
 
                 if (circular)
                 {
                     for (int i = 0; i < particleAmount; i++)
                     {
-                        particles.Add(new Sprite
+                        particles.Add((kiaiBig != null ? new Sprite() : new Triangle()).With(d =>
                         {
-                            RelativePositionAxes = Axes.Both,
-                            Position = Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 0.15f) + 0.5f, (float)rng.NextDouble() * 360f),
-                            Rotation = (float)rng.NextDouble() * 360f,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.BottomCentre,
-                            Size = new Vector2(rng.Next(1, 15)),
-                            Colour = colour,
-                            Texture = kiaiBig
-                        });
+                            d.RelativePositionAxes = Axes.Both;
+
+                            d.Position = Extensions.GetCircularPosition(inversed ? (((float)(rng.NextDouble() * 0.15f) * 0.15f) + 0.5f) : ((float)(rng.NextDouble() * 0.15f) * 0.15f) + 0.5f,
+                                (float)rng.NextDouble() * 360f);
+
+                            d.Rotation = (float)rng.NextDouble() * 360f;
+                            d.Anchor = Anchor.Centre;
+                            d.Origin = Anchor.BottomCentre;
+                            d.Size = new Vector2(rng.Next(5, 15));
+                            d.Colour = colour;
+                            d.Alpha = RNG.NextSingle(0.25f, 1f);
+                            d.Texture = kiaiBig ?? Texture.WhitePixel;
+                        }));
                     }
                 }
                 else
                 {
                     for (int i = 0; i < particleAmount; i++)
                     {
-                        particles.Add(new Sprite
+                        particles.Add((kiai != null ? new Sprite() : new Triangle()).With(d =>
                         {
-                            RelativePositionAxes = Axes.Both,
-                            Position = Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 0.15f, ((float)rng.NextDouble() / 10 * 10) + (Angle - 20)),
-                            Rotation = (float)rng.NextDouble() * 360f,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.BottomCentre,
-                            Size = new Vector2(rng.Next(1, 15)),
-                            Colour = colour,
-                            Texture = kiai
-                        });
+                            d.RelativePositionAxes = Axes.Both;
+                            d.Position = Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 0.15f, ((float)rng.NextDouble() / 10 * 10) + (Angle - 20));
+                            d.Rotation = (float)rng.NextDouble() * 360f;
+                            d.Anchor = Anchor.Centre;
+                            d.Origin = Anchor.BottomCentre;
+                            d.Size = new Vector2(rng.Next(5, 15));
+                            d.Colour = colour;
+                            d.Alpha = RNG.NextSingle(0.25f, 1f);
+                            d.Texture = kiai ?? Texture.WhitePixel;
+                        }));
                     }
                 }
 
@@ -150,16 +154,23 @@ namespace osu.Game.Rulesets.Tau.UI
 
                     if (circular)
                     {
-                        particle.MoveTo(Extensions.GetCircularPosition(((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f, Vector2.Zero.GetDegreesFromPosition(particle.Position)), duration,
-                                     Easing.OutQuint)
-                                .ScaleTo(new Vector2(rng.Next(1, 2)), duration, Easing.OutQuint)
-                                .FadeOut(duration, Easing.OutQuint);
+                        particle
+                           .RotateTo(RNG.NextSingle(-720, 720), duration)
+                           .MoveTo(
+                                Extensions.GetCircularPosition(inversed ? ((float)(rng.NextDouble() * 0.15f) * -2f) + 0.5f : ((float)(rng.NextDouble() * 0.15f) * 2f) + 0.5f,
+                                    Vector2.Zero.GetDegreesFromPosition(particle.Position)), duration,
+                                Easing.OutQuint)
+                           .ScaleTo(new Vector2(rng.Next(1, 2)), duration, Easing.OutQuint)
+                           .FadeOut(duration, Easing.OutQuint);
                     }
                     else
                     {
-                        particle.MoveTo(Extensions.GetCircularPosition((float)(rng.NextDouble() * 0.15f) * 1f, randomBetween(Angle - 40, Angle + 40)), duration, Easing.OutQuint)
-                                .ResizeTo(new Vector2(rng.Next(0, 5)), duration, Easing.OutQuint)
-                                .FadeOut(duration, Easing.OutQuint);
+                        particle
+                           .RotateTo(RNG.NextSingle(-720, 720), duration)
+                           .MoveTo(Extensions.GetCircularPosition(inversed ? (float)(rng.NextDouble() * 0.15f) * -1f : (float)(rng.NextDouble() * 0.15f) * 1f, randomBetween(Angle - 40, Angle + 40)),
+                                duration, Easing.OutQuint)
+                           .ResizeTo(new Vector2(rng.Next(0, 5)), duration, Easing.OutQuint)
+                           .FadeOut(duration, Easing.OutQuint);
 
                         float randomBetween(float smallNumber, float bigNumber)
                         {

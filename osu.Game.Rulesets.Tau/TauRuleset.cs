@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
+using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -24,6 +25,7 @@ using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.Skinning.Legacy;
+using osu.Game.Rulesets.Tau.Statistics;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
@@ -68,8 +70,9 @@ namespace osu.Game.Rulesets.Tau
                         new TauModHardRock(),
                         new TauModSuddenDeath(),
                         new MultiMod(new TauModDoubleTime(), new TauModNightcore()),
-                        new TauModHidden(),
+                        new MultiMod(new TauModHidden(), new TauModFadeIn()),
                         new MultiMod(new TauModFlashlight(), new TauModBlinds()),
+                        new TauModInverse()
                     };
 
                 case ModType.Automation:
@@ -83,6 +86,7 @@ namespace osu.Game.Rulesets.Tau
                     return new Mod[]
                     {
                         new TauModDifficultyAdjust(),
+                        new TauModLite()
                     };
 
                 case ModType.Fun:
@@ -98,7 +102,7 @@ namespace osu.Game.Rulesets.Tau
 
         public override string ShortName => SHORT_NAME;
 
-        public override string PlayingVerb => "Hitting beats";
+        public override string PlayingVerb => "Slicing beats";
 
         public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
 
@@ -112,7 +116,8 @@ namespace osu.Game.Rulesets.Tau
             new KeyBinding(InputKey.X, TauAction.RightButton),
             new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
             new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
-            new KeyBinding(InputKey.Space, TauAction.HardButton),
+            new KeyBinding(InputKey.Space, TauAction.HardButton1),
+            new KeyBinding(InputKey.LShift, TauAction.HardButton2),
         };
 
         public override StatisticRow[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
@@ -126,6 +131,17 @@ namespace osu.Game.Rulesets.Tau
                         RelativeSizeAxes = Axes.X,
                         Height = 250
                     }),
+                }
+            },
+            new StatisticRow
+            {
+                Columns = new[]
+                {
+                    new StatisticItem("Paddle Distribution", new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 250,
+                    })
                 }
             },
             new StatisticRow
@@ -148,7 +164,7 @@ namespace osu.Game.Rulesets.Tau
 
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
 
-        public override ISkin CreateLegacySkinProvider(ISkinSource source, IBeatmap beatmap) => new TauLegacySkinTransformer(source);
+        public override ISkin CreateLegacySkinProvider(ISkin source, IBeatmap beatmap) => new TauLegacySkinTransformer(source);
 
         protected override IEnumerable<HitResult> GetValidHitResults()
         {
@@ -163,6 +179,7 @@ namespace osu.Game.Rulesets.Tau
         private class TauIcon : CompositeDrawable
         {
             private readonly Ruleset ruleset;
+
             public TauIcon(Ruleset ruleset)
             {
                 this.ruleset = ruleset;
@@ -170,10 +187,20 @@ namespace osu.Game.Rulesets.Tau
             }
 
             [BackgroundDependencyLoader]
-            private void load(TextureStore textures, GameHost host)
+            private void load(TextureStore textures, FontStore store, GameHost host)
             {
                 if (!textures.GetAvailableResources().Contains("Textures/tau.png"))
                     textures.AddStore(host.CreateTextureLoaderStore(ruleset.CreateResourceStore()));
+
+                // Note to new ruleset creators:
+                // This is definitely something you should try to avoid.
+                // Typically resources would only be loaded inside of gameplay, NOT anywhere else.
+                // Until the osu! team figures out a safe way for you to use resources out of the gameplay area (e.g mods icon),
+                // Please try to avoid this at all costs.
+                store.AddStore(new GlyphStore(
+                    new ResourceStore<byte[]>(ruleset.CreateResourceStore()),
+                    "Fonts/tauFont",
+                    host.CreateTextureLoaderStore(ruleset.CreateResourceStore())));
 
                 AddRangeInternal(new Drawable[]
                 {

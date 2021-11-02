@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override ModType Type => ModType.DifficultyReduction;
         public override string Description => @"Hold beat will automatically be completed.";
         public override double ScoreMultiplier => 0.9;
-        public override bool Ranked => true;
+
+        public override bool HasImplementation => false;
         public override Type[] IncompatibleMods => new[] { typeof(ModAutoplay) };
     }
 }

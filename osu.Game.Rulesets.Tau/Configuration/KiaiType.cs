@@ -4,5 +4,6 @@
     {
         Turbulent,
         Classic,
+        Disabled
     }
 }
