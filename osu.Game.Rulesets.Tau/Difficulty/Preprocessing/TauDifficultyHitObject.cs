@@ -84,7 +84,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
             slider.EndPosition = Extensions.GetCircularPosition(30, slider.Nodes.Last().Angle);
 
-            float approxFollowRadius = (float)BeatmapDifficulty.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
+            float approxFollowRadius = (float)IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
 
             var computeVertex = new Action<double>(t =>
             {

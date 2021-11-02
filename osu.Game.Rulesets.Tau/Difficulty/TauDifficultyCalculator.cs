@@ -1,6 +1,5 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty;
-using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Tau.Difficulty;
@@ -10,9 +9,7 @@ using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Scoring;
-
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Tau
@@ -20,7 +17,11 @@ namespace osu.Game.Rulesets.Tau
     public class TauDifficultyCalculator : DifficultyCalculator
     {
         private const double difficulty_multiplier = 0.0675;
-        public TauDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap) : base(ruleset, beatmap) { }
+
+        public TauDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap)
+            : base(ruleset, beatmap)
+        {
+        }
 
         protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
         {
@@ -30,7 +31,7 @@ namespace osu.Game.Rulesets.Tau
             double aimRating = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
             double speedRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double starRating = aimRating + speedRating + (Math.Abs(aimRating - speedRating) / 2);
-            
+
             // Uncomment to see aimrating vs speedrating of a map: if aim rating is 3.5 and speed rating is 2.6 then sr will be 352.6
             // starRating = Math.Round(aimRating,1)*100 + Math.Round(speedRating,1);
 
@@ -39,7 +40,7 @@ namespace osu.Game.Rulesets.Tau
 
             // Todo: These int casts are temporary to achieve 1:1 results with osu!stable, and should be removed in the future
             double hitWindowGreat = (int)(hitWindows.WindowFor(HitResult.Great)) / clockRate;
-            double preempt = (int)BeatmapDifficulty.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / clockRate;
+            double preempt = (int)IBeatmapDifficultyInfo.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / clockRate;
 
             int maxCombo = beatmap.HitObjects.Count;
 
@@ -75,11 +76,12 @@ namespace osu.Game.Rulesets.Tau
             }
         }
 
-        protected override Skill[] CreateSkills(IBeatmap beatmap) => new Skill[]
+        protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
-            new Aim(),
-            new Speed()
+            new Aim(mods),
+            new Speed(mods)
         };
+
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]
         {
             new TauModDoubleTime(),
