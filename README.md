@@ -1,4 +1,4 @@
-[![tau](https://alten.s-ul.eu/rdXkomwh.png)](https://github.com/Altenhh/tau "tau")
+[![tau](https://alten.s-ul.eu/pRr7vj6C.png)](https://github.com/Altenhh/tau "tau")
 <div align="center">
 
 [![release](https://img.shields.io/github/v/release/naoei/tau?style=flat-square)](https://github.com/Altenhh/tau/releases)
@@ -12,6 +12,8 @@
 </div>
 
 [Original](https://deadlysprinklez.itch.io/tau) idea belonging to *pizzapip* and *[DeadlySprinklez](https://github.com/DeadlySprinklez)*.
+
+[Art](https://github.com/taulazer/tau/wiki/Mascot) done by [Izeunne](https://www.fiverr.com/izeunne)
 
 ## Running the Gamemode
 We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users looking to play the mode without creating a development environment. All releases will work on all operating systems that *osu!* supports.
