@@ -15,24 +15,6 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             Children = new Drawable[]
             {
-                // new CircularProgress
-                // {
-                //     RelativeSizeAxes = Axes.Both,
-                //     Anchor = Anchor.Centre,
-                //     Origin = Anchor.Centre,
-                //     Current = new BindableDouble(.33f),
-                //     InnerRadius = 0.1f,
-                //     Rotation = -150
-                // },
-                // new CircularProgress
-                // {
-                //     RelativeSizeAxes = Axes.Both,
-                //     Anchor = Anchor.Centre,
-                //     Origin = Anchor.Centre,
-                //     Current = new BindableDouble(.33f),
-                //     InnerRadius = 0.1f,
-                //     Rotation = 30
-                // },
                 new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Cursor), _ => new CursorPiece(), ConfineMode.ScaleToFit)
             };
         }
