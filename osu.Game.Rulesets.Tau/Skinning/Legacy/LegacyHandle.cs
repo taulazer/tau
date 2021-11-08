@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
                     Origin = Anchor.Centre,
                     FillMode = FillMode.Fit,
                     RelativeSizeAxes = Axes.Both,
-                    Texture = skin.GetTexture("handle-line")
+                    Texture = skin.GetTexture($"{TauRuleset.SHORT_NAME}-handle-line")
                 },
                 handle = new Sprite
                 {
@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     FillMode = FillMode.Fit,
-                    Texture = skin.GetTexture("handle")
+                    Texture = skin.GetTexture($"{TauRuleset.SHORT_NAME}-handle")
                 }
             };
         }

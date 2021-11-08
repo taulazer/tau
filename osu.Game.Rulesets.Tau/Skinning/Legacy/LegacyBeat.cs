@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
         [BackgroundDependencyLoader]
         private void load(ISkinSource skin)
         {
-            Texture = skin.GetTexture("beat");
+            Texture = skin.GetTexture($"{TauRuleset.SHORT_NAME}-beat");
         }
     }
 }
