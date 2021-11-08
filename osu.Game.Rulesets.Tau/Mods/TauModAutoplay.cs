@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using osu.Game.Beatmaps;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Scoring;
-using osu.Game.Users;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
@@ -11,10 +11,7 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override Score CreateReplayScore(IBeatmap beatmap, IReadOnlyList<Mod> mods) => new Score
         {
-            ScoreInfo = new ScoreInfo
-            {
-                User = new User { Username = "tau" },
-            },
+            ScoreInfo = new ScoreInfo { User = new APIUser { Username = "Astraeus" }, },
             Replay = new TauAutoGenerator(beatmap).Generate(),
         };
     }
