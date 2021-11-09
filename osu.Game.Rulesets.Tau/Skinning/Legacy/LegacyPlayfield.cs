@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     FillMode = FillMode.Fit,
-                    Texture = skin.GetTexture("field-background")
+                    Texture = skin.GetTexture($"{TauRuleset.SHORT_NAME}-field-background")
                 },
                 new Sprite
                 {
@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     FillMode = FillMode.Fit,
-                    Texture = skin.GetTexture("ring-overlay")
+                    Texture = skin.GetTexture($"{TauRuleset.SHORT_NAME}-ring-overlay")
                 }
             });
 

@@ -50,7 +50,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Child = skin.GetAnimation("kiai" + (circular ? "-big" : string.Empty), true, false, true).With(a =>
+                    Child = skin.GetAnimation($"{TauRuleset.SHORT_NAME}-kiai" + (circular ? "-big" : string.Empty), true, false, true).With(a =>
                     {
                         a.FillMode = FillMode.Fit;
                         a.RelativeSizeAxes = Axes.Both;
@@ -97,8 +97,8 @@ namespace osu.Game.Rulesets.Tau.UI
             private void load(ISkinSource skin)
             {
                 var rng = new Random();
-                var kiai = skin.GetTexture("kiai");
-                var kiaiBig = skin.GetTexture("kiai-big");
+                var kiai = skin.GetTexture($"{TauRuleset.SHORT_NAME}-kiai");
+                var kiaiBig = skin.GetTexture($"{TauRuleset.SHORT_NAME}-kiai-big");
 
                 if (circular)
                 {

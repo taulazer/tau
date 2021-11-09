@@ -5,6 +5,7 @@
         Beat,
         Ring,
         HardBeat,
-        Handle
+        Handle,
+        Cursor
     }
 }

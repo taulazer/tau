@@ -16,22 +16,15 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
             if (!(component is TauSkinComponent tauComponent))
                 return null;
 
-            switch (tauComponent.Component)
+            return tauComponent.Component switch
             {
-                case TauSkinComponents.Beat:
-                    return Skin.GetTexture("beat") != null ? new LegacyBeat() : null;
-
-                case TauSkinComponents.HardBeat:
-                    return Skin.GetTexture("hard-beat") != null ? new LegacyHardBeat() : null;
-
-                case TauSkinComponents.Handle:
-                    return Skin.GetTexture("handle") != null ? new LegacyHandle() : null;
-
-                case TauSkinComponents.Ring:
-                    return Skin.GetTexture("ring-overlay") != null ? new LegacyPlayfield() : null;
-            }
-
-            return null;
+                TauSkinComponents.Beat => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-beat") != null ? new LegacyBeat() : null,
+                TauSkinComponents.HardBeat => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-hard-beat") != null ? new LegacyHardBeat() : null,
+                TauSkinComponents.Handle => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-handle") != null ? new LegacyHandle() : null,
+                TauSkinComponents.Ring => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-ring-overlay") != null ? new LegacyPlayfield() : null,
+                TauSkinComponents.Cursor => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-cursor") != null ? new LegacyCursor() : null,
+                _ => null
+            };
         }
 
         public override IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup)

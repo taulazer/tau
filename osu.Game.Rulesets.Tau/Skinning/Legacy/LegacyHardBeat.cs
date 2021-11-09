@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Texture = skin.GetTexture("hard-beat");
+            Texture = skin.GetTexture($"{TauRuleset.SHORT_NAME}-hard-beat");
         }
     }
 }
