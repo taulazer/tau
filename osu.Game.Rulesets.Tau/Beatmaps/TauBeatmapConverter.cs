@@ -19,6 +19,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         public bool CanConvertToSliders = true;
         public bool CanConvertToHardBeats = true;
+        public int SliderDivisionLevel = 4;
 
         public TauBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -38,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     if (!CanConvertToSliders)
                         goto default;
 
-                    if (pathData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
+                    if (pathData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / SliderDivisionLevel)
                         goto default;
 
                     var nodes = new List<SliderNode>();
