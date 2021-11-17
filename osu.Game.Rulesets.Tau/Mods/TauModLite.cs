@@ -24,9 +24,11 @@ namespace osu.Game.Rulesets.Tau.Mods
         public Bindable<bool> ToggleHardBeats { get; } = new Bindable<bool>(true);
 
         [SettingSource("Slider division level", "The minimum slider length divisor.")]
-        public BindableBeatDivisor SlidersDivisionLevel { get; } = new BindableBeatDivisor
+        public BindableInt SlidersDivisionLevel { get; } = new BindableInt
         {
-            Default = 2
+            Value = 2,
+            MinValue = 1,
+            MaxValue = 64
         };
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
