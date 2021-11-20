@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau
 {
     public class TauDifficultyCalculator : DifficultyCalculator
     {
-        public TauDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap)
+        public TauDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
             : base(ruleset, beatmap)
         {
         }

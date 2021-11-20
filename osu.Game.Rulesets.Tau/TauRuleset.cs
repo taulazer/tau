@@ -45,8 +45,8 @@ namespace osu.Game.Rulesets.Tau
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>
             new TauBeatmapConverter(beatmap, this);
 
-        public override DifficultyCalculator CreateDifficultyCalculator(WorkingBeatmap beatmap) =>
-            new TauDifficultyCalculator(this, beatmap);
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) =>
+            new TauDifficultyCalculator(RulesetInfo, beatmap);
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
