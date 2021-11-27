@@ -20,7 +20,6 @@ namespace osu.Game.Rulesets.Tau
             {
                 StarRating = beatmap.BeatmapInfo.StarRating,
                 Mods = mods,
-                Skills = skills,
                 MaxCombo = beatmap.HitObjects.Count,
             };
 
