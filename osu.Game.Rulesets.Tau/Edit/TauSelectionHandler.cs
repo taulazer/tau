@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Screens.Edit.Compose.Components;
 
 namespace osu.Game.Rulesets.Tau.Edit
