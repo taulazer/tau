@@ -65,7 +65,7 @@ namespace osu.Game.Rulesets.Tau
                     return new Mod[]
                     {
                         new TauModHardRock(),
-                        new TauModSuddenDeath(),
+                        new MultiMod(new TauModSuddenDeath(), new TauModPerfect()),
                         new MultiMod(new TauModDoubleTime(), new TauModNightcore()),
                         new MultiMod(new TauModHidden(), new TauModFadeIn()),
                         new MultiMod(new TauModFlashlight(), new TauModBlinds()),
