@@ -13,20 +13,18 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
 
         public override Drawable GetDrawableComponent(ISkinComponent component)
         {
-            if (component is TauSkinComponent tauComponent)
-            {
-                return tauComponent.Component switch
-                {
-                    TauSkinComponents.Beat => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-beat") != null ? new LegacyBeat() : null,
-                    TauSkinComponents.HardBeat => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-hard-beat") != null ? new LegacyHardBeat() : null,
-                    TauSkinComponents.Handle => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-handle") != null ? new LegacyHandle() : null,
-                    TauSkinComponents.Ring => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-ring-overlay") != null ? new LegacyPlayfield() : null,
-                    TauSkinComponents.Cursor => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-cursor") != null ? new LegacyCursor() : null,
-                    _ => null
-                };
-            }
+            if (!(component is TauSkinComponent tauComponent))
+                return base.GetDrawableComponent(component);
 
-            return base.GetDrawableComponent(component);
+            return tauComponent.Component switch
+            {
+                TauSkinComponents.Beat => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-beat") != null ? new LegacyBeat() : null,
+                TauSkinComponents.HardBeat => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-hard-beat") != null ? new LegacyHardBeat() : null,
+                TauSkinComponents.Handle => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-handle") != null ? new LegacyHandle() : null,
+                TauSkinComponents.Ring => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-ring-overlay") != null ? new LegacyPlayfield() : null,
+                TauSkinComponents.Cursor => Skin.GetTexture($"{TauRuleset.SHORT_NAME}-cursor") != null ? new LegacyCursor() : null,
+                _ => null
+            };
         }
 
         public override IBindable<TValue> GetConfig<TLookup, TValue>(TLookup lookup)
