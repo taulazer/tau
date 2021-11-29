@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Tau.Skinning.Legacy
         public override Drawable GetDrawableComponent(ISkinComponent component)
         {
             if (!(component is TauSkinComponent tauComponent))
-                return null;
+                return base.GetDrawableComponent(component);
 
             return tauComponent.Component switch
             {
