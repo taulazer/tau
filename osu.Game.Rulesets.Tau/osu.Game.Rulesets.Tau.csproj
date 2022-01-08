@@ -16,8 +16,4 @@
   <ItemGroup>
     <PackageReference Include="ppy.osu.Game" Version="2021.1113.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\Samples\Gameplay" />
-    <Folder Include="Resources\Textures" />
-  </ItemGroup>
 </Project>
