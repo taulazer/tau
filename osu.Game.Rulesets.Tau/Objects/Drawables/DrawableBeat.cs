@@ -1,6 +1,8 @@
-﻿using osu.Framework.Bindables;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
@@ -64,19 +66,35 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 ApplyResult(r => r.Type = HitResult.Perfect);
         }
 
+        [Resolved]
+        private OsuColour colour { get; set; }
+
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
-            const double duration = 500;
+            base.UpdateHitStateTransforms(state);
+
+            const double time_fade_hit = 250, time_fade_miss = 400;
 
             switch (state)
             {
                 case ArmedState.Hit:
-                    this.FadeOut(duration, Easing.OutQuint);
+                    DrawableBox.ScaleTo(2f, time_fade_hit, Easing.OutQuint)
+                               .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
+                               .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
+                               .FadeOut(time_fade_hit);
+
+                    this.Delay(time_fade_hit).Expire();
+
                     break;
 
                 case ArmedState.Miss:
-                    this.FadeColour(Color4.Red, duration);
-                    this.FadeOut(duration, Easing.OutQuint);
+                    DrawableBox.ScaleTo(0.5f, time_fade_miss, Easing.InQuint)
+                               .FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
+                               .MoveToOffset(new Vector2(0, -.1f), time_fade_hit, Easing.OutQuint)
+                               .FadeOut(time_fade_miss);
+
+                    this.Delay(time_fade_miss).Expire();
+
                     break;
             }
         }
