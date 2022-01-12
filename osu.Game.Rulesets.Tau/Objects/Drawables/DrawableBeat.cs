@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 RelativePositionAxes = Axes.Both,
                 Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
+                Origin = Anchor.TopCentre,
                 Alpha = 0,
                 AlwaysPresent = true,
                 Size = new Vector2(16),
