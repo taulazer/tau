@@ -16,6 +16,8 @@ namespace osu.Game.Rulesets.Tau.UI
         public static readonly Vector2 BASE_SIZE = new Vector2(768);
         public static readonly Bindable<Color4> ACCENT_COLOUR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
 
+        protected override GameplayCursorContainer CreateCursor() => new TauCursor();
+
         [BackgroundDependencyLoader]
         private void load()
         {

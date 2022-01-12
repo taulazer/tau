@@ -10,6 +10,15 @@ namespace osu.Game.Rulesets.Tau
                 -(distance * MathF.Cos((angle + 90f) * (MathF.PI / 180))),
                 -(distance * MathF.Sin((angle + 90f) * (MathF.PI / 180))));
 
+        public static float GetDegreesFromPosition(this Vector2 a, Vector2 b)
+        {
+            Vector2 direction = b - a;
+            float angle = MathHelper.RadiansToDegrees(MathF.Atan2(direction.Y, direction.X));
+            if (angle < 0f) angle += 360f;
+
+            return angle + 90;
+        }
+
         public static float GetHitObjectAngle(this Vector2 target)
         {
             var offset = new Vector2(256, 192) - target;
