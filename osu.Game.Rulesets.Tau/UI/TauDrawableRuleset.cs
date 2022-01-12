@@ -18,6 +18,9 @@ namespace osu.Game.Rulesets.Tau.UI
         {
         }
 
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            => new TauDependencyContainer(Beatmap, parent);
+
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h)
             => h switch
             {
