@@ -18,6 +18,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override GameplayCursorContainer CreateCursor() => new TauCursor();
 
+        public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
+
         [BackgroundDependencyLoader]
         private void load()
         {
