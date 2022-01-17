@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -9,7 +8,6 @@ using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osuTK;
 using osuTK.Graphics;
@@ -71,33 +69,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
         }
 
-        protected override void CheckForResult(bool userTriggered, double timeOffset)
-        {
-            Debug.Assert(HitObject.HitWindows != null);
-
-            if (CheckValidation == null)
-                return;
-
-            if (!userTriggered)
-            {
-                if (!HitObject.HitWindows.CanBeHit(timeOffset))
-                    ApplyResult(r => r.Type = HitResult.Miss);
-
-                return;
-            }
-
-            var validated = CheckValidation(HitObject);
-
-            if (!validated.IsValid)
-                return;
-
-            var result = HitObject.HitWindows.ResultFor(timeOffset);
-
-            if (result == HitResult.None)
-                return;
-
-            ApplyResult(r => r.Type = result);
-        }
+        protected override bool CheckForValidation() =>
+            CheckValidation != null && CheckValidation(HitObject).IsValid;
 
         public bool OnPressed(KeyBindingPressEvent<TauAction> e)
         {
