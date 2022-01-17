@@ -17,8 +17,8 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        public static readonly Vector2 BASE_SIZE = new Vector2(768);
-        public static readonly Bindable<Color4> ACCENT_COLOUR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
+        public static readonly Vector2 BASE_SIZE = new(768);
+        public static readonly Bindable<Color4> ACCENT_COLOUR = new(Color4Extensions.FromHex(@"FF0040"));
 
         protected override GameplayCursorContainer CreateCursor() => new TauCursor();
         public new TauCursor Cursor => base.Cursor as TauCursor;
@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private class PlayfieldPiece : CompositeDrawable
         {
-            private readonly Bindable<float> playfieldDimLevel = new Bindable<float>(0.8f);
+            private readonly Bindable<float> playfieldDimLevel = new(0.8f);
 
             public PlayfieldPiece()
             {

@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
         }
 
         private CircularProgress createProgress(float rotation)
-            => new CircularProgress
+            => new()
             {
                 RelativeSizeAxes = Axes.Both,
                 Anchor = Anchor.Centre,

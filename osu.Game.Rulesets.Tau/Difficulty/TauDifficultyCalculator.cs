@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         {
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate) => new DifficultyAttributes
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate) => new()
         {
             StarRating = beatmap.BeatmapInfo.StarRating,
             Mods = mods,

@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Tau.UI
 {
     public class TauDependencyContainer : DependencyContainer
     {
-        public TauCachedProperties CachedProperties { get; } = new TauCachedProperties();
+        public TauCachedProperties CachedProperties { get; } = new();
         public IBeatmapDifficultyInfo DifficultyInfo { get; }
 
         public TauDependencyContainer(IBeatmap beatmap, IReadOnlyDependencyContainer parent)
@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
     public class TauCachedProperties
     {
-        public readonly BindableDouble AngleRange = new BindableDouble();
+        public readonly BindableDouble AngleRange = new();
 
         public void SetRange(float cs)
         {

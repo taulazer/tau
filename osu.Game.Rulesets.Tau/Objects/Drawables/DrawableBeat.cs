@@ -44,7 +44,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             angleBindable.BindValueChanged(r => Rotation = r.NewValue);
         }
 
-        private readonly BindableFloat angleBindable = new BindableFloat();
+        private readonly BindableFloat angleBindable = new();
 
         protected override void OnApply()
         {

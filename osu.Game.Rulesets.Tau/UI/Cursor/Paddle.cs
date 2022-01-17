@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 angleRange.BindTo(props.AngleRange);
         }
 
-        private readonly BindableDouble angleRange = new BindableDouble(75);
+        private readonly BindableDouble angleRange = new(75);
 
         protected override void PopIn()
         {
