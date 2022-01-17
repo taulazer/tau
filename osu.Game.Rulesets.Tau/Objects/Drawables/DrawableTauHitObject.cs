@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics;
+using System.Linq;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>
+    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
         where T : TauHitObject
     {
         protected new T HitObject => (T)base.HitObject;
@@ -17,7 +20,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// <summary>
         /// A list of <see cref="TauAction"/>s that denotes which keys can trigger this Hit object.
         /// </summary>
-        protected virtual TauAction[] Actions { get; set; } =
+        protected virtual TauAction[] Actions { get; } =
         {
             TauAction.LeftButton,
             TauAction.RightButton
@@ -49,6 +52,18 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         protected virtual bool CheckForValidation() => true;
+
+        public bool OnPressed(KeyBindingPressEvent<TauAction> e)
+        {
+            if (Judged)
+                return false;
+
+            return Actions.Contains(e.Action) && UpdateResult(true);
+        }
+
+        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
+        {
+        }
     }
 
     public struct ValidationResult

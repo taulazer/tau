@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Input.Bindings;
-using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
@@ -14,7 +11,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableBeat : DrawableTauHitObject<Beat>, IKeyBindingHandler<TauAction>
+    public class DrawableBeat : DrawableTauHitObject<Beat>
     {
         public Drawable DrawableBox;
 
@@ -71,18 +68,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override bool CheckForValidation() =>
             CheckValidation != null && CheckValidation(HitObject).IsValid;
-
-        public bool OnPressed(KeyBindingPressEvent<TauAction> e)
-        {
-            if (Judged)
-                return false;
-
-            return Actions.Contains(e.Action) && UpdateResult(true);
-        }
-
-        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
-        {
-        }
 
         [Resolved]
         private OsuColour colour { get; set; }
