@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
@@ -19,6 +20,16 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         protected override IEnumerable<TauHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken)
         {
+            bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
+
+            if (isHard)
+                yield return convertToHardBeat(original);
+            else
+                yield return convertToBeat(original);
+        }
+
+        private static TauHitObject convertToBeat(HitObject original)
+        {
             float angle = original switch
             {
                 IHasPosition pos => pos.Position.GetHitObjectAngle(),
@@ -27,13 +38,19 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 _ => 0
             };
 
-            yield return new Beat
+            return new Beat
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
                 Angle = angle
             };
         }
+
+        private static TauHitObject convertToHardBeat(HitObject original) =>
+            new HardBeat
+            {
+                Samples = original.Samples,
+                StartTime = original.StartTime,
+            };
     }
 }
-

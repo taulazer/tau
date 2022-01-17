@@ -24,7 +24,8 @@ namespace osu.Game.Rulesets.Tau.UI
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h)
             => h switch
             {
-                Beat beat => new DrawableBeat(beat),
+                Beat b => new DrawableBeat(b),
+                HardBeat hb => new DrawableHardBeat(hb),
                 _ => null
             };
 
