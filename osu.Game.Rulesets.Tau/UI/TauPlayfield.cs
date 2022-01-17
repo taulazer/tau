@@ -1,9 +1,13 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osuTK;
 using osuTK.Graphics;
@@ -17,6 +21,10 @@ namespace osu.Game.Rulesets.Tau.UI
         public static readonly Bindable<Color4> ACCENT_COLOUR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
 
         protected override GameplayCursorContainer CreateCursor() => new TauCursor();
+        public new TauCursor Cursor => base.Cursor as TauCursor;
+
+        [Resolved]
+        private TauCachedProperties tauCachedProperties { get; set; }
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
@@ -33,6 +41,23 @@ namespace osu.Game.Rulesets.Tau.UI
                 new PlayfieldPiece(),
                 HitObjectContainer
             });
+        }
+
+        protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
+        {
+            base.OnNewDrawableHitObject(drawableHitObject);
+
+            if (drawableHitObject is DrawableBeat b)
+            {
+                b.CheckValidation = checkPaddlePosition;
+            }
+        }
+
+        private ValidationResult checkPaddlePosition(Beat tauHitObject)
+        {
+            var angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, tauHitObject.Angle);
+
+            return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
         }
 
         private class PlayfieldPiece : CompositeDrawable

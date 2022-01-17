@@ -10,6 +10,9 @@ namespace osu.Game.Rulesets.Tau
                 -(distance * MathF.Cos((angle + 90f) * (MathF.PI / 180))),
                 -(distance * MathF.Sin((angle + 90f) * (MathF.PI / 180))));
 
+        public static float GetDeltaAngle(float a, float b)
+            => ((a - b) + 180) % 360 - 180;
+
         public static float GetDegreesFromPosition(this Vector2 a, Vector2 b)
         {
             Vector2 direction = b - a;

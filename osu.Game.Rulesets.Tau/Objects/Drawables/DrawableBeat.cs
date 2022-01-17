@@ -1,7 +1,12 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -11,9 +16,15 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableBeat : DrawableTauHitObject<Beat>
+    public class DrawableBeat : DrawableTauHitObject<Beat>, IKeyBindingHandler<TauAction>
     {
         public Drawable DrawableBox;
+
+        /// <summary>
+        /// Check to see whether or not this Hit object is in the paddle's range.
+        /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
+        /// </summary>
+        public Func<Beat, ValidationResult> CheckValidation;
 
         public DrawableBeat(Beat hitObject)
             : base(hitObject)
@@ -62,8 +73,42 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            if (timeOffset >= 0)
-                ApplyResult(r => r.Type = HitResult.Perfect);
+            Debug.Assert(HitObject.HitWindows != null);
+
+            if (CheckValidation == null)
+                return;
+
+            if (!userTriggered)
+            {
+                if (!HitObject.HitWindows.CanBeHit(timeOffset))
+                    ApplyResult(r => r.Type = HitResult.Miss);
+
+                return;
+            }
+
+            var validated = CheckValidation(HitObject);
+
+            if (!validated.IsValid)
+                return;
+
+            var result = HitObject.HitWindows.ResultFor(timeOffset);
+
+            if (result == HitResult.None)
+                return;
+
+            ApplyResult(r => r.Type = result);
+        }
+
+        public bool OnPressed(KeyBindingPressEvent<TauAction> e)
+        {
+            if (Judged)
+                return false;
+
+            return Actions.Contains(e.Action) && UpdateResult(true);
+        }
+
+        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
+        {
         }
 
         [Resolved]
