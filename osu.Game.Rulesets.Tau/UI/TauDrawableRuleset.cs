@@ -26,6 +26,7 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 Beat b => new DrawableBeat(b),
                 HardBeat hb => new DrawableHardBeat(hb),
+                Slider s => new DrawableSlider(s),
                 _ => null
             };
 

@@ -6,7 +6,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osuTK;
@@ -47,15 +46,21 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             base.OnNewDrawableHitObject(drawableHitObject);
 
-            if (drawableHitObject is DrawableBeat b)
+            switch (drawableHitObject)
             {
-                b.CheckValidation = checkPaddlePosition;
+                case DrawableBeat b:
+                    b.CheckValidation = beat => checkPaddlePosition(beat.Angle);
+                    break;
+
+                case DrawableSlider s:
+                    s.CheckValidation = checkPaddlePosition;
+                    break;
             }
         }
 
-        private ValidationResult checkPaddlePosition(Beat tauHitObject)
+        private ValidationResult checkPaddlePosition(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, tauHitObject.Angle);
+            var angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
 
             return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
         }

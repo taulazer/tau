@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
@@ -51,7 +52,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         public int RepeatCount { get; set; }
         public IList<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();
 
-        public struct SliderNode
+        public struct SliderNode : IComparable<SliderNode>
         {
             public float Time { get; }
 
@@ -62,6 +63,8 @@ namespace osu.Game.Rulesets.Tau.Objects
                 Time = time;
                 Angle = angle;
             }
+
+            public int CompareTo(SliderNode other) => Time.CompareTo(other.Time);
         }
     }
 }
