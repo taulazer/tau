@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
     public class TauCachedProperties
     {
-        public readonly BindableDouble AngleRange = new();
+        public readonly BindableDouble AngleRange = new(25);
 
         public void SetRange(float cs)
         {

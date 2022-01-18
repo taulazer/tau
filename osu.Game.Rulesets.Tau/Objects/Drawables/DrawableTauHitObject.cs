@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
         where T : TauHitObject
     {
-        protected new T HitObject => (T)base.HitObject;
+        public new T HitObject => (T)base.HitObject;
 
         public DrawableTauHitObject(T obj)
             : base(obj)
