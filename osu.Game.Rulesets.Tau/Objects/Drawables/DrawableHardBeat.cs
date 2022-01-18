@@ -16,6 +16,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.HardButton2
         };
 
+        public DrawableHardBeat()
+            : this(null)
+        {
+        }
+
         public DrawableHardBeat(HardBeat obj)
             : base(obj)
         {

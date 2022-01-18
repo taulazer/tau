@@ -21,6 +21,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// </summary>
         public Func<Beat, ValidationResult> CheckValidation;
 
+        public DrawableBeat()
+            : this(null)
+        {
+        }
+
         public DrawableBeat(Beat hitObject)
             : base(hitObject)
         {
@@ -34,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 RelativePositionAxes = Axes.Both,
                 Anchor = Anchor.Centre,
-                Origin = Anchor.TopCentre,
+                Origin = Anchor.Centre,
                 Alpha = 0,
                 AlwaysPresent = true,
                 Size = new Vector2(16),

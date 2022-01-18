@@ -2,6 +2,10 @@
 {
     public class DrawableSliderHead : DrawableBeat
     {
+        public DrawableSliderHead()
+        {
+        }
+
         public DrawableSliderHead(Beat hitObject)
             : base(hitObject)
         {

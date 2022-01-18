@@ -28,6 +28,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Cached drawCache = new();
 
+        public DrawableSlider()
+            : this(null)
+        {
+        }
+
         public DrawableSlider(Slider obj)
             : base(obj)
         {
@@ -95,6 +100,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         private double totalTimeHeld;
+
+        protected override void OnApply()
+        {
+            base.OnApply();
+            totalTimeHeld = 0;
+        }
 
         protected override void Update()
         {

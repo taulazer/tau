@@ -12,7 +12,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     {
         public new T HitObject => (T)base.HitObject;
 
-        public DrawableTauHitObject(T obj)
+        protected DrawableTauHitObject()
+            : base(null)
+        {
+        }
+
+        protected DrawableTauHitObject(T obj)
             : base(obj)
         {
         }

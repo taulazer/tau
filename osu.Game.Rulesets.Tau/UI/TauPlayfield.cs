@@ -12,6 +12,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.UI;
@@ -68,6 +69,12 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             if (props != null)
                 tauCachedProperties = props;
+
+            RegisterPool<Beat, DrawableBeat>(10);
+            RegisterPool<HardBeat, DrawableHardBeat>(5);
+
+            RegisterPool<Slider, DrawableSlider>(5);
+            RegisterPool<SliderHeadBeat, DrawableSliderHead>(5);
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
