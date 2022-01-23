@@ -154,7 +154,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     {
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.Black,
-                        Alpha = 0,
+                        Alpha = playfieldDimLevel.Default,
                         AlwaysPresent = true
                     }
                 });
