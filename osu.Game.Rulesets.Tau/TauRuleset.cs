@@ -11,6 +11,7 @@ using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Rulesets.Tau.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Difficulty;
+using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
@@ -25,7 +26,19 @@ namespace osu.Game.Rulesets.Tau
         public override string ShortName => SHORT_NAME;
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
-            => ArraySegment<Mod>.Empty;
+        {
+            switch (type)
+            {
+                case ModType.Automation:
+                    return new Mod[]
+                    {
+                        new TauModAutoplay()
+                    };
+
+                default:
+                    return ArraySegment<Mod>.Empty;
+            }
+        }
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             => new TauDrawableRuleset(this, beatmap, mods);
