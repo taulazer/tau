@@ -1,7 +1,9 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Scoring;
 
 namespace osu.Game.Rulesets.Tau.Objects
@@ -12,6 +14,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         public double TimeFadeIn = 100;
 
         protected override HitWindows CreateHitWindows() => new TauHitWindow();
+        public override Judgement CreateJudgement() => new TauJudgement();
 
         protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
         {
