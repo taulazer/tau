@@ -12,6 +12,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
@@ -136,11 +137,11 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private class PlayfieldPiece : CompositeDrawable
         {
-            private readonly Bindable<float> playfieldDimLevel = new(0.8f);
+            private readonly Box background;
+            private readonly Bindable<float> playfieldDimLevel = new(0.7f);
 
             public PlayfieldPiece()
             {
-                Box background;
                 RelativeSizeAxes = Axes.Both;
 
                 AddInternal(new CircularContainer
@@ -153,11 +154,18 @@ namespace osu.Game.Rulesets.Tau.UI
                     {
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.Black,
-                        Alpha = playfieldDimLevel.Value,
+                        Alpha = 0,
                         AlwaysPresent = true
                     }
                 });
+            }
 
+            [Resolved(canBeNull: true)]
+            private TauRulesetConfigManager config { get; set; }
+
+            protected override void LoadComplete()
+            {
+                config?.BindWith(TauRulesetSettings.PlayfieldDim, playfieldDimLevel);
                 playfieldDimLevel.BindValueChanged(v => { background.FadeTo(v.NewValue, 100); }, true);
             }
         }
