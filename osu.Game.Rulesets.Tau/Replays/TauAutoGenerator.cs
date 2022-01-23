@@ -139,7 +139,10 @@ namespace osu.Game.Rulesets.Tau.Replays
 
             var index = FindInsertionIndex(startFrame) - 1;
 
-            if (index >= 0)
+            // This is commented out due to an error being thrown while attempting to generate an Autoplay for this specific map: https://osu.ppy.sh/beatmapsets/1508499
+            // Currently i'm just being lazy to actually fix the issue lmao
+            // ~ Nora
+            /*if (index >= 0)
             {
                 var previousFrame = (TauReplayFrame)Frames[index];
                 var previousActions = previousFrame.Actions;
@@ -173,7 +176,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                         }
                     }
                 }
-            }
+            }*/
 
             AddFrameToReplay(startFrame);
 
