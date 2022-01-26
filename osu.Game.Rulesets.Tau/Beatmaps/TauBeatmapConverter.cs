@@ -92,9 +92,10 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             return new Slider
             {
-                Samples = data.NodeSamples[0],
+                Samples = original.Samples,
                 StartTime = original.StartTime,
                 NodeSamples = data.NodeSamples,
+                RepeatCount = data.RepeatCount,
                 Nodes = new BindableList<Slider.SliderNode>(nodes),
             };
         }

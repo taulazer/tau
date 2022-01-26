@@ -76,6 +76,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             RegisterPool<Slider, DrawableSlider>(5);
             RegisterPool<SliderHeadBeat, DrawableSliderHead>(5);
+            RegisterPool<SliderRepeat, DrawableSliderRepeat>(5);
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)

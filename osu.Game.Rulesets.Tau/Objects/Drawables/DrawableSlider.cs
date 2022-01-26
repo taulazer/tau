@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -25,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public Func<float, ValidationResult> CheckValidation;
 
         private readonly Path path;
-        private readonly Container<DrawableSliderHead> headContainer;
+        private readonly Container headContainer;
         private readonly Cached drawCache = new();
 
         public DrawableSlider()
@@ -64,7 +65,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         },
                     }
                 },
-                headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
+                headContainer = new Container { RelativeSizeAxes = Axes.Both },
             });
         }
 
@@ -72,16 +73,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.AddNestedHitObject(hitObject);
 
-            headContainer.Child = hitObject switch
-            {
-                DrawableSliderHead head => head,
-                _ => headContainer.Child
-            };
+            headContainer.Add(hitObject);
         }
 
         protected override DrawableHitObject CreateNestedHitObject(HitObject hitObject)
             => hitObject switch
             {
+                SliderRepeat repeat => new DrawableSliderRepeat(repeat),
                 SliderHeadBeat head => new DrawableSliderHead(head),
                 _ => base.CreateNestedHitObject(hitObject)
             };
@@ -107,11 +105,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             totalTimeHeld = 0;
         }
 
+        public BindableBool Tracking = new();
+
         protected override void Update()
         {
             base.Update();
 
-            if (checkIfTracking())
+            // ReSharper disable once AssignmentInConditionalExpression
+            if (Tracking.Value = checkIfTracking())
             {
                 totalTimeHeld += Time.Elapsed;
             }
