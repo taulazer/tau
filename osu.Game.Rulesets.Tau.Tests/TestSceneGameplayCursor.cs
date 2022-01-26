@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Origin = Anchor.Centre,
             });
 
-            Add(cursor = new TauCursor(CreateBeatmap(new TauRuleset().RulesetInfo).BeatmapInfo.BaseDifficulty));
+            Add(cursor = new TauCursor(CreateBeatmap(new TauRuleset().RulesetInfo).BeatmapInfo.Difficulty));
 
             AddStep("Reset cursor", () => { InputManager.MoveMouseTo(cursor, new Vector2(0, -50)); });
             AddStep("Hide paddle", () => { cursor.Hide(); });

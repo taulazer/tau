@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         public void TestAroundCentre()
         {
             var beatmap = new TestBeatmap(new TauRuleset().RulesetInfo);
-            var angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
+            var angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(beatmap.BeatmapInfo.Difficulty.CircleSize, 75, 25, 10);
             createTest(Enumerable.Range(0, (int)angleRange).Select(i => new HitEvent(i / 50f, HitResult.Perfect, new Beat(), new Beat(), new Vector2((i - (angleRange / 2)), 0))).ToList());
         }
 
@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         {
             var hitEvents = new List<HitEvent>();
             var beatmap = new TestBeatmap(new TauRuleset().RulesetInfo);
-            var angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(beatmap.BeatmapInfo.BaseDifficulty.CircleSize, 75, 25, 10);
+            var angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(beatmap.BeatmapInfo.Difficulty.CircleSize, 75, 25, 10);
 
             for (int i = 0; i < 100; i++)
             {
