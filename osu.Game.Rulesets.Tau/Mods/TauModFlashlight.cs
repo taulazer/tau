@@ -4,6 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
 using osu.Framework.Utils;
+using osu.Game.Configuration;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
@@ -14,17 +15,33 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override double ScoreMultiplier => 1.12;
 
-        private const float default_flashlight_size = 180;
+        public override float DefaultFlashlightSize => 180;
 
-        private TauFlashlight flashlight;
+        [SettingSource("Flashlight size", "Multiplier applied to the default flashlight size.")]
+        public override BindableNumber<float> SizeMultiplier { get; } = new BindableNumber<float>
+        {
+            MinValue = 0.5f,
+            MaxValue = 1.5f,
+            Default = 1f,
+            Value = 1f,
+            Precision = 0.1f
+        };
 
-        public override Flashlight CreateFlashlight() => flashlight = new TauFlashlight();
+        [SettingSource("Change size based on combo", "Decrease the flashlight size as combo increases.")]
+        public override BindableBool ComboBasedSize { get; } = new BindableBool
+        {
+            Default = true,
+            Value = true
+        };
+
+        protected override Flashlight CreateFlashlight() => new TauFlashlight(this);
 
         private class TauFlashlight : Flashlight, IRequireHighFrequencyMousePosition
         {
-            public TauFlashlight()
+
+            public TauFlashlight(TauModFlashlight modFlashlight) : base(modFlashlight)
             {
-                FlashlightSize = new Vector2(0, getSizeFor(0));
+                FlashlightSize = new Vector2(0, GetSizeFor(0));
             }
 
             protected override bool OnMouseMove(MouseMoveEvent e)
@@ -40,20 +57,9 @@ namespace osu.Game.Rulesets.Tau.Mods
                 return base.OnMouseMove(e);
             }
 
-            private float getSizeFor(int combo)
-            {
-                if (combo > 200)
-                    return default_flashlight_size * 0.8f;
-
-                if (combo > 100)
-                    return default_flashlight_size * 0.9f;
-
-                return default_flashlight_size;
-            }
-
             protected override void OnComboChange(ValueChangedEvent<int> e)
             {
-                this.TransformTo(nameof(FlashlightSize), new Vector2(0, getSizeFor(e.NewValue)), FLASHLIGHT_FADE_DURATION);
+                this.TransformTo(nameof(FlashlightSize), new Vector2(0, GetSizeFor(e.NewValue)), FLASHLIGHT_FADE_DURATION);
             }
 
             protected override string FragmentShader => "CircularFlashlight";
