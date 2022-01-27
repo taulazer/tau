@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -16,6 +17,8 @@ using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
+using osu.Game.Screens.Ranking.Statistics;
 
 namespace osu.Game.Rulesets.Tau
 {
@@ -25,6 +28,23 @@ namespace osu.Game.Rulesets.Tau
 
         public override string Description => SHORT_NAME;
         public override string ShortName => SHORT_NAME;
+
+        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
+            => new TauDrawableRuleset(this, beatmap, mods);
+
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap)
+            => new TauBeatmapConverter(this, beatmap);
+
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap)
+            => new TauDifficultyCalculator(RulesetInfo, beatmap);
+
+        public override IRulesetConfigManager CreateConfig(SettingsStore settings)
+            => new TauRulesetConfigManager(settings, RulesetInfo);
+
+        public override RulesetSettingsSubsection CreateSettings()
+            => new TauSettingsSubsection(this);
+
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
@@ -51,22 +71,20 @@ namespace osu.Game.Rulesets.Tau
             };
         }
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
-            => new TauDrawableRuleset(this, beatmap, mods);
-
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap)
-            => new TauBeatmapConverter(this, beatmap);
-
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap)
-            => new TauDifficultyCalculator(RulesetInfo, beatmap);
-
-        public override IRulesetConfigManager CreateConfig(SettingsStore settings)
-            => new TauRulesetConfigManager(settings, RulesetInfo);
-
-        public override RulesetSettingsSubsection CreateSettings()
-            => new TauSettingsSubsection(this);
-
-        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
+        public override StatisticRow[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
+        {
+            new StatisticRow
+            {
+                Columns = new[]
+                {
+                    new StatisticItem("Timing Distribution", new HitEventTimingDistributionGraph(score.HitEvents)
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 350
+                    })
+                }
+            }
+        };
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {
