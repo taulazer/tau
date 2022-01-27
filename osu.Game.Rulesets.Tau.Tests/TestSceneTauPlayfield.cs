@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Beatmap.Value.Track.Start();
             });
 
-            AddStep("Load playfield", () => SetContents(_ => new TauPlayfield(Beatmap.Value.BeatmapInfo.BaseDifficulty)
+            AddStep("Load playfield", () => SetContents(_ => new TauPlayfield(Beatmap.Value.BeatmapInfo.Difficulty)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,

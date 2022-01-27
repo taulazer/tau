@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                     if (!CanConvertToSliders)
                         goto default;
 
-                    if (pathData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / SliderDivisionLevel)
+                    if (pathData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.Difficulty.ApproachRate, 1800, 1200, 450) / SliderDivisionLevel)
                         goto default;
 
                     var nodes = new List<SliderNode>();
@@ -83,7 +83,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         goto default;
 
                     // Spinners should only be converted to sliders if duration is sufficiently long
-                    if (durationData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.BaseDifficulty.ApproachRate, 1800, 1200, 450) / 2)
+                    if (durationData.Duration < IBeatmapDifficultyInfo.DifficultyRange(Beatmap.BeatmapInfo.Difficulty.ApproachRate, 1800, 1200, 450) / 2)
                         goto default;
 
                     var sliderNodes = new List<SliderNode>();
@@ -143,7 +143,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             if (isRepeatSpam)
                 yield break;
 
-            var difficulty = Beatmap.BeatmapInfo.BaseDifficulty;
+            var difficulty = Beatmap.BeatmapInfo.Difficulty;
 
             var controlPointInfo = Beatmap.ControlPointInfo;
             TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(original.StartTime);

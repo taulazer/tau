@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Children = new Drawable[]
                 {
                     cursor = new CursorContainer(),
-                    resume = new TauResumeOverlay(CreateBeatmap(new TauRuleset().RulesetInfo).BeatmapInfo.BaseDifficulty)
+                    resume = new TauResumeOverlay(CreateBeatmap(new TauRuleset().RulesetInfo).BeatmapInfo.Difficulty)
                     {
                         GameplayCursor = cursor
                     }

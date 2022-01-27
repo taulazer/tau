@@ -22,9 +22,9 @@ namespace osu.Game.Rulesets.Tau.UI
         {
         }
 
-        protected override ResumeOverlay CreateResumeOverlay() => new TauResumeOverlay(Beatmap.BeatmapInfo.BaseDifficulty);
+        protected override ResumeOverlay CreateResumeOverlay() => new TauResumeOverlay(Beatmap.BeatmapInfo.Difficulty);
 
-        protected override Playfield CreatePlayfield() => new TauPlayfield(Beatmap.BeatmapInfo.BaseDifficulty);
+        protected override Playfield CreatePlayfield() => new TauPlayfield(Beatmap.BeatmapInfo.Difficulty);
 
         protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new TauFramedReplayInputHandler(replay);
 

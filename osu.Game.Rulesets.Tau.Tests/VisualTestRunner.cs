@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         [STAThread]
         public static int Main(string[] args)
         {
-            using (DesktopGameHost host = Host.GetSuitableHost(@"osu", true))
+            using (DesktopGameHost host = Host.GetSuitableDesktopHost(@"osu", new HostOptions { BindIPC = true }))
             {
                 host.Run(new OsuTestBrowser());
 
