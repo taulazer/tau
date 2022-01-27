@@ -2,6 +2,7 @@
 using System.Linq;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 
@@ -53,10 +54,16 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (result == HitResult.None)
                 return;
 
-            ApplyResult(r => r.Type = result);
+            ApplyResult(r =>
+            {
+                r.Type = result;
+                ApplyCustomResult(r);
+            });
         }
 
         protected virtual bool CheckForValidation() => true;
+
+        protected virtual void ApplyCustomResult(JudgementResult result) { }
 
         public bool OnPressed(KeyBindingPressEvent<TauAction> e)
         {

@@ -15,6 +15,7 @@ using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Difficulty;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
+using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
@@ -29,22 +30,13 @@ namespace osu.Game.Rulesets.Tau
         public override string Description => SHORT_NAME;
         public override string ShortName => SHORT_NAME;
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
-            => new TauDrawableRuleset(this, beatmap, mods);
-
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap)
-            => new TauBeatmapConverter(this, beatmap);
-
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap)
-            => new TauDifficultyCalculator(RulesetInfo, beatmap);
-
-        public override IRulesetConfigManager CreateConfig(SettingsStore settings)
-            => new TauRulesetConfigManager(settings, RulesetInfo);
-
-        public override RulesetSettingsSubsection CreateSettings()
-            => new TauSettingsSubsection(this);
-
+        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new TauDrawableRuleset(this, beatmap, mods);
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new TauBeatmapConverter(this, beatmap);
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new TauDifficultyCalculator(RulesetInfo, beatmap);
+        public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
+        public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
+        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor();
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
