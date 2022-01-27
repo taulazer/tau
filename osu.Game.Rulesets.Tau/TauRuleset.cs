@@ -83,6 +83,16 @@ namespace osu.Game.Rulesets.Tau
                         Height = 350
                     })
                 }
+            },
+            new StatisticRow
+            {
+                Columns = new[]
+                {
+                    new StatisticItem(String.Empty, new SimpleStatisticTable(3, new SimpleStatisticItem[]
+                    {
+                        new UnstableRate(score.HitEvents)
+                    }))
+                }
             }
         };
 
