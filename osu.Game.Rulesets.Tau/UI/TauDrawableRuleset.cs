@@ -7,7 +7,6 @@ using osu.Game.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
@@ -28,14 +27,7 @@ namespace osu.Game.Rulesets.Tau.UI
             return new TauDependencyContainer(Beatmap, dependencies);
         }
 
-        public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h)
-            => h switch
-            {
-                Beat b => new DrawableBeat(b),
-                HardBeat hb => new DrawableHardBeat(hb),
-                Slider s => new DrawableSlider(s),
-                _ => null
-            };
+        public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h) => null;
 
         protected override PassThroughInputManager CreateInputManager() => new TauInputManager(Ruleset?.RulesetInfo);
         protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new TauFramedReplayInputHandler(replay);
