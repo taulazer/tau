@@ -123,32 +123,32 @@ namespace osu.Game.Rulesets.Tau
             {
                 Columns = new[]
                 {
-                    new StatisticItem("Timing Distribution", new HitEventTimingDistributionGraph(score.HitEvents)
+                    new StatisticItem("Timing Distribution", () => new HitEventTimingDistributionGraph(score.HitEvents)
                     {
                         RelativeSizeAxes = Axes.X,
                         Height = 250
-                    }),
+                    }, true),
                 }
             },
             new StatisticRow
             {
                 Columns = new[]
                 {
-                    new StatisticItem("Paddle Distribution", new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
+                    new StatisticItem("Paddle Distribution", () => new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
                     {
                         RelativeSizeAxes = Axes.X,
                         Height = 250,
-                    })
+                    }, true)
                 }
             },
             new StatisticRow
             {
                 Columns = new[]
                 {
-                    new StatisticItem(string.Empty, new SimpleStatisticTable(3, new SimpleStatisticItem[]
+                    new StatisticItem(string.Empty, ()=>new SimpleStatisticTable(3, new SimpleStatisticItem[]
                     {
                         new UnstableRate(score.HitEvents)
-                    }))
+                    }), true)
                 }
             }
         };

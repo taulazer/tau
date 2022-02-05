@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override float DefaultFlashlightSize => 180;
 
         [SettingSource("Flashlight size", "Multiplier applied to the default flashlight size.")]
-        public override BindableNumber<float> SizeMultiplier { get; } = new BindableNumber<float>
+        public override BindableFloat SizeMultiplier { get; } = new BindableFloat
         {
             MinValue = 0.5f,
             MaxValue = 1.5f,
