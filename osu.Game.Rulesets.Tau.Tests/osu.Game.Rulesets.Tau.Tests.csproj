@@ -21,7 +21,7 @@
   </ItemGroup>
   <PropertyGroup Label="Project">
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>osu.Game.Rulesets.Tau.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
