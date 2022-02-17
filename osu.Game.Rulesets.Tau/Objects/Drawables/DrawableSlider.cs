@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableSlider(Slider obj)
             : base(obj)
         {
-            Size = TauPlayfield.BASE_SIZE;
+            Size = TauPlayfield.BaseSize;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Origin = Anchor.Centre,
                             PathRadius = 4,
                             AutoSizeAxes = Axes.None,
-                            Size = TauPlayfield.BASE_SIZE
+                            Size = TauPlayfield.BaseSize
                         },
                     }
                 },

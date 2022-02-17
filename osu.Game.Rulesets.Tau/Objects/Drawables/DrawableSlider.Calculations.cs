@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             path.ClearVertices();
 
-            float maxDistance = TauPlayfield.BASE_SIZE.X / 2;
+            float maxDistance = TauPlayfield.BaseSize.X / 2;
 
             for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
                  t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);

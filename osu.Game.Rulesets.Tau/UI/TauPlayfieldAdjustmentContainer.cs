@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 base.Update();
 
-                Scale = new Vector2(Parent.ChildSize.X / TauPlayfield.BASE_SIZE.X);
+                Scale = new Vector2(Parent.ChildSize.X / TauPlayfield.BaseSize.X);
 
                 Size = Vector2.Divide(Vector2.One, Scale);
             }

@@ -28,12 +28,13 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container judgementAboveHitObjectLayer;
 
-        public static readonly Vector2 BASE_SIZE = new(768);
-        public static readonly Bindable<Color4> ACCENT_COLOUR = new(Color4Extensions.FromHex(@"FF0040"));
+        public static readonly Vector2 BaseSize = new(768);
+        public static readonly Bindable<Color4> AccentColour = new(Color4Extensions.FromHex(@"FF0040"));
 
         private readonly Dictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new();
 
         protected override GameplayCursorContainer CreateCursor() => new TauCursor();
+
         public new TauCursor Cursor => base.Cursor as TauCursor;
 
         private TauCachedProperties tauCachedProperties = new();
@@ -45,7 +46,7 @@ namespace osu.Game.Rulesets.Tau.UI
             RelativeSizeAxes = Axes.None;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Size = BASE_SIZE;
+            Size = BaseSize;
 
             AddRangeInternal(new Drawable[]
             {
@@ -150,7 +151,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
                     BorderThickness = 3,
-                    BorderColour = ACCENT_COLOUR.Value,
+                    BorderColour = AccentColour.Value,
                     Child = background = new Box
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -167,7 +168,11 @@ namespace osu.Game.Rulesets.Tau.UI
             protected override void LoadComplete()
             {
                 config?.BindWith(TauRulesetSettings.PlayfieldDim, playfieldDimLevel);
-                playfieldDimLevel.BindValueChanged(v => { background.FadeTo(v.NewValue, 100); }, true);
+
+                playfieldDimLevel.BindValueChanged(v =>
+                {
+                    background.FadeTo(v.NewValue, 100);
+                }, true);
             }
         }
     }

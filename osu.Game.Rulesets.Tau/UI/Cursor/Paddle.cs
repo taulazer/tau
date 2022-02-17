@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            Colour = TauPlayfield.ACCENT_COLOUR.Value;
+            Colour = TauPlayfield.AccentColour.Value;
 
             InternalChildren = new Drawable[]
             {
