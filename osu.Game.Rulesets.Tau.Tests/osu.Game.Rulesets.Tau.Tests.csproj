@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <StartupObject>osu.Game.Rulesets.Tau.Tests.VisualTestRunner</StartupObject>
-    <LangVersion>9</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup Label="Service">
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
@@ -21,7 +21,7 @@
   </ItemGroup>
   <PropertyGroup Label="Project">
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>osu.Game.Rulesets.Tau.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
