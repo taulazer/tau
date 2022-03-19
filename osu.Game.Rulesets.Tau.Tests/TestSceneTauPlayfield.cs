@@ -30,13 +30,6 @@ namespace osu.Game.Rulesets.Tau.Tests
                 FillAspectRatio = 1,
                 FillMode = FillMode.Fit
             }));
-
-            DllResourceStore dllResourceStore = new DllResourceStore(DynamicCompilationOriginal.GetType().Assembly);
-
-            foreach (var resource in dllResourceStore.GetAvailableResources())
-            {
-                Console.WriteLine(resource);
-            }
         }
     }
 }
