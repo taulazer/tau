@@ -105,7 +105,7 @@ namespace osu.Game.Rulesets.Tau
 
         public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
 
-        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor();
+        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {
