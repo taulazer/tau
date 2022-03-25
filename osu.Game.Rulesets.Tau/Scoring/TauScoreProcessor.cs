@@ -12,5 +12,10 @@ namespace osu.Game.Rulesets.Tau.Scoring
             => base.CreateHitEvent(result).With(new Vector2((result as TauJudgementResult)?.DeltaAngle ?? 0, 0));
 
         protected override JudgementResult CreateResult(HitObject hitObject, Judgement judgement) => new TauJudgementResult(hitObject, judgement);
+
+        public TauScoreProcessor(Ruleset ruleset)
+            : base(ruleset)
+        {
+        }
     }
 }

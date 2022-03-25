@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Tau
         public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
         public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
-        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor();
+        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
