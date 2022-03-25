@@ -26,6 +26,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [CanBeNull]
         public Func<float, ValidationResult> CheckValidation;
 
+        public DrawableSliderHead SliderHead => headContainer.Child;
+
         public SliderFollower Follower { get; private set; }
 
         private readonly Path path;

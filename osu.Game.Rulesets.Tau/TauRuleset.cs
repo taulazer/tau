@@ -46,7 +46,8 @@ namespace osu.Game.Rulesets.Tau
                 case ModType.Automation:
                     return new Mod[]
                     {
-                        new TauModAutoplay()
+                        new TauModAutoplay(),
+                        new TauModRelax()
                     };
 
                 default:
