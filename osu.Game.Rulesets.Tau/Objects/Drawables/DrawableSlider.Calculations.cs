@@ -63,9 +63,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private bool checkIfTracking()
             => IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => Actions.Contains(x));
 
-        public bool IsWithinPaddle => CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)).IsValid ?? false;
+        private float getCurrentAngle()
+            => Vector2.Zero.GetDegreesFromPosition(path.Position);
+
+        public bool IsWithinPaddle
+            => CheckValidation?.Invoke(getCurrentAngle()).IsValid ?? false;
 
         private TauInputManager tauActionInputManager;
-        internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
+
+        internal TauInputManager TauActionInputManager
+            => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
     }
 }

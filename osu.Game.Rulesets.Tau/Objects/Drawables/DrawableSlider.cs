@@ -12,6 +12,7 @@ using osu.Framework.Platform;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -25,8 +26,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [CanBeNull]
         public Func<float, ValidationResult> CheckValidation;
 
+        public SliderFollower Follower { get; private set; }
+
         private readonly Path path;
-        private readonly Container headContainer;
+        private readonly Container<DrawableSliderHead> headContainer;
+        private readonly Container<DrawableSliderRepeat> repeatContainer;
         private readonly Cached drawCache = new();
 
         public DrawableSlider()
@@ -65,15 +69,32 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         },
                     }
                 },
-                headContainer = new Container { RelativeSizeAxes = Axes.Both },
+                Follower = new SliderFollower()
+                {
+                    AlwaysPresent = true,
+                    Alpha = 0
+                },
+                headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
+                repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
             });
+
+            Follower.IsTracking.BindTo(Tracking);
         }
 
         protected override void AddNestedHitObject(DrawableHitObject hitObject)
         {
             base.AddNestedHitObject(hitObject);
 
-            headContainer.Add(hitObject);
+            switch (hitObject)
+            {
+                case DrawableSliderHead head:
+                    headContainer.Child = head;
+                    break;
+
+                case DrawableSliderRepeat repeat:
+                    repeatContainer.Add(repeat);
+                    break;
+            }
         }
 
         protected override DrawableHitObject CreateNestedHitObject(HitObject hitObject)
@@ -89,6 +110,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.ClearNestedHitObjects();
 
             headContainer.Clear(false);
+            repeatContainer.Clear(false);
         }
 
         [BackgroundDependencyLoader]
@@ -102,6 +124,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void OnApply()
         {
             base.OnApply();
+
             totalTimeHeld = 0;
         }
 
@@ -124,8 +147,23 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 return;
 
             updatePath();
+            Follower.UpdateProgress(getCurrentAngle());
 
             drawCache.Validate();
+        }
+
+        protected override void UpdateInitialTransforms()
+        {
+            base.UpdateInitialTransforms();
+
+            this.FadeInFromZero(HitObject.TimeFadeIn);
+        }
+
+        protected override void UpdateStartTimeStateTransforms()
+        {
+            base.UpdateStartTimeStateTransforms();
+
+            Follower.FadeIn();
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
