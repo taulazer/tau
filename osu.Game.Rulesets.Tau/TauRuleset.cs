@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps;
@@ -40,20 +41,28 @@ namespace osu.Game.Rulesets.Tau
         public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
-        {
-            switch (type)
+            => type switch
             {
-                case ModType.Automation:
-                    return new Mod[]
-                    {
-                        new TauModAutoplay(),
-                        new TauModRelax()
-                    };
-
-                default:
-                    return ArraySegment<Mod>.Empty;
-            }
-        }
+                ModType.DifficultyReduction => new Mod[]
+                {
+                    new TauModNoFail()
+                },
+                ModType.DifficultyIncrease => new Mod[]
+                {
+                },
+                ModType.Automation => new Mod[]
+                {
+                    new TauModAutoplay(),
+                    new TauModRelax()
+                },
+                ModType.Conversion => new Mod[]
+                {
+                },
+                ModType.Fun => new Mod[]
+                {
+                },
+                _ => Enumerable.Empty<Mod>()
+            };
 
         protected override IEnumerable<HitResult> GetValidHitResults()
         {
