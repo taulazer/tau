@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Input.Events;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Physics;
@@ -27,6 +28,13 @@ namespace osu.Game.Rulesets.Tau.Tests
 
         public TestSceneParticleSim () {
             var rng = new Random(122345);
+
+            Add(cursor = new Box {
+                Size = new(10),
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Alpha = 0
+            } );
 
             float next (float min, float max) {
                 return min + rng.NextSingle() * ( max - min );
@@ -229,6 +237,30 @@ namespace osu.Game.Rulesets.Tau.Tests
             } );
         }
 
+        Vector2 lastMousePos = Vector2.Zero;
+        Vector2 mousePos = Vector2.Zero;
+        Box cursor;
+        protected override bool OnMouseMove ( MouseMoveEvent e ) {
+            if ( !e.CurrentState.Mouse.Buttons.HasAnyButtonPressed )
+                return false;
+
+            var prev = cursor.Parent.ToLocalSpace(e.ScreenSpaceLastMousePosition) - cursor.Parent.DrawSize / 2;
+            var next = cursor.Parent.ToLocalSpace(e.ScreenSpaceMousePosition) - cursor.Parent.DrawSize / 2;
+
+            if (prev != lastMousePos) {
+                lastMousePos = next;
+                mousePos = next;
+            }
+            else {
+                lastMousePos = mousePos;
+                mousePos = next;
+            }
+
+            cursor.Position = mousePos;
+
+            return false;
+        }
+
         static Field.ScalarFn kernelSpike = Field.KernelSpike();
         static Field.ScalarFn kernelBell = Field.KernelBell();
         static Field.VectorFn spikeGradient = Field.KernelSpikeGradient();
@@ -236,6 +268,17 @@ namespace osu.Game.Rulesets.Tau.Tests
         static Field.ScalarFn bellLaplacian = Field.Laplacian(kernelBell);
         protected override void Update () {
             base.Update();
+
+            var delta = MathF.Min( (float)Time.Elapsed, 100 ) / 1000 * 14;
+            if (lastMousePos != mousePos) {
+                var drag = (mousePos - lastMousePos) / delta;
+
+                foreach ( var i in distanceHash.GetClose(mousePos, FIELD_SCALE) ) {
+                    i.Velocity = ( i.Velocity * 5 + drag ) / 6;
+                }
+
+                lastMousePos = mousePos;
+            }
 
             Vector2 pressureGradientField ( Particle i ) {
                 return ParticleField<Particle>.FieldAt(
@@ -297,7 +340,6 @@ namespace osu.Game.Rulesets.Tau.Tests
                 return forceField( p ) / densityField( p );
             }
 
-            var delta = MathF.Min( (float)Time.Elapsed, 100 ) / 1000 * 14;
             using ( ArrayPool<Vector2>.Rent( particles.Count, out var acceleration ) ) {
                 int i = 0;
                 foreach ( var p in particles ) {
@@ -313,17 +355,29 @@ namespace osu.Game.Rulesets.Tau.Tests
                         p.X = -360;
                         p.Velocity.X *= -1;
                     }
+                    if ( p.X < -340 ) {
+                        p.Velocity.X += delta;
+                    }
                     if ( p.X > 360 ) {
                         p.X = 360;
                         p.Velocity.X *= -1;
+                    }
+                    if ( p.X > 340 ) {
+                        p.Velocity.X -= delta;
                     }
                     if ( p.Y < -360 ) {
                         p.Y = -360;
                         p.Velocity.Y *= -1;
                     }
+                    if ( p.Y < -340 ) {
+                        p.Velocity.Y += delta;
+                    }
                     if ( p.Y > 360 ) {
                         p.Y = 360;
                         p.Velocity.Y *= -1;
+                    }
+                    if ( p.Y > 340 ) {
+                        p.Velocity.Y -= delta;
                     }
                 }
             }
