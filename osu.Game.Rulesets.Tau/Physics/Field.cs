@@ -22,7 +22,6 @@ namespace osu.Game.Rulesets.Tau.Physics {
         public static VectorFn Gradient ( ScalarFn fn, float s = 0.001f ) {
             var sInv = 1 / s / 2;
             return p => {
-                var k = fn(p);
                 var dx = (fn(p + new Vector2(s, 0)) - fn(p - new Vector2(s, 0))) * sInv;
                 var dy = (fn(p + new Vector2(0, s)) - fn(p - new Vector2(0, s))) * sInv;
 
@@ -130,21 +129,34 @@ namespace osu.Game.Rulesets.Tau.Physics {
 
             return p => {
                 var r2 = p.LengthSquared;
+                var n = h2 - r2;
 
                 return r2 <= h2
-                    ? factor * MathF.Pow( h2 - r2, 3 )
+                    ? factor * n * n * n
                     : 0;
             };
         }
         public static ScalarFn KernelSpike ( float h = 1 ) {
-            var factor = 15f / MathF.PI / MathF.Pow(h, 6);
+            var factor = 15f / MathF.PI / MathF.Pow( h, 6 );
 
             return p => {
-                var r = p.Length;
+                var r = p.LengthFast;
+                var n = h - r;
 
                 return r <= h
-                    ? factor * MathF.Pow( h - r, 3 )
+                    ? factor * n * n * n
                     : 0;
+            };
+        }
+        public static VectorFn KernelSpikeGradient ( float h = 1 ) {
+            var factor = -45f / MathF.PI / MathF.Pow( h, 6 );
+
+            return p => {
+                var r = p.LengthFast;
+
+                return r > 0 && r <= h
+                    ? factor * p * ( h*h/r - 2*h + r )
+                    : Vector2.Zero;
             };
         }
         public static ScalarFn KernelAsymptote ( float h = 1 ) {
@@ -153,7 +165,7 @@ namespace osu.Game.Rulesets.Tau.Physics {
             var factor = 15f / 2 / MathF.PI / h3;
 
             return p => {
-                var r = p.Length;
+                var r = p.LengthFast;
                 var r2 = r * r;
                 var r3 = r * r2;
 
@@ -166,31 +178,34 @@ namespace osu.Game.Rulesets.Tau.Physics {
 
     public static class ParticleField<T> where T : IHasPosition {
         public static float FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, float> selector, Field.ScalarFn kernel, float scale = 1 ) {
-            position /= scale;
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
 
             float value = 0;
             foreach ( var particle in particles ) {
-                value += selector( particle ) * kernel( position - particle.Position / scale );
+                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
             }
 
             return value;
         }
         public static Vector2 FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
-            position /= scale;
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
 
             Vector2 value = Vector2.Zero;
             foreach ( var particle in particles ) {
-                value += selector( particle ) * kernel( position - particle.Position / scale );
+                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
             }
 
             return value;
         }
         public static Vector2 FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, float> selector, Field.VectorFn kernel, float scale = 1 ) {
-            position /= scale;
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
 
             Vector2 value = Vector2.Zero;
             foreach ( var particle in particles ) {
-                value += selector( particle ) * kernel( position - particle.Position / scale );
+                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
             }
 
             return value;

@@ -229,14 +229,19 @@ namespace osu.Game.Rulesets.Tau.Tests
             } );
         }
 
+        static Field.ScalarFn kernelSpike = Field.KernelSpike();
+        static Field.ScalarFn kernelBell = Field.KernelBell();
+        static Field.VectorFn spikeGradient = Field.KernelSpikeGradient();
+        static Field.VectorFn bellGradient = Field.Gradient(kernelBell);
+        static Field.ScalarFn bellLaplacian = Field.Laplacian(kernelBell);
         protected override void Update () {
             base.Update();
 
             Vector2 pressureGradientField ( Particle i ) {
                 return ParticleField<Particle>.FieldAt(
                     i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
-                    j => j.Mass * ( j.Density + i.Density ) / 2 / j.Density,
-                    Field.Gradient( Field.KernelSpike() ),
+                    j => j.Mass * ( j.Density + i.Density ) / (2 * j.Density),
+                    spikeGradient,
                     FIELD_SCALE
                 );
             }
@@ -245,7 +250,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 return ParticleField<Particle>.FieldAt(
                     i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
                     j => j.Mass,
-                    Field.KernelSpike(),
+                    kernelSpike,
                     FIELD_SCALE
                 );
             }
@@ -254,7 +259,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 return ParticleField<Particle>.FieldAt(
                     i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
                     j => j.Mass * ( j.Velocity - i.Velocity ) / j.Density,
-                    Field.KernelBell(),
+                    kernelBell,
                     FIELD_SCALE
                 );
             }
@@ -263,7 +268,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 return ParticleField<Particle>.FieldAt(
                     i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
                     j => j.Volume,
-                    Field.Gradient( Field.KernelBell() ),
+                    bellGradient,
                     FIELD_SCALE
                 );
             }
@@ -271,7 +276,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 return ParticleField<Particle>.FieldAt(
                     i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
                     j => j.Volume,
-                    Field.Laplacian( Field.KernelBell() ),
+                    bellLaplacian,
                     FIELD_SCALE
                 );
             }
@@ -421,8 +426,8 @@ namespace osu.Game.Rulesets.Tau.Tests
             for ( int i = xFrom; i <= xTo; i++ ) {
                 for ( int j = yFrom; j <= yTo; j++ ) {
                     if ( hash.TryGetValue((i, j), out var list) ) {
-                        foreach ( var k in list ) {
-                            yield return k;
+                        for ( int k = 0; k < list.Count; k++ ) {
+                            yield return list[k];
                         }
                     }
                 }
