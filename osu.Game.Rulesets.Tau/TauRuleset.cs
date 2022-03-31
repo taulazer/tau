@@ -54,8 +54,8 @@ namespace osu.Game.Rulesets.Tau
                 ModType.Automation => new Mod[]
                 {
                     new TauModAutoplay(),
-                    new TauModAutopilot(),
-                    new TauModRelax()
+                    new TauModRelax(),
+                    new TauModAutopilot()
                 },
                 ModType.Conversion => new Mod[]
                 {
