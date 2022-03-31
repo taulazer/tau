@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 {
     public class TauBeatmapConverter : BeatmapConverter<TauHitObject>
     {
-        public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition or IHasXPosition or IHasYPosition);
+        // TODO: Create a more robust system.
+        public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition or IHasXPosition or IHasYPosition or IHasAngle);
 
         public TauBeatmapConverter(Ruleset ruleset, IBeatmap beatmap)
             : base(beatmap, ruleset)
@@ -39,6 +40,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 IHasPosition pos => pos.Position.GetHitObjectAngle(),
                 IHasXPosition xPos => xPos.X.Remap(0, 512, 0, 360),
                 IHasYPosition yPos => yPos.Y.Remap(0, 384, 0, 360),
+                IHasAngle ang => ang.Angle,
                 _ => 0
             };
 

@@ -14,7 +14,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class Slider : TauHitObject, IHasRepeats
+    public class Slider : TauHitObject, IHasRepeats, IHasAngle
     {
         public double Duration
         {
@@ -28,6 +28,12 @@ namespace osu.Game.Rulesets.Tau.Objects
         public SliderHeadBeat HeadBeat { get; protected set; }
 
         public BindableList<SliderNode> Nodes { get; set; }
+
+        public float Angle
+        {
+            get => Nodes[0].Angle;
+            set => throw new InvalidOperationException("Cannot set a slider's angle");
+        }
 
         private SliderPath path;
 

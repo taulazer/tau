@@ -1,6 +1,6 @@
 ﻿namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class HardBeat : TauHitObject, IHasAngle
+    public interface IHasAngle
     {
         public float Angle { get; set; }
     }
