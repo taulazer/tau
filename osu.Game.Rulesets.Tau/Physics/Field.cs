@@ -188,6 +188,19 @@ namespace osu.Game.Rulesets.Tau.Physics {
 
             return value;
         }
+        public static float FieldAt ( Vector2 position, Span<T> particles, Func<T, float> selector, Field.ScalarFn kernel, float scale = 1 ) {
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
+
+            float value = 0;
+            for ( int i = 0; i < particles.Length; i++ ) {
+                var particle = particles[i];
+                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
+            }
+
+            return value;
+        }
+
         public static Vector2 FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
             var scaleInv = 1 / scale;
             position *= scaleInv;
@@ -199,6 +212,19 @@ namespace osu.Game.Rulesets.Tau.Physics {
 
             return value;
         }
+        public static Vector2 FieldAt ( Vector2 position, Span<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
+
+            Vector2 value = Vector2.Zero;
+            for ( int i = 0; i < particles.Length; i++ ) {
+                var particle = particles[i];
+                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
+            }
+
+            return value;
+        }
+
         public static Vector2 FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, float> selector, Field.VectorFn kernel, float scale = 1 ) {
             var scaleInv = 1 / scale;
             position *= scaleInv;
@@ -207,6 +233,18 @@ namespace osu.Game.Rulesets.Tau.Physics {
             foreach ( var particle in particles ) {
                 value += selector( particle ) * kernel( position - particle.Position * scaleInv );
             }
+
+            return value;
+        }
+        public static Vector2 FieldAt ( Vector2 position, Span<T> particles, Func<T, float> selector, Field.VectorFn kernel, float scale = 1 ) {
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
+
+            Vector2 value = Vector2.Zero;
+            for ( int i = 0; i < particles.Length; i++ ) {
+				var particle = particles[ i ];
+				value += selector( particle ) * kernel( position - particle.Position * scaleInv );
+			}
 
             return value;
         }

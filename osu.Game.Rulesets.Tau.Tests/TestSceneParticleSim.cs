@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         }
 
         const float FIELD_SCALE = 50;
-        DistanceHash<Particle> distanceHash = new(radius: FIELD_SCALE);
+        ArrayDistanceHash<Particle> distanceHash = new(radius: FIELD_SCALE, -360, 360, -360, 360);
 
         public TestSceneParticleSim () {
             var rng = new Random(122345);
@@ -192,7 +192,8 @@ namespace osu.Game.Rulesets.Tau.Tests
 
         Drawable createScalarField ( int w, int h, float res, Func<Particle, float> selector, Field.ScalarFn kernel, float? from = null, float? to = null ) {
             return createField( w, h, res, pos => {
-                return ParticleField<Particle>.FieldAt( pos, distanceHash.GetClose( pos, FIELD_SCALE ), selector, kernel, FIELD_SCALE );
+                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
+                    return ParticleField<Particle>.FieldAt( pos, arr, selector, kernel, FIELD_SCALE );
             }, data => {
                 return (from is null ? min(data) : from.Value, to is null ? max(data) : to.Value);
             }, pos => new Box {
@@ -207,7 +208,8 @@ namespace osu.Game.Rulesets.Tau.Tests
 
         Drawable createVectorField ( int w, int h, float res, Func<Particle, float> selector, Field.VectorFn gradient ) {
             return createField( w, h, res, pos => {
-                return ParticleField<Particle>.FieldAt( pos, distanceHash.GetClose( pos, FIELD_SCALE ), selector, gradient, FIELD_SCALE );
+                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
+                    return ParticleField<Particle>.FieldAt( pos, arr, selector, gradient, FIELD_SCALE );
             }, data => {
                 return (min(data, x => x.Length), max(data, x => x.Length));
             }, pos => new Box {
@@ -223,7 +225,8 @@ namespace osu.Game.Rulesets.Tau.Tests
 
         Drawable createVectorField ( int w, int h, float res, Func<Particle, Vector2> selector, Field.ScalarFn kernel ) {
             return createField( w, h, res, pos => {
-                return ParticleField<Particle>.FieldAt( pos, distanceHash.GetClose( pos, FIELD_SCALE ), selector, kernel, FIELD_SCALE );
+                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
+                    return ParticleField<Particle>.FieldAt( pos, arr, selector, kernel, FIELD_SCALE );
             }, data => {
                 return (min( data, x => x.Length ), max( data, x => x.Length ));
             }, pos => new Box {
@@ -280,70 +283,93 @@ namespace osu.Game.Rulesets.Tau.Tests
                 lastMousePos = mousePos;
             }
 
-            Vector2 pressureGradientField ( Particle i ) {
+            Vector2 pressureGradientField ( Particle i, Span<Particle> neighborhood ) {
                 return ParticleField<Particle>.FieldAt(
-                    i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
+                    i.Position, neighborhood,
                     j => j.Mass * ( j.Density + i.Density ) / (2 * j.Density),
                     spikeGradient,
                     FIELD_SCALE
                 );
             }
 
-            float densityField ( Particle i ) {
+            float densityField ( Particle i, Span<Particle> neighborhood ) {
                 return ParticleField<Particle>.FieldAt(
-                    i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
+                    i.Position, neighborhood,
                     j => j.Mass,
                     kernelSpike,
                     FIELD_SCALE
                 );
             }
 
-            Vector2 viscosityField ( Particle i ) {
+            Vector2 viscosityField ( Particle i, Span<Particle> neighborhood ) {
                 return ParticleField<Particle>.FieldAt(
-                    i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
+                    i.Position, neighborhood,
                     j => j.Mass * ( j.Velocity - i.Velocity ) / j.Density,
                     kernelBell,
                     FIELD_SCALE
                 );
             }
 
-            Vector2 colorGradient ( Particle i ) {
+            Vector2 colorGradient ( Particle i, Span<Particle> neighborhood ) {
                 return ParticleField<Particle>.FieldAt(
-                    i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
+                    i.Position, neighborhood,
                     j => j.Volume,
                     bellGradient,
                     FIELD_SCALE
                 );
             }
-            float colorLaplacian ( Particle i ) {
+            float colorLaplacian ( Particle i, Span<Particle> neighborhood ) {
                 return ParticleField<Particle>.FieldAt(
-                    i.Position, distanceHash.GetClose( i.Position, FIELD_SCALE ),
+                    i.Position, neighborhood,
                     j => j.Volume,
                     bellLaplacian,
                     FIELD_SCALE
                 );
             }
-            Vector2 sufraceTensionForce ( Particle i ) {
-                var n = colorGradient( i );
+            Vector2 sufraceTensionForce ( Particle i, Span<Particle> neighborhood ) {
+                var n = colorGradient( i, neighborhood );
                 if ( n == Vector2.Zero )
                     return Vector2.Zero;
 
-                return -colorLaplacian( i ) * n.Normalized();
+                return -colorLaplacian( i, neighborhood ) * n.Normalized();
             }
 
-            Vector2 forceField ( Particle p ) {
-                return -pressureGradientField( p ) + viscosityField( p ) /*+ sufraceTensionForce( p ) / 6*/;
+            Vector2 forceField ( Particle p, Span<Particle> neighborhood ) {
+                return -pressureGradientField( p, neighborhood ) + viscosityField( p, neighborhood ) /*+ sufraceTensionForce( p ) / 6*/;
             }
 
-            Vector2 accelerationField ( Particle p ) {
+            Vector2 accelerationField ( Particle p, Span<Particle> neighborhood ) {
                 // acceleration is force / mass
-                return forceField( p ) / densityField( p );
+                return forceField( p, neighborhood ) / densityField( p, neighborhood );
+            }
+
+            var scaleInv = 1 / FIELD_SCALE;
+            Vector2 optimizedAccelerationField ( Particle p ) {
+                Vector2 pressureGradient = Vector2.Zero;
+                Vector2 viscosity = Vector2.Zero;
+                float density = 0;
+
+                distanceHash.ForeachClose( p.Position, FIELD_SCALE, particle => {
+                    var volume = particle.Volume;
+                    var pos = ( p.Position - particle.Position ) * scaleInv;
+
+                    pressureGradient += volume * ( particle.Density + p.Density ) * spikeGradient( pos );
+                    viscosity += volume * ( particle.Velocity - p.Velocity ) * kernelBell( pos );
+                    density += particle.Mass * kernelSpike( pos );
+                } );
+                pressureGradient /= 2;
+
+                var force = -pressureGradient + viscosity /*+ sufraceTensionForce( p ) / 6*/;
+                return force / density;
             }
 
             using ( ArrayPool<Vector2>.Rent( particles.Count, out var acceleration ) ) {
                 int i = 0;
                 foreach ( var p in particles ) {
-                    acceleration[ i++ ] = accelerationField( p );
+                    acceleration[ i++ ] = optimizedAccelerationField( p );
+                    //using ( distanceHash.GetClose( p.Position, FIELD_SCALE, particles.Count, out var neighborghood ) ) {
+                    //    acceleration[ i++ ] = accelerationField( p, neighborhood );
+                    //}
                 }
 
                 i = 0;
@@ -479,10 +505,193 @@ namespace osu.Game.Rulesets.Tau.Tests
 
             for ( int i = xFrom; i <= xTo; i++ ) {
                 for ( int j = yFrom; j <= yTo; j++ ) {
-                    if ( hash.TryGetValue((i, j), out var list) ) {
+                    if ( hash.TryGetValue( (i, j), out var list ) ) {
                         for ( int k = 0; k < list.Count; k++ ) {
-                            yield return list[k];
+                            yield return list[ k ];
                         }
+                    }
+                }
+            }
+        }
+
+        public IDisposable GetClose ( Vector2 pos, float distance, out Span<T> arr ) {
+            return GetClose( pos.X, pos.Y, distance, out arr );
+        }
+        public IDisposable GetClose ( float x, float y, float distance, out Span<T> arr ) {
+            int xFrom = (int)MathF.Round( ( x - distance ) / Radius );
+            int xTo = (int)MathF.Round( ( x + distance ) / Radius );
+            int yFrom = (int)MathF.Round( ( y - distance ) / Radius );
+            int yTo = (int)MathF.Round( ( y + distance ) / Radius );
+
+            using ( ArrayPool<List<T>>.Rent( (xTo - xFrom + 1) * (yTo - yTo + 1), out var lists ) ) {
+                int count = 0;
+                int listCount = 0;
+
+                for ( int i = xFrom; i <= xTo; i++ ) {
+                    for ( int j = yFrom; j <= yTo; j++ ) {
+                        if ( hash.TryGetValue( (i, j), out var list ) ) {
+                            count += list.Count;
+                            lists[ listCount++ ] = list;
+                        }
+                    }
+                }
+
+                var lease = ArrayPool<T>.Rent( count, out var array );
+
+                count = 0;
+                for ( int i = 0; i < listCount; i++ ) {
+                    var list = lists[ i ];
+                    for ( int j = 0; j < list.Count; j++ ) {
+                        array[count++] = list[j];
+                    }
+                }
+
+                arr = array.AsSpan(0, count);
+                return lease;
+            }
+        }
+    }
+
+    public class ArrayDistanceHash<T> {
+        private List<T>[,] hash;
+        public readonly float Radius;
+        public readonly float RadiusInverse;
+        float minX;
+        float minY;
+        int maxX;
+        int maxY;
+
+        public ArrayDistanceHash ( float radius, float minX, float maxX, float minY, float maxY ) {
+            Radius = radius;
+            RadiusInverse = 1 / radius;
+            this.minX = minX;
+            this.minY = minY;
+            this.maxX = (int)Math.Ceiling( ( maxX - minX ) / radius ) - 1;
+            this.maxY = (int)Math.Ceiling( ( maxY - minY ) / radius ) - 1;
+            hash = new List<T>[this.maxX + 1,this.maxY + 1];
+            for ( int x = 0; x <= this.maxX; x++ ) {
+                for ( int y = 0; y <= this.maxY; y++ ) {
+                    hash[x, y] = new();
+                }
+            }
+        }
+
+        public void Clear () {
+            foreach ( var l in hash ) {
+                l.Clear();
+            }
+        }
+
+        public void Add ( Vector2 pos, T value ) {
+            Add( pos.X, pos.Y, value );
+        }
+        public void Add ( float x, float y, T value ) {
+            int x2 = (int)MathF.Floor( (x - minX) * RadiusInverse );
+            int y2 = (int)MathF.Floor( (y - minY) * RadiusInverse );
+
+            hash[x2, y2].Add( value );
+        }
+
+        public IEnumerable<T> GetClose ( Vector2 pos, float distance ) {
+            return GetClose( pos.X, pos.Y, distance );
+        }
+        public IEnumerable<T> GetClose ( float x, float y, float distance ) {
+            x -= minX;
+            y -= minY;
+            int xFrom = (int)Math.Clamp( MathF.Floor( ( x - distance ) * RadiusInverse ), 0, maxX );
+            int xTo = (int)Math.Clamp( MathF.Floor( ( x + distance ) * RadiusInverse ), 0, maxX );
+            int yFrom = (int)Math.Clamp( MathF.Floor( ( y - distance ) * RadiusInverse ), 0, maxY );
+            int yTo = (int)Math.Clamp( MathF.Floor( ( y + distance ) * RadiusInverse ), 0, maxY );
+
+            for ( int i = xFrom; i <= xTo; i++ ) {
+                for ( int j = yFrom; j <= yTo; j++ ) {
+                    var list = hash[i, j];
+                    for ( int k = 0; k < list.Count; k++ ) {
+                        yield return list[ k ];
+                    }
+                }
+            }
+        }
+
+        public IDisposable GetClose ( Vector2 pos, float distance, out Span<T> arr ) {
+            return GetClose( pos.X, pos.Y, distance, out arr );
+        }
+        public IDisposable GetClose ( float x, float y, float distance, out Span<T> arr ) {
+            x -= minX;
+            y -= minY;
+            int xFrom = (int)Math.Clamp( MathF.Floor( ( x - distance ) * RadiusInverse ), 0, maxX );
+            int xTo = (int)Math.Clamp( MathF.Floor( ( x + distance ) * RadiusInverse ), 0, maxX );
+            int yFrom = (int)Math.Clamp( MathF.Floor( ( y - distance ) * RadiusInverse ), 0, maxY );
+            int yTo = (int)Math.Clamp( MathF.Floor( ( y + distance ) * RadiusInverse ), 0, maxY );
+
+            int count = 0;
+            for ( int i = xFrom; i <= xTo; i++ ) {
+                for ( int j = yFrom; j <= yTo; j++ ) {
+                    var list = hash[ i, j ];
+                    count += list.Count;
+                }
+            }
+
+            var lease = ArrayPool<T>.Rent( count, out var array );
+
+            count = 0;
+            for ( int i = xFrom; i <= xTo; i++ ) {
+                for ( int j = yFrom; j <= yTo; j++ ) {
+                    var list = hash[ i, j ];
+                    for ( int k = 0; k < list.Count; k++ ) {
+                        array[ count++ ] = list[ k ];
+                    }
+                }
+            }
+
+            arr = array.AsSpan( 0, count );
+            return lease;
+        }
+
+        public IDisposable GetClose ( Vector2 pos, float distance, int size, out Span<T> arr ) {
+            return GetClose( pos.X, pos.Y, distance, size, out arr );
+        }
+        public IDisposable GetClose ( float x, float y, float distance, int size, out Span<T> arr ) {
+            x -= minX;
+            y -= minY;
+            int xFrom = (int)Math.Clamp( MathF.Floor( ( x - distance ) * RadiusInverse ), 0, maxX );
+            int xTo = (int)Math.Clamp( MathF.Floor( ( x + distance ) * RadiusInverse ), 0, maxX );
+            int yFrom = (int)Math.Clamp( MathF.Floor( ( y - distance ) * RadiusInverse ), 0, maxY );
+            int yTo = (int)Math.Clamp( MathF.Floor( ( y + distance ) * RadiusInverse ), 0, maxY );
+
+            var lease = ArrayPool<T>.Rent( size, out var array );
+
+            int count = 0;
+            for ( int i = xFrom; i <= xTo; i++ ) {
+                for ( int j = yFrom; j <= yTo; j++ ) {
+                    var list = hash[ i, j ];
+                    for ( int k = 0; k < list.Count; k++ ) {
+                        array[ count++ ] = list[ k ];
+                    }
+                }
+            }
+
+            arr = array.AsSpan( 0, count );
+            return lease;
+        }
+
+        public void ForeachClose ( Vector2 pos, float distance, Action<T> action ) {
+            ForeachClose( pos.X, pos.Y, distance, action );
+        }
+        public void ForeachClose ( float x, float y, float distance, Action<T> action ) {
+            x -= minX;
+            y -= minY;
+            int xFrom = (int)Math.Clamp( MathF.Floor( ( x - distance ) * RadiusInverse ), 0, maxX );
+            int xTo = (int)Math.Clamp( MathF.Floor( ( x + distance ) * RadiusInverse ), 0, maxX );
+            int yFrom = (int)Math.Clamp( MathF.Floor( ( y - distance ) * RadiusInverse ), 0, maxY );
+            int yTo = (int)Math.Clamp( MathF.Floor( ( y + distance ) * RadiusInverse ), 0, maxY );
+
+            int count = 0;
+            for ( int i = xFrom; i <= xTo; i++ ) {
+                for ( int j = yFrom; j <= yTo; j++ ) {
+                    var list = hash[ i, j ];
+                    for ( int k = 0; k < list.Count; k++ ) {
+                        action(list[ k ]);
                     }
                 }
             }
