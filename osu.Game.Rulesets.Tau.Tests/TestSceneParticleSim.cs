@@ -94,7 +94,8 @@ namespace osu.Game.Rulesets.Tau.Tests
             // viscosity
             // velocity
 #if DRAW_PARTICLES
-            createVectorField( 15, 15, 18 * 4 / 3, x => x.Velocity, Field.KernelBell() );
+            //createScalarField( 15, 15, 24, x => x.Velocity, Field.KernelBell(), fn => Field.Curl(fn) );
+            createVectorField( 15, 15, 24, x => x.Velocity, Field.KernelBell() );
 #endif
             // laplacian
             //createVectorField( 30, 30, 12, x => x.Velocity, Field.Laplacian( Field.KernelAsymptote()) );
@@ -211,13 +212,29 @@ namespace osu.Game.Rulesets.Tau.Tests
                 using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
                     return ParticleField<ParticleData>.FieldAt( pos, arr, selector, kernel, FIELD_SCALE );
             }, data => {
-                return (from is null ? min(data) : from.Value, to is null ? max(data) : to.Value);
+                return (from is null ? min( data ) : from.Value, to is null ? max( data ) : to.Value);
             }, pos => new Box {
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
                 Position = pos,
                 Size = new( res )
-            }, (v, d, range) => {
+            }, ( v, d, range ) => {
+                d.Colour = Interpolation.ValueAt( v, Colour4.Blue, Colour4.Red, range.Item1, range.Item2 );
+            } );
+        }
+
+        Drawable createScalarField ( int w, int h, float res, Func<ParticleData, Vector2> selector, Field.ScalarFn kernel, Func<Field.VectorFn, Field.ScalarFn> transformer, float? from = null, float? to = null ) {
+            return createField( w, h, res, pos => {
+                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
+                    return ParticleField<ParticleData>.FieldAt( pos, arr, selector, kernel, transformer, FIELD_SCALE );
+            }, data => {
+                return (from is null ? min( data ) : from.Value, to is null ? max( data ) : to.Value);
+            }, pos => new Box {
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Position = pos,
+                Size = new( res )
+            }, ( v, d, range ) => {
                 d.Colour = Interpolation.ValueAt( v, Colour4.Blue, Colour4.Red, range.Item1, range.Item2 );
             } );
         }
@@ -291,9 +308,10 @@ namespace osu.Game.Rulesets.Tau.Tests
             var delta = MathF.Min( (float)Time.Elapsed, 100 ) / 1000 * 14;
             if (lastMousePos != mousePos) {
                 var drag = (mousePos - lastMousePos) / delta;
+                var factor = 1 - MathF.Pow( 1 - 0.9f, delta ); // 0 -> 0, 1 -> 0.9, 2 -> 0.99
 
-                distanceHash.ForeachClose( mousePos, FIELD_SCALE, ( ref ParticleData i ) => {
-                    i.Velocity = ( i.Velocity * 5 + drag ) / 6;
+                distanceHash.ForeachClose( mousePos, FIELD_SCALE, (ref ParticleData i) => {
+                    i.Velocity = i.Velocity * (1 - factor) + drag * factor;
                 } );
 
                 lastMousePos = mousePos;
@@ -366,32 +384,37 @@ namespace osu.Game.Rulesets.Tau.Tests
             const float spikeGradientFactor = -(-45f / MathF.PI / h6) / 2;
             const float kernelBellFactor = 315f / 64 / MathF.PI / h6;
             const float kernelSpikeFactor = 15f / MathF.PI / h6;
+            Vector2 temp;
             Vector2 optimizedAccelerationField ( Particle p ) {
+                var ownPosition = p.Position;
+                var ownVelocity = p.Velocity;
+                var ownDensity = p.Density;
+
                 Vector2 pressureGradient = Vector2.Zero;
                 Vector2 viscosity = Vector2.Zero;
                 float density = 0;
 
                 // merging ParticleField<T>.FieldAt
-                distanceHash.ForeachClose( p.Position, FIELD_SCALE, (ref ParticleData particle) => {
+                distanceHash.ForeachClose( p.Position, FIELD_SCALE, particle => {
                     // merging kernels
-                    var pos = ( p.Position - particle.Position ) * scaleInv;
-                    var r = pos.LengthFast;
+                    // using Vector2 ref methods, we dont copy vector2s each time
+                    Vector2.Subtract(ref ownPosition, ref particle.Position, out temp);
+                    Vector2.Multiply(ref temp, scaleInv, out temp);
+                    var r = 1f / MathHelper.InverseSqrtFast( temp.LengthSquared );
 
-                    if ( r < 0 || r >= h )
+                    if ( r <= 0 || r >= h )
                         return;
 
                     var volume = particle.Volume;
                     var hmr = h - r;
                     var h2mr2 = hmr * (h + r); // (a-b)(a+b) = a^2 - b^2
 
-                    var spikeGradientResult = spikeGradientFactor * ( h2 / r - 2 * h + r ) * pos;
-                    var kernelBellResult = kernelBellFactor * h2mr2 * h2mr2 * h2mr2;
-                    var kernelSpikeResult = kernelSpikeFactor * hmr * hmr * hmr;
-
-                    // if we keep some of these constant this can be optimized
-                    pressureGradient += volume * ( particle.Density + p.Density ) * spikeGradientResult;
-                    viscosity += volume * kernelBellResult * ( particle.Velocity - p.Velocity );
-                    density += particle.Mass * kernelSpikeResult;
+                    Vector2.Multiply(ref temp, spikeGradientFactor * ( h2 / r - 2 * h + r ) * volume * ( particle.Density + ownDensity ), out temp);
+                    Vector2.Add(ref pressureGradient, ref temp, out pressureGradient);
+                    Vector2.Subtract(ref particle.Velocity, ref ownVelocity, out temp);
+                    Vector2.Multiply(ref temp, volume * kernelBellFactor * h2mr2 * h2mr2 * h2mr2, out temp);
+                    Vector2.Add(ref viscosity, ref temp, out viscosity);
+                    density += particle.Mass * kernelSpikeFactor * hmr * hmr * hmr;
                 } );
 
                 var force = pressureGradient + viscosity /*+ sufraceTensionForce( p ) / 6*/;
@@ -746,6 +769,27 @@ namespace osu.Game.Rulesets.Tau.Tests
                     var arr = CollectionsMarshal.AsSpan(list);
                     for ( int k = 0; k < list.Count; k++ ) {
                         action(ref arr[k]);
+                    }
+                }
+            }
+        }
+
+        public void ForeachClose ( Vector2 pos, float distance, Action<T> action ) {
+            ForeachClose( pos.X, pos.Y, distance, action );
+        }
+        public void ForeachClose ( float x, float y, float distance, Action<T> action ) {
+            x -= minX;
+            y -= minY;
+            int xFrom = (int)Math.Clamp( MathF.Floor( ( x - distance ) * RadiusInverse ), 0, maxX );
+            int xTo = (int)Math.Clamp( MathF.Floor( ( x + distance ) * RadiusInverse ), 0, maxX );
+            int yFrom = (int)Math.Clamp( MathF.Floor( ( y - distance ) * RadiusInverse ), 0, maxY );
+            int yTo = (int)Math.Clamp( MathF.Floor( ( y + distance ) * RadiusInverse ), 0, maxY );
+
+            for ( int i = xFrom; i <= xTo; i++ ) {
+                for ( int j = yFrom; j <= yTo; j++ ) {
+                    var list = hash[ i, j ];
+                    for ( int k = 0; k < list.Count; k++ ) {
+                        action( list[ k ] );
                     }
                 }
             }

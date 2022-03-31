@@ -62,8 +62,8 @@ namespace osu.Game.Rulesets.Tau.Physics {
             var sInv = 1 / s / 2;
 
             return p => {
-                var dy_dx = (fn(p + new Vector2(s, 0)).Y - fn(p - new Vector2(s, 0)).Y) * sInv;
-                var dx_dy = (fn(p + new Vector2(0, s)).X - fn(p - new Vector2(0, s)).X) * sInv;
+                var dy_dx = ( fn( p + new Vector2( s, 0 ) ).Y - fn( p - new Vector2( s, 0 ) ).Y ) * sInv;
+                var dx_dy = ( fn( p + new Vector2( 0, s ) ).X - fn( p - new Vector2( 0, s ) ).X ) * sInv;
 
                 return dy_dx - dx_dy;
             };
@@ -220,6 +220,34 @@ namespace osu.Game.Rulesets.Tau.Physics {
             for ( int i = 0; i < particles.Length; i++ ) {
                 var particle = particles[i];
                 value += selector( particle ) * kernel( position - particle.Position * scaleInv );
+            }
+
+            return value;
+        }
+
+        public static float FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, Func<Field.VectorFn, Field.ScalarFn> transformer, float scale = 1 ) {
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
+
+            float value = 0;
+            foreach ( var particle in particles ) {
+                var pos = position - particle.Position * scaleInv;
+
+                value += transformer( p => selector( particle ) * kernel( p ) )( pos );
+            }
+
+            return value;
+        }
+        public static float FieldAt ( Vector2 position, Span<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, Func<Field.VectorFn, Field.ScalarFn> transformer, float scale = 1 ) {
+            var scaleInv = 1 / scale;
+            position *= scaleInv;
+
+            float value = 0;
+            for ( int i = 0; i < particles.Length; i++ ) {
+                var particle = particles[ i ];
+                var pos = position - particle.Position * scaleInv;
+
+                value += transformer( p => selector( particle ) * kernel( p ) )( pos );
             }
 
             return value;
