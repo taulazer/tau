@@ -11,6 +11,7 @@ using osu.Game.Tests.Visual;
 using osuTK;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace osu.Game.Rulesets.Tau.Tests
@@ -394,28 +395,43 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Vector2 viscosity = Vector2.Zero;
                 float density = 0;
 
-                // merging ParticleField<T>.FieldAt
-                distanceHash.ForeachClose( p.Position, FIELD_SCALE, particle => {
-                    // merging kernels
-                    // using Vector2 ref methods, we dont copy vector2s each time
-                    Vector2.Subtract(ref ownPosition, ref particle.Position, out temp);
-                    Vector2.Multiply(ref temp, scaleInv, out temp);
-                    var r = 1f / MathHelper.InverseSqrtFast( temp.LengthSquared );
+                var x = ownPosition.X - distanceHash.minX;
+                var y = ownPosition.Y - distanceHash.minY;
+                int xFrom = (int)Math.Clamp( MathF.Floor( ( x - FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxX );
+                int xTo = (int)Math.Clamp( MathF.Floor( ( x + FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxX );
+                int yFrom = (int)Math.Clamp( MathF.Floor( ( y - FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxY );
+                int yTo = (int)Math.Clamp( MathF.Floor( ( y + FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxY );
+                var hash = distanceHash.Hash;
 
-                    if ( r <= 0 || r >= h )
-                        return;
+                // inlining distanceHash method
+                for ( int i = xFrom; i <= xTo; i++ ) {
+                    for ( int j = yFrom; j <= yTo; j++ ) {
+                        var list = hash[ i, j ];
+                        // merging ParticleField<T>.FieldAt
+                        for ( int k = 0; k < list.Count; k++ ) {
+                            var particle = list[k];
+                            // merging kernels
+                            // using Vector2 ref methods, we dont copy vector2s each time
+                            Vector2.Subtract( ref ownPosition, ref particle.Position, out temp );
+                            Vector2.Multiply( ref temp, scaleInv, out temp );
+                            var r = 1f / MathHelper.InverseSqrtFast( temp.LengthSquared );
 
-                    var volume = particle.Volume;
-                    var hmr = h - r;
-                    var h2mr2 = hmr * (h + r); // (a-b)(a+b) = a^2 - b^2
+                            if ( r <= 0 || r >= h )
+                                continue;
 
-                    Vector2.Multiply(ref temp, spikeGradientFactor * ( h2 / r - 2 * h + r ) * volume * ( particle.Density + ownDensity ), out temp);
-                    Vector2.Add(ref pressureGradient, ref temp, out pressureGradient);
-                    Vector2.Subtract(ref particle.Velocity, ref ownVelocity, out temp);
-                    Vector2.Multiply(ref temp, volume * kernelBellFactor * h2mr2 * h2mr2 * h2mr2, out temp);
-                    Vector2.Add(ref viscosity, ref temp, out viscosity);
-                    density += particle.Mass * kernelSpikeFactor * hmr * hmr * hmr;
-                } );
+                            var volume = particle.Volume;
+                            var hmr = h - r;
+                            var h2mr2 = hmr * ( h + r ); // (a-b)(a+b) = a^2 - b^2
+
+                            Vector2.Multiply( ref temp, spikeGradientFactor * ( h2 / r - 2 * h + r ) * volume * ( particle.Density + ownDensity ), out temp );
+                            Vector2.Add( ref pressureGradient, ref temp, out pressureGradient );
+                            Vector2.Subtract( ref particle.Velocity, ref ownVelocity, out temp );
+                            Vector2.Multiply( ref temp, volume * kernelBellFactor * h2mr2 * h2mr2 * h2mr2, out temp );
+                            Vector2.Add( ref viscosity, ref temp, out viscosity );
+                            density += particle.Mass * kernelSpikeFactor * hmr * hmr * hmr;
+                        }
+                    }
+                }
 
                 var force = pressureGradient + viscosity /*+ sufraceTensionForce( p ) / 6*/;
                 return force / density;
@@ -630,12 +646,13 @@ namespace osu.Game.Rulesets.Tau.Tests
 
     public class ArrayDistanceHash<T> {
         private List<T>[,] hash;
+        public List<T>[,] Hash => hash;
         public readonly float Radius;
         public readonly float RadiusInverse;
-        float minX;
-        float minY;
-        int maxX;
-        int maxY;
+        public readonly float minX;
+        public readonly float minY;
+        public readonly int maxX;
+        public readonly int maxY;
 
         public ArrayDistanceHash ( float radius, float minX, float maxX, float minY, float maxY ) {
             Radius = radius;
