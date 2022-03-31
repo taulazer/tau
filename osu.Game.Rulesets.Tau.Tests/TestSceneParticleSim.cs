@@ -414,16 +414,21 @@ namespace osu.Game.Rulesets.Tau.Tests
                             // using Vector2 ref methods, we dont copy vector2s each time
                             Vector2.Subtract( ref ownPosition, ref particle.Position, out temp );
                             Vector2.Multiply( ref temp, scaleInv, out temp );
-                            var r = 1f / MathHelper.InverseSqrtFast( temp.LengthSquared );
 
-                            if ( r <= 0 || r >= h )
+                            var r2 = temp.LengthSquared;
+                            if ( r2 >= h2 )
+                                continue;
+
+                            var rInv = MathHelper.InverseSqrtFast( r2 );
+                            var r = 1f / rInv;
+                            if ( r <= 0 )
                                 continue;
 
                             var volume = particle.Volume;
                             var hmr = h - r;
                             var h2mr2 = hmr * ( h + r ); // (a-b)(a+b) = a^2 - b^2
 
-                            Vector2.Multiply( ref temp, spikeGradientFactor * ( h2 / r - 2 * h + r ) * volume * ( particle.Density + ownDensity ), out temp );
+                            Vector2.Multiply( ref temp, spikeGradientFactor * ( h2 * rInv - 2 * h + r ) * volume * ( particle.Density + ownDensity ), out temp );
                             Vector2.Add( ref pressureGradient, ref temp, out pressureGradient );
                             Vector2.Subtract( ref particle.Velocity, ref ownVelocity, out temp );
                             Vector2.Multiply( ref temp, volume * kernelBellFactor * h2mr2 * h2mr2 * h2mr2, out temp );
@@ -438,18 +443,80 @@ namespace osu.Game.Rulesets.Tau.Tests
             }
 
             using ( ArrayPool<Vector2>.Rent( particles.Count, out var acceleration ) ) {
-                int i = 0;
-                foreach ( var p in particles ) {
-                    acceleration[ i++ ] = optimizedAccelerationField( p );
-                    //using ( distanceHash.GetClose( p.Position, FIELD_SCALE, particles.Count, out var neighborghood ) ) {
-                    //    acceleration[ i++ ] = accelerationField( p, neighborhood );
-                    //}
+                int n = 0;
+
+                //foreach ( var p in particles ) {
+                //    acceleration[ n++ ] = optimizedAccelerationField( p );
+                //    //using ( distanceHash.GetClose( p.Position, FIELD_SCALE, particles.Count, out var neighborghood ) ) {
+                //    //    acceleration[ n++ ] = accelerationField( p, neighborhood );
+                //    //}
+                //}
+
+                var hash = distanceHash.Hash;
+                var particleList = CollectionsMarshal.AsSpan(particles);
+                for ( int l = 0; l < particleList.Length; l++ ) {
+                    var p = particleList[l];
+                    // inlining optimizedAccelerationField
+                    var ownPosition = p.Position;
+                    var ownVelocity = p.Velocity;
+                    var ownDensity = p.Density;
+
+                    Vector2 pressureGradient = Vector2.Zero;
+                    Vector2 viscosity = Vector2.Zero;
+                    float density = 0;
+
+                    var x = ownPosition.X - distanceHash.minX;
+                    var y = ownPosition.Y - distanceHash.minY;
+                    int xFrom = (int)Math.Clamp( MathF.Floor( ( x - FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxX );
+                    int xTo = (int)Math.Clamp( MathF.Floor( ( x + FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxX );
+                    int yFrom = (int)Math.Clamp( MathF.Floor( ( y - FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxY );
+                    int yTo = (int)Math.Clamp( MathF.Floor( ( y + FIELD_SCALE ) * distanceHash.RadiusInverse ), 0, distanceHash.maxY );
+
+                    // inlining distanceHash method
+                    for ( int i = xFrom; i <= xTo; i++ ) {
+                        for ( int j = yFrom; j <= yTo; j++ ) {
+                            var list = hash[ i, j ];
+                            // merging ParticleField<T>.FieldAt
+                            for ( int k = 0; k < list.Count; k++ ) {
+                                var particle = list[ k ];
+                                // merging kernels
+                                // using Vector2 ref methods, we dont copy vector2s each time
+                                Vector2.Subtract( ref ownPosition, ref particle.Position, out temp );
+                                Vector2.Multiply( ref temp, scaleInv, out temp );
+
+                                var r2 = temp.LengthSquared;
+                                if ( r2 >= h2 )
+                                    continue;
+
+                                var rInv = MathHelper.InverseSqrtFast( r2 );
+                                var r = 1f / rInv;
+                                if ( r <= 0 )
+                                    continue;
+
+                                var volume = particle.Volume;
+                                var hmr = h - r;
+                                var h2mr2 = hmr * ( h + r ); // (a-b)(a+b) = a^2 - b^2
+
+                                Vector2.Multiply( ref temp, spikeGradientFactor * ( h2 * rInv - 2 * h + r ) * volume * ( particle.Density + ownDensity ), out temp );
+                                Vector2.Add( ref pressureGradient, ref temp, out pressureGradient );
+                                Vector2.Subtract( ref particle.Velocity, ref ownVelocity, out temp );
+                                Vector2.Multiply( ref temp, volume * kernelBellFactor * h2mr2 * h2mr2 * h2mr2, out temp );
+                                Vector2.Add( ref viscosity, ref temp, out viscosity );
+                                density += particle.Mass * kernelSpikeFactor * hmr * hmr * hmr;
+                            }
+                        }
+                    }
+
+                    Vector2.Add(ref pressureGradient, ref viscosity, out temp);
+                    Vector2.Divide(ref temp, density, out acceleration[n++]);
                 }
 
-                i = 0;
+                n = 0;
                 foreach ( var p in particles ) {
-                    p.Velocity += acceleration[ i++ ] * delta;
-                    p.Position += p.Velocity * delta;
+                    Vector2.Multiply(ref acceleration[n++], delta, out temp);
+                    Vector2.Add(ref p.Velocity, ref temp, out p.Velocity);
+                    Vector2.Multiply(ref p.Velocity, delta, out temp);
+                    p.Position += temp;
 
                     if ( p.X < -360 ) {
                         p.X = -360;
