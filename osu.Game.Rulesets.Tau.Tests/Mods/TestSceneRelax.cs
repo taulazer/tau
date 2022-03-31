@@ -4,7 +4,7 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests.Mods
 {
-    public class TestSceneTauRelax : TestSceneOsuPlayer
+    public class TestSceneRelax : TestSceneOsuPlayer
     {
         protected override TestPlayer CreatePlayer(Ruleset ruleset)
         {
