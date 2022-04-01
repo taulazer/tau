@@ -177,104 +177,118 @@ namespace osu.Game.Rulesets.Tau.Physics {
     }
 
     public static class ParticleField<T> where T : IHasPosition {
-        public static float FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, float> selector, Field.ScalarFn kernel, float scale = 1 ) {
+        public delegate Span<T> ParticleSpanSelector ( Vector2 pos );
+        public delegate IDisposable RentedParticleSpanSelector ( Vector2 pos, out Span<T> span );
+
+        public static Field.ScalarFn Smoothed ( Func<Vector2, IEnumerable<T>> particleSelector, Func<T, float> selector, Field.ScalarFn kernel, float scale = 1 ) {
             var scaleInv = 1 / scale;
-            position *= scaleInv;
 
-            float value = 0;
-            foreach ( var particle in particles ) {
-                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
-            }
+            return p => {
+                float value = 0;
+                foreach ( var particle in particleSelector( p ) ) {
+                    var pos = particle.Position;
+                    Vector2.Subtract( ref p, ref pos, out pos );
+                    Vector2.Multiply( ref pos, scaleInv, out pos );
+                    value += selector( particle ) * kernel( pos );
+                }
 
-            return value;
+                return value;
+            };
         }
-        public static float FieldAt ( Vector2 position, Span<T> particles, Func<T, float> selector, Field.ScalarFn kernel, float scale = 1 ) {
+        public static Field.ScalarFn Smoothed ( ParticleSpanSelector particleSelector, Func<T, float> selector, Field.ScalarFn kernel, float scale = 1 ) {
             var scaleInv = 1 / scale;
-            position *= scaleInv;
 
-            float value = 0;
-            for ( int i = 0; i < particles.Length; i++ ) {
-                var particle = particles[i];
-                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
-            }
+            return p => {
+                float value = 0;
+                var particles = particleSelector( p );
+                for ( int i = 0; i < particles.Length; i++ ) {
+                    var particle = particles[ i ];
+                    var pos = particle.Position;
+                    Vector2.Subtract( ref p, ref pos, out pos );
+                    Vector2.Multiply( ref pos, scaleInv, out pos );
+                    value += selector( particle ) * kernel( pos );
+                }
 
-            return value;
+                return value;
+            };
         }
-
-        public static Vector2 FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
+        public static Field.ScalarFn Smoothed ( RentedParticleSpanSelector particleSelector, Func<T, float> selector, Field.ScalarFn kernel, float scale = 1 ) {
             var scaleInv = 1 / scale;
-            position *= scaleInv;
 
-            Vector2 value = Vector2.Zero;
-            foreach ( var particle in particles ) {
-                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
-            }
+            return p => {
+                float value = 0;
+                using ( particleSelector( p, out var particles ) ) {
+                    for ( int i = 0; i < particles.Length; i++ ) {
+                        var particle = particles[ i ];
+                        var pos = particle.Position;
+                        Vector2.Subtract( ref p, ref pos, out pos );
+                        Vector2.Multiply( ref pos, scaleInv, out pos );
+                        value += selector( particle ) * kernel( pos );
+                    }
+                }
 
-            return value;
-        }
-        public static Vector2 FieldAt ( Vector2 position, Span<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
-            var scaleInv = 1 / scale;
-            position *= scaleInv;
-
-            Vector2 value = Vector2.Zero;
-            for ( int i = 0; i < particles.Length; i++ ) {
-                var particle = particles[i];
-                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
-            }
-
-            return value;
-        }
-
-        public static float FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, Func<Field.VectorFn, Field.ScalarFn> transformer, float scale = 1 ) {
-            var scaleInv = 1 / scale;
-            position *= scaleInv;
-
-            float value = 0;
-            foreach ( var particle in particles ) {
-                var pos = position - particle.Position * scaleInv;
-
-                value += transformer( p => selector( particle ) * kernel( p ) )( pos );
-            }
-
-            return value;
-        }
-        public static float FieldAt ( Vector2 position, Span<T> particles, Func<T, Vector2> selector, Field.ScalarFn kernel, Func<Field.VectorFn, Field.ScalarFn> transformer, float scale = 1 ) {
-            var scaleInv = 1 / scale;
-            position *= scaleInv;
-
-            float value = 0;
-            for ( int i = 0; i < particles.Length; i++ ) {
-                var particle = particles[ i ];
-                var pos = position - particle.Position * scaleInv;
-
-                value += transformer( p => selector( particle ) * kernel( p ) )( pos );
-            }
-
-            return value;
+                return value;
+            };
         }
 
-        public static Vector2 FieldAt ( Vector2 position, IEnumerable<T> particles, Func<T, float> selector, Field.VectorFn kernel, float scale = 1 ) {
+        public static Field.VectorFn Smoothed ( Func<Vector2, IEnumerable<T>> particleSelector, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
             var scaleInv = 1 / scale;
-            position *= scaleInv;
 
-            Vector2 value = Vector2.Zero;
-            foreach ( var particle in particles ) {
-                value += selector( particle ) * kernel( position - particle.Position * scaleInv );
-            }
+            return p => {
+                Vector2 value = Vector2.Zero;
+                foreach ( var particle in particleSelector( p ) ) {
+                    var pos = particle.Position;
+                    Vector2.Subtract( ref p, ref pos, out pos );
+                    Vector2.Multiply( ref pos, scaleInv, out pos );
+                    var scale = kernel( pos );
+                    pos = selector( particle );
+                    Vector2.Multiply( ref pos, scale, out pos );
+                    Vector2.Add( ref value, ref pos, out value );
+                }
 
-            return value;
+                return value;
+            };
         }
-        public static Vector2 FieldAt ( Vector2 position, Span<T> particles, Func<T, float> selector, Field.VectorFn kernel, float scale = 1 ) {
+        public static Field.VectorFn Smoothed ( ParticleSpanSelector particleSelector, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
             var scaleInv = 1 / scale;
-            position *= scaleInv;
 
-            Vector2 value = Vector2.Zero;
-            for ( int i = 0; i < particles.Length; i++ ) {
-				var particle = particles[ i ];
-				value += selector( particle ) * kernel( position - particle.Position * scaleInv );
-			}
+            return p => {
+                Vector2 value = Vector2.Zero;
+                var particles = particleSelector( p );
+                for ( int i = 0; i < particles.Length; i++ ) {
+                    var particle = particles[ i ];
+                    var pos = particle.Position;
+                    Vector2.Subtract( ref p, ref pos, out pos );
+                    Vector2.Multiply( ref pos, scaleInv, out pos );
+                    var scale = kernel( pos );
+                    pos = selector( particle );
+                    Vector2.Multiply( ref pos, scale, out pos );
+                    Vector2.Add( ref value, ref pos, out value );
+                }
 
-            return value;
+                return value;
+            };
+        }
+        public static Field.VectorFn Smoothed ( RentedParticleSpanSelector particleSelector, Func<T, Vector2> selector, Field.ScalarFn kernel, float scale = 1 ) {
+            var scaleInv = 1 / scale;
+
+            return p => {
+                Vector2 value = Vector2.Zero;
+                using ( particleSelector( p, out var particles ) ) {
+                    for ( int i = 0; i < particles.Length; i++ ) {
+                        var particle = particles[ i ];
+                        var pos = particle.Position;
+                        Vector2.Subtract( ref p, ref pos, out pos );
+                        Vector2.Multiply( ref pos, scaleInv, out pos );
+                        var scale = kernel( pos );
+                        pos = selector( particle );
+                        Vector2.Multiply( ref pos, scale, out pos );
+                        Vector2.Add( ref value, ref pos, out value );
+                    }
+                }
+
+                return value;
+            };
         }
     }
 }

@@ -95,7 +95,12 @@ namespace osu.Game.Rulesets.Tau.Tests
             // viscosity
             // velocity
 #if DRAW_PARTICLES
-            //createScalarField( 15, 15, 24, x => x.Velocity, Field.KernelBell(), fn => Field.Curl(fn) );
+            //createScalarField( 15, 15, 24, Field.Curl( ParticleField<ParticleData>.Smoothed(
+            //    (Vector2 pos, out Span<ParticleData> arr) => distanceHash.GetClose(pos, FIELD_SCALE, out arr),
+            //    x => x.Velocity,
+            //    Field.KernelBell(),
+            //    FIELD_SCALE
+            //) ), -1, 1 );
             createVectorField( 15, 15, 24, x => x.Velocity, Field.KernelBell() );
 #endif
             // laplacian
@@ -208,43 +213,31 @@ namespace osu.Game.Rulesets.Tau.Tests
             return min;
         }
 
+        Drawable createScalarField ( int w, int h, float res, Field.ScalarFn fn, float? from = null, float? to = null ) {
+            return createField( w, h, res, p => fn(p), data => {
+                return (from is null ? min( data ) : from.Value, to is null ? max( data ) : to.Value);
+            }, pos => new Box {
+                Origin = Anchor.Centre,
+                Anchor = Anchor.Centre,
+                Position = pos,
+                Size = new( res )
+            }, ( v, d, range ) => {
+                d.Colour = Interpolation.ValueAt( v, Colour4.Blue, Colour4.Red, range.Item1, range.Item2 );
+            } );
+        }
         Drawable createScalarField ( int w, int h, float res, Func<ParticleData, float> selector, Field.ScalarFn kernel, float? from = null, float? to = null ) {
-            return createField( w, h, res, pos => {
-                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
-                    return ParticleField<ParticleData>.FieldAt( pos, arr, selector, kernel, FIELD_SCALE );
-            }, data => {
-                return (from is null ? min( data ) : from.Value, to is null ? max( data ) : to.Value);
-            }, pos => new Box {
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-                Position = pos,
-                Size = new( res )
-            }, ( v, d, range ) => {
-                d.Colour = Interpolation.ValueAt( v, Colour4.Blue, Colour4.Red, range.Item1, range.Item2 );
-            } );
+            return createScalarField( w, h, res, ParticleField<ParticleData>.Smoothed(
+                    (Vector2 pos, out Span<ParticleData> arr) => distanceHash.GetClose(pos, FIELD_SCALE, out arr),
+                    selector,
+                    kernel,
+                    FIELD_SCALE
+                ),
+                from, to
+            );
         }
 
-        Drawable createScalarField ( int w, int h, float res, Func<ParticleData, Vector2> selector, Field.ScalarFn kernel, Func<Field.VectorFn, Field.ScalarFn> transformer, float? from = null, float? to = null ) {
-            return createField( w, h, res, pos => {
-                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
-                    return ParticleField<ParticleData>.FieldAt( pos, arr, selector, kernel, transformer, FIELD_SCALE );
-            }, data => {
-                return (from is null ? min( data ) : from.Value, to is null ? max( data ) : to.Value);
-            }, pos => new Box {
-                Origin = Anchor.Centre,
-                Anchor = Anchor.Centre,
-                Position = pos,
-                Size = new( res )
-            }, ( v, d, range ) => {
-                d.Colour = Interpolation.ValueAt( v, Colour4.Blue, Colour4.Red, range.Item1, range.Item2 );
-            } );
-        }
-
-        Drawable createVectorField ( int w, int h, float res, Func<ParticleData, float> selector, Field.VectorFn gradient ) {
-            return createField( w, h, res, pos => {
-                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
-                    return ParticleField<ParticleData>.FieldAt( pos, arr, selector, gradient, FIELD_SCALE );
-            }, data => {
+        Drawable createVectorField ( int w, int h, float res, Field.VectorFn fn ) {
+            return createField( w, h, res, p => fn(p), data => {
                 return (min(data, x => x.Length), max(data, x => x.Length));
             }, pos => new Box {
                 Origin = Anchor.CentreLeft,
@@ -256,22 +249,14 @@ namespace osu.Game.Rulesets.Tau.Tests
                 d.Colour = Interpolation.ValueAt( v.Length, Colour4.Blue, Colour4.Green, range.Item1, range.Item2 );
             } );
         }
-
         Drawable createVectorField ( int w, int h, float res, Func<ParticleData, Vector2> selector, Field.ScalarFn kernel ) {
-            return createField( w, h, res, pos => {
-                using ( distanceHash.GetClose( pos, FIELD_SCALE, particles.Count, out var arr ) )
-                    return ParticleField<ParticleData>.FieldAt( pos, arr, selector, kernel, FIELD_SCALE );
-            }, data => {
-                return (min( data, x => x.Length ), max( data, x => x.Length ));
-            }, pos => new Box {
-                Origin = Anchor.CentreLeft,
-                Anchor = Anchor.Centre,
-                Position = pos
-            }, ( v, d, range ) => {
-                d.Size = range.Item1 == range.Item2 ? Vector2.Zero : new( res * ( v.Length - range.Item1 ) / ( range.Item2 - range.Item1 ) / 2, res / 8 );
-                d.Rotation = MathF.Atan2( v.Y, v.X ) / MathF.PI * 180;
-                d.Colour = Interpolation.ValueAt( v.Length, Colour4.Blue, Colour4.Green, range.Item1, range.Item2 );
-            } );
+            return createVectorField( w, h, res, ParticleField<ParticleData>.Smoothed(
+                    ( Vector2 pos, out Span<ParticleData> arr ) => distanceHash.GetClose( pos, FIELD_SCALE, out arr ),
+                    selector,
+                    kernel,
+                    FIELD_SCALE
+                )
+            );
         }
 
         Vector2 lastMousePos = Vector2.Zero;
@@ -318,65 +303,65 @@ namespace osu.Game.Rulesets.Tau.Tests
                 lastMousePos = mousePos;
             }
 
-            Vector2 pressureGradientField ( Particle i, Span<Particle> neighborhood ) {
-                return ParticleField<Particle>.FieldAt(
-                    i.Position, neighborhood,
-                    j => j.Mass * ( j.Density + i.Density ) / (2 * j.Density),
-                    spikeGradient,
-                    FIELD_SCALE
-                );
-            }
+            //Vector2 pressureGradientField ( Particle i, Span<Particle> neighborhood ) {
+            //    return ParticleField<Particle>.FieldAt(
+            //        i.Position, neighborhood,
+            //        j => j.Mass * ( j.Density + i.Density ) / (2 * j.Density),
+            //        spikeGradient,
+            //        FIELD_SCALE
+            //    );
+            //}
 
-            float densityField ( Particle i, Span<Particle> neighborhood ) {
-                return ParticleField<Particle>.FieldAt(
-                    i.Position, neighborhood,
-                    j => j.Mass,
-                    kernelSpike,
-                    FIELD_SCALE
-                );
-            }
+            //float densityField ( Particle i, Span<Particle> neighborhood ) {
+            //    return ParticleField<Particle>.FieldAt(
+            //        i.Position, neighborhood,
+            //        j => j.Mass,
+            //        kernelSpike,
+            //        FIELD_SCALE
+            //    );
+            //}
 
-            Vector2 viscosityField ( Particle i, Span<Particle> neighborhood ) {
-                return ParticleField<Particle>.FieldAt(
-                    i.Position, neighborhood,
-                    j => j.Mass * ( j.Velocity - i.Velocity ) / j.Density,
-                    kernelBell,
-                    FIELD_SCALE
-                );
-            }
+            //Vector2 viscosityField ( Particle i, Span<Particle> neighborhood ) {
+            //    return ParticleField<Particle>.FieldAt(
+            //        i.Position, neighborhood,
+            //        j => j.Mass * ( j.Velocity - i.Velocity ) / j.Density,
+            //        kernelBell,
+            //        FIELD_SCALE
+            //    );
+            //}
 
-            Vector2 colorGradient ( Particle i, Span<Particle> neighborhood ) {
-                return ParticleField<Particle>.FieldAt(
-                    i.Position, neighborhood,
-                    j => j.Volume,
-                    bellGradient,
-                    FIELD_SCALE
-                );
-            }
-            float colorLaplacian ( Particle i, Span<Particle> neighborhood ) {
-                return ParticleField<Particle>.FieldAt(
-                    i.Position, neighborhood,
-                    j => j.Volume,
-                    bellLaplacian,
-                    FIELD_SCALE
-                );
-            }
-            Vector2 sufraceTensionForce ( Particle i, Span<Particle> neighborhood ) {
-                var n = colorGradient( i, neighborhood );
-                if ( n == Vector2.Zero )
-                    return Vector2.Zero;
+            //Vector2 colorGradient ( Particle i, Span<Particle> neighborhood ) {
+            //    return ParticleField<Particle>.FieldAt(
+            //        i.Position, neighborhood,
+            //        j => j.Volume,
+            //        bellGradient,
+            //        FIELD_SCALE
+            //    );
+            //}
+            //float colorLaplacian ( Particle i, Span<Particle> neighborhood ) {
+            //    return ParticleField<Particle>.FieldAt(
+            //        i.Position, neighborhood,
+            //        j => j.Volume,
+            //        bellLaplacian,
+            //        FIELD_SCALE
+            //    );
+            //}
+            //Vector2 sufraceTensionForce ( Particle i, Span<Particle> neighborhood ) {
+            //    var n = colorGradient( i, neighborhood );
+            //    if ( n == Vector2.Zero )
+            //        return Vector2.Zero;
 
-                return -colorLaplacian( i, neighborhood ) * n.Normalized();
-            }
+            //    return -colorLaplacian( i, neighborhood ) * n.Normalized();
+            //}
 
-            Vector2 forceField ( Particle p, Span<Particle> neighborhood ) {
-                return -pressureGradientField( p, neighborhood ) + viscosityField( p, neighborhood ) /*+ sufraceTensionForce( p ) / 6*/;
-            }
+            //Vector2 forceField ( Particle p, Span<Particle> neighborhood ) {
+            //    return -pressureGradientField( p, neighborhood ) + viscosityField( p, neighborhood ) /*+ sufraceTensionForce( p ) / 6*/;
+            //}
 
-            Vector2 accelerationField ( Particle p, Span<Particle> neighborhood ) {
-                // acceleration is force / mass
-                return forceField( p, neighborhood ) / densityField( p, neighborhood );
-            }
+            //Vector2 accelerationField ( Particle p, Span<Particle> neighborhood ) {
+            //    // acceleration is force / mass
+            //    return forceField( p, neighborhood ) / densityField( p, neighborhood );
+            //}
 
             const float h = 1; // this is a parameter. you can modify it
             const float scaleInv = 1 / FIELD_SCALE;
