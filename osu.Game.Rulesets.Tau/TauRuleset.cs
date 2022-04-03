@@ -51,6 +51,7 @@ namespace osu.Game.Rulesets.Tau
                 },
                 ModType.DifficultyIncrease => new Mod[]
                 {
+                    new TauModHardRock(),
                     new TauModFlashlight()
                 },
                 ModType.Automation => new Mod[]
