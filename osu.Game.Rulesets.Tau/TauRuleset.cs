@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Tau
                 ModType.DifficultyReduction => new Mod[]
                 {
                     new TauModNoFail(),
-                    new TauModHalfTime()
+                    new MultiMod(new TauModHalfTime(), new TauModDaycore())
                 },
                 ModType.DifficultyIncrease => new Mod[]
                 {
