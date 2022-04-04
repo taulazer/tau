@@ -53,6 +53,7 @@ namespace osu.Game.Rulesets.Tau
                 {
                     new TauModHardRock(),
                     new MultiMod(new TauModSuddenDeath(), new TauModPerfect()),
+                    new TauModDoubleTime(),
                     new TauModFlashlight()
                 },
                 ModType.Automation => new Mod[]
