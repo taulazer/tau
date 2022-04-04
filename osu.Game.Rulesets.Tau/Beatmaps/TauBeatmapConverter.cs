@@ -15,7 +15,11 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
     public class TauBeatmapConverter : BeatmapConverter<TauHitObject>
     {
         // TODO: Create a more robust system.
-        public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition or IHasXPosition or IHasYPosition or IHasAngle);
+        public override bool CanConvert() => true;
+
+        public bool CanConvertToHardBeats { get; set; } = true;
+        public bool CanConvertToSliders { get; set; } = true;
+        public int SliderDivisor { get; set; } = 4;
 
         public TauBeatmapConverter(Ruleset ruleset, IBeatmap beatmap)
             : base(beatmap, ruleset)
@@ -29,11 +33,11 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             return original switch
             {
                 IHasPathWithRepeats path => convertToSlider(original, path, isHard, beatmap.Difficulty).Yield(),
-                _ => isHard ? convertToHardBeat(original).Yield() : convertToBeat(original).Yield()
+                _ => isHard && CanConvertToHardBeats ? convertToHardBeat(original).Yield() : convertToBeat(original).Yield()
             };
         }
 
-        private static TauHitObject convertToBeat(HitObject original)
+        private TauHitObject convertToBeat(HitObject original)
         {
             float angle = original switch
             {
@@ -52,19 +56,22 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             };
         }
 
-        private static TauHitObject convertToHardBeat(HitObject original) =>
+        private TauHitObject convertToHardBeat(HitObject original) =>
             new HardBeat
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
             };
 
-        private static TauHitObject convertToSlider(HitObject original, IHasPathWithRepeats data, bool isHard, IBeatmapDifficultyInfo info)
+        private TauHitObject convertToSlider(HitObject original, IHasPathWithRepeats data, bool isHard, IBeatmapDifficultyInfo info)
         {
             TauHitObject convertBeat()
-                => isHard ? convertToHardBeat(original) : convertToBeat(original);
+                => CanConvertToHardBeats && isHard ? convertToHardBeat(original) : convertToBeat(original);
 
-            if (data.Duration < IBeatmapDifficultyInfo.DifficultyRange(info.ApproachRate, 1800, 1200, 450) / 4)
+            if (!CanConvertToSliders)
+                return convertBeat();
+
+            if (data.Duration < IBeatmapDifficultyInfo.DifficultyRange(info.ApproachRate, 1800, 1200, 450) / SliderDivisor)
                 return convertBeat();
 
             var nodes = new List<Slider.SliderNode>();

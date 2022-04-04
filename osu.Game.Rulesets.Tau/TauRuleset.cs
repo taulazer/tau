@@ -64,7 +64,8 @@ namespace osu.Game.Rulesets.Tau
                 },
                 ModType.Conversion => new Mod[]
                 {
-                    new TauModDifficultyAdjust()
+                    new TauModDifficultyAdjust(),
+                    new TauModLite()
                 },
                 ModType.Fun => new Mod[]
                 {
