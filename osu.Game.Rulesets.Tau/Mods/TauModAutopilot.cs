@@ -19,6 +19,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override ModType Type => ModType.Automation;
         public override string Description => @"Automatic paddle movement - just follow the rhythm.";
         public override double ScoreMultiplier => 1;
+        public override Type[] IncompatibleMods => new[] { typeof(ModRelax), typeof(ModFailCondition), typeof(ModNoFail), typeof(ModAutoplay) };
 
         public bool PerformFail() => false;
 
