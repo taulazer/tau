@@ -2,17 +2,17 @@
 using NUnit.Framework;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Testing;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneSlider : TestScene
+    public class TestSceneSlider : OsuTestScene
     {
         private int depthIndex;
 
