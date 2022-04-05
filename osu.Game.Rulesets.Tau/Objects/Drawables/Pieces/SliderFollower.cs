@@ -9,6 +9,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
     {
         public BindableBool IsTracking = new();
 
+        public bool Inversed;
+
         public SliderFollower()
         {
             CircularContainer container;
@@ -33,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
             IsTracking.BindValueChanged(t =>
             {
                 container.FadeTo(t.NewValue ? 1f : 0f, 600, Easing.OutQuint);
-                container.MoveToY(t.NewValue ? -0.5f - 0.025f : -0.5f, 600, Easing.OutQuint);
+                container.MoveToY(t.NewValue ? (Inversed ? -0.5f + 0.05f : -0.5f - 0.025f) : -0.5f, 600, Easing.OutQuint);
             }, true);
         }
 

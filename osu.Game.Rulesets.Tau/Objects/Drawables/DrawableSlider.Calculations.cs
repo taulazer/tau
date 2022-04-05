@@ -34,6 +34,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 // Larger the time, the further in it is.
                 float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * maxDistance;
 
+                if (inversed)
+                    distanceFromCentre = (maxDistance * 2) - distanceFromCentre;
+
                 // Angle calc
                 float difference = (nextNode.Angle - currentNode.Angle) % 360;
 
@@ -52,6 +55,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 double progress = 1 - timeDiff / HitObject.TimePreempt;
 
                 float endNodeDistanceFromCentre = (float)(progress * maxDistance);
+
+                if (inversed)
+                    endNodeDistanceFromCentre = (maxDistance * 2) - endNodeDistanceFromCentre;
 
                 path.AddVertex(Extensions.GetCircularPosition(endNodeDistanceFromCentre, HitObject.Nodes.Last().Angle));
             }

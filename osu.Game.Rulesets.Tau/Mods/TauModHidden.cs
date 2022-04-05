@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Batches;
@@ -21,6 +22,7 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override string Description => @"Play with no beats and fading sliders.";
         public override double ScoreMultiplier => 1.06;
+        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(TauModInverse) }).ToArray();
 
         public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {
