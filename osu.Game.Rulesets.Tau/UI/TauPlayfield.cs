@@ -52,7 +52,11 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 new PlayfieldPiece(),
                 judgementLayer = new JudgementContainer<DrawableTauJudgement> { RelativeSizeAxes = Axes.Both },
-                HitObjectContainer,
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = HitObjectContainer
+                },
                 judgementAboveHitObjectLayer = new Container { RelativeSizeAxes = Axes.Both },
             });
 
