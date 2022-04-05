@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private OsuConfigManager config { get; set; }
 
         [Resolved(canBeNull: true)]
-        private TauPlayfield playfield { get; set; }
+        private TauCachedProperties properties { get; set; }
 
         public DrawableTauJudgement()
         {
@@ -51,7 +51,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 _ => 0f
             };
 
-            Position = Extensions.GetCircularPosition(.6f, angle);
+            var distance = 0.6f;
+
+            if (properties != null && properties.InverseModEnabled.Value)
+                distance = 0.4f;
+
+            Position = Extensions.GetCircularPosition(distance, angle);
             Rotation = angle;
         }
 

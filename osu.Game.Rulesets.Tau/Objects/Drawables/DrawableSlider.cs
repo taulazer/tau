@@ -14,6 +14,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -33,7 +34,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private readonly Path path;
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
+        private readonly CircularContainer maskingContainer;
         private readonly Cached drawCache = new();
+
+        private bool inversed;
 
         public DrawableSlider()
             : this(null)
@@ -49,7 +53,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             AddRangeInternal(new Drawable[]
             {
-                new CircularContainer
+                maskingContainer = new CircularContainer
                 {
                     Masking = true,
                     RelativeSizeAxes = Axes.Both,
@@ -121,6 +125,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
         }
 
+        [Resolved(canBeNull: true)]
+        private TauCachedProperties properties { get; set; }
+
         private double totalTimeHeld;
 
         protected override void OnApply()
@@ -128,6 +135,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.OnApply();
 
             totalTimeHeld = 0;
+
+            if (properties != null && properties.InverseModEnabled.Value)
+            {
+                inversed = Follower.Inversed = true;
+                maskingContainer.Masking = false;
+
+                path.Size = new Vector2(TauPlayfield.BaseSize.X * 2);
+            }
         }
 
         public BindableBool Tracking = new();

@@ -16,6 +16,8 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauDrawableRuleset : DrawableRuleset<TauHitObject>
     {
+        internal TauDependencyContainer TauDependencyContainer;
+
         public TauDrawableRuleset(TauRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             : base(ruleset, beatmap, mods)
         {
@@ -24,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
         {
             var dependencies = base.CreateChildDependencies(parent);
-            return new TauDependencyContainer(Beatmap, dependencies);
+            return TauDependencyContainer = new TauDependencyContainer(Beatmap, dependencies);
         }
 
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h) => null;

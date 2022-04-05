@@ -23,6 +23,7 @@ namespace osu.Game.Rulesets.Tau.UI
     public class TauCachedProperties
     {
         public readonly BindableDouble AngleRange = new(25);
+        public readonly BindableBool InverseModEnabled = new();
 
         public void SetRange(float cs)
         {
