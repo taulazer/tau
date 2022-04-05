@@ -24,6 +24,23 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         public double EndTime => StartTime + Duration;
 
+        public override IList<HitSampleInfo> AuxiliarySamples => CreateSlidingSamples().Concat(TailSamples).ToArray();
+
+        public IList<HitSampleInfo> CreateSlidingSamples()
+        {
+            var slidingSamples = new List<HitSampleInfo>();
+
+            var normalSample = Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_NORMAL);
+            if (normalSample != null)
+                slidingSamples.Add(normalSample.With("sliderslide"));
+
+            var whistleSample = Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_WHISTLE);
+            if (whistleSample != null)
+                slidingSamples.Add(whistleSample.With("sliderwhistle"));
+
+            return slidingSamples;
+        }
+
         [JsonIgnore]
         public SliderHeadBeat HeadBeat { get; protected set; }
 
@@ -64,6 +81,9 @@ namespace osu.Game.Rulesets.Tau.Objects
         /// An increase in this value increases <see cref="TickDistance"/>, which reduces the number of ticks generated.
         /// </summary>
         public double TickDistanceMultiplier = 4;
+
+        [JsonIgnore]
+        public IList<HitSampleInfo> TailSamples { get; private set; }
 
         public const int BASE_SCORING_DISTANCE = 100;
 
@@ -113,11 +133,13 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         private void updateNestedSamples()
         {
+            foreach (var repeat in NestedHitObjects.OfType<SliderRepeat>())
+                repeat.Samples = this.GetNodeSamples(repeat.RepeatIndex + 1);
+
             if (HeadBeat != null)
                 HeadBeat.Samples = this.GetNodeSamples(0);
 
-            foreach (var repeat in NestedHitObjects.OfType<SliderRepeat>())
-                repeat.Samples = this.GetNodeSamples(repeat.RepeatIndex + 1);
+            TailSamples = this.GetNodeSamples(RepeatCount + 1);
         }
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;

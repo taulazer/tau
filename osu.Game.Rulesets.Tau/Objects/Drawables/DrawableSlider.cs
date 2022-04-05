@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -9,11 +10,13 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
+using osu.Game.Audio;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Skinning;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -29,13 +32,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public DrawableSliderHead SliderHead => headContainer.Child;
 
-        public SliderFollower Follower { get; private set; }
-
+        private readonly SliderFollower follower;
         private readonly Path path;
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
         private readonly CircularContainer maskingContainer;
         private readonly Cached drawCache = new();
+        private readonly PausableSkinnableSound slidingSample;
 
         private bool inversed;
 
@@ -75,16 +78,18 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         },
                     }
                 },
-                Follower = new SliderFollower()
+                follower = new SliderFollower()
                 {
                     AlwaysPresent = true,
                     Alpha = 0
                 },
                 headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
+                slidingSample = new PausableSkinnableSound { Looping = true }
             });
 
-            Follower.IsTracking.BindTo(Tracking);
+            follower.IsTracking.BindTo(Tracking);
+            Tracking.BindValueChanged(updateSlidingSample);
         }
 
         protected override void AddNestedHitObject(DrawableHitObject hitObject)
@@ -138,11 +143,46 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (properties != null && properties.InverseModEnabled.Value)
             {
-                inversed = Follower.Inversed = true;
+                inversed = follower.Inversed = true;
                 maskingContainer.Masking = false;
 
                 path.Size = new Vector2(TauPlayfield.BaseSize.X * 2);
             }
+        }
+
+        protected override void OnFree()
+        {
+            base.OnFree();
+
+            slidingSample.Samples = null;
+        }
+
+        protected override void LoadSamples()
+        {
+            // Note: base.LoadSamples() isn't called since the slider plays the tail's hitsounds for the time being.
+
+            if (HitObject.SampleControlPoint == null)
+            {
+                throw new InvalidOperationException($"{nameof(HitObject)}s must always have an attached {nameof(HitObject.SampleControlPoint)}." +
+                                                    $" This is an indication that {nameof(HitObject.ApplyDefaults)} has not been invoked on {this}.");
+            }
+
+            Samples.Samples = HitObject.TailSamples.Select(s => HitObject.SampleControlPoint.ApplyTo(s)).Cast<ISampleInfo>().ToArray();
+            slidingSample.Samples = HitObject.CreateSlidingSamples().Select(s => HitObject.SampleControlPoint.ApplyTo(s)).Cast<ISampleInfo>().ToArray();
+        }
+
+        public override void StopAllSamples()
+        {
+            base.StopAllSamples();
+            slidingSample?.Stop();
+        }
+
+        private void updateSlidingSample(ValueChangedEvent<bool> tracking)
+        {
+            if (tracking.NewValue)
+                slidingSample?.Play();
+            else
+                slidingSample?.Stop();
         }
 
         public BindableBool Tracking = new();
@@ -164,7 +204,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 return;
 
             updatePath();
-            Follower.UpdateProgress(getCurrentAngle());
+            follower.UpdateProgress(getCurrentAngle());
 
             drawCache.Validate();
         }
@@ -180,7 +220,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.UpdateStartTimeStateTransforms();
 
-            Follower.FadeIn();
+            follower.FadeIn();
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
