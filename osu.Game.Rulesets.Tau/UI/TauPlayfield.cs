@@ -27,6 +27,7 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container judgementAboveHitObjectLayer;
+        private readonly EffectsContainer effectsContainer;
 
         public static readonly Vector2 BaseSize = new(768);
         public static readonly Bindable<Color4> AccentColour = new(Color4Extensions.FromHex(@"FF0040"));
@@ -57,6 +58,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
+                effectsContainer = new EffectsContainer(),
                 judgementAboveHitObjectLayer = new Container { RelativeSizeAxes = Axes.Both },
             });
 
@@ -115,6 +117,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
+            effectsContainer.OnNewResult(judgedObject, result);
         }
 
         private class DrawableJudgementPool : DrawablePool<DrawableTauJudgement>
