@@ -1,4 +1,5 @@
 ﻿using System;
+using osu.Framework.Utils;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau
@@ -12,6 +13,13 @@ namespace osu.Game.Rulesets.Tau
 
         public static float GetDeltaAngle(float a, float b)
             => ((a - b) + 180) % 360 - 180;
+
+        public static float RandomBetween(float min, float max)
+        {
+            var diff = max - min;
+
+            return (RNG.NextSingle() * diff) + min;
+        }
 
         public static float GetDegreesFromPosition(this Vector2 a, Vector2 b)
         {

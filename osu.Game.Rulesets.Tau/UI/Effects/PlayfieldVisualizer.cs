@@ -9,12 +9,15 @@ using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Utils;
 using osu.Game.Graphics;
+using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class PlayfieldVisualizer : Drawable, IHasAccentColour
+    public class PlayfieldVisualizer : Drawable, IHasAccentColour, INeedsNewResult
     {
         /// <summary>
         /// The maximum length of each bar in the visualiser.
@@ -72,7 +75,25 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
         }
 
-        public void UpdateAmplitudes(float angle)
+        public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
+        {
+            switch (judgedObject.HitObject)
+            {
+                case IHasAngle angle:
+                    updateAmplitudes(angle.Angle);
+                    break;
+
+                case HardBeat _:
+                    for (int i = 0; i < 360; i += 90)
+                    {
+                        updateAmplitudes(i);
+                    }
+
+                    break;
+            }
+        }
+
+        private void updateAmplitudes(float angle)
         {
             var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser), 0, bars_per_visualiser);
             amplitudes[barIndex] += 0.5f;
