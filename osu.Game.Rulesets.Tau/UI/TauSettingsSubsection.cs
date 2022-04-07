@@ -15,6 +15,10 @@ namespace osu.Game.Rulesets.Tau.UI
         {
         }
 
+        private SettingsCheckbox showEffects;
+        private SettingsCheckbox showVisualizer;
+        private SettingsCheckbox showKiai;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -25,10 +29,20 @@ namespace osu.Game.Rulesets.Tau.UI
 
             Children = new Drawable[]
             {
-                new SettingsCheckbox
+                showEffects = new SettingsCheckbox
+                {
+                    LabelText = "Show effects",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowEffects)
+                },
+                showVisualizer = new SettingsCheckbox
                 {
                     LabelText = "Show Visualizer",
                     Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
+                },
+                showKiai = new SettingsCheckbox
+                {
+                    LabelText = "Show Kiai effects",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowKiai)
                 },
                 new SettingsSlider<float>
                 {
@@ -44,6 +58,12 @@ namespace osu.Game.Rulesets.Tau.UI
                     KeyboardStep = 1f
                 },
             };
+
+            showEffects.Current.BindValueChanged(v =>
+            {
+                showVisualizer.Current.Disabled = !v.NewValue;
+                showKiai.Current.Disabled = !v.NewValue;
+            }, true);
         }
     }
 }

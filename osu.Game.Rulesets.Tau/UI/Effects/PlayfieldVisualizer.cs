@@ -1,5 +1,6 @@
 ﻿using System;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Colour;
@@ -11,6 +12,7 @@ using osu.Framework.Utils;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 using osuTK.Graphics;
@@ -57,6 +59,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         private IShader shader;
         private readonly Texture texture;
 
+        private readonly Bindable<bool> showVisualizer = new(true);
+
         public PlayfieldVisualizer()
         {
             texture = Texture.WhitePixel;
@@ -67,12 +71,19 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             FillAspectRatio = 1;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+            AlwaysPresent = true; // This is to keep the update() function running, decaying the amplitudes.
+            Alpha = 0;
+
+            showVisualizer.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); });
         }
 
-        [BackgroundDependencyLoader]
-        private void load(ShaderManager shaders)
+        [BackgroundDependencyLoader(true)]
+        private void load(ShaderManager shaders, TauRulesetConfigManager config)
         {
             shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
+
+            config?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualizer);
+            showVisualizer.TriggerChange();
         }
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)

@@ -14,7 +14,9 @@ namespace osu.Game.Rulesets.Tau.Configuration
         {
             base.InitialiseDefaults();
 
+            SetDefault(TauRulesetSettings.ShowEffects, true);
             SetDefault(TauRulesetSettings.ShowVisualizer, true);
+            SetDefault(TauRulesetSettings.ShowKiai, true);
             SetDefault(TauRulesetSettings.PlayfieldDim, 0.7f, 0, 1, 0.01f);
             SetDefault(TauRulesetSettings.BeatSize, 16f, 10, 25, 1f);
         }
@@ -22,7 +24,9 @@ namespace osu.Game.Rulesets.Tau.Configuration
 
     public enum TauRulesetSettings
     {
+        ShowEffects,
         ShowVisualizer,
+        ShowKiai,
         PlayfieldDim,
         BeatSize,
     }
