@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         [Resolved]
         private OsuColour colour { get; set; }
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private TauCachedProperties properties { get; set; }
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
@@ -49,7 +49,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             {
                 Amount = 10,
                 Angle = angle.Angle,
-                Inversed = properties.InverseModEnabled.Value,
+                Inversed = properties?.InverseModEnabled?.Value ?? false,
                 Colour = colour.ForHitResult(result.Type)
             }));
 
@@ -63,7 +63,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             {
                 Amount = 64,
                 IsCircular = true,
-                Inversed = properties.InverseModEnabled.Value,
+                Inversed = properties?.InverseModEnabled?.Value ?? false,
                 Colour = colour.ForHitResult(result.Type)
             }));
 
