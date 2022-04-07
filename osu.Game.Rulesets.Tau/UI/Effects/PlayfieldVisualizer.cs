@@ -9,7 +9,6 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Utils;
-using osu.Game.Graphics;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Configuration;
@@ -19,7 +18,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class PlayfieldVisualizer : Drawable, IHasAccentColour, INeedsNewResult
+    public class PlayfieldVisualizer : Drawable, INeedsNewResult
     {
         /// <summary>
         /// The maximum length of each bar in the visualiser.
