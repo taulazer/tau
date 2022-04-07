@@ -25,6 +25,11 @@ namespace osu.Game.Rulesets.Tau.UI
 
             Children = new Drawable[]
             {
+                new SettingsCheckbox
+                {
+                    LabelText = "Show Visualizer",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
+                },
                 new SettingsSlider<float>
                 {
                     LabelText = "Playfield dim",

@@ -14,6 +14,7 @@ namespace osu.Game.Rulesets.Tau.Configuration
         {
             base.InitialiseDefaults();
 
+            SetDefault(TauRulesetSettings.ShowVisualizer, true);
             SetDefault(TauRulesetSettings.PlayfieldDim, 0.7f, 0, 1, 0.01f);
             SetDefault(TauRulesetSettings.BeatSize, 16f, 10, 25, 1f);
         }
@@ -21,7 +22,8 @@ namespace osu.Game.Rulesets.Tau.Configuration
 
     public enum TauRulesetSettings
     {
+        ShowVisualizer,
         PlayfieldDim,
-        BeatSize
+        BeatSize,
     }
 }
