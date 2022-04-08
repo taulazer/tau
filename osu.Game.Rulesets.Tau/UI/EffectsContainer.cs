@@ -13,10 +13,8 @@ namespace osu.Game.Rulesets.Tau.UI
     public class EffectsContainer : CompositeDrawable
     {
         private readonly PlayfieldVisualizer visualizer;
-        private readonly ClassicKiaiContainer classicKiaiContainer; // TODO: Replace this with a TauKiaiContainer which handles the logic of switching between different kiai effects.
 
         private readonly Bindable<bool> showEffects = new(true);
-        private readonly Bindable<bool> showKiai = new(true);
 
         public EffectsContainer()
         {
@@ -27,11 +25,10 @@ namespace osu.Game.Rulesets.Tau.UI
             InternalChildren = new Drawable[]
             {
                 visualizer = new PlayfieldVisualizer(),
-                classicKiaiContainer = new ClassicKiaiContainer()
+                new KiaiEffectContainer()
             };
 
             showEffects.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); });
-            showKiai.BindValueChanged(v => { classicKiaiContainer.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); });
         }
 
         [BackgroundDependencyLoader(true)]
@@ -40,9 +37,7 @@ namespace osu.Game.Rulesets.Tau.UI
             visualizer.AccentColour = TauPlayfield.AccentColour.Value.Opacity(0.25f);
 
             config?.BindWith(TauRulesetSettings.ShowEffects, showEffects);
-            config?.BindWith(TauRulesetSettings.ShowKiai, showKiai);
             showEffects.TriggerChange();
-            showKiai.TriggerChange();
         }
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)

@@ -10,6 +10,8 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         public readonly Paddle DrawablePaddle;
 
+        public float AngleDistanceFromLastUpdate { get; private set; }
+
         protected override Drawable CreateCursor() => new AbsoluteCursor();
 
         public TauCursor()
@@ -34,7 +36,9 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            DrawablePaddle.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+            var rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+            AngleDistanceFromLastUpdate = Extensions.GetDeltaAngle(DrawablePaddle.Rotation, rotation);
+            DrawablePaddle.Rotation = rotation;
             ActiveCursor.Position = ToLocalSpace(e.ScreenSpaceMousePosition);
 
             return false;

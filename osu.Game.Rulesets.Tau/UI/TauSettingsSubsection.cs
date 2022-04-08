@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private SettingsCheckbox showEffects;
         private SettingsCheckbox showVisualizer;
-        private SettingsCheckbox showKiai;
+        private SettingsEnumDropdown<KiaiType> kiaiType;
 
         [BackgroundDependencyLoader]
         private void load()
@@ -39,10 +39,10 @@ namespace osu.Game.Rulesets.Tau.UI
                     LabelText = "Show Visualizer",
                     Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
                 },
-                showKiai = new SettingsCheckbox
+                kiaiType = new SettingsEnumDropdown<KiaiType>()
                 {
                     LabelText = "Show Kiai effects",
-                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowKiai)
+                    Current = config.GetBindable<KiaiType>(TauRulesetSettings.KiaiType)
                 },
                 new SettingsSlider<float>
                 {
@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Tau.UI
             showEffects.Current.BindValueChanged(v =>
             {
                 showVisualizer.Current.Disabled = !v.NewValue;
-                showKiai.Current.Disabled = !v.NewValue;
+                kiaiType.Current.Disabled = !v.NewValue;
             }, true);
         }
     }

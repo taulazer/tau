@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Pooling;
@@ -30,6 +31,42 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         [Resolved(canBeNull: true)]
         private TauCachedProperties properties { get; set; }
+
+        [Resolved(canBeNull: true)]
+        private TauPlayfield playfield { get; set; }
+
+        [CanBeNull]
+        private TauCursor cursor;
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            if (playfield != null)
+            {
+                cursor = playfield.Cursor;
+
+                // TODO: This should probably not be here.
+                Vortices.Add(new Vortex
+                {
+                    Position = new Vector2(0, -((TauPlayfield.BaseSize.X / 2) + 105)),
+                    Velocity = new Vector2(20, -20),
+                    Scale = 0.01f,
+                    Speed = 10f,
+                });
+            }
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            if (cursor == null)
+                return;
+
+            Vortices[0].Position = Extensions.GetCircularPosition((properties?.InverseModEnabled?.Value ?? false) ? 120 : 420, cursor.DrawablePaddle.Rotation);
+            Vortices[0].Speed = cursor.AngleDistanceFromLastUpdate * 5;
+        }
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
@@ -195,7 +232,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         }
     }
 
-    public struct Vortex
+    public class Vortex
     {
         public Vector2 Velocity { get; set; }
         public Vector2 Position { get; set; }
