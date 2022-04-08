@@ -31,21 +31,19 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
-            switch (judgedObject.HitObject)
+            KiaiExplosionEmitter emitter = judgedObject.HitObject switch
             {
-                case IHasAngle angle:
-                    onAngledHit(angle, result);
-                    break;
+                IHasAngle angle => getEmitterForAngle(angle, result),
+                HardBeat => getEmitterForHardBeat(result),
+                _ => new KiaiExplosionEmitter()
+            };
 
-                case HardBeat:
-                    onHardHit(result);
-                    break;
-            }
+            AddInternal(emitter);
+            emitter.GoOff();
         }
 
-        private void onAngledHit(IHasAngle angle, JudgementResult result)
-        {
-            var emitter = Get(e => e.Apply(new KiaiExplosionSettings
+        private KiaiExplosionEmitter getEmitterForAngle(IHasAngle angle, JudgementResult result)
+            => Get(e => e.Apply(new KiaiExplosionSettings
             {
                 Amount = 10,
                 Angle = angle.Angle,
@@ -53,23 +51,14 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 Colour = colour.ForHitResult(result.Type)
             }));
 
-            AddInternal(emitter);
-            emitter.GoOff();
-        }
-
-        private void onHardHit(JudgementResult result)
-        {
-            var emitter = Get(e => e.Apply(new KiaiExplosionSettings
+        private KiaiExplosionEmitter getEmitterForHardBeat(JudgementResult result)
+            => Get(e => e.Apply(new KiaiExplosionSettings
             {
                 Amount = 64,
                 IsCircular = true,
                 Inversed = properties?.InverseModEnabled?.Value ?? false,
                 Colour = colour.ForHitResult(result.Type)
             }));
-
-            AddInternal(emitter);
-            emitter.GoOff();
-        }
     }
 
     public class KiaiExplosionEmitter : PoolableDrawable
@@ -92,36 +81,27 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
             for (var i = 0; i < settings.Amount; i++)
             {
-                if (this.settings.IsCircular)
-                    createCircularParticle();
-                else
-                    createAngularParticle();
+                particles.Add(createProperties(this.settings.IsCircular
+                                                   ? createCircularParticle()
+                                                   : createAngularParticle()));
             }
         }
 
         private float distance => settings.Inversed ? 0.5f - Paddle.PADDLE_RADIUS : 0.5f;
 
-        private void createAngularParticle()
-        {
-            var drawable = new Triangle
+        private Drawable createAngularParticle()
+            => new Triangle
             {
                 Position = Extensions.GetCircularPosition(distance, settings.Angle)
             };
 
-            particles.Add(createProperties(drawable));
-        }
-
-        private void createCircularParticle()
-        {
-            var drawable = new Triangle
+        private Drawable createCircularParticle()
+            => new Triangle
             {
                 Position = Extensions.GetCircularPosition(
                     (RNG.NextSingle() * 0.15f) * 0.15f + distance,
                     RNG.NextSingle() * 360f)
             };
-
-            particles.Add(createProperties(drawable));
-        }
 
         private Drawable createProperties(Drawable drawable)
             => drawable.With(d =>
