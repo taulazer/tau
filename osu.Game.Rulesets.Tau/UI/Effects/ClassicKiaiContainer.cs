@@ -31,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
-            KiaiExplosionEmitter emitter = judgedObject.HitObject switch
+            var emitter = judgedObject.HitObject switch
             {
                 IHasAngle angle => getEmitterForAngle(angle, result),
                 HardBeat => getEmitterForHardBeat(result),
@@ -76,7 +76,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         public void Apply(KiaiExplosionSettings settings)
         {
             this.settings = settings;
-
             particles.Clear();
 
             for (var i = 0; i < settings.Amount; i++)

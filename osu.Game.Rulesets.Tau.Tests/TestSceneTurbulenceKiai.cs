@@ -10,12 +10,13 @@ using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.Tau.UI.Effects;
 using osu.Game.Tests.Visual;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneClassicKiai : OsuTestScene
+    public class TestSceneTurbulenceKiai : OsuTestScene
     {
-        private ClassicKiaiContainer kiaiContainer;
+        private TurbulenceKiaiContainer kiaiContainer;
         private TauDependencyContainer dependencyContainer;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
@@ -33,9 +34,20 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Children = new Drawable[]
                 {
                     new TauPlayfield(),
-                    kiaiContainer = new ClassicKiaiContainer()
+                    kiaiContainer = new TurbulenceKiaiContainer()
                 }
             }));
+
+            AddStep("Add turbulence", () =>
+            {
+                kiaiContainer.Vortices.Add(new Vortex
+                {
+                    Position = new Vector2(0, -((TauPlayfield.BaseSize.X / 2) + 105)),
+                    Velocity = new Vector2(10),
+                    Scale = 0.01f,
+                    Speed = 5f,
+                });
+            });
         }
 
         [TestCase(false)]
