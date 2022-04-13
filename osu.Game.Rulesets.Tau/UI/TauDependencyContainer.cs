@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics.Textures;
 using osu.Game.Beatmaps;
 
 namespace osu.Game.Rulesets.Tau.UI
@@ -24,6 +25,7 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         public readonly BindableDouble AngleRange = new(25);
         public readonly BindableBool InverseModEnabled = new();
+        public Texture SliderTexture; // TODO Uhhh, dispose this at some point
 
         public void SetRange(float cs)
         {

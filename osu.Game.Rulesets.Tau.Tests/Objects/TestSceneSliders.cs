@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -12,22 +13,24 @@ using osu.Game.Tests.Visual;
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneSlider : TauTestScene
+    public class TestSceneSliders : TauTestScene
     {
         private int depthIndex;
 
-        public TestSceneSlider()
+        public TestSceneSliders()
         {
-            AddStep("Miss Single", () => Add(testSingle()));
-            AddStep("Hit Single", () => Add(testSingle(true)));
+            AddStep("Hit 100", () => AddRange(testMultiple(100, true)));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableSlider { AllJudged: false }));
         }
 
-        private Drawable testSingle(bool auto = false)
+        private IEnumerable<Drawable> testMultiple(int count, bool auto = false)
+            => Enumerable.Range(0, count).Select(x => testSingle(Time.Current + x * 100, auto));
+
+        private Drawable testSingle(double startTime, bool auto)
         {
             var slider = new Slider
             {
-                StartTime = Time.Current + 1000,
+                StartTime = startTime + 1000,
                 Nodes = new BindableList<Slider.SliderNode>(new[]
                 {
                     new Slider.SliderNode(0, 0),

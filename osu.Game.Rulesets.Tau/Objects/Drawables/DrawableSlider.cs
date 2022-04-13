@@ -18,6 +18,7 @@ using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -33,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableSliderHead SliderHead => headContainer.Child;
 
         private readonly SliderFollower follower;
-        private readonly Path path;
+        private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
         private readonly CircularContainer maskingContainer;
@@ -68,7 +69,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Alpha = 0,
                             AlwaysPresent = true
                         },
-                        path = new SmoothPath
+                        path = new SliderPath
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
@@ -128,9 +129,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void load(GameHost host)
         {
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
+            path.Texture = properties.SliderTexture ??= GenerateSmoothPathTexture( path.PathRadius, t => Color4.White );
         }
 
-        [Resolved(canBeNull: true)]
+        [Resolved]
         private TauCachedProperties properties { get; set; }
 
         private double totalTimeHeld;
@@ -141,7 +143,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             totalTimeHeld = 0;
 
-            if (properties != null && properties.InverseModEnabled.Value)
+            if (properties.InverseModEnabled.Value)
             {
                 inversed = follower.Inversed = true;
                 maskingContainer.Masking = false;
