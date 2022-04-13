@@ -54,8 +54,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
     public class TurbulenceEmitter : Emitter
     {
-        private readonly List<TriangleWithVelocity> particles = new();
-
         public TurbulenceKiaiEffect KiaiContainer => Parent as TurbulenceKiaiEffect;
         public List<Vortex> Vortices => KiaiContainer.Vortices;
 

@@ -12,7 +12,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public abstract class KiaiEffect<T> : DrawablePool<T>, INeedsNewResult
+    public abstract class KiaiEffect<T> : DrawablePool<T>, INeedsNewResult, IFollowsSlider
         where T : Emitter, new()
     {
         protected KiaiEffect()
@@ -37,6 +37,20 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 HardBeat => GetEmitterForHardBeat(result),
                 _ => new T()
             };
+
+            AddInternal(emitter);
+            emitter.GoOff();
+        }
+
+        public void UpdateSliderPosition(float angle)
+        {
+            var emitter = Get(e => e.Apply(new Emitter.EmitterSettings
+            {
+                Amount = 2,
+                Angle = angle,
+                Inversed = properties?.InverseModEnabled?.Value ?? false,
+                Colour = TauPlayfield.AccentColour.Value
+            }));
 
             AddInternal(emitter);
             emitter.GoOff();

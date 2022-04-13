@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Effects;
 
 namespace osu.Game.Rulesets.Tau.UI
@@ -13,6 +14,7 @@ namespace osu.Game.Rulesets.Tau.UI
     public class EffectsContainer : CompositeDrawable
     {
         private readonly PlayfieldVisualizer visualizer;
+        private readonly KiaiEffectContainer sliderEffects;
 
         private readonly Bindable<bool> showEffects = new(true);
 
@@ -25,7 +27,8 @@ namespace osu.Game.Rulesets.Tau.UI
             InternalChildren = new Drawable[]
             {
                 visualizer = new PlayfieldVisualizer(),
-                new KiaiEffectContainer()
+                new KiaiEffectContainer(),
+                sliderEffects = new KiaiEffectContainer(),
             };
 
             showEffects.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); });
@@ -52,6 +55,17 @@ namespace osu.Game.Rulesets.Tau.UI
                     res.OnNewResult(judgedObject, result);
                 }
             }
+        }
+
+        public void TrackSlider(float angle, DrawableSlider slider)
+        {
+            if (!slider.Tracking.Value)
+                return;
+
+            if ((int)Time.Current % 25 != 0)
+                return;
+
+            sliderEffects.UpdateSliderPosition(angle);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 
-namespace osu.Game.Rulesets.Tau.UI
+namespace osu.Game.Rulesets.Tau.UI.Effects
 {
     public interface INeedsNewResult
     {

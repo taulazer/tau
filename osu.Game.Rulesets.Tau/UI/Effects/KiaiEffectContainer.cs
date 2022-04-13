@@ -8,7 +8,7 @@ using osu.Game.Rulesets.Tau.Configuration;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class KiaiEffectContainer : CompositeDrawable, INeedsNewResult
+    public class KiaiEffectContainer : CompositeDrawable, INeedsNewResult, IFollowsSlider
     {
         private readonly ClassicKiaiEffect classicEffect;
         private readonly TurbulenceKiaiEffect turbulenceEffect;
@@ -60,6 +60,12 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         {
             classicEffect.OnNewResult(judgedObject, result);
             turbulenceEffect.OnNewResult(judgedObject, result);
+        }
+
+        public void UpdateSliderPosition(float angle)
+        {
+            classicEffect.UpdateSliderPosition(angle);
+            turbulenceEffect.UpdateSliderPosition(angle);
         }
     }
 }
