@@ -2,32 +2,15 @@
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
-using osu.Game.Graphics;
-using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.Tau.UI.Cursor;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class TurbulenceKiaiContainer : DrawablePool<TurbulenceEmitter>, INeedsNewResult
+    public class TurbulenceKiaiEffect : KiaiEffect<TurbulenceEmitter>
     {
         public List<Vortex> Vortices = new();
-
-        public TurbulenceKiaiContainer()
-            : base(20, 50)
-        {
-            RelativeSizeAxes = Axes.Both;
-            Anchor = Anchor.Centre;
-            Origin = Anchor.Centre;
-        }
-
-        [Resolved]
-        private OsuColour colour { get; set; }
 
         [Resolved(canBeNull: true)]
         private TauCachedProperties properties { get; set; }
@@ -67,118 +50,44 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             Vortices[0].Position = Extensions.GetCircularPosition((properties?.InverseModEnabled?.Value ?? false) ? 120 : 420, cursor.DrawablePaddle.Rotation);
             Vortices[0].Speed = cursor.AngleDistanceFromLastUpdate * 5;
         }
-
-        public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
-        {
-            var emitter = judgedObject.HitObject switch
-            {
-                IHasAngle angle => getEmitterForAngle(angle, result),
-                HardBeat => getEmitterForHardBeat(result),
-                _ => new TurbulenceEmitter()
-            };
-
-            AddInternal(emitter);
-            emitter.GoOff();
-        }
-
-        private TurbulenceEmitter getEmitterForAngle(IHasAngle angle, JudgementResult result)
-            => Get(e => e.Apply(new TurbulenceEmitter.TurbulenceEmitterSettings
-            {
-                Amount = 10,
-                Angle = angle.Angle,
-                Inversed = properties?.InverseModEnabled?.Value ?? false,
-                Colour = colour.ForHitResult(result.Type)
-            }));
-
-        private TurbulenceEmitter getEmitterForHardBeat(JudgementResult result)
-            => Get(e => e.Apply(new TurbulenceEmitter.TurbulenceEmitterSettings
-            {
-                Amount = 64,
-                IsCircular = true,
-                Inversed = properties?.InverseModEnabled?.Value ?? false,
-                Colour = colour.ForHitResult(result.Type)
-            }));
     }
 
-    public class TurbulenceEmitter : PoolableDrawable
+    public class TurbulenceEmitter : Emitter
     {
         private readonly List<TriangleWithVelocity> particles = new();
-        private TurbulenceEmitterSettings settings;
 
-        public TurbulenceKiaiContainer KiaiContainer => Parent as TurbulenceKiaiContainer;
+        public TurbulenceKiaiEffect KiaiContainer => Parent as TurbulenceKiaiEffect;
         public List<Vortex> Vortices => KiaiContainer.Vortices;
 
-        public TurbulenceEmitter()
-        {
-            // RelativePositionAxes = Axes.Both;
-            RelativeSizeAxes = Axes.Both;
-            Blending = BlendingParameters.Additive;
-        }
-
-        public void Apply(TurbulenceEmitterSettings settings)
-        {
-            this.settings = settings;
-            particles.Clear();
-
-            for (int i = 0; i < settings.Amount; i++)
+        protected override Drawable CreateAngularParticle()
+            => new TriangleWithVelocity
             {
-                particles.Add(createProperties(this.settings.IsCircular
-                                                   ? createCircularParticle()
-                                                   : createAngularParticle()));
-            }
-        }
-
-        private float distance => settings.Inversed ? 0.5f - Paddle.PADDLE_RADIUS : 0.5f;
-
-        private TriangleWithVelocity createAngularParticle()
-            => new()
-            {
-                Position = Extensions.GetCircularPosition(distance, settings.Angle)
+                Position = Extensions.GetCircularPosition(Distance, Settings.Angle)
             };
 
-        private TriangleWithVelocity createCircularParticle()
-            => new()
+        protected override Drawable CreateCircularParticle()
+            => new TriangleWithVelocity
             {
-                Position = Extensions.GetCircularPosition(distance, RNG.NextSingle() * 360f)
+                Position = Extensions.GetCircularPosition(Distance, RNG.NextSingle() * 360f)
             };
 
-        private TriangleWithVelocity createProperties(TriangleWithVelocity drawable)
-            => drawable.With(d =>
-            {
-                d.RelativePositionAxes = Axes.Both;
-                d.Anchor = Anchor.Centre;
-                d.Origin = Anchor.BottomCentre;
-
-                d.Colour = settings.Colour;
-                d.Rotation = (float)RNG.NextDouble() * 360f;
-                d.Size = new Vector2(RNG.Next(5, 15));
-                d.Alpha = RNG.NextSingle(0.25f, 1f);
-            });
-
-        private const double duration = 1500;
-
-        public void GoOff()
+        protected override void ApplyHitAnimation(Drawable drawable)
         {
-            AddRangeInternal(particles);
+            var particle = (TriangleWithVelocity)drawable;
 
-            foreach (var particle in particles)
-            {
-                particle.RotateTo(RNG.NextSingle(-720, 720), duration)
-                        .ResizeTo(new Vector2(RNG.Next(0, 5)), duration, Easing.OutQuint)
-                        .FadeOut(duration)
-                        .Expire(true);
+            particle.RotateTo(RNG.NextSingle(-720, 720), Duration)
+                    .ResizeTo(new Vector2(RNG.Next(0, 5)), Duration, Easing.OutQuint)
+                    .FadeOut(Duration)
+                    .Expire(true);
 
-                particle.Velocity =
-                    Extensions.GetCircularPosition(distance + (RNG.NextSingle(1, 5) * 0.15f),
-                        settings.IsCircular
-                            ? Vector2.Zero.GetDegreesFromPosition(particle.Position)
-                            : Extensions.RandomBetween(settings.Angle - 10, settings.Angle + 10));
+            particle.Velocity =
+                Extensions.GetCircularPosition(Distance + (RNG.NextSingle(1, 5) * 0.15f),
+                    Settings.IsCircular
+                        ? Vector2.Zero.GetDegreesFromPosition(particle.Position)
+                        : Extensions.RandomBetween(Settings.Angle - 10, Settings.Angle + 10));
 
-                if (settings.Inversed)
-                    particle.Velocity = -particle.Velocity;
-            }
-
-            this.Delay(duration).Expire(true);
+            if (Settings.Inversed)
+                particle.Velocity = -particle.Velocity;
         }
 
         private class TriangleWithVelocity : Triangle
@@ -220,15 +129,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 var deltaTime = (float)(Time.Elapsed * 0.001);
                 Position += new Vector2(velocity.X * deltaTime, velocity.Y * deltaTime);
             }
-        }
-
-        public struct TurbulenceEmitterSettings
-        {
-            public float Angle { get; set; }
-            public int Amount { get; set; }
-            public Colour4 Colour { get; set; }
-            public bool IsCircular { get; set; }
-            public bool Inversed { get; set; }
         }
     }
 

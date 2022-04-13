@@ -10,8 +10,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 {
     public class KiaiEffectContainer : CompositeDrawable, INeedsNewResult
     {
-        private readonly ClassicKiaiContainer classicContainer;
-        private readonly TurbulenceKiaiContainer turbulenceContainer;
+        private readonly ClassicKiaiEffect classicEffect;
+        private readonly TurbulenceKiaiEffect turbulenceEffect;
         private readonly Bindable<KiaiType> kiaiType = new();
 
         public KiaiEffectContainer()
@@ -22,8 +22,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
             InternalChildren = new Drawable[]
             {
-                classicContainer = new ClassicKiaiContainer { Alpha = 0 },
-                turbulenceContainer = new TurbulenceKiaiContainer()
+                classicEffect = new ClassicKiaiEffect { Alpha = 0 },
+                turbulenceEffect = new TurbulenceKiaiEffect()
             };
 
             kiaiType.BindValueChanged(t =>
@@ -31,19 +31,19 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 switch (t.NewValue)
                 {
                     case KiaiType.Turbulence:
-                        classicContainer.FadeTo(0f, 250, Easing.OutQuint);
-                        turbulenceContainer.FadeTo(1f, 250, Easing.OutQuint);
+                        classicEffect.FadeTo(0f, 250, Easing.OutQuint);
+                        turbulenceEffect.FadeTo(1f, 250, Easing.OutQuint);
                         break;
 
                     case KiaiType.Classic:
-                        classicContainer.FadeTo(1f, 250, Easing.OutQuint);
-                        turbulenceContainer.FadeTo(0f, 250, Easing.OutQuint);
+                        classicEffect.FadeTo(1f, 250, Easing.OutQuint);
+                        turbulenceEffect.FadeTo(0f, 250, Easing.OutQuint);
                         break;
 
                     case KiaiType.None:
                     default:
-                        classicContainer.FadeTo(0f, 250, Easing.OutQuint);
-                        turbulenceContainer.FadeTo(0f, 250, Easing.OutQuint);
+                        classicEffect.FadeTo(0f, 250, Easing.OutQuint);
+                        turbulenceEffect.FadeTo(0f, 250, Easing.OutQuint);
                         break;
                 }
             });
@@ -58,8 +58,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
-            classicContainer.OnNewResult(judgedObject, result);
-            turbulenceContainer.OnNewResult(judgedObject, result);
+            classicEffect.OnNewResult(judgedObject, result);
+            turbulenceEffect.OnNewResult(judgedObject, result);
         }
     }
 }

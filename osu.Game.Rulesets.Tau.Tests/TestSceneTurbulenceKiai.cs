@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Tau.Tests
 {
     public class TestSceneTurbulenceKiai : OsuTestScene
     {
-        private TurbulenceKiaiContainer kiaiContainer;
+        private TurbulenceKiaiEffect kiaiContainer;
         private TauDependencyContainer dependencyContainer;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Children = new Drawable[]
                 {
                     new TauPlayfield(),
-                    kiaiContainer = new TurbulenceKiaiContainer()
+                    kiaiContainer = new TurbulenceKiaiEffect()
                 }
             }));
 
