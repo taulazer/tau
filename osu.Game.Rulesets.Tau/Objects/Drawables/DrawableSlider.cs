@@ -73,9 +73,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            PathRadius = 4,
-                            AutoSizeAxes = Axes.None,
-                            Size = TauPlayfield.BaseSize
+                            PathRadius = 4
                         },
                     }
                 },

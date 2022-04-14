@@ -22,12 +22,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables;
 
 public partial class DrawableSlider {
     public static Texture GenerateSmoothPathTexture ( float radius, Func<float, Color4> colourAt ) {
+        const float aa_portion = 0.02f;
         int textureWidth = (int)radius * 2;
 
-        //initialise background
         var raw = new Image<Rgba32>( textureWidth, 1 );
-
-        const float aa_portion = 0.02f;
 
         for ( int i = 0; i < textureWidth; i++ ) {
             float progress = (float)i / ( textureWidth - 1 );
@@ -42,9 +40,6 @@ public partial class DrawableSlider {
     }
 
     public class SliderPath : Drawable {
-        public IShader RoundedTextureShader { get; private set; }
-        public IShader TextureShader { get; private set; }
-
         public SliderPath () {
             AutoSizeAxes = Axes.Both;
         }
@@ -52,11 +47,10 @@ public partial class DrawableSlider {
         [BackgroundDependencyLoader]
         private void load ( ShaderManager shaders ) {
             RoundedTextureShader = shaders.Load( VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED );
-            TextureShader = shaders.Load( VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE );
         }
+        public IShader RoundedTextureShader { get; private set; }
 
-        private readonly List<Vector2> vertices = new List<Vector2>();
-
+        private readonly List<Vector2> vertices = new();
         public IReadOnlyList<Vector2> Vertices {
             get => vertices;
             set {
@@ -255,39 +249,24 @@ public partial class DrawableSlider {
                 if ( texture == value )
                     return;
 
-                //texture?.Dispose();
                 texture = value;
-
                 Invalidate( Invalidation.DrawNode );
             }
         }
 
-        public DrawColourInfo? FrameBufferDrawColour => base.DrawColourInfo;
-
-        public Vector2 FrameBufferScale { get; } = Vector2.One;
-
-        public Color4 BackgroundColour => new Color4( 0, 0, 0, 0 );
-
         protected override DrawNode CreateDrawNode () => new SliderPathDrawNode( this );
-
-        protected override void Dispose ( bool isDisposing ) {
-            base.Dispose( isDisposing );
-
-            //texture?.Dispose();
-            texture = null;
-        }
 
         public class SliderPathDrawNode : DrawNode {
             public const int MAX_RES = 24;
 
             protected new SliderPath Source => (SliderPath)base.Source;
 
-            private readonly List<Line> segments = new List<Line>();
+            private readonly List<Line> segments = new();
 
             private Texture texture;
             private Vector2 drawSize;
             private float radius;
-            private IShader pathShader;
+            private IShader shader;
 
             // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
             // per primitive (triangles in this case). Otherwise overflowing the batch will result in wrong
@@ -308,7 +287,7 @@ public partial class DrawableSlider {
                 texture = Source.Texture;
                 drawSize = Source.DrawSize;
                 radius = Source.PathRadius;
-                pathShader = Source.RoundedTextureShader;
+                shader = Source.RoundedTextureShader;
             }
 
             private Vector2 pointOnCircle ( float angle ) => new Vector2( MathF.Sin( angle ), -MathF.Cos( angle ) );
@@ -453,21 +432,13 @@ public partial class DrawableSlider {
                 if ( texture?.Available != true || segments.Count == 0 )
                     return;
 
-                // blending my ass fix your code instead of blaming it on blending
-                //GLWrapper.PushDepthInfo( DepthInfo.Default );
-
-                // Blending is removed to allow for correct blending between the wedges of the path.
-                //GLWrapper.SetBlend( BlendingParameters.None );
-
-                pathShader.Bind();
+                shader.Bind();
 
                 texture.TextureGL.Bind();
 
                 updateVertexBuffer();
 
-                pathShader.Unbind();
-
-                //GLWrapper.PopDepthInfo();
+                shader.Unbind();
             }
 
             protected override void Dispose ( bool isDisposing ) {
