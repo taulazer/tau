@@ -1,12 +1,11 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Tau.UI;
-using osu.Game.Tests.Visual;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneTauPlayfield : OsuTestScene
+    public class TestSceneTauPlayfield : TauTestScene
     {
         public TestSceneTauPlayfield()
         {
