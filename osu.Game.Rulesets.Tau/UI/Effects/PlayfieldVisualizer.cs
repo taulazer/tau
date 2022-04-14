@@ -72,8 +72,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             Origin = Anchor.Centre;
             AlwaysPresent = true; // This is to keep the update() function running, decaying the amplitudes.
             Alpha = 0;
-
-            showVisualizer.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); });
         }
 
         [BackgroundDependencyLoader(true)]
@@ -82,6 +80,12 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
 
             config?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualizer);
+            showVisualizer.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); }, true);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
             showVisualizer.TriggerChange();
         }
 

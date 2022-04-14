@@ -25,6 +25,12 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 classicEffect = new ClassicKiaiEffect { Alpha = 0 },
                 turbulenceEffect = new TurbulenceKiaiEffect()
             };
+        }
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.KiaiType, kiaiType);
 
             kiaiType.BindValueChanged(t =>
             {
@@ -46,13 +52,12 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                         turbulenceEffect.FadeTo(0f, 250, Easing.OutQuint);
                         break;
                 }
-            });
+            }, true);
         }
 
-        [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
+        protected override void LoadComplete()
         {
-            config?.BindWith(TauRulesetSettings.KiaiType, kiaiType);
+            base.LoadComplete();
             kiaiType.TriggerChange();
         }
 

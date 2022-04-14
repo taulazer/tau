@@ -98,7 +98,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 case DrawableSlider s:
                     s.CheckValidation = ang =>
                     {
-                        effectsContainer.TrackSlider(Cursor.DrawablePaddle.Rotation, s);
+                        effectsContainer.TrackSlider(ang, s);
                         return checkPaddlePosition(ang);
                     };
                     break;
