@@ -145,8 +145,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 inversed = follower.Inversed = true;
                 maskingContainer.Masking = false;
-
-                path.Size = new Vector2(TauPlayfield.BaseSize.X * 2);
             }
         }
 

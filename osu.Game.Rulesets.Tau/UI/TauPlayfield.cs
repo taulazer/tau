@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public new TauCursor Cursor => base.Cursor as TauCursor;
 
-        private TauCachedProperties tauCachedProperties = new();
+        private TauCachedProperties tauCachedProperties;
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
@@ -72,11 +72,10 @@ namespace osu.Game.Rulesets.Tau.UI
             AddRangeInternal(poolDictionary.Values);
         }
 
-        [BackgroundDependencyLoader(true)]
+        [BackgroundDependencyLoader]
         private void load(TauCachedProperties props)
         {
-            if (props != null)
-                tauCachedProperties = props;
+            tauCachedProperties = props;
 
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);

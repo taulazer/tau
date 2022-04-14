@@ -6,7 +6,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneTauPlayfield : OsuTestScene
+    public class TestSceneTauPlayfield : TauTestScene
     {
         public TestSceneTauPlayfield()
         {
