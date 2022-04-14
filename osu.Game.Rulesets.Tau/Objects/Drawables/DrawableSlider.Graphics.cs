@@ -44,7 +44,6 @@ public partial class DrawableSlider {
     public class SliderPath : Drawable {
         public IShader RoundedTextureShader { get; private set; }
         public IShader TextureShader { get; private set; }
-        private IShader pathShader;
 
         public SliderPath () {
             AutoSizeAxes = Axes.Both;
@@ -54,7 +53,6 @@ public partial class DrawableSlider {
         private void load ( ShaderManager shaders ) {
             RoundedTextureShader = shaders.Load( VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED );
             TextureShader = shaders.Load( VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE );
-            pathShader = shaders.Load( VertexShaderDescriptor.TEXTURE_3, FragmentShaderDescriptor.TEXTURE );
         }
 
         private readonly List<Vector2> vertices = new List<Vector2>();
@@ -268,9 +266,6 @@ public partial class DrawableSlider {
 
         public Vector2 FrameBufferScale { get; } = Vector2.One;
 
-        // The path should not receive the true colour to avoid colour doubling when the frame-buffer is rendered to the back-buffer.
-        public override DrawColourInfo DrawColourInfo => new DrawColourInfo( Color4.White, base.DrawColourInfo.Blending );
-
         public Color4 BackgroundColour => new Color4( 0, 0, 0, 0 );
 
         protected override DrawNode CreateDrawNode () => new SliderPathDrawNode( this );
@@ -297,8 +292,8 @@ public partial class DrawableSlider {
             // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
             // per primitive (triangles in this case). Otherwise overflowing the batch will result in wrong
             // grouping of vertices into primitives.
-            private readonly LinearBatch<TexturedVertex3D> halfCircleBatch = new LinearBatch<TexturedVertex3D>( MAX_RES * 100 * 3, 10, PrimitiveType.Triangles );
-            private readonly QuadBatch<TexturedVertex3D> quadBatch = new QuadBatch<TexturedVertex3D>( 200, 10 );
+            private readonly LinearBatch<TexturedVertex2D> halfCircleBatch = new LinearBatch<TexturedVertex2D>( MAX_RES * 100 * 3, 10, PrimitiveType.Triangles );
+            private readonly QuadBatch<TexturedVertex2D> quadBatch = new QuadBatch<TexturedVertex2D>( 200, 10 );
 
             public SliderPathDrawNode ( SliderPath source )
                 : base( source ) {
@@ -313,7 +308,7 @@ public partial class DrawableSlider {
                 texture = Source.Texture;
                 drawSize = Source.DrawSize;
                 radius = Source.PathRadius;
-                pathShader = Source.pathShader;
+                pathShader = Source.RoundedTextureShader;
             }
 
             private Vector2 pointOnCircle ( float angle ) => new Vector2( MathF.Sin( angle ), -MathF.Cos( angle ) );
@@ -349,15 +344,15 @@ public partial class DrawableSlider {
 
                 for ( int i = 1; i <= amountPoints; i++ ) {
                     // Center point
-                    halfCircleBatch.Add( new TexturedVertex3D {
-                        Position = new Vector3( screenOrigin.X, screenOrigin.Y, 1 ),
+                    halfCircleBatch.Add( new TexturedVertex2D {
+                        Position = new Vector2( screenOrigin.X, screenOrigin.Y ),
                         TexturePosition = new Vector2( texRect.Right, texRect.Centre.Y ),
                         Colour = originColour
                     } );
 
                     // First outer point
-                    halfCircleBatch.Add( new TexturedVertex3D {
-                        Position = new Vector3( current.X, current.Y, 0 ),
+                    halfCircleBatch.Add( new TexturedVertex2D {
+                        Position = new Vector2( current.X, current.Y ),
                         TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
                         Colour = currentColour
                     } );
@@ -368,8 +363,8 @@ public partial class DrawableSlider {
                     current = Vector2Extensions.Transform( current, DrawInfo.Matrix );
 
                     // Second outer point
-                    halfCircleBatch.Add( new TexturedVertex3D {
-                        Position = new Vector3( current.X, current.Y, 0 ),
+                    halfCircleBatch.Add( new TexturedVertex2D {
+                        Position = new Vector2( current.X, current.Y ),
                         TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
                         Colour = currentColour
                     } );
@@ -385,13 +380,13 @@ public partial class DrawableSlider {
                 Line screenLineRight = new Line( Vector2Extensions.Transform( lineRight.StartPoint, DrawInfo.Matrix ), Vector2Extensions.Transform( lineRight.EndPoint, DrawInfo.Matrix ) );
                 Line screenLine = new Line( Vector2Extensions.Transform( line.StartPoint, DrawInfo.Matrix ), Vector2Extensions.Transform( line.EndPoint, DrawInfo.Matrix ) );
 
-                quadBatch.Add( new TexturedVertex3D {
-                    Position = new Vector3( screenLineRight.EndPoint.X, screenLineRight.EndPoint.Y, 0 ),
+                quadBatch.Add( new TexturedVertex2D {
+                    Position = new Vector2( screenLineRight.EndPoint.X, screenLineRight.EndPoint.Y ),
                     TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
                     Colour = colourAt( lineRight.EndPoint )
                 } );
-                quadBatch.Add( new TexturedVertex3D {
-                    Position = new Vector3( screenLineRight.StartPoint.X, screenLineRight.StartPoint.Y, 0 ),
+                quadBatch.Add( new TexturedVertex2D {
+                    Position = new Vector2( screenLineRight.StartPoint.X, screenLineRight.StartPoint.Y ),
                     TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
                     Colour = colourAt( lineRight.StartPoint )
                 } );
@@ -399,31 +394,31 @@ public partial class DrawableSlider {
                 // Each "quad" of the slider is actually rendered as 2 quads, being split in half along the approximating line.
                 // On this line the depth is 1 instead of 0, which is done properly handle self-overlap using the depth buffer.
                 // Thus the middle vertices need to be added twice (once for each quad).
-                Vector3 firstMiddlePoint = new Vector3( screenLine.StartPoint.X, screenLine.StartPoint.Y, 1 );
-                Vector3 secondMiddlePoint = new Vector3( screenLine.EndPoint.X, screenLine.EndPoint.Y, 1 );
+                Vector2 firstMiddlePoint = new Vector2( screenLine.StartPoint.X, screenLine.StartPoint.Y );
+                Vector2 secondMiddlePoint = new Vector2( screenLine.EndPoint.X, screenLine.EndPoint.Y );
                 Color4 firstMiddleColour = colourAt( line.StartPoint );
                 Color4 secondMiddleColour = colourAt( line.EndPoint );
 
                 for ( int i = 0; i < 2; ++i ) {
-                    quadBatch.Add( new TexturedVertex3D {
+                    quadBatch.Add( new TexturedVertex2D {
                         Position = firstMiddlePoint,
                         TexturePosition = new Vector2( texRect.Right, texRect.Centre.Y ),
                         Colour = firstMiddleColour
                     } );
-                    quadBatch.Add( new TexturedVertex3D {
+                    quadBatch.Add( new TexturedVertex2D {
                         Position = secondMiddlePoint,
                         TexturePosition = new Vector2( texRect.Right, texRect.Centre.Y ),
                         Colour = secondMiddleColour
                     } );
                 }
 
-                quadBatch.Add( new TexturedVertex3D {
-                    Position = new Vector3( screenLineLeft.EndPoint.X, screenLineLeft.EndPoint.Y, 0 ),
+                quadBatch.Add( new TexturedVertex2D {
+                    Position = new Vector2( screenLineLeft.EndPoint.X, screenLineLeft.EndPoint.Y ),
                     TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
                     Colour = colourAt( lineLeft.EndPoint )
                 } );
-                quadBatch.Add( new TexturedVertex3D {
-                    Position = new Vector3( screenLineLeft.StartPoint.X, screenLineLeft.StartPoint.Y, 0 ),
+                quadBatch.Add( new TexturedVertex2D {
+                    Position = new Vector2( screenLineLeft.StartPoint.X, screenLineLeft.StartPoint.Y ),
                     TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
                     Colour = colourAt( lineLeft.StartPoint )
                 } );

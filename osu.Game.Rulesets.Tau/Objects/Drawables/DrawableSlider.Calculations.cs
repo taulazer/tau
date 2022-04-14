@@ -11,59 +11,58 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void updatePath()
         {
             path.ClearVertices();
+            var nodes = HitObject.Nodes;
+            if ( nodes.Count == 0 )
+                return;
 
-            float maxDistance = TauPlayfield.BaseSize.X / 2;
+            var radius = TauPlayfield.BaseSize.X / 2;
+            var time = Time.Current - HitObject.StartTime + HitObject.TimePreempt;
+            var startTime = Math.Max( time - HitObject.TimePreempt, nodes[0].Time );
+            var endTime = Math.Min( time, nodes[^1].Time );
+            double deltaTime = 20;
 
-            for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
-                 t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
-                 t += 20)
-            {
-                var currentNode = HitObject.Nodes.Last(x => t >= HitObject.StartTime + x.Time);
-                var currentNodeIndex = HitObject.Nodes.BinarySearch(currentNode);
-                var nextNode = new Slider.SliderNode();
+            if ( time < startTime )
+                return;
 
-                if (currentNodeIndex < HitObject.Nodes.Count)
-                    nextNode = HitObject.Nodes[currentNodeIndex + 1];
+            int nodeIndex = 0;
+            while ( nodeIndex + 1 < nodes.Count && nodes[nodeIndex + 1].Time <= startTime )
+                nodeIndex++;
 
-                double nodeStart = HitObject.StartTime + currentNode.Time;
-                double nodeEnd = HitObject.StartTime + nextNode.Time;
-                double duration = nodeEnd - nodeStart;
+            float distanceAt ( double t ) => inversed
+                ? (float)( 2 * radius - ( time - t ) / HitObject.TimePreempt * radius )
+                : (float)( ( time - t ) / HitObject.TimePreempt * radius );
+            bool capAdded = false;
 
-                float actualProgress = (float)((t - nodeStart) / duration);
-
-                // Larger the time, the further in it is.
-                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * maxDistance;
-
-                if (inversed)
-                    distanceFromCentre = (maxDistance * 2) - distanceFromCentre;
-
-                // Angle calc
-                float difference = (nextNode.Angle - currentNode.Angle) % 360;
-
-                if (difference > 180) difference -= 360;
-                else if (difference < -180) difference += 360;
-
-                float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, actualProgress);
-
-                path.AddVertex(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
+            void addVertex ( double t, double angle ) {
+                path.AddVertex( Extensions.GetCircularPosition( distanceAt( t ), (float)angle ) );
             }
 
-            //Check if the last node is visible
-            if (Time.Current + HitObject.TimePreempt > HitObject.StartTime + HitObject.Nodes.Last().Time)
-            {
-                double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
-                double progress = 1 - timeDiff / HitObject.TimePreempt;
+            do {
+                var prevNode = nodes[nodeIndex];
+                var nextNode = nodeIndex + 1 < nodes.Count ? nodes[nodeIndex + 1] : prevNode;
 
-                float endNodeDistanceFromCentre = (float)(progress * maxDistance);
+                var from = Math.Max( startTime, prevNode.Time );
+                var to = Math.Min( endTime, nextNode.Time );
+                var duration = nextNode.Time - prevNode.Time;
 
-                if (inversed)
-                    endNodeDistanceFromCentre = (maxDistance * 2) - endNodeDistanceFromCentre;
+                var deltaAngle = Extensions.GetDeltaAngle( nextNode.Angle, prevNode.Angle );
+                var anglePerMs = duration != 0 ? deltaAngle / duration : 0;
 
-                path.AddVertex(Extensions.GetCircularPosition(endNodeDistanceFromCentre, HitObject.Nodes.Last().Angle));
-            }
+                if ( !capAdded )
+                    addVertex( from, prevNode.Angle + anglePerMs * ( from - prevNode.Time ) );
+                for ( var t = from + deltaTime; t < to; t += deltaTime )
+                    addVertex( t, prevNode.Angle + anglePerMs * ( t - prevNode.Time ) );
+                if ( duration != 0 )
+                    addVertex( to, prevNode.Angle + anglePerMs * ( to - prevNode.Time ) );
+                else
+                    addVertex( to, nextNode.Angle );
 
-            path.Position = path.Vertices.Any() ? path.Vertices.First() : Vector2.Zero;
-            path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.First()) : base.OriginPosition;
+                capAdded = true;
+                nodeIndex++;
+            } while ( nodeIndex < nodes.Count && nodes[nodeIndex].Time < endTime );
+
+            path.Position = path.Vertices[0];
+            path.OriginPosition = path.PositionInBoundingBox( path.Vertices[0] );
         }
 
         private bool checkIfTracking()

@@ -9,10 +9,15 @@ namespace osu.Game.Rulesets.Tau
         public static Vector2 GetCircularPosition(float distance, float angle)
             => new Vector2(
                 -(distance * MathF.Cos((angle + 90f) * (MathF.PI / 180))),
-                -(distance * MathF.Sin((angle + 90f) * (MathF.PI / 180))));
+                -(distance * MathF.Sin((angle + 90f) * (MathF.PI / 180)))
+            );
 
+        public static float mod (float a, float b) {
+            var m = a % b;
+            return m < 0 ? ( b + m ) : m;
+        }
         public static float GetDeltaAngle(float a, float b)
-            => ((a - b) + 180) % 360 - 180;
+            => mod((a - b) + 180, 360) - 180;
 
         public static float RandomBetween(float min, float max)
         {
