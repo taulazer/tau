@@ -183,9 +183,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public BindableBool Tracking = new();
 
-        [Resolved]
-        private EffectsContainer effects { get; set; }
-
         protected override void Update()
         {
             base.Update();
@@ -194,10 +191,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (Tracking.Value = checkIfTracking())
             {
                 totalTimeHeld += Time.Elapsed;
-
-                // NOTE: This still shows up on some beats, and I have absolutely no fucking idea why.
-                //       ~ Nora
-                effects.TrackSlider(getCurrentAngle());
             }
 
             // This gives us about the same performance as if we were to just would update the path without this.

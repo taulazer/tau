@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Effects;
 
 namespace osu.Game.Rulesets.Tau.UI
@@ -59,8 +60,11 @@ namespace osu.Game.Rulesets.Tau.UI
         private const double tracking_threshold = 100;
         private double currentTrackingTime;
 
-        public void TrackSlider(float angle)
+        public void TrackSlider(float angle, DrawableSlider slider)
         {
+            if (!slider.Tracking.Value)
+                return;
+
             currentTrackingTime += Time.Elapsed;
 
             if (currentTrackingTime < tracking_threshold)
