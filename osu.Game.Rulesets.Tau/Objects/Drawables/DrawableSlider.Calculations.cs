@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             var endTime = Math.Min(time, nodes[^1].Time);
 
             const double delta_time = 20;
+            const double max_angle_per_ms = 5;
 
             if (time < startTime)
                 return;
@@ -50,10 +51,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 var deltaAngle = Extensions.GetDeltaAngle(nextNode.Angle, prevNode.Angle);
                 var anglePerMs = duration != 0 ? deltaAngle / duration : 0;
+                var timeStep = Math.Min(delta_time, Math.Abs(max_angle_per_ms / anglePerMs));
 
                 if (!capAdded)
                     addVertex(from, prevNode.Angle + anglePerMs * (from - prevNode.Time));
-                for (var t = from + delta_time; t < to; t += delta_time)
+                for (var t = from + timeStep; t < to; t += timeStep)
                     addVertex(t, prevNode.Angle + anglePerMs * (t - prevNode.Time));
                 if (duration != 0)
                     addVertex(to, prevNode.Angle + anglePerMs * (to - prevNode.Time));
