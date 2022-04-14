@@ -12,4 +12,9 @@ namespace osu.Game.Rulesets.Tau.Tests;
 public class TauTestScene : OsuTestScene {
     [Cached]
     private TauCachedProperties cachedProperties { get; set; } = new();
+
+    protected override void Dispose ( bool isDisposing ) {
+        base.Dispose( isDisposing );
+        cachedProperties.Dispose();
+    }
 }
