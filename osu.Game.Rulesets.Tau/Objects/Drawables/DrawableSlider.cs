@@ -7,7 +7,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
 using osu.Game.Audio;
@@ -17,7 +16,6 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
-using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -127,7 +125,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void load(GameHost host)
         {
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
-            path.Texture = properties.SliderTexture ??= GenerateSmoothPathTexture( path.PathRadius, t => Color4.White );
+            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
         }
 
         [Resolved]

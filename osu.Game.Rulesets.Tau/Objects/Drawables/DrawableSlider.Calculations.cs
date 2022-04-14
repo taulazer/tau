@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using osu.Framework.Utils;
 using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
@@ -12,57 +11,61 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             path.ClearVertices();
             var nodes = HitObject.Nodes;
-            if ( nodes.Count == 0 )
+            if (nodes.Count == 0)
                 return;
 
             var radius = TauPlayfield.BaseSize.X / 2;
             var time = Time.Current - HitObject.StartTime + HitObject.TimePreempt;
-            var startTime = Math.Max( time - HitObject.TimePreempt, nodes[0].Time );
-            var endTime = Math.Min( time, nodes[^1].Time );
-            double deltaTime = 20;
+            var startTime = Math.Max(time - HitObject.TimePreempt, nodes[0].Time);
+            var endTime = Math.Min(time, nodes[^1].Time);
 
-            if ( time < startTime )
+            const double delta_time = 20;
+
+            if (time < startTime)
                 return;
 
             int nodeIndex = 0;
-            while ( nodeIndex + 1 < nodes.Count && nodes[nodeIndex + 1].Time <= startTime )
+            while (nodeIndex + 1 < nodes.Count && nodes[nodeIndex + 1].Time <= startTime)
                 nodeIndex++;
 
-            float distanceAt ( double t ) => inversed
-                ? (float)( 2 * radius - ( time - t ) / HitObject.TimePreempt * radius )
-                : (float)( ( time - t ) / HitObject.TimePreempt * radius );
+            float distanceAt(double t) => inversed
+                                              ? (float)(2 * radius - (time - t) / HitObject.TimePreempt * radius)
+                                              : (float)((time - t) / HitObject.TimePreempt * radius);
+
             bool capAdded = false;
 
-            void addVertex ( double t, double angle ) {
-                path.AddVertex( Extensions.GetCircularPosition( distanceAt( t ), (float)angle ) );
+            void addVertex(double t, double angle)
+            {
+                path.AddVertex(Extensions.GetCircularPosition(distanceAt(t), (float)angle));
             }
 
-            do {
+            do
+            {
                 var prevNode = nodes[nodeIndex];
                 var nextNode = nodeIndex + 1 < nodes.Count ? nodes[nodeIndex + 1] : prevNode;
 
-                var from = Math.Max( startTime, prevNode.Time );
-                var to = Math.Min( endTime, nextNode.Time );
+                var from = Math.Max(startTime, prevNode.Time);
+                var to = Math.Min(endTime, nextNode.Time);
                 var duration = nextNode.Time - prevNode.Time;
 
-                var deltaAngle = Extensions.GetDeltaAngle( nextNode.Angle, prevNode.Angle );
+                var deltaAngle = Extensions.GetDeltaAngle(nextNode.Angle, prevNode.Angle);
                 var anglePerMs = duration != 0 ? deltaAngle / duration : 0;
 
-                if ( !capAdded )
-                    addVertex( from, prevNode.Angle + anglePerMs * ( from - prevNode.Time ) );
-                for ( var t = from + deltaTime; t < to; t += deltaTime )
-                    addVertex( t, prevNode.Angle + anglePerMs * ( t - prevNode.Time ) );
-                if ( duration != 0 )
-                    addVertex( to, prevNode.Angle + anglePerMs * ( to - prevNode.Time ) );
+                if (!capAdded)
+                    addVertex(from, prevNode.Angle + anglePerMs * (from - prevNode.Time));
+                for (var t = from + delta_time; t < to; t += delta_time)
+                    addVertex(t, prevNode.Angle + anglePerMs * (t - prevNode.Time));
+                if (duration != 0)
+                    addVertex(to, prevNode.Angle + anglePerMs * (to - prevNode.Time));
                 else
-                    addVertex( to, nextNode.Angle );
+                    addVertex(to, nextNode.Angle);
 
                 capAdded = true;
                 nodeIndex++;
-            } while ( nodeIndex < nodes.Count && nodes[nodeIndex].Time < endTime );
+            } while (nodeIndex < nodes.Count && nodes[nodeIndex].Time < endTime);
 
             path.Position = path.Vertices[0];
-            path.OriginPosition = path.PositionInBoundingBox( path.Vertices[0] );
+            path.OriginPosition = path.PositionInBoundingBox(path.Vertices[0]);
         }
 
         private bool checkIfTracking()

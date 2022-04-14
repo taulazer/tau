@@ -20,5 +20,8 @@
     <Compile Update="Objects\Drawables\DrawableSlider.Calculations.cs">
       <DependentUpon>DrawableSlider.cs</DependentUpon>
     </Compile>
+    <Compile Update="Objects\Drawables\DrawableSlider.Graphics.cs">
+      <DependentUpon>DrawableSlider.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

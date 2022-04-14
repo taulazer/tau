@@ -21,7 +21,8 @@ namespace osu.Game.Rulesets.Tau.UI
             Cache(cachedProperties);
         }
 
-        public void Dispose () {
+        public void Dispose()
+        {
             cachedProperties.Dispose();
         }
     }
@@ -37,7 +38,8 @@ namespace osu.Game.Rulesets.Tau.UI
             AngleRange.Value = IBeatmapDifficultyInfo.DifficultyRange(cs, 75, 25, 10);
         }
 
-        public void Dispose () {
+        public void Dispose()
+        {
             SliderTexture?.Dispose();
             SliderTexture = null;
         }
