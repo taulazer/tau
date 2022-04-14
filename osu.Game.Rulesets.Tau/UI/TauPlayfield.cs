@@ -27,7 +27,9 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container judgementAboveHitObjectLayer;
-        private readonly EffectsContainer effectsContainer;
+
+        [Cached]
+        private EffectsContainer effectsContainer { get; set; }
 
         public static readonly Vector2 BaseSize = new(768);
         public static readonly Bindable<Color4> AccentColour = new(Color4Extensions.FromHex(@"FF0040"));
@@ -96,11 +98,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     break;
 
                 case DrawableSlider s:
-                    s.CheckValidation = ang =>
-                    {
-                        effectsContainer.TrackSlider(ang, s);
-                        return checkPaddlePosition(ang);
-                    };
+                    s.CheckValidation = checkPaddlePosition;
                     break;
             }
         }
