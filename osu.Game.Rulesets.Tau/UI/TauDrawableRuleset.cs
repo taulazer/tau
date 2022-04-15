@@ -29,6 +29,11 @@ namespace osu.Game.Rulesets.Tau.UI
             return TauDependencyContainer = new TauDependencyContainer(Beatmap, dependencies);
         }
 
+        protected override void Dispose ( bool isDisposing ) {
+            base.Dispose( isDisposing );
+            TauDependencyContainer.Dispose();
+        }
+
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h) => null;
 
         protected override PassThroughInputManager CreateInputManager() => new TauInputManager(Ruleset?.RulesetInfo);

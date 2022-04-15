@@ -127,6 +127,8 @@ namespace osu.Game.Rulesets.Tau
         {
             new KeyBinding(InputKey.Z, TauAction.LeftButton),
             new KeyBinding(InputKey.X, TauAction.RightButton),
+            new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
+            new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
             new KeyBinding(InputKey.Space, TauAction.HardButton1),
             new KeyBinding(InputKey.LShift, TauAction.HardButton2),
         };

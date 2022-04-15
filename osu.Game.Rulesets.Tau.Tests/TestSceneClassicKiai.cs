@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Tau.Tests
 {
     public class TestSceneClassicKiai : OsuTestScene
     {
-        private ClassicKiaiContainer kiaiContainer;
+        private ClassicKiaiEffect kiaiContainer;
         private TauDependencyContainer dependencyContainer;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Children = new Drawable[]
                 {
                     new TauPlayfield(),
-                    kiaiContainer = new ClassicKiaiContainer()
+                    kiaiContainer = new ClassicKiaiEffect()
                 }
             }));
         }

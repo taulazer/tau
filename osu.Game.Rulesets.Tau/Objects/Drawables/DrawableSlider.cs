@@ -7,7 +7,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
 using osu.Game.Audio;
@@ -17,7 +16,7 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
-using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -33,7 +32,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableSliderHead SliderHead => headContainer.Child;
 
         private readonly SliderFollower follower;
-        private readonly Path path;
+        private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
         private readonly CircularContainer maskingContainer;
@@ -68,13 +67,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Alpha = 0,
                             AlwaysPresent = true
                         },
-                        path = new SmoothPath
+                        path = new SliderPath
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            PathRadius = 4,
-                            AutoSizeAxes = Axes.None,
-                            Size = TauPlayfield.BaseSize
+                            PathRadius = 4
                         },
                     }
                 },
@@ -128,9 +125,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void load(GameHost host)
         {
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
+            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
         }
 
-        [Resolved(canBeNull: true)]
+        [Resolved]
         private TauCachedProperties properties { get; set; }
 
         private double totalTimeHeld;
@@ -141,12 +139,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             totalTimeHeld = 0;
 
-            if (properties != null && properties.InverseModEnabled.Value)
+            if (properties.InverseModEnabled.Value)
             {
                 inversed = follower.Inversed = true;
                 maskingContainer.Masking = false;
-
-                path.Size = new Vector2(TauPlayfield.BaseSize.X * 2);
             }
         }
 

@@ -7,12 +7,11 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI;
-using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneHardBeat : OsuTestScene
+    public class TestSceneHardBeat : TauTestScene
     {
         private int depthIndex;
 

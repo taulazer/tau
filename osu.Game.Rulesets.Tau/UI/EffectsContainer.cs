@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Effects;
 
 namespace osu.Game.Rulesets.Tau.UI
@@ -13,6 +14,8 @@ namespace osu.Game.Rulesets.Tau.UI
     public class EffectsContainer : CompositeDrawable
     {
         private readonly PlayfieldVisualizer visualizer;
+        private readonly KiaiEffectContainer kiaiEffects;
+        private readonly KiaiEffectContainer sliderEffects;
 
         private readonly Bindable<bool> showEffects = new(true);
 
@@ -25,10 +28,9 @@ namespace osu.Game.Rulesets.Tau.UI
             InternalChildren = new Drawable[]
             {
                 visualizer = new PlayfieldVisualizer(),
-                new KiaiEffectContainer()
+                kiaiEffects = new KiaiEffectContainer(),
+                sliderEffects = new KiaiEffectContainer(),
             };
-
-            showEffects.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); });
         }
 
         [BackgroundDependencyLoader(true)]
@@ -37,6 +39,12 @@ namespace osu.Game.Rulesets.Tau.UI
             visualizer.AccentColour = TauPlayfield.AccentColour.Value.Opacity(0.25f);
 
             config?.BindWith(TauRulesetSettings.ShowEffects, showEffects);
+            showEffects.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); }, true);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
             showEffects.TriggerChange();
         }
 
@@ -45,13 +53,25 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!result.IsHit || !judgedObject.HitObject.Kiai)
                 return;
 
-            foreach (var child in InternalChildren)
-            {
-                if (child is INeedsNewResult res)
-                {
-                    res.OnNewResult(judgedObject, result);
-                }
-            }
+            visualizer.OnNewResult(judgedObject, result);
+            kiaiEffects.OnNewResult(judgedObject, result);
+        }
+
+        private const double tracking_threshold = 100;
+        private double currentTrackingTime;
+
+        public void TrackSlider(float angle, DrawableSlider slider)
+        {
+            if (!slider.Tracking.Value)
+                return;
+
+            currentTrackingTime += Time.Elapsed;
+
+            if (currentTrackingTime < tracking_threshold)
+                return;
+
+            currentTrackingTime = 0;
+            sliderEffects.UpdateSliderPosition(angle);
         }
     }
 }
