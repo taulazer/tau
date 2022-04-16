@@ -220,13 +220,36 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (!(Time.Current > HitObject.GetEndTime())) return;
 
             double percentage = totalTimeHeld / HitObject.Duration;
-
-            ApplyResult(r => r.Type = percentage switch
+            var result = percentage switch
             {
                 > .85 => HitResult.Great,
                 > .50 => HitResult.Ok,
                 _ => HitResult.Miss
-            });
+            };
+
+            // Some nested hitobjects may not be judged before the tail, so we need to make sure that we have them all judged beforehand.
+            // Thanks osu!.
+            // ~ Nora
+            foreach (var nested in NestedHitObjects.Where(n => !n.AllJudged))
+            {
+                if (nested is ICanApplyResult res)
+                    res.ForcefullyApplyResult(r => r.Type = result);
+            }
+
+            ApplyResult(r => r.Type = result);
+        }
+
+        protected override void UpdateHitStateTransforms(ArmedState state)
+        {
+            base.UpdateHitStateTransforms(state);
+
+            switch (state)
+            {
+                case ArmedState.Idle:
+                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
+
+                    break;
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
+    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>, ICanApplyResult
         where T : TauHitObject
     {
         public new T HitObject => (T)base.HitObject;
@@ -80,6 +80,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
         {
         }
+
+        public void ForcefullyApplyResult(Action<JudgementResult> application)
+            => ApplyResult(application);
     }
 
     public struct ValidationResult
