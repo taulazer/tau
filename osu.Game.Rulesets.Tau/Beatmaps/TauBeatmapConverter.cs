@@ -17,6 +17,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         // TODO: Create a more robust system.
         public override bool CanConvert() => true;
 
+        protected override Beatmap<TauHitObject> CreateBeatmap() => new TauBeatmap();
+
         public bool CanConvertToHardBeats { get; set; } = true;
         public bool CanConvertToSliders { get; set; } = true;
         public bool CanConvertImpossibleSliders { get; set; } = false;
