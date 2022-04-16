@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
@@ -10,6 +11,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
 using osu.Game.Audio;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -57,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 maskingContainer = new CircularContainer
                 {
-                    Masking = true,
+                    Masking = false,
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
@@ -136,6 +138,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void OnApply()
         {
             base.OnApply();
+            path.FadeColour = colour.ForHitResult( HitResult.Perfect );
 
             totalTimeHeld = 0;
 
@@ -149,6 +152,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void OnFree()
         {
             base.OnFree();
+            trackingCheckpoints.Clear();
 
             slidingSample.Samples = null;
         }
@@ -182,6 +186,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         public BindableBool Tracking = new();
+        double trackingCheckpointInterval = 5;
+        List<bool> trackingCheckpoints = new();
 
         protected override void Update()
         {
@@ -193,10 +199,17 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 totalTimeHeld += Time.Elapsed;
             }
 
+            var trackingCheckpointIndex = (int)( ( Time.Current - HitObject.StartTime ) / trackingCheckpointInterval );
+            if ( trackingCheckpointIndex >= 0 ) {
+                while ( trackingCheckpoints.Count <= trackingCheckpointIndex )
+                    trackingCheckpoints.Add( trackingCheckpoints.Count == 0 ? Tracking.Value : trackingCheckpoints[^1] );
+                trackingCheckpoints[trackingCheckpointIndex] = Tracking.Value;
+            }
+
             // This gives us about the same performance as if we were to just would update the path without this.
             // The catch is that with this, we're giving the Update thread more breathing room to update everything
             // else instead of worrying with updating the path vertices every update frame.
-            if (drawCache.IsValid)
+            if ( drawCache.IsValid)
                 return;
 
             updatePath();
@@ -233,6 +246,17 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 > .50 => HitResult.Ok,
                 _ => HitResult.Miss
             });
+        }
+
+        [Resolved]
+        private OsuColour colour { get; set; }
+
+        public double Velocity => ( TauPlayfield.BaseSize.X / 2 ) / HitObject.TimePreempt;
+        public double FadeTime => fade_range / Velocity;
+        protected override void UpdateHitStateTransforms ( ArmedState state ) {
+            base.UpdateHitStateTransforms( state );
+            if ( state is ArmedState.Hit or ArmedState.Miss )
+                LifetimeEnd = Time.Current + FadeTime;
         }
     }
 }

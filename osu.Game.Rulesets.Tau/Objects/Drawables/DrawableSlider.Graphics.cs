@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using osu.Framework.Allocation;
 using osu.Framework.Caching;
 using osu.Framework.Extensions.EnumExtensions;
@@ -11,15 +12,19 @@ using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 using SixLabors.ImageSharp.PixelFormats;
+using static NUnit.Framework.Constraints.Tolerance;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public partial class DrawableSlider
     {
+        const float fade_range = 120;
+
         private static Texture generateSmoothPathTexture(float radius, Func<float, Color4> colourAt)
         {
             const float aa_portion = 0.02f;
@@ -43,10 +48,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public class SliderPath : Drawable
         {
             private IShader roundedTextureShader { get; set; }
+            private IShader hitFadeTextureShader { get; set; }
 
-            private readonly List<Vector2> vertices = new();
+            private readonly List<Vector3> vertices = new();
 
-            public IReadOnlyList<Vector2> Vertices
+            public IReadOnlyList<Vector3> Vertices
             {
                 get => vertices;
                 set
@@ -62,6 +68,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
 
             private float pathRadius = 10f;
+            public Colour4 FadeColour;
 
             /// <summary>
             /// How wide this path is on each side of the line.
@@ -214,6 +221,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             private void load(ShaderManager shaders)
             {
                 roundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
+                hitFadeTextureShader = shaders.Load( "PositionAndColour", "HitFade" );
             }
 
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
@@ -221,7 +229,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 var localPos = ToLocalSpace(screenSpacePos);
                 float pathRadiusSquared = PathRadius * PathRadius;
 
-                foreach (var t in segments)
+                foreach (var (t, alpha) in segments)
                 {
                     if (t.DistanceSquaredToPoint(localPos) <= pathRadiusSquared)
                         return true;
@@ -245,7 +253,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Invalidate(Invalidation.DrawSize);
             }
 
-            public void AddVertex(Vector2 pos)
+            public void AddVertex(Vector3 pos)
             {
                 vertices.Add(pos);
 
@@ -255,11 +263,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Invalidate(Invalidation.DrawSize);
             }
 
-            private readonly List<Line> segmentsBacking = new();
+            private readonly List<(Line, float)> segmentsBacking = new();
             private readonly Cached segmentsCache = new();
-            private List<Line> segments => segmentsCache.IsValid ? segmentsBacking : generateSegments();
+            private List<(Line, float)> segments => segmentsCache.IsValid ? segmentsBacking : generateSegments();
 
-            private List<Line> generateSegments()
+            private List<(Line, float)> generateSegments()
             {
                 segmentsBacking.Clear();
 
@@ -267,7 +275,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     Vector2 offset = vertexBounds.TopLeft;
                     for (int i = 0; i < vertices.Count - 1; ++i)
-                        segmentsBacking.Add(new Line(vertices[i] - offset, vertices[i + 1] - offset));
+                        segmentsBacking.Add((new Line(vertices[i].Xy - offset, vertices[i + 1].Xy - offset), vertices[i].Z));
                 }
 
                 segmentsCache.Validate();
@@ -297,7 +305,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 protected new SliderPath Source => (SliderPath)base.Source;
 
-                private readonly List<Line> segments = new();
+                private readonly List<(Line line, float alpha)> segments = new();
 
                 private Texture texture;
                 private Vector2 drawSize;
@@ -316,6 +324,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                 }
 
+                private Vector4 hitColour;
+                private Vector2 centerPos;
+                private float range;
+                private float fadeRange;
+                private float alpha;
                 public override void ApplyState()
                 {
                     base.ApplyState();
@@ -326,18 +339,34 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     texture = Source.Texture;
                     drawSize = Source.DrawSize;
                     radius = Source.PathRadius;
-                    shader = Source.roundedTextureShader;
+                    shader = Source.hitFadeTextureShader;
+
+                    var center = Source.PositionInBoundingBox( Vector2.Zero );
+                    var edge = Source.PositionInBoundingBox( new Vector2( TauPlayfield.BaseSize.X / 2, 0 ) );
+                    var fade = Source.PositionInBoundingBox( new Vector2( TauPlayfield.BaseSize.X / 2 + fade_range, 0 ) );
+
+                    centerPos = Source.ToScreenSpace( center );
+                    range = (Source.ToScreenSpace( edge ) - centerPos).Length;
+                    fadeRange = (Source.ToScreenSpace( fade ) - centerPos).Length - range;
+                    var c = Source.FadeColour;
+                    hitColour = new Vector4(c.R, c.G, c.B, c.A);
+                    alpha = DrawColourInfo.Colour.MinAlpha;
                 }
 
                 private Vector2 pointOnCircle(float angle) => new(MathF.Sin(angle), -MathF.Cos(angle));
 
                 private Vector2 relativePosition(Vector2 localPos) => Vector2.Divide(localPos, drawSize);
 
-                private Color4 colourAt(Vector2 localPos) => DrawColourInfo.Colour.HasSingleColour
-                                                                 ? ((SRGBColour)DrawColourInfo.Colour).Linear
-                                                                 : DrawColourInfo.Colour.Interpolate(relativePosition(localPos)).Linear;
+                private Color4 colourAt(Vector2 localPos, float alpha) {
+                    var c = DrawColourInfo.Colour.HasSingleColour
+                        ? ( (SRGBColour)DrawColourInfo.Colour ).Linear
+                        : DrawColourInfo.Colour.Interpolate( relativePosition( localPos ) ).Linear;
 
-                private void addLineCap(Vector2 origin, float theta, float thetaDiff, RectangleF texRect)
+                    c.A *= alpha;
+                    return c;
+                }
+
+                private void addLineCap(Vector2 origin, float alpha, float theta, float thetaDiff, RectangleF texRect)
                 {
                     const float step = MathF.PI / max_resolution;
 
@@ -356,11 +385,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         theta += MathF.PI;
 
                     Vector2 current = origin + pointOnCircle(theta) * radius;
-                    Color4 currentColour = colourAt(current);
+                    Color4 currentColour = colourAt(current, alpha);
                     current = Vector2Extensions.Transform(current, DrawInfo.Matrix);
 
                     Vector2 screenOrigin = Vector2Extensions.Transform(origin, DrawInfo.Matrix);
-                    Color4 originColour = colourAt(origin);
+                    Color4 originColour = colourAt(origin, alpha);
 
                     for (int i = 1; i <= amountPoints; i++)
                     {
@@ -382,7 +411,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                         float angularOffset = Math.Min(i * step, thetaDiff);
                         current = origin + pointOnCircle(theta + dir * angularOffset) * radius;
-                        currentColour = colourAt(current);
+                        currentColour = colourAt(current, alpha);
                         current = Vector2Extensions.Transform(current, DrawInfo.Matrix);
 
                         // Second outer point
@@ -395,7 +424,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 }
 
-                private void addLineQuads(Line line, RectangleF texRect)
+                private void addLineQuads(Line line, float startAlpha, float endAlpha, RectangleF texRect)
                 {
                     Vector2 ortho = line.OrthogonalDirection;
                     Line lineLeft = new Line(line.StartPoint + ortho * radius, line.EndPoint + ortho * radius);
@@ -412,13 +441,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     {
                         Position = new Vector2(screenLineRight.EndPoint.X, screenLineRight.EndPoint.Y),
                         TexturePosition = new Vector2(texRect.Left, texRect.Centre.Y),
-                        Colour = colourAt(lineRight.EndPoint)
+                        Colour = colourAt(lineRight.EndPoint, endAlpha)
                     });
                     quadBatch.Add(new TexturedVertex2D
                     {
                         Position = new Vector2(screenLineRight.StartPoint.X, screenLineRight.StartPoint.Y),
                         TexturePosition = new Vector2(texRect.Left, texRect.Centre.Y),
-                        Colour = colourAt(lineRight.StartPoint)
+                        Colour = colourAt(lineRight.StartPoint, startAlpha)
                     });
 
                     // Each "quad" of the slider is actually rendered as 2 quads, being split in half along the approximating line.
@@ -426,8 +455,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     // Thus the middle vertices need to be added twice (once for each quad).
                     Vector2 firstMiddlePoint = new Vector2(screenLine.StartPoint.X, screenLine.StartPoint.Y);
                     Vector2 secondMiddlePoint = new Vector2(screenLine.EndPoint.X, screenLine.EndPoint.Y);
-                    Color4 firstMiddleColour = colourAt(line.StartPoint);
-                    Color4 secondMiddleColour = colourAt(line.EndPoint);
+                    Color4 firstMiddleColour = colourAt(line.StartPoint, startAlpha );
+                    Color4 secondMiddleColour = colourAt(line.EndPoint, endAlpha );
 
                     for (int i = 0; i < 2; ++i)
                     {
@@ -449,39 +478,43 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     {
                         Position = new Vector2(screenLineLeft.EndPoint.X, screenLineLeft.EndPoint.Y),
                         TexturePosition = new Vector2(texRect.Left, texRect.Centre.Y),
-                        Colour = colourAt(lineLeft.EndPoint)
-                    });
+                        Colour = colourAt(lineLeft.EndPoint, endAlpha )
+                    });;
                     quadBatch.Add(new TexturedVertex2D
                     {
                         Position = new Vector2(screenLineLeft.StartPoint.X, screenLineLeft.StartPoint.Y),
                         TexturePosition = new Vector2(texRect.Left, texRect.Centre.Y),
-                        Colour = colourAt(lineLeft.StartPoint)
+                        Colour = colourAt(lineLeft.StartPoint, startAlpha)
                     });
                 }
 
                 private void updateVertexBuffer()
                 {
-                    Line line = segments[0];
+                    var (line, alpha) = segments[0];
                     float theta = line.Theta;
 
                     // Offset by 0.5 pixels inwards to ensure we never sample texels outside the bounds
                     RectangleF texRect = texture.GetTextureRect(new RectangleF(0.5f, 0.5f, texture.Width - 1, texture.Height - 1));
-                    addLineCap(line.StartPoint, theta + MathF.PI, MathF.PI, texRect);
+                    addLineCap(line.StartPoint, alpha, theta + MathF.PI, MathF.PI, texRect);
 
                     for (int i = 1; i < segments.Count; ++i)
                     {
-                        Line nextLine = segments[i];
+                        var (nextLine, nextAlpha) = segments[i];
                         float nextTheta = nextLine.Theta;
-                        addLineCap(line.EndPoint, theta, nextTheta - theta, texRect);
+                        addLineCap(line.EndPoint, nextAlpha, theta, nextTheta - theta, texRect);
 
                         line = nextLine;
                         theta = nextTheta;
                     }
 
-                    addLineCap(line.EndPoint, theta, MathF.PI, texRect);
+                    addLineCap(line.EndPoint, segments[^1].alpha, theta, MathF.PI, texRect);
 
-                    foreach (Line segment in segments)
-                        addLineQuads(segment, texRect);
+                    for ( int i = 0; i < segments.Count; i++ ) {
+                        var (segment, segAlpha) = segments[i];
+                        addLineQuads( segment, alpha, segAlpha, texRect );
+
+                        alpha = segAlpha;
+                    }
                 }
 
                 public override void Draw(Action<TexturedVertex2D> vertexAction)
@@ -492,6 +525,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         return;
 
                     shader.Bind();
+                    shader.GetUniform<Vector2>( "centerPos" ).UpdateValue( ref centerPos );
+                    shader.GetUniform<float>( "range" ).UpdateValue( ref range );
+                    shader.GetUniform<float>( "fadeRange" ).UpdateValue( ref fadeRange );
+                    shader.GetUniform<Vector4>( "hitColor" ).UpdateValue( ref hitColour );
+                    shader.GetUniform<float>( "alpha" ).UpdateValue( ref alpha );
 
                     texture.TextureGL.Bind();
 
