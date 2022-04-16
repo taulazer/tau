@@ -187,22 +187,24 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.Update();
 
+            // This gives us about the same performance as if we were to just would update the path without this.
+            // The catch is that with this, we're giving the Update thread more breathing room to update everything
+            // else instead of worrying with updating the path vertices every update frame.
+            if (!drawCache.IsValid)
+            {
+                updatePath();
+                follower.UpdateProgress(getCurrentAngle());
+
+                drawCache.Validate();
+            }
+
+            if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
+
             // ReSharper disable once AssignmentInConditionalExpression
             if (Tracking.Value = checkIfTracking())
             {
                 totalTimeHeld += Time.Elapsed;
             }
-
-            // This gives us about the same performance as if we were to just would update the path without this.
-            // The catch is that with this, we're giving the Update thread more breathing room to update everything
-            // else instead of worrying with updating the path vertices every update frame.
-            if (drawCache.IsValid)
-                return;
-
-            updatePath();
-            follower.UpdateProgress(getCurrentAngle());
-
-            drawCache.Validate();
         }
 
         protected override void UpdateInitialTransforms()
