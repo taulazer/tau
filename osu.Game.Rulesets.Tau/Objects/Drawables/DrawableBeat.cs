@@ -1,5 +1,4 @@
-﻿using System;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -18,12 +17,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     public class DrawableBeat : DrawableTauHitObject<Beat>
     {
         public Drawable DrawableBox;
-
-        /// <summary>
-        /// Check to see whether or not this Hit object is in the paddle's range.
-        /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
-        /// </summary>
-        public Func<Beat, ValidationResult> CheckValidation;
 
         private readonly BindableFloat size = new(16f);
 
@@ -91,12 +84,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             size.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
         }
 
-        protected override bool CheckForValidation() => CheckValidation != null && CheckValidation(HitObject).IsValid;
+        protected override bool CheckForValidation() => CheckValidation != null && CheckValidation(HitObject.Angle).IsValid;
         protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);
 
         protected override void ApplyCustomResult(JudgementResult result)
         {
-            var delta = CheckValidation(HitObject).DeltaFromPaddleCenter;
+            var delta = CheckValidation(HitObject.Angle).DeltaFromPaddleCenter;
             var beatResult = (TauJudgementResult)result;
 
             if (result.IsHit)

@@ -38,7 +38,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public new TauCursor Cursor => base.Cursor as TauCursor;
 
-        private TauCachedProperties tauCachedProperties;
+        [Resolved]
+        private TauCachedProperties tauCachedProperties { get; set; }
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
@@ -73,10 +74,8 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         [BackgroundDependencyLoader]
-        private void load(TauCachedProperties props)
+        private void load()
         {
-            tauCachedProperties = props;
-
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
 
@@ -91,16 +90,16 @@ namespace osu.Game.Rulesets.Tau.UI
 
             switch (drawableHitObject)
             {
-                case DrawableBeat b:
-                    b.CheckValidation = beat => checkPaddlePosition(beat.Angle);
-                    break;
-
                 case DrawableSlider s:
                     s.CheckValidation = ang =>
                     {
                         effectsContainer.TrackSlider(ang, s);
                         return checkPaddlePosition(ang);
                     };
+                    break;
+
+                case DrawableBeat beat:
+                    beat.CheckValidation = checkPaddlePosition;
                     break;
             }
         }

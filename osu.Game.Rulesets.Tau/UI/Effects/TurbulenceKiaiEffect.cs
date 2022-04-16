@@ -25,19 +25,19 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         {
             base.LoadComplete();
 
-            if (playfield != null)
-            {
-                cursor = playfield.Cursor;
+            if (playfield == null)
+                return;
 
-                // TODO: This should probably not be here.
-                Vortices.Add(new Vortex
-                {
-                    Position = new Vector2(0, -((TauPlayfield.BaseSize.X / 2) + 105)),
-                    Velocity = new Vector2(20, -20),
-                    Scale = 0.01f,
-                    Speed = 10f,
-                });
-            }
+            cursor = playfield.Cursor;
+
+            // TODO: This is broken as shit.
+            Vortices.Add(new Vortex
+            {
+                Position = new Vector2(0, -((TauPlayfield.BaseSize.X / 2) + 105)),
+                Velocity = new Vector2(20, -20),
+                Scale = 0.01f,
+                Speed = 10f,
+            });
         }
 
         protected override void Update()
@@ -54,8 +54,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
     public class TurbulenceEmitter : Emitter
     {
-        public TurbulenceKiaiEffect KiaiContainer => Parent as TurbulenceKiaiEffect;
-        public List<Vortex> Vortices => KiaiContainer.Vortices;
+        private TurbulenceKiaiEffect kiaiContainer => Parent as TurbulenceKiaiEffect;
+        private List<Vortex> vortices => kiaiContainer.Vortices;
 
         protected override Drawable CreateAngularParticle()
             => new TriangleWithVelocity
@@ -99,14 +99,14 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             private Vector2 staticVelocity;
             private Vector2 velocity;
 
-            public TurbulenceEmitter Emitter => Parent as TurbulenceEmitter;
-            public List<Vortex> Vortices => Emitter.Vortices;
+            private TurbulenceEmitter emitter => Parent as TurbulenceEmitter;
+            private List<Vortex> vortices => emitter.vortices;
 
             protected override void Update()
             {
                 base.Update();
 
-                foreach (var vortex in Vortices)
+                foreach (var vortex in vortices)
                 {
                     var distance = new Vector2(DrawPosition.X - vortex.Position.X, DrawPosition.Y - vortex.Position.Y);
 

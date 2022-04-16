@@ -8,7 +8,7 @@ using osu.Game.Rulesets.Tau.Configuration;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class KiaiEffectContainer : CompositeDrawable, INeedsNewResult, IFollowsSlider
+    public class KiaiEffectContainer : CompositeDrawable
     {
         private readonly ClassicKiaiEffect classicEffect;
         private readonly TurbulenceKiaiEffect turbulenceEffect;

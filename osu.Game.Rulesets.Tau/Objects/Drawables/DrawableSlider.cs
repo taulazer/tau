@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
@@ -22,13 +21,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public partial class DrawableSlider : DrawableTauHitObject<Slider>
     {
-        /// <summary>
-        /// Check to see whether or not this Hit object is in the paddle's range.
-        /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
-        /// </summary>
-        [CanBeNull]
-        public Func<float, ValidationResult> CheckValidation;
-
         public DrawableSliderHead SliderHead => headContainer.Child;
 
         private readonly SliderFollower follower;

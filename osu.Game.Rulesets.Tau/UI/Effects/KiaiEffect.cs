@@ -12,7 +12,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public abstract class KiaiEffect<T> : DrawablePool<T>, INeedsNewResult, IFollowsSlider
+    public abstract class KiaiEffect<T> : DrawablePool<T>
         where T : Emitter, new()
     {
         protected KiaiEffect()
@@ -33,13 +33,13 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         {
             var emitter = judgedObject.HitObject switch
             {
-                IHasAngle angle => GetEmitterForAngle(angle, result),
-                HardBeat => GetEmitterForHardBeat(result),
+                IHasAngle angle => getEmitterForAngle(angle, result),
+                HardBeat => getEmitterForHardBeat(result),
                 _ => new T()
             };
 
             AddInternal(emitter);
-            emitter.GoOff();
+            emitter.ApplyAnimations();
         }
 
         public void UpdateSliderPosition(float angle)
@@ -53,10 +53,10 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             }));
 
             AddInternal(emitter);
-            emitter.GoOff();
+            emitter.ApplyAnimations();
         }
 
-        protected virtual Emitter GetEmitterForAngle(IHasAngle angle, JudgementResult result)
+        private Emitter getEmitterForAngle(IHasAngle angle, JudgementResult result)
             => Get(e => e.Apply(new Emitter.EmitterSettings
             {
                 Amount = 10,
@@ -65,7 +65,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 Colour = colour.ForHitResult(result.Type)
             }));
 
-        protected virtual Emitter GetEmitterForHardBeat(JudgementResult result)
+        private Emitter getEmitterForHardBeat(JudgementResult result)
             => Get(e => e.Apply(new Emitter.EmitterSettings
             {
                 Amount = 64,
@@ -107,7 +107,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         protected const double Duration = 1500;
 
-        public void GoOff()
+        public void ApplyAnimations()
         {
             AddRangeInternal(particles);
 

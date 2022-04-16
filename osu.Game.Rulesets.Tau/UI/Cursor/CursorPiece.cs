@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                 RelativeSizeAxes = Axes.Both,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Current = new BindableDouble(.33f),
+                Current = new BindableDouble(0.33f),
                 InnerRadius = 0.1f,
                 Rotation = rotation
             };

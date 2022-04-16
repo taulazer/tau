@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!result.IsHit || !judgedObject.HitObject.Kiai)
                 return;
 
-            visualizer.OnNewResult(judgedObject, result);
+            visualizer.OnNewResult(judgedObject);
             kiaiEffects.OnNewResult(judgedObject, result);
         }
 

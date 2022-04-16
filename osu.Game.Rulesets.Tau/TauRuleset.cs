@@ -97,7 +97,7 @@ namespace osu.Game.Rulesets.Tau
                     new StatisticItem("Timing Distribution", new HitEventTimingDistributionGraph(score.HitEvents)
                     {
                         RelativeSizeAxes = Axes.X,
-                        Height = 350
+                        Height = 250
                     }),
                 }
             },
