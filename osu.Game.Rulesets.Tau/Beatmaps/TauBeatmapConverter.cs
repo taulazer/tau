@@ -19,6 +19,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         public bool CanConvertToHardBeats { get; set; } = true;
         public bool CanConvertToSliders { get; set; } = true;
+        public bool CanConvertImpossibleSliders { get; set; } = false;
         public int SliderDivisor { get; set; } = 4;
 
         public TauBeatmapConverter(Ruleset ruleset, IBeatmap beatmap)
@@ -84,8 +85,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 float angle = (((IHasPosition)original).Position + data.CurvePositionAt(t / data.Duration)).GetHitObjectAngle();
 
                 // We don't want sliders that switch angles too fast. We would default to a normal note in this case
-                if (lastAngle.HasValue && MathF.Abs(Extensions.GetDeltaAngle(lastAngle.Value, angle)) / MathF.Abs(lastTime.Value - t) > 0.6)
-                    return convertBeat();
+                if (!CanConvertImpossibleSliders)
+                    if (lastAngle.HasValue && MathF.Abs(Extensions.GetDeltaAngle(lastAngle.Value, angle)) / MathF.Abs(lastTime.Value - t) > 0.6)
+                        return convertBeat();
 
                 lastAngle = angle;
                 lastTime = t;
@@ -94,8 +96,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             var finalAngle = (((IHasPosition)original).Position + data.CurvePositionAt(1)).GetHitObjectAngle();
 
-            if (lastAngle.HasValue && MathF.Abs(Extensions.GetDeltaAngle(lastAngle.Value, finalAngle)) / Math.Abs(lastTime.Value - data.Duration) > 0.6)
-                return convertBeat();
+            if (!CanConvertImpossibleSliders)
+                if (lastAngle.HasValue && MathF.Abs(Extensions.GetDeltaAngle(lastAngle.Value, finalAngle)) / Math.Abs(lastTime.Value - data.Duration) > 0.6)
+                    return convertBeat();
 
             nodes.Add(new Slider.SliderNode((float)data.Duration, finalAngle));
 

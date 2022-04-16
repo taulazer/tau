@@ -72,7 +72,8 @@ namespace osu.Game.Rulesets.Tau
                 ModType.Fun => new Mod[]
                 {
                     new MultiMod(new ModWindUp(), new ModWindDown()),
-                    new ModAdaptiveSpeed()
+                    new ModAdaptiveSpeed(),
+                    new TauModImpossibleSliders()
                 },
                 _ => Enumerable.Empty<Mod>()
             };
