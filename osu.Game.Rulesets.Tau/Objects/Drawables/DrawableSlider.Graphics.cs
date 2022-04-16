@@ -305,7 +305,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 protected new SliderPath Source => (SliderPath)base.Source;
 
-                private readonly List<(Line line, float alpha)> segments = new();
+                private RentedArray<(Line line, float alpha)> segments;
 
                 private Texture texture;
                 private Vector2 drawSize;
@@ -333,8 +333,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     base.ApplyState();
 
-                    segments.Clear();
-                    segments.AddRange(Source.segments);
+                    segments.Dispose();
+                    segments = MemoryPool<(Line line, float alpha)>.Shared.Rent( Source.segments );
 
                     texture = Source.Texture;
                     drawSize = Source.DrawSize;
@@ -497,7 +497,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     RectangleF texRect = texture.GetTextureRect(new RectangleF(0.5f, 0.5f, texture.Width - 1, texture.Height - 1));
                     addLineCap(line.StartPoint, alpha, theta + MathF.PI, MathF.PI, texRect);
 
-                    for (int i = 1; i < segments.Count; ++i)
+                    for (int i = 1; i < segments.Length; ++i)
                     {
                         var (nextLine, nextAlpha) = segments[i];
                         float nextTheta = nextLine.Theta;
@@ -509,7 +509,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                     addLineCap(line.EndPoint, segments[^1].alpha, theta, MathF.PI, texRect);
 
-                    for ( int i = 0; i < segments.Count; i++ ) {
+                    for ( int i = 0; i < segments.Length; i++ ) {
                         var (segment, segAlpha) = segments[i];
                         addLineQuads( segment, alpha, segAlpha, texRect );
 
@@ -521,7 +521,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     base.Draw(vertexAction);
 
-                    if (texture?.Available != true || segments.Count == 0)
+                    if (texture?.Available != true || segments.Length == 0)
                         return;
 
                     shader.Bind();
@@ -544,6 +544,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                     halfCircleBatch.Dispose();
                     quadBatch.Dispose();
+                    segments.Dispose();
                 }
             }
         }
