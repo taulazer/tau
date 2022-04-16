@@ -18,6 +18,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly KiaiEffectContainer sliderEffects;
 
         private readonly Bindable<bool> showEffects = new(true);
+        private readonly Bindable<bool> showSliderEffects = new(true);
 
         public EffectsContainer()
         {
@@ -39,13 +40,16 @@ namespace osu.Game.Rulesets.Tau.UI
             visualizer.AccentColour = TauPlayfield.AccentColour.Value.Opacity(0.25f);
 
             config?.BindWith(TauRulesetSettings.ShowEffects, showEffects);
+            config?.BindWith(TauRulesetSettings.ShowSliderEffects, showSliderEffects);
             showEffects.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); }, true);
+            showSliderEffects.BindValueChanged(v => { sliderEffects.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); }, true);
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
             showEffects.TriggerChange();
+            showSliderEffects.TriggerChange();
         }
 
         public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
