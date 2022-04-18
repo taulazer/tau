@@ -122,7 +122,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void OnApply()
         {
             base.OnApply();
-            path.FadeColour = colour.ForHitResult( HitResult.Perfect );
+            path.FadeColour = colour.ForHitResult(HitResult.Perfect);
 
             totalTimeHeld = 0;
 
@@ -195,10 +195,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 totalTimeHeld += Time.Elapsed;
             }
 
-            var trackingCheckpointIndex = (int)( ( Time.Current - HitObject.StartTime ) / trackingCheckpointInterval );
-            if ( trackingCheckpointIndex >= 0 ) {
-                while ( trackingCheckpoints.Count <= trackingCheckpointIndex )
-                    trackingCheckpoints.Add( trackingCheckpoints.Count == 0 ? Tracking.Value : trackingCheckpoints[^1] );
+            var trackingCheckpointIndex = (int)((Time.Current - HitObject.StartTime) / trackingCheckpointInterval);
+
+            if (trackingCheckpointIndex >= 0)
+            {
+                while (trackingCheckpoints.Count <= trackingCheckpointIndex)
+                    trackingCheckpoints.Add(trackingCheckpoints.Count == 0 ? Tracking.Value : trackingCheckpoints[^1]);
                 trackingCheckpoints[trackingCheckpointIndex] = Tracking.Value;
             }
         }
@@ -239,11 +241,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [Resolved]
         private OsuColour colour { get; set; }
 
-        public double Velocity => ( TauPlayfield.BaseSize.X / 2 ) / HitObject.TimePreempt;
+        public double Velocity => (TauPlayfield.BaseSize.X / 2) / HitObject.TimePreempt;
         public double FadeTime => fade_range / Velocity;
-        protected override void UpdateHitStateTransforms ( ArmedState state ) {
-            base.UpdateHitStateTransforms( state );
-            if ( state is ArmedState.Hit or ArmedState.Miss )
+
+        protected override void UpdateHitStateTransforms(ArmedState state)
+        {
+            base.UpdateHitStateTransforms(state);
+            if (state is ArmedState.Hit or ArmedState.Miss)
                 LifetimeEnd = Time.Current + FadeTime;
             else
                 LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;

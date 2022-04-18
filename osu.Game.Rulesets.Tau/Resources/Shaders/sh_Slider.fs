@@ -21,11 +21,14 @@ void main(void)
 
     vec2 diff = v_Position - centerPos;
     float dist = sqrt(diff.x * diff.x + diff.y * diff.y);
-    if ( reverse != dist <= range ) {
-       gl_FragColor = v_Colour;
-    }
-    else {
-       float progress = abs(dist - range) / fadeRange;
-       gl_FragColor = vec4(mix(vec3(1.0, 0.0, 0.0), hitColor.xyz, v_Result), mix(hitColor.w * v_Colour.w, 0.0, progress));
+
+    if ( reverse != dist <= range ) 
+    {
+        gl_FragColor = v_Colour;
+    } 
+    else 
+    {
+        float progress = abs(dist - range) / fadeRange;
+        gl_FragColor = vec4(mix(vec3(1.0, 0.0, 0.0), hitColor.xyz, v_Result), mix(hitColor.w * v_Colour.w, 0.0, progress));
     }
 }

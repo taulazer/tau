@@ -12,6 +12,7 @@ using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Rulesets.Tau.Allocation;
 using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 using osuTK.Graphics;
@@ -221,7 +222,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             private void load(ShaderManager shaders)
             {
                 roundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
-                hitFadeTextureShader = shaders.Load( "SliderPositionAndColour", "Slider" );
+                hitFadeTextureShader = shaders.Load("SliderPositionAndColour", "Slider");
             }
 
             public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
@@ -301,33 +302,34 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             public class SliderPathDrawNode : DrawNode
             {
-                [StructLayout( LayoutKind.Sequential )]
-                public struct SliderTexturedVertex2D : IEquatable<SliderTexturedVertex2D>, IVertex {
-                    [VertexMember( 2, VertexAttribPointerType.Float )]
+                [StructLayout(LayoutKind.Sequential)]
+                public struct SliderTexturedVertex2D : IEquatable<SliderTexturedVertex2D>, IVertex
+                {
+                    [VertexMember(2, VertexAttribPointerType.Float)]
                     public Vector2 Position;
 
-                    [VertexMember( 4, VertexAttribPointerType.Float )]
+                    [VertexMember(4, VertexAttribPointerType.Float)]
                     public Color4 Colour;
 
-                    [VertexMember( 2, VertexAttribPointerType.Float )]
+                    [VertexMember(2, VertexAttribPointerType.Float)]
                     public Vector2 TexturePosition;
 
-                    [VertexMember( 4, VertexAttribPointerType.Float )]
+                    [VertexMember(4, VertexAttribPointerType.Float)]
                     public Vector4 TextureRect;
 
-                    [VertexMember( 2, VertexAttribPointerType.Float )]
+                    [VertexMember(2, VertexAttribPointerType.Float)]
                     public Vector2 BlendRange;
 
-                    [VertexMember( 1, VertexAttribPointerType.Float )]
+                    [VertexMember(1, VertexAttribPointerType.Float)]
                     public float Result;
 
-                    public readonly bool Equals ( SliderTexturedVertex2D other ) =>
-                        Position.Equals( other.Position )
-                        && TexturePosition.Equals( other.TexturePosition )
-                        && Colour.Equals( other.Colour )
-                        && TextureRect.Equals( other.TextureRect )
-                        && BlendRange.Equals( other.BlendRange )
-                        && Result.Equals( other.Result );
+                    public readonly bool Equals(SliderTexturedVertex2D other) =>
+                        Position.Equals(other.Position) &&
+                        TexturePosition.Equals(other.TexturePosition) &&
+                        Colour.Equals(other.Colour) &&
+                        TextureRect.Equals(other.TextureRect) &&
+                        BlendRange.Equals(other.BlendRange) &&
+                        Result.Equals(other.Result);
                 }
 
                 private const int max_resolution = 24;
@@ -358,25 +360,26 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 private float range;
                 private float fadeRange;
                 private bool reverse;
+
                 public override void ApplyState()
                 {
                     base.ApplyState();
 
                     segments.Dispose();
-                    segments = MemoryPool<(Line line, float result)>.Shared.Rent( Source.segments );
+                    segments = MemoryPool<(Line line, float result)>.Shared.Rent(Source.segments);
 
                     texture = Source.Texture;
                     drawSize = Source.DrawSize;
                     radius = Source.PathRadius;
                     shader = Source.hitFadeTextureShader;
 
-                    var center = Source.PositionInBoundingBox( Vector2.Zero );
-                    var edge = Source.PositionInBoundingBox( new Vector2( TauPlayfield.BaseSize.X / 2, 0 ) );
-                    var fade = Source.PositionInBoundingBox( new Vector2( TauPlayfield.BaseSize.X / 2 + fade_range, 0 ) );
+                    var center = Source.PositionInBoundingBox(Vector2.Zero);
+                    var edge = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2, 0));
+                    var fade = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2 + fade_range, 0));
 
-                    centerPos = Source.ToScreenSpace( center );
-                    range = (Source.ToScreenSpace( edge ) - centerPos).Length;
-                    fadeRange = (Source.ToScreenSpace( fade ) - centerPos).Length - range;
+                    centerPos = Source.ToScreenSpace(center);
+                    range = (Source.ToScreenSpace(edge) - centerPos).Length;
+                    fadeRange = (Source.ToScreenSpace(fade) - centerPos).Length - range;
                     var c = Source.FadeColour;
                     hitColour = new Vector4(c.R, c.G, c.B, c.A);
                     reverse = Source.Reverse;
@@ -388,8 +391,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 private Color4 colourAt(Vector2 localPos)
                     => DrawColourInfo.Colour.HasSingleColour
-                        ? ( (SRGBColour)DrawColourInfo.Colour ).Linear
-                        : DrawColourInfo.Colour.Interpolate( relativePosition( localPos ) ).Linear;
+                           ? ((SRGBColour)DrawColourInfo.Colour).Linear
+                           : DrawColourInfo.Colour.Interpolate(relativePosition(localPos)).Linear;
 
                 private void addLineCap(Vector2 origin, float result, float theta, float thetaDiff, RectangleF texRect)
                 {
@@ -512,7 +515,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         TexturePosition = new Vector2(texRect.Left, texRect.Centre.Y),
                         Colour = colourAt(lineLeft.EndPoint),
                         Result = endResult
-                    });;
+                    });
+                    ;
                     quadBatch.Add(new SliderTexturedVertex2D
                     {
                         Position = new Vector2(screenLineLeft.StartPoint.X, screenLineLeft.StartPoint.Y),
@@ -543,9 +547,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                     addLineCap(line.EndPoint, segments[^1].result, theta, MathF.PI, texRect);
 
-                    for ( int i = 0; i < segments.Length; i++ ) {
+                    for (int i = 0; i < segments.Length; i++)
+                    {
                         var (segment, segResult) = segments[i];
-                        addLineQuads( segment, result, segResult, texRect );
+                        addLineQuads(segment, result, segResult, texRect);
 
                         result = segResult;
                     }
@@ -559,11 +564,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         return;
 
                     shader.Bind();
-                    shader.GetUniform<Vector2>( "centerPos" ).UpdateValue( ref centerPos );
-                    shader.GetUniform<float>( "range" ).UpdateValue( ref range );
-                    shader.GetUniform<float>( "fadeRange" ).UpdateValue( ref fadeRange );
-                    shader.GetUniform<Vector4>( "hitColor" ).UpdateValue( ref hitColour );
-                    shader.GetUniform<bool>( "reverse" ).UpdateValue( ref reverse );
+                    shader.GetUniform<Vector2>("centerPos").UpdateValue(ref centerPos);
+                    shader.GetUniform<float>("range").UpdateValue(ref range);
+                    shader.GetUniform<float>("fadeRange").UpdateValue(ref fadeRange);
+                    shader.GetUniform<Vector4>("hitColor").UpdateValue(ref hitColour);
+                    shader.GetUniform<bool>("reverse").UpdateValue(ref reverse);
 
                     texture.TextureGL.Bind();
 
