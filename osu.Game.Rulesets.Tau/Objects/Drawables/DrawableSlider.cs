@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
@@ -9,10 +10,10 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
 using osu.Game.Audio;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK.Graphics;
@@ -23,7 +24,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     {
         public DrawableSliderHead SliderHead => headContainer.Child;
 
-        private readonly SliderFollower follower;
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
@@ -49,7 +49,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 maskingContainer = new CircularContainer
                 {
-                    Masking = true,
+                    Masking = false,
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
@@ -67,17 +67,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         },
                     }
                 },
-                follower = new SliderFollower()
-                {
-                    AlwaysPresent = true,
-                    Alpha = 0
-                },
                 headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
 
-            follower.IsTracking.BindTo(Tracking);
             Tracking.BindValueChanged(updateSlidingSample);
         }
 
@@ -128,19 +122,22 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void OnApply()
         {
             base.OnApply();
+            path.FadeColour = colour.ForHitResult(HitResult.Perfect);
 
             totalTimeHeld = 0;
 
             if (properties.InverseModEnabled.Value)
             {
-                inversed = follower.Inversed = true;
+                inversed = true;
                 maskingContainer.Masking = false;
+                path.Reverse = inversed;
             }
         }
 
         protected override void OnFree()
         {
             base.OnFree();
+            trackingCheckpoints.Clear();
 
             slidingSample.Samples = null;
         }
@@ -174,6 +171,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         public BindableBool Tracking = new();
+        double trackingCheckpointInterval = 5;
+        List<bool> trackingCheckpoints = new();
 
         protected override void Update()
         {
@@ -185,8 +184,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (!drawCache.IsValid)
             {
                 updatePath();
-                follower.UpdateProgress(getCurrentAngle());
-
                 drawCache.Validate();
             }
 
@@ -197,6 +194,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 totalTimeHeld += Time.Elapsed;
             }
+
+            var trackingCheckpointIndex = (int)((Time.Current - HitObject.StartTime) / trackingCheckpointInterval);
+
+            if (trackingCheckpointIndex >= 0)
+            {
+                while (trackingCheckpoints.Count <= trackingCheckpointIndex)
+                    trackingCheckpoints.Add(trackingCheckpoints.Count == 0 ? Tracking.Value : trackingCheckpoints[^1]);
+                trackingCheckpoints[trackingCheckpointIndex] = Tracking.Value;
+            }
         }
 
         protected override void UpdateInitialTransforms()
@@ -204,13 +210,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.FadeInFromZero(HitObject.TimeFadeIn);
-        }
-
-        protected override void UpdateStartTimeStateTransforms()
-        {
-            base.UpdateStartTimeStateTransforms();
-
-            follower.FadeIn();
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
@@ -239,17 +238,19 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             ApplyResult(r => r.Type = result);
         }
 
+        [Resolved]
+        private OsuColour colour { get; set; }
+
+        public double Velocity => (TauPlayfield.BaseSize.X / 2) / HitObject.TimePreempt;
+        public double FadeTime => fade_range / Velocity;
+
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
             base.UpdateHitStateTransforms(state);
-
-            switch (state)
-            {
-                case ArmedState.Idle:
-                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-
-                    break;
-            }
+            if (state is ArmedState.Hit or ArmedState.Miss)
+                LifetimeEnd = Time.Current + FadeTime;
+            else
+                LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
         }
     }
 }

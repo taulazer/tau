@@ -14,30 +14,47 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (nodes.Count == 0)
                 return;
 
-            var radius = TauPlayfield.BaseSize.X / 2;
             var time = Time.Current - HitObject.StartTime + HitObject.TimePreempt;
-            var startTime = Math.Max(time - HitObject.TimePreempt, nodes[0].Time);
+            var startTime = Math.Max(time - HitObject.TimePreempt - FadeTime, nodes[0].Time);
+            var midTime = Math.Max(time - HitObject.TimePreempt, nodes[0].Time);
             var endTime = Math.Min(time, nodes[^1].Time);
-
-            const double delta_time = 20;
-            const double max_angle_per_ms = 5;
 
             if (time < startTime)
                 return;
 
             int nodeIndex = 0;
+            bool capAdded = false;
+
+            generatePathSegmnt(ref nodeIndex, ref capAdded, time, startTime, midTime);
+            var pos = path.Vertices.Any() ? path.Vertices[^1].Xy : Vector2.Zero;
+            generatePathSegmnt(ref nodeIndex, ref capAdded, time, midTime, endTime);
+
+            path.Position = pos;
+            path.OriginPosition = path.PositionInBoundingBox(pos);
+        }
+
+        private void generatePathSegmnt(ref int nodeIndex, ref bool capAdded, double time, double startTime, double endTime)
+        {
+            var nodes = HitObject.Nodes;
+            if (nodeIndex >= nodes.Count)
+                return;
+
             while (nodeIndex + 1 < nodes.Count && nodes[nodeIndex + 1].Time <= startTime)
                 nodeIndex++;
+
+            const double delta_time = 20;
+            const double max_angle_per_ms = 5;
+            var radius = TauPlayfield.BaseSize.X / 2;
 
             float distanceAt(double t) => inversed
                                               ? (float)(2 * radius - (time - t) / HitObject.TimePreempt * radius)
                                               : (float)((time - t) / HitObject.TimePreempt * radius);
 
-            bool capAdded = false;
-
             void addVertex(double t, double angle)
             {
-                path.AddVertex(Extensions.GetCircularPosition(distanceAt(t), (float)angle));
+                var p = Extensions.GetCircularPosition(distanceAt(t), (float)angle);
+                var index = (int)(t / trackingCheckpointInterval);
+                path.AddVertex(new Vector3(p.X, p.Y, index >= 0 && index < trackingCheckpoints.Count ? (trackingCheckpoints[index] ? 1 : 0) : 1));
             }
 
             do
@@ -65,9 +82,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 capAdded = true;
                 nodeIndex++;
             } while (nodeIndex < nodes.Count && nodes[nodeIndex].Time < endTime);
-
-            path.Position = path.Vertices[0];
-            path.OriginPosition = path.PositionInBoundingBox(path.Vertices[0]);
         }
 
         private bool checkIfTracking()

@@ -14,4 +14,7 @@ public class TauTestScene : OsuTestScene
         base.Dispose(isDisposing);
         cachedProperties.Dispose();
     }
+
+    protected override Ruleset CreateRuleset()
+        => new TauRuleset();
 }
