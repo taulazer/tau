@@ -146,6 +146,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 inversed = follower.Inversed = true;
                 maskingContainer.Masking = false;
+                path.Reverse = inversed;
             }
         }
 
