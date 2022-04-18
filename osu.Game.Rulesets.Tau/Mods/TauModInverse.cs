@@ -1,4 +1,5 @@
 ﻿using System;
+using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
@@ -11,7 +12,8 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override string Name => "Inverse";
         public override string Acronym => "IN";
-        public override ModType Type => ModType.DifficultyIncrease;
+        public override ModType Type => ModType.Fun;
+        public override IconUsage? Icon => TauIcons.ModInverse;
         public override string Description => @"Beats will appear outside of the playfield.";
         public override double ScoreMultiplier => 1.09;
         public override Type[] IncompatibleMods => new[] { typeof(TauModHidden) };
