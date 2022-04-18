@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -37,6 +36,7 @@ namespace osu.Game.Rulesets.Tau
 
         public override string Description => SHORT_NAME;
         public override string ShortName => SHORT_NAME;
+        public override string PlayingVerb => "Slicing beats";
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new TauDrawableRuleset(this, beatmap, mods);
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new TauBeatmapConverter(this, beatmap);
@@ -101,32 +101,33 @@ namespace osu.Game.Rulesets.Tau
             {
                 Columns = new[]
                 {
-                    new StatisticItem("Timing Distribution", new HitEventTimingDistributionGraph(score.HitEvents)
+                    new StatisticItem("Timing Distribution", () => new HitEventTimingDistributionGraph(score.HitEvents)
                     {
                         RelativeSizeAxes = Axes.X,
                         Height = 250
-                    }),
+                    }, true),
                 }
             },
             new StatisticRow
             {
                 Columns = new[]
                 {
-                    new StatisticItem("Paddle Distribution", new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
+                    new StatisticItem("Paddle Distribution", () => new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
                     {
                         RelativeSizeAxes = Axes.X,
-                        Height = 250,
-                    })
+                        Height = 250
+                    }, true),
                 }
             },
             new StatisticRow
             {
                 Columns = new[]
                 {
-                    new StatisticItem(String.Empty, new SimpleStatisticTable(3, new SimpleStatisticItem[]
+                    new StatisticItem(string.Empty, () => new SimpleStatisticTable(3, new SimpleStatisticItem[]
                     {
+                        new AverageHitError(score.HitEvents),
                         new UnstableRate(score.HitEvents)
-                    }))
+                    }), true)
                 }
             }
         };
@@ -158,6 +159,7 @@ namespace osu.Game.Rulesets.Tau
                 //       Typically rulesets resources should be created inside of gameplay, NOT anywhere else.
                 //       Until the osu! team figures out a safe way for you to use resources out of the gameplay area (e.g mods icon),
                 //       Please try to avoid this at all costs.
+                //
                 //       ~ Nora
                 store.AddStore(new GlyphStore(
                     new ResourceStore<byte[]>(ruleset.CreateResourceStore()),
