@@ -88,19 +88,12 @@ namespace osu.Game.Rulesets.Tau.Mods
         }
 
         public ScoreRank AdjustRank(ScoreRank rank, double accuracy)
-        {
-            switch (rank)
+            => rank switch
             {
-                case ScoreRank.X:
-                    return ScoreRank.XH;
-
-                case ScoreRank.S:
-                    return ScoreRank.SH;
-
-                default:
-                    return rank;
-            }
-        }
+                ScoreRank.X => ScoreRank.XH,
+                ScoreRank.S => ScoreRank.SH,
+                _ => rank
+            };
 
         public virtual void ApplyToDrawableRuleset(DrawableRuleset<T> drawableRuleset)
         {

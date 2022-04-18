@@ -103,7 +103,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             void handleBeat(DrawableBeat beat)
             {
-                if (!beat.CheckValidation(beat.HitObject).IsValid)
+                if (beat.CheckValidation != null && !beat.CheckValidation(beat.HitObject.Angle).IsValid)
                     return;
 
                 Debug.Assert(beat.HitObject.HitWindows != null);

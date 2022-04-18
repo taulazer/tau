@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
@@ -23,13 +22,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public partial class DrawableSlider : DrawableTauHitObject<Slider>
     {
-        /// <summary>
-        /// Check to see whether or not this Hit object is in the paddle's range.
-        /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
-        /// </summary>
-        [CanBeNull]
-        public Func<float, ValidationResult> CheckValidation;
-
         public DrawableSliderHead SliderHead => headContainer.Child;
 
         private readonly SliderPath path;
@@ -186,6 +178,17 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.Update();
 
+            // This gives us about the same performance as if we were to just would update the path without this.
+            // The catch is that with this, we're giving the Update thread more breathing room to update everything
+            // else instead of worrying with updating the path vertices every update frame.
+            if (!drawCache.IsValid)
+            {
+                updatePath();
+                drawCache.Validate();
+            }
+
+            if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
+
             // ReSharper disable once AssignmentInConditionalExpression
             if (Tracking.Value = checkIfTracking())
             {
@@ -198,15 +201,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     trackingCheckpoints.Add( trackingCheckpoints.Count == 0 ? Tracking.Value : trackingCheckpoints[^1] );
                 trackingCheckpoints[trackingCheckpointIndex] = Tracking.Value;
             }
-
-            // This gives us about the same performance as if we were to just would update the path without this.
-            // The catch is that with this, we're giving the Update thread more breathing room to update everything
-            // else instead of worrying with updating the path vertices every update frame.
-            if ( drawCache.IsValid)
-                return;
-
-            updatePath();
-            drawCache.Validate();
         }
 
         protected override void UpdateInitialTransforms()
@@ -223,13 +217,23 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (!(Time.Current > HitObject.GetEndTime())) return;
 
             double percentage = totalTimeHeld / HitObject.Duration;
-
-            ApplyResult(r => r.Type = percentage switch
+            var result = percentage switch
             {
                 > .85 => HitResult.Great,
                 > .50 => HitResult.Ok,
                 _ => HitResult.Miss
-            });
+            };
+
+            // Some nested hitobjects may not be judged before the tail, so we need to make sure that we have them all judged beforehand.
+            // Thanks osu!.
+            // ~ Nora
+            foreach (var nested in NestedHitObjects.Where(n => !n.AllJudged))
+            {
+                if (nested is ICanApplyResult res)
+                    res.ForcefullyApplyResult(r => r.Type = result);
+            }
+
+            ApplyResult(r => r.Type = result);
         }
 
         [Resolved]
@@ -241,6 +245,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateHitStateTransforms( state );
             if ( state is ArmedState.Hit or ArmedState.Miss )
                 LifetimeEnd = Time.Current + FadeTime;
+            else
+                LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
         }
     }
 }

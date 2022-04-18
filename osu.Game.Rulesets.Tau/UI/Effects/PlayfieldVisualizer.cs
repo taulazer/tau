@@ -9,7 +9,6 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Utils;
-using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
@@ -18,7 +17,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class PlayfieldVisualizer : Drawable, INeedsNewResult
+    public class PlayfieldVisualizer : Drawable
     {
         /// <summary>
         /// The maximum length of each bar in the visualiser.
@@ -89,7 +88,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             showVisualizer.TriggerChange();
         }
 
-        public void OnNewResult(DrawableHitObject judgedObject, JudgementResult result)
+        public void OnNewResult(DrawableHitObject judgedObject)
         {
             switch (judgedObject.HitObject)
             {
