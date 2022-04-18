@@ -15,7 +15,6 @@ using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK.Graphics;
@@ -33,7 +32,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public DrawableSliderHead SliderHead => headContainer.Child;
 
-        private readonly SliderFollower follower;
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
@@ -77,17 +75,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         },
                     }
                 },
-                follower = new SliderFollower()
-                {
-                    AlwaysPresent = true,
-                    Alpha = 0
-                },
                 headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
 
-            follower.IsTracking.BindTo(Tracking);
             Tracking.BindValueChanged(updateSlidingSample);
         }
 
@@ -144,7 +136,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             if (properties.InverseModEnabled.Value)
             {
-                inversed = follower.Inversed = true;
+                inversed = true;
                 maskingContainer.Masking = false;
                 path.Reverse = inversed;
             }
@@ -214,8 +206,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 return;
 
             updatePath();
-            follower.UpdateProgress(getCurrentAngle());
-
             drawCache.Validate();
         }
 
@@ -224,13 +214,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.FadeInFromZero(HitObject.TimeFadeIn);
-        }
-
-        protected override void UpdateStartTimeStateTransforms()
-        {
-            base.UpdateStartTimeStateTransforms();
-
-            follower.FadeIn();
         }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
