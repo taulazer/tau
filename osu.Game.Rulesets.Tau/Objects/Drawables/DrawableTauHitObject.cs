@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using JetBrains.Annotations;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Judgements;
@@ -8,15 +10,17 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>
+    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>, ICanApplyResult
         where T : TauHitObject
     {
         public new T HitObject => (T)base.HitObject;
 
-        protected DrawableTauHitObject()
-            : base(null)
-        {
-        }
+        /// <summary>
+        /// Check to see whether or not this Hit object is in the paddle's range.
+        /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
+        /// </summary>
+        [CanBeNull]
+        public Func<float, ValidationResult> CheckValidation;
 
         protected DrawableTauHitObject(T obj)
             : base(obj)
@@ -76,6 +80,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
         {
         }
+
+        public void ForcefullyApplyResult(Action<JudgementResult> application)
+            => ApplyResult(application);
     }
 
     public struct ValidationResult

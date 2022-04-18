@@ -8,16 +8,14 @@ namespace osu.Game.Rulesets.Tau.Scoring
 {
     public class TauScoreProcessor : ScoreProcessor
     {
-        public TauScoreProcessor(TauRuleset ruleset) : base(ruleset) { }
+        public TauScoreProcessor(Ruleset ruleset)
+            : base(ruleset)
+        {
+        }
 
         protected override HitEvent CreateHitEvent(JudgementResult result)
             => base.CreateHitEvent(result).With(new Vector2((result as TauJudgementResult)?.DeltaAngle ?? 0, 0));
 
         protected override JudgementResult CreateResult(HitObject hitObject, Judgement judgement) => new TauJudgementResult(hitObject, judgement);
-
-        public TauScoreProcessor(Ruleset ruleset)
-            : base(ruleset)
-        {
-        }
     }
 }

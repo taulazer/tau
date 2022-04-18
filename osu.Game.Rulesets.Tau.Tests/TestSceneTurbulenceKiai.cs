@@ -17,13 +17,9 @@ namespace osu.Game.Rulesets.Tau.Tests
     public class TestSceneTurbulenceKiai : OsuTestScene
     {
         private TurbulenceKiaiEffect kiaiContainer;
-        private TauDependencyContainer dependencyContainer;
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-        {
-            var dependencies = base.CreateChildDependencies(parent);
-            return dependencyContainer = new TauDependencyContainer(Beatmap.Value.Beatmap, dependencies);
-        }
+        [Cached]
+        private TauCachedProperties properties { get; set; } = new();
 
         [SetUpSteps]
         public void SetUp()
@@ -56,7 +52,6 @@ namespace osu.Game.Rulesets.Tau.Tests
         {
             AddStep("Set inverse effect", () =>
             {
-                var properties = (TauCachedProperties)dependencyContainer.Get(typeof(TauCachedProperties));
                 properties.InverseModEnabled.Value = isInversed;
             });
 

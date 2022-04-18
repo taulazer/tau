@@ -5,17 +5,13 @@ namespace osu.Game.Rulesets.Tau.Scoring
     public class TauHitWindow : HitWindows
     {
         public override bool IsHitResultAllowed(HitResult result)
-        {
-            switch (result)
+            => result switch
             {
-                case HitResult.Great:
-                case HitResult.Ok:
-                case HitResult.Miss:
-                    return true;
-            }
-
-            return false;
-        }
+                HitResult.Great
+                    or HitResult.Ok
+                    or HitResult.Miss => true,
+                _ => false
+            };
 
         protected override DifficultyRange[] GetRanges() => new[]
         {

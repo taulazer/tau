@@ -72,7 +72,8 @@ namespace osu.Game.Rulesets.Tau
                 ModType.Fun => new Mod[]
                 {
                     new MultiMod(new ModWindUp(), new ModWindDown()),
-                    new ModAdaptiveSpeed()
+                    new ModAdaptiveSpeed(),
+                    new TauModImpossibleSliders()
                 },
                 _ => Enumerable.Empty<Mod>()
             };
@@ -96,7 +97,7 @@ namespace osu.Game.Rulesets.Tau
                     new StatisticItem("Timing Distribution", new HitEventTimingDistributionGraph(score.HitEvents)
                     {
                         RelativeSizeAxes = Axes.X,
-                        Height = 350
+                        Height = 250
                     }),
                 }
             },

@@ -16,23 +16,15 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauDrawableRuleset : DrawableRuleset<TauHitObject>
     {
-        internal TauDependencyContainer TauDependencyContainer;
-
         public TauDrawableRuleset(TauRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             : base(ruleset, beatmap, mods)
         {
         }
 
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-        {
-            var dependencies = base.CreateChildDependencies(parent);
-            return TauDependencyContainer = new TauDependencyContainer(Beatmap, dependencies);
-        }
+        [Cached]
+        private TauCachedProperties properties { get; set; } = new();
 
-        protected override void Dispose ( bool isDisposing ) {
-            base.Dispose( isDisposing );
-            TauDependencyContainer.Dispose();
-        }
+        internal TauCachedProperties CachedProperties => properties;
 
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h) => null;
 
@@ -42,5 +34,17 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override Playfield CreatePlayfield() => new TauPlayfield();
         public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new TauPlayfieldAdjustmentContainer();
+
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            properties.SetRange(Beatmap.Difficulty.CircleSize);
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+            properties.Dispose();
+        }
     }
 }

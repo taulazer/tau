@@ -19,8 +19,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {
             var ruleset = (TauDrawableRuleset)drawableRuleset;
-            var dependencyContainer = ruleset.TauDependencyContainer;
-            var properties = (TauCachedProperties)dependencyContainer.Get(typeof(TauCachedProperties));
+            var properties = ruleset.CachedProperties;
 
             properties.InverseModEnabled.Value = true;
 

@@ -16,6 +16,7 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         private SettingsCheckbox showEffects;
+        private SettingsCheckbox showSliderEffects;
         private SettingsCheckbox showVisualizer;
         private SettingsEnumDropdown<KiaiType> kiaiType;
 
@@ -31,8 +32,13 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 showEffects = new SettingsCheckbox
                 {
-                    LabelText = "Show effects",
+                    LabelText = "Show Effects",
                     Current = config.GetBindable<bool>(TauRulesetSettings.ShowEffects)
+                },
+                showSliderEffects = new SettingsCheckbox
+                {
+                    LabelText = "Show Slider Effects",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowSliderEffects)
                 },
                 showVisualizer = new SettingsCheckbox
                 {
@@ -41,12 +47,12 @@ namespace osu.Game.Rulesets.Tau.UI
                 },
                 kiaiType = new SettingsEnumDropdown<KiaiType>()
                 {
-                    LabelText = "Show Kiai effects",
+                    LabelText = "Kiai Type",
                     Current = config.GetBindable<KiaiType>(TauRulesetSettings.KiaiType)
                 },
                 new SettingsSlider<float>
                 {
-                    LabelText = "Playfield dim",
+                    LabelText = "Playfield Dim",
                     Current = config.GetBindable<float>(TauRulesetSettings.PlayfieldDim),
                     KeyboardStep = 0.01f,
                     DisplayAsPercentage = true
@@ -61,6 +67,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             showEffects.Current.BindValueChanged(v =>
             {
+                showSliderEffects.Current.Disabled = !v.NewValue;
                 showVisualizer.Current.Disabled = !v.NewValue;
                 kiaiType.Current.Disabled = !v.NewValue;
             }, true);
