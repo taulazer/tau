@@ -72,6 +72,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
 
+            path.Ticks = repeatContainer;
+
             Tracking.BindValueChanged(updateSlidingSample);
         }
 

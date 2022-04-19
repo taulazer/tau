@@ -39,7 +39,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
 
         public partial class SliderPath : Drawable
         {
-            private IShader roundedTextureShader { get; set; }
+            public IEnumerable<DrawableSliderRepeat> Ticks = Array.Empty<DrawableSliderRepeat>();
+            private IShader depthMaskShader { get; set; }
+            private IShader textureShader { get; set; }
             private IShader hitFadeTextureShader { get; set; }
 
             private readonly List<Vector3> vertices = new();
@@ -213,7 +215,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
             [BackgroundDependencyLoader]
             private void load(ShaderManager shaders)
             {
-                roundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
+                textureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+                depthMaskShader = shaders.Load("DepthMask", "DepthMask");
                 hitFadeTextureShader = shaders.Load("SliderPositionAndColour", "Slider");
             }
 

@@ -23,4 +23,6 @@ void main(void)
     v_TexCoord = m_TexCoord;
     v_TexRect = m_TexRect;
     v_BlendRange = m_BlendRange;
+
+    gl_Position.z = 0.0;
 }
