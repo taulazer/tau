@@ -184,7 +184,7 @@ namespace osu.Game.Rulesets.Tau.Replays
             {
                 foreach (var node in s.Nodes)
                 {
-                    var pos = getGameplayPositionFromAngle(node.Angle);
+                    var pos = getGameplayPositionFromAngle(s.Angle + node.Angle);
                     AddFrameToReplay(new TauReplayFrame(h.StartTime + node.Time, pos, action));
                 }
 

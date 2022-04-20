@@ -20,7 +20,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public partial class DrawableSlider : DrawableTauHitObject<Slider>
+    public partial class DrawableSlider : DrawableAngledTauHitObject<Slider>
     {
         public DrawableSliderHead SliderHead => headContainer.Child;
 
@@ -82,6 +82,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             switch (hitObject)
             {
                 case DrawableSliderHead head:
+                    head.Slider = this;
                     headContainer.Child = head;
                     break;
 
@@ -171,8 +172,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         public BindableBool Tracking = new();
-        double trackingCheckpointInterval = 5;
-        List<bool> trackingCheckpoints = new();
+        private const double trackingCheckpointInterval = 5;
+        private readonly List<bool> trackingCheckpoints = new();
 
         protected override void Update()
         {
@@ -247,6 +248,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
             base.UpdateHitStateTransforms(state);
+
             if (state is ArmedState.Hit or ArmedState.Miss)
                 LifetimeEnd = Time.Current + FadeTime;
             else

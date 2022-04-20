@@ -14,7 +14,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class Slider : TauHitObject, IHasRepeats
+    public class Slider : AngledTauHitObject, IHasRepeats
     {
         public double Duration
         {

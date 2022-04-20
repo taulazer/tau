@@ -85,7 +85,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                         if (!slider.SliderHead.IsHit)
                             handleBeat(slider.SliderHead);
 
-                        requiresHold |= slider.IsWithinPaddle;
+                        requiresHold |= slider.IsWithinPaddle();
                         break;
                 }
             }

@@ -14,7 +14,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableBeat : DrawableTauHitObject<Beat>
+    public class DrawableBeat : DrawableAngledTauHitObject<Beat>
     {
         public Drawable DrawableBox;
 
@@ -84,17 +84,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             size.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
         }
 
-        protected override bool CheckForValidation() => CheckValidation != null && CheckValidation(HitObject.Angle).IsValid;
         protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);
-
-        protected override void ApplyCustomResult(JudgementResult result)
-        {
-            var delta = CheckValidation(HitObject.Angle).DeltaFromPaddleCenter;
-            var beatResult = (TauJudgementResult)result;
-
-            if (result.IsHit)
-                beatResult.DeltaAngle = delta;
-        }
 
         [Resolved]
         private OsuColour colour { get; set; }
