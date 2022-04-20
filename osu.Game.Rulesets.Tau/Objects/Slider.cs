@@ -14,7 +14,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class Slider : AngledTauHitObject, IHasRepeats
+    public class Slider : AngledTauHitObject, IHasRepeats, IHasOffsetAngle
     {
         public double Duration
         {
@@ -112,6 +112,7 @@ namespace osu.Game.Rulesets.Tau.Objects
                     case SliderEventType.Head:
                         AddNested(HeadBeat = new SliderHeadBeat
                         {
+                            ParentSlider = this,
                             StartTime = StartTime,
                             Angle = Nodes[0].Angle
                         });
@@ -122,6 +123,7 @@ namespace osu.Game.Rulesets.Tau.Objects
                         var pos = Path.PositionAt(time / Duration);
                         AddNested(new SliderRepeat
                         {
+                            ParentSlider = this,
                             RepeatIndex = e.SpanIndex,
                             StartTime = StartTime + time,
                             Angle = pos.Y
@@ -147,6 +149,8 @@ namespace osu.Game.Rulesets.Tau.Objects
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;
 
         public float GetAbsoluteAngle(SliderNode node) => Angle + node.Angle;
+
+        public float GetOffsetAngle() => EndNode.Angle;
 
         public int RepeatCount { get; set; }
         public IList<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();

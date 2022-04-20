@@ -2,7 +2,7 @@
 {
     public class DrawableSliderHead : DrawableBeat
     {
-        public DrawableSlider Slider;
+        public DrawableSlider DrawableSlider => (DrawableSlider)ParentHitObject;
 
         public DrawableSliderHead()
         {
@@ -13,7 +13,6 @@
         {
         }
 
-        // TODO: This probably shouldn't be here?
-        protected override float GetCurrentOffset() => Slider.HitObject.Angle;
+        protected override float GetCurrentOffset() => DrawableSlider.HitObject.Angle;
     }
 }

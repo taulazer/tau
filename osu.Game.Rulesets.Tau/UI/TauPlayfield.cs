@@ -118,8 +118,12 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
-            judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
             effectsContainer.OnNewResult(judgedObject, result);
+
+            if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
+                return;
+
+            judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
         }
 
         private class DrawableJudgementPool : DrawablePool<DrawableTauJudgement>

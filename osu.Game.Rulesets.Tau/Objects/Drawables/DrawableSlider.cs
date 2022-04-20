@@ -82,7 +82,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             switch (hitObject)
             {
                 case DrawableSliderHead head:
-                    head.Slider = this;
                     headContainer.Child = head;
                     break;
 

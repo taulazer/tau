@@ -92,6 +92,10 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         {
             switch (judgedObject.HitObject)
             {
+                case IHasOffsetAngle offset:
+                    updateAmplitudes(offset.GetAbsoluteAngle(), 0.5f);
+                    break;
+
                 case IHasAngle angle:
                     updateAmplitudes(angle.Angle, 0.5f);
                     break;

@@ -33,7 +33,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         {
             var emitter = judgedObject.HitObject switch
             {
-                IHasAngle angle => getEmitterForAngle(angle, result),
+                IHasOffsetAngle angle => getEmitterForAngle(angle.GetAbsoluteAngle(), result),
+                IHasAngle angle => getEmitterForAngle(angle.Angle, result),
                 HardBeat => getEmitterForHardBeat(result),
                 _ => new T()
             };
@@ -56,11 +57,11 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             emitter.ApplyAnimations();
         }
 
-        private Emitter getEmitterForAngle(IHasAngle angle, JudgementResult result)
+        private Emitter getEmitterForAngle(float angle, JudgementResult result)
             => Get(e => e.Apply(new Emitter.EmitterSettings
             {
                 Amount = 10,
-                Angle = angle.Angle,
+                Angle = angle,
                 Inversed = properties?.InverseModEnabled?.Value ?? false,
                 Colour = colour.ForHitResult(result.Type)
             }));
