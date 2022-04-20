@@ -45,6 +45,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             var angle = JudgedObject switch
             {
+                DrawableSliderHead h => h.Slider.HitObject.Angle,
                 DrawableBeat b => b.HitObject.Angle,
                 DrawableSlider s => s.HitObject.GetAbsoluteAngle(s.HitObject.EndNode),
                 _ => 0f
