@@ -66,7 +66,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public void TrackSlider(float angle, DrawableSlider slider)
         {
-            if (!slider.Tracking.Value)
+            if (!slider.Tracking.Value || !slider.HitObject.Kiai)
                 return;
 
             currentTrackingTime += Time.Elapsed;
@@ -76,6 +76,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             currentTrackingTime = 0;
             sliderEffects.UpdateSliderPosition(angle);
+            visualizer.UpdateSliderPosition(angle);
         }
     }
 }

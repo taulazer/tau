@@ -52,6 +52,14 @@ namespace osu.Game.Rulesets.Tau
             if (angle >= 360) angle %= 360;
         }
 
+        public static float Normalize(this float angle)
+        {
+            if (angle < 0) angle += 360;
+            if (angle >= 360) angle %= 360;
+
+            return angle;
+        }
+
         public static float Remap(this float value, float x1, float x2, float y1, float y2)
         {
             var m = (y2 - y1) / (x2 - x1);

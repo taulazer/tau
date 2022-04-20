@@ -93,23 +93,28 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             switch (judgedObject.HitObject)
             {
                 case IHasAngle angle:
-                    updateAmplitudes(angle.Angle);
+                    updateAmplitudes(angle.Angle, 0.5f);
                     break;
 
                 case HardBeat _:
                     for (int i = 0; i < 360; i += 90)
                     {
-                        updateAmplitudes(i);
+                        updateAmplitudes(i, 0.5f);
                     }
 
                     break;
             }
         }
 
-        private void updateAmplitudes(float angle)
+        public void UpdateSliderPosition(float angle)
+        {
+            updateAmplitudes(angle, 0.25f);
+        }
+
+        private void updateAmplitudes(float angle, float multiplier)
         {
             var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser), 0, bars_per_visualiser);
-            amplitudes[barIndex] += 0.5f;
+            amplitudes[barIndex] += multiplier;
 
             for (int i = 1; i <= bar_spread; i++)
             {
@@ -122,7 +127,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 if (indexRight >= bars_per_visualiser)
                     indexRight -= bars_per_visualiser;
 
-                var amplitude = Interpolation.ValueAt(i, 0.0f, 0.3f, bar_spread, 1, Easing.InQuint);
+                var amplitude = Interpolation.ValueAt(i, 0.0f, multiplier * 0.75f, bar_spread, 1, Easing.InQuint);
                 amplitudes[indexLeft] += amplitude;
                 amplitudes[indexRight] += amplitude;
             }
