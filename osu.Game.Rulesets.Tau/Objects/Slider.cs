@@ -24,6 +24,8 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         public double EndTime => StartTime + Duration;
 
+        public SliderNode EndNode => Nodes.LastOrDefault();
+
         public override IList<HitSampleInfo> AuxiliarySamples => CreateSlidingSamples().Concat(TailSamples).ToArray();
 
         public IList<HitSampleInfo> CreateSlidingSamples()
@@ -143,6 +145,8 @@ namespace osu.Game.Rulesets.Tau.Objects
         }
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;
+
+        public float GetAbsoluteAngle(SliderNode node) => Angle + node.Angle;
 
         public int RepeatCount { get; set; }
         public IList<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();

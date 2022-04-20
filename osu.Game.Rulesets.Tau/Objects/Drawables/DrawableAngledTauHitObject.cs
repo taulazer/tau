@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Game.Rulesets.Judgements;
@@ -13,6 +14,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// Check to see whether or not this Hit object is in the paddle's range.
         /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
         /// </summary>
+        [CanBeNull]
         public Func<float, ValidationResult> CheckValidation;
 
         protected DrawableAngledTauHitObject(T obj)
@@ -42,10 +44,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override bool CheckForValidation() => IsWithinPaddle();
 
-        public bool IsWithinPaddle() => CheckValidation(HitObject.Angle + GetCurrentOffset()).IsValid;
+        public bool IsWithinPaddle() => CheckValidation != null && CheckValidation(HitObject.Angle + GetCurrentOffset()).IsValid;
 
         protected override void ApplyCustomResult(JudgementResult result)
         {
+            if (CheckValidation == null)
+                return;
+
             var delta = CheckValidation(HitObject.Angle + GetCurrentOffset()).DeltaFromPaddleCenter;
             var beatResult = (TauJudgementResult)result;
 

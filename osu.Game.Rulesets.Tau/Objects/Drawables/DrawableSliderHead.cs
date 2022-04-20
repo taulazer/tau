@@ -13,6 +13,7 @@
         {
         }
 
+        // TODO: This probably shouldn't be here?
         protected override float GetCurrentOffset() => Slider.HitObject.Angle;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using osu.Framework.Graphics;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
@@ -61,8 +60,7 @@ namespace osu.Game.Rulesets.Tau.Replays
             var lastFrame = (TauReplayFrame)Frames[^1];
             var startPosition = h switch
             {
-                Beat b => getGameplayPositionFromAngle(b.Angle),
-                Slider s => getGameplayPositionFromAngle(s.HeadBeat.Angle),
+                IHasAngle ang => getGameplayPositionFromAngle(ang.Angle),
                 _ => lastFrame.Position
             };
 
@@ -184,11 +182,11 @@ namespace osu.Game.Rulesets.Tau.Replays
             {
                 foreach (var node in s.Nodes)
                 {
-                    var pos = getGameplayPositionFromAngle(s.Angle + node.Angle);
+                    var pos = getGameplayPositionFromAngle(s.GetAbsoluteAngle(node));
                     AddFrameToReplay(new TauReplayFrame(h.StartTime + node.Time, pos, action));
                 }
 
-                endFrame.Position = getGameplayPositionFromAngle(s.Nodes.LastOrDefault().Angle);
+                endFrame.Position = getGameplayPositionFromAngle(s.GetAbsoluteAngle(s.EndNode));
             }
 
             if (Frames[^1].Time <= endFrame.Time)

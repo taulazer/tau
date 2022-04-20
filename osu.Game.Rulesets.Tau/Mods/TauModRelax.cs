@@ -101,6 +101,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             else if (normal.isDown && time - lastStateChangeTime > AutoGenerator.KEY_UP_DELAY)
                 changeNormalState(false, time);
 
+            // TODO: Replace with DrawableAngledTauHitObject.
             void handleBeat(DrawableBeat beat)
             {
                 if (beat.CheckValidation != null && !beat.CheckValidation(beat.HitObject.Angle).IsValid)

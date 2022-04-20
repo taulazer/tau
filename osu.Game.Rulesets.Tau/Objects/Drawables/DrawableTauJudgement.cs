@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
@@ -47,7 +46,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             var angle = JudgedObject switch
             {
                 DrawableBeat b => b.HitObject.Angle,
-                DrawableSlider s => s.HitObject.Angle + s.HitObject.Nodes.Last().Angle,
+                DrawableSlider s => s.HitObject.GetAbsoluteAngle(s.HitObject.EndNode),
                 _ => 0f
             };
 
