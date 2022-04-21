@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Bindables;
 using osu.Game.Beatmaps;
@@ -41,7 +42,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
                         }
                     }
                 },
-                PassCondition = () => Player.ScoreProcessor.JudgedHits >= 5,
+                PassCondition = () => Player.Results.Count(r => r.IsHit) >= 5,
             });
         }
     }
