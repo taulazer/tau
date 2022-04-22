@@ -15,7 +15,7 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace osu.Game.Rulesets.Tau.Objects.Drawables {
     public partial class DrawableSlider
     {
-        const float fade_range = 120;
+        public const float fade_range = 120;
 
         private static Texture generateSmoothPathTexture(float radius, Func<float, Color4> colourAt)
         {

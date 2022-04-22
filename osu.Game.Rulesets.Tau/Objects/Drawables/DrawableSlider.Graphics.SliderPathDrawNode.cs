@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO.Pipelines;
 using System.Linq;
 using System.Runtime.InteropServices;
-using osu.Framework;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Colour;
@@ -18,8 +15,6 @@ using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables {
     public partial class DrawableSlider
@@ -62,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
                 protected new SliderPath Source => (SliderPath)base.Source;
 
                 private RentedArray<(Line line, float result)> segments;
-                private RentedArray<Quad> ticks;
+                private RentedArray<(Quad quad, float alpha, bool result)> ticks;
                 private RentedArray<Quad> innerTicks;
 
                 private Texture texture;
@@ -97,12 +92,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
                     segments.Dispose();
                     segments = MemoryPool<(Line line, float result)>.Shared.Rent(Source.segments);
                     ticks.Dispose();
-                    ticks = MemoryPool<Quad>.Shared.Rent(Source.Ticks.Count());
+                    ticks = MemoryPool<(Quad, float, bool)>.Shared.Rent(Source.Ticks.Count());
                     innerTicks.Dispose();
                     innerTicks = MemoryPool<Quad>.Shared.Rent( ticks.Length );
                     int k = 0;
                     foreach ( var i in Source.Ticks ) {
-                        ticks[k] = i.DrawableBox.ScreenSpaceDrawQuad;
+                        ticks[k] = (i.DrawableBox.ScreenSpaceDrawQuad, i.DrawableBox.Alpha, i.Result.Type == Rulesets.Scoring.HitResult.Great);
                         innerTicks[k] = i.InnerDrawableBox.ScreenSpaceDrawQuad;
 
                         k++;
@@ -299,28 +294,28 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
 
                     foreach ( var i in ticks ) {
                         quadBatch.Add( new SliderTexturedVertex2D {
-                            Position = i.BottomRight,
+                            Position = i.quad.BottomRight,
                             TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
-                            Colour = Color4.White,//colourAt( lineRight.EndPoint ),
-                            Result = 1
+                            Colour = Color4.White.Opacity( i.alpha ),//colourAt( lineRight.EndPoint ),
+                            Result = i.result ? 1 : 0
                         } );
                         quadBatch.Add( new SliderTexturedVertex2D {
-                            Position = i.BottomLeft,
+                            Position = i.quad.BottomLeft,
                             TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
-                            Colour = Color4.White,//colourAt( lineRight.StartPoint ),
-                            Result = 1
+                            Colour = Color4.White.Opacity( i.alpha ),//colourAt( lineRight.StartPoint ),
+                            Result = i.result ? 1 : 0
                         } );
                         quadBatch.Add( new SliderTexturedVertex2D {
-                            Position = i.TopLeft,
+                            Position = i.quad.TopLeft,
                             TexturePosition = new Vector2( texRect.Right, texRect.Centre.Y ),
-                            Colour = Color4.White,//firstMiddleColour,
-                            Result = 1
+                            Colour = Color4.White.Opacity( i.alpha ),//firstMiddleColour,
+                            Result = i.result ? 1 : 0
                         } );
                         quadBatch.Add( new SliderTexturedVertex2D {
-                            Position = i.TopRight,
+                            Position = i.quad.TopRight,
                             TexturePosition = new Vector2( texRect.Right, texRect.Centre.Y ),
-                            Colour = Color4.White,//secondMiddleColour,
-                            Result = 1
+                            Colour = Color4.White.Opacity( i.alpha ),//secondMiddleColour,
+                            Result = i.result ? 1 : 0
                         } );
                     }
                 }

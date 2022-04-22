@@ -1,9 +1,10 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osuTK;
-using osuTK.Graphics;
+using System;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -60,6 +61,39 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             if (HitObject.StartTime <= Time.Current)
                 ApplyResult(r => r.Type = DrawableSlider.Tracking.Value ? HitResult.Great : HitResult.Miss);
+        }
+
+        protected override void OnApply () {
+            base.OnApply();
+
+            DrawableBox.Y = Properties?.InverseModEnabled.Value == true ? -1.0f : 0;
+
+            DrawableBox.Alpha = 0;
+        }
+
+        protected override void UpdateInitialTransforms () {
+            base.UpdateInitialTransforms();
+
+            DrawableBox.FadeIn( HitObject.TimeFadeIn );
+
+            DrawableBox.MoveToY( -0.5f, HitObject.TimePreempt );
+        }
+
+        protected override void UpdateHitStateTransforms ( ArmedState state ) {
+            base.UpdateHitStateTransforms( state );
+            var velocity = -0.5f / (float)HitObject.TimePreempt;
+            var time_fade_hit = DrawableSlider.fade_range / Math.Abs(velocity);
+
+            if ( Properties?.InverseModEnabled.Value == true )
+                velocity *= -1;
+
+            switch ( state ) {
+                case ArmedState.Hit or ArmedState.Miss:
+                    DrawableBox.ClearTransforms();
+                    DrawableBox.MoveToY( -0.5f + velocity * time_fade_hit, time_fade_hit );
+
+                    break;
+            }
         }
     }
 }
