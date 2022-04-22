@@ -187,7 +187,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                     AddFrameToReplay(new TauReplayFrame(h.StartTime + node.Time, pos, action));
                 }
 
-                endFrame.Position = getGameplayPositionFromAngle(s.GetAbsoluteAngle(s.EndNode));
+                endFrame.Position = getGameplayPositionFromAngle(s.GetAbsoluteAngle(s.Path.EndNode));
             }
 
             if (Frames[^1].Time <= endFrame.Time)

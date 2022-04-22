@@ -63,5 +63,20 @@ namespace osu.Game.Rulesets.Tau.Tests.NonVisual
             Assert.AreEqual(60, nodes[0].Angle);
             Assert.AreEqual(70, nodes[1].Angle);
         }
+
+        [Test]
+        public void TestCalculatedDistance()
+        {
+            var path = new PolarSliderPath(new SliderNode[]
+            {
+                new(0, 50),
+                new(200, 70),
+                new(400, 50),
+            });
+
+            Assert.AreEqual(1, path.Version.Value);
+            Assert.AreEqual(40, path.CalculatedDistance);
+            Assert.AreEqual(1, path.Version.Value);
+        }
     }
 }

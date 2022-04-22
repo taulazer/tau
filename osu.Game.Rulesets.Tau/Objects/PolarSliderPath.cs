@@ -1,23 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using osu.Framework.Bindables;
+using osu.Framework.Caching;
 using osu.Framework.Utils;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
     public class PolarSliderPath
     {
+        [JsonIgnore]
+        public IBindable<int> Version => version;
+
+        private readonly Bindable<int> version = new();
+
+        public readonly Bindable<double?> ExpectedDistance = new();
+
+        public double Duration => Nodes.Max(n => n.Time);
+        public SliderNode EndNode => Nodes.LastOrDefault();
+
         public readonly BindableList<SliderNode> Nodes = new();
 
-        public PolarSliderPath(SliderNode[] nodes)
+        private readonly Cached pathCache = new();
+
+        private double calculatedLength;
+
+        public PolarSliderPath()
+        {
+            Nodes.CollectionChanged += (_, _) =>
+            {
+                invalidate();
+            };
+        }
+
+        public PolarSliderPath(SliderNode[] nodes, double? expectedDistance = null)
+            : this()
         {
             Nodes.AddRange(nodes);
+            ExpectedDistance.Value = expectedDistance;
+        }
+
+        /// <summary>
+        /// The distance of the path prior to lengthening/shortening to account for <see cref="ExpectedDistance"/>.
+        /// </summary>
+        public double CalculatedDistance
+        {
+            get
+            {
+                ensureValid();
+                return calculatedLength;
+            }
         }
 
         public IEnumerable<SliderNode> NodesBetween(float start, float end)
             => Nodes
-              .Where(node => !(node.Time < start))
+              .SkipWhile(node => node.Time < start)
               .TakeWhile(node => !(node.Time > end));
 
         public SliderNode NodeAt(float time)
@@ -42,6 +80,40 @@ namespace osu.Game.Rulesets.Tau.Objects
             var angle = Interpolation.ValueAt(time, start.Angle, end.Angle, start.Time, end.Time);
 
             return new SliderNode(time, angle);
+        }
+
+        private void invalidate()
+        {
+            pathCache.Invalidate();
+            version.Value++;
+        }
+
+        private void ensureValid()
+        {
+            if (pathCache.IsValid)
+                return;
+
+            calculateLength();
+
+            pathCache.Validate();
+        }
+
+        private void calculateLength()
+        {
+            calculatedLength = 0;
+
+            if (Nodes.Count <= 0)
+                return;
+
+            (float angle, float sum) result = (angle: Nodes[0].Angle, sum: 0f);
+
+            foreach (var node in Nodes)
+            {
+                result.sum += Math.Abs(Extensions.GetDeltaAngle(result.angle, node.Angle));
+                result.angle = node.Angle;
+            }
+
+            calculatedLength = result.sum;
         }
     }
 

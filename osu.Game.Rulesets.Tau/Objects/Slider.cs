@@ -15,13 +15,11 @@ namespace osu.Game.Rulesets.Tau.Objects
     {
         public double Duration
         {
-            get => Path.Nodes.Max(n => n.Time);
+            get => Path.Duration;
             set { }
         }
 
         public double EndTime => StartTime + Duration;
-
-        public SliderNode EndNode => Path.Nodes.LastOrDefault();
 
         public override IList<HitSampleInfo> AuxiliarySamples => CreateSlidingSamples().Concat(TailSamples).ToArray();
 
@@ -86,7 +84,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         {
             base.CreateNestedHitObjects(cancellationToken);
 
-            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Duration, this.SpanCount(), null, cancellationToken);
+            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.CalculatedDistance, this.SpanCount(), null, cancellationToken);
 
             foreach (var e in sliderEvents)
             {
@@ -134,7 +132,7 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         public float GetAbsoluteAngle(SliderNode node) => Angle + node.Angle;
 
-        public float GetOffsetAngle() => EndNode.Angle;
+        public float GetOffsetAngle() => Path.EndNode.Angle;
 
         public int RepeatCount { get; set; }
         public IList<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();
