@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
@@ -20,22 +21,13 @@ namespace osu.Game.Rulesets.Tau.Objects
         public double Duration => Nodes.Max(n => n.Time);
         public SliderNode EndNode => Nodes.LastOrDefault();
 
-        public readonly BindableList<SliderNode> Nodes = new();
+        public readonly List<SliderNode> Nodes = new();
 
         private readonly Cached pathCache = new();
 
         private double calculatedLength;
 
-        public PolarSliderPath()
-        {
-            Nodes.CollectionChanged += (_, _) =>
-            {
-                invalidate();
-            };
-        }
-
         public PolarSliderPath(SliderNode[] nodes, double? expectedDistance = null)
-            : this()
         {
             Nodes.AddRange(nodes);
             ExpectedDistance.Value = expectedDistance;
@@ -53,10 +45,34 @@ namespace osu.Game.Rulesets.Tau.Objects
             }
         }
 
-        public IEnumerable<SliderNode> NodesBetween(float start, float end)
-            => Nodes
-              .SkipWhile(node => node.Time < start)
-              .TakeWhile(node => !(node.Time > end));
+        public Span<SliderNode> NodesBetween(float start, float end)
+        {
+            int? index = null;
+            int? length = null;
+
+            for (var i = 0; i < Nodes.Count; i++)
+            {
+                var node = Nodes[i];
+                if (node.Time < start)
+                    continue;
+
+                if (index == null)
+                {
+                    index = i;
+                    length = 0;
+                }
+
+                if (node.Time > end)
+                    break;
+
+                length = (i + 1) - index;
+            }
+
+            if (index is null or 0)
+                return Span<SliderNode>.Empty;
+
+            return CollectionsMarshal.AsSpan(Nodes).Slice((int)index, (int)length);
+        }
 
         public SliderNode NodeAt(float time)
         {

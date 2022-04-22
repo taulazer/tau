@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Tests.NonVisual
@@ -62,6 +61,14 @@ namespace osu.Game.Rulesets.Tau.Tests.NonVisual
             Assert.AreEqual(2, nodes.Length);
             Assert.AreEqual(60, nodes[0].Angle);
             Assert.AreEqual(70, nodes[1].Angle);
+
+            nodes = path.NodesBetween(50, 60).ToArray();
+            Assert.IsEmpty(nodes);
+
+            nodes = path.NodesBetween(90, 110).ToArray();
+            Assert.IsNotEmpty(nodes);
+            Assert.AreEqual(1, nodes.Length);
+            Assert.AreEqual(60, nodes[0].Angle);
         }
 
         [Test]
@@ -74,9 +81,9 @@ namespace osu.Game.Rulesets.Tau.Tests.NonVisual
                 new(400, 50),
             });
 
-            Assert.AreEqual(1, path.Version.Value);
+            Assert.AreEqual(0, path.Version.Value);
             Assert.AreEqual(40, path.CalculatedDistance);
-            Assert.AreEqual(1, path.Version.Value);
+            Assert.AreEqual(0, path.Version.Value);
         }
     }
 }
