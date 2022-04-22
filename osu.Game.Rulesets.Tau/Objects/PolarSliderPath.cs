@@ -15,14 +15,12 @@ namespace osu.Game.Rulesets.Tau.Objects
         public IBindable<int> Version => version;
 
         private readonly Bindable<int> version = new();
-
         public readonly Bindable<double?> ExpectedDistance = new();
 
         public double Duration => Nodes.Max(n => n.Time);
         public SliderNode EndNode => Nodes.LastOrDefault();
 
         public readonly List<SliderNode> Nodes = new();
-
         private readonly Cached pathCache = new();
 
         private double calculatedLength;
