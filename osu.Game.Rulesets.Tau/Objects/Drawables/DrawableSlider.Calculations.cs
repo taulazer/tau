@@ -55,7 +55,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 var p = Extensions.GetCircularPosition(distanceAt(t), (float)angle);
                 var index = (int)(t / trackingCheckpointInterval);
-                path.AddVertex(new Vector3(p.X, p.Y, index >= 0 && index < trackingCheckpoints.Count ? (trackingCheckpoints[index] ? 1 : 0) : 1));
+                path.AddVertex(new Vector3(p.X, p.Y, trackingCheckpoints.ValueAtOrLastOr(index, true) ? 1 : 0));
             }
 
             do
