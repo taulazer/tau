@@ -15,8 +15,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
     public abstract class KiaiEffect<T> : DrawablePool<T>
         where T : Emitter, new()
     {
-        protected KiaiEffect()
-            : base(20, 50)
+        protected KiaiEffect(int initialSize)
+            : base(initialSize)
         {
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;

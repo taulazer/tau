@@ -23,6 +23,16 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         [CanBeNull]
         private TauCursor cursor;
 
+        public TurbulenceKiaiEffect(int initialSize)
+            : base(initialSize)
+        {
+        }
+
+        public TurbulenceKiaiEffect()
+            : base(20)
+        {
+        }
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
