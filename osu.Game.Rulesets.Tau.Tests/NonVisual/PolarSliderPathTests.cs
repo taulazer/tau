@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using NUnit.Framework;
 using osu.Game.Rulesets.Tau.Objects;
 
@@ -56,27 +56,12 @@ namespace osu.Game.Rulesets.Tau.Tests.NonVisual
                 new(200, 70),
             });
 
-            Span<SliderNode> nodes;
+            var nodes = path.NodesBetween(50, 250).ToArray();
 
-            {
-                nodes = path.NodesBetween(50, 250, true);
-
-                Assert.IsNotEmpty(nodes.ToArray());
-                Assert.AreEqual(4, nodes.Length);
-                Assert.AreEqual(55, nodes[0].Angle);
-                Assert.AreEqual(60, nodes[1].Angle);
-                Assert.AreEqual(70, nodes[2].Angle);
-                Assert.AreEqual(70, nodes[3].Angle);
-            }
-
-            {
-                nodes = path.NodesBetween(50, 250, false);
-
-                Assert.IsNotEmpty(nodes.ToArray());
-                Assert.AreEqual(2, nodes.Length);
-                Assert.AreEqual(60, nodes[0].Angle);
-                Assert.AreEqual(70, nodes[1].Angle);
-            }
+            Assert.IsNotEmpty(nodes);
+            Assert.AreEqual(2, nodes.Length);
+            Assert.AreEqual(60, nodes[0].Angle);
+            Assert.AreEqual(70, nodes[1].Angle);
         }
     }
 }

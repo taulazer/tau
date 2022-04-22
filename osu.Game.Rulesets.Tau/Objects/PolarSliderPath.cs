@@ -15,29 +15,10 @@ namespace osu.Game.Rulesets.Tau.Objects
             Nodes.AddRange(nodes);
         }
 
-        public Span<SliderNode> NodesBetween(float start, float end, bool generateNodes = false)
-        {
-            var found = new List<SliderNode>();
-
-            if (generateNodes)
-                found.Add(NodeAt(start));
-
-            foreach (var node in Nodes.Where(node => !(node.Time < start)))
-            {
-                if (generateNodes && node.Time == start)
-                    continue;
-
-                if (node.Time > end)
-                    break;
-
-                found.Add(node);
-            }
-
-            if (generateNodes)
-                found.Add(NodeAt(end));
-
-            return new Span<SliderNode>(found.ToArray());
-        }
+        public IEnumerable<SliderNode> NodesBetween(float start, float end)
+            => Nodes
+              .Where(node => !(node.Time < start))
+              .TakeWhile(node => !(node.Time > end));
 
         public SliderNode NodeAt(float time)
         {
