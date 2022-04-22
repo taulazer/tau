@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void updatePath()
         {
             path.ClearVertices();
-            var nodes = HitObject.Nodes;
+            var nodes = HitObject.Path.Nodes;
             if (nodes.Count == 0)
                 return;
 
@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private void generatePathSegmnt(ref int nodeIndex, ref bool capAdded, double time, double startTime, double endTime)
         {
-            var nodes = HitObject.Nodes;
+            var nodes = HitObject.Path.Nodes;
             if (nodeIndex >= nodes.Count)
                 return;
 

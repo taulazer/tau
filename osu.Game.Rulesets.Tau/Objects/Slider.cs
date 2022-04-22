@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
-using osu.Framework.Bindables;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
-using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
@@ -18,13 +15,13 @@ namespace osu.Game.Rulesets.Tau.Objects
     {
         public double Duration
         {
-            get => Nodes.Max(n => n.Time);
+            get => Path.Nodes.Max(n => n.Time);
             set { }
         }
 
         public double EndTime => StartTime + Duration;
 
-        public SliderNode EndNode => Nodes.LastOrDefault();
+        public SliderNode EndNode => Path.Nodes.LastOrDefault();
 
         public override IList<HitSampleInfo> AuxiliarySamples => CreateSlidingSamples().Concat(TailSamples).ToArray();
 
@@ -46,22 +43,8 @@ namespace osu.Game.Rulesets.Tau.Objects
         [JsonIgnore]
         public SliderHeadBeat HeadBeat { get; protected set; }
 
-        public BindableList<SliderNode> Nodes { get; set; }
-
-        private SliderPath path;
-
         [JsonIgnore]
-        public SliderPath Path
-        {
-            get
-            {
-                if (path != null)
-                    return path;
-
-                var positions = Nodes.Select(node => new Vector2(node.Time, node.Angle)).ToList();
-                return path = new SliderPath(PathType.Linear, positions.ToArray());
-            }
-        }
+        public PolarSliderPath Path { get; set; }
 
         /// <summary>
         /// The length of one span of this <see cref="Slider"/>.
@@ -114,19 +97,20 @@ namespace osu.Game.Rulesets.Tau.Objects
                         {
                             ParentSlider = this,
                             StartTime = StartTime,
-                            Angle = Nodes[0].Angle
+                            Angle = Path.Nodes[0].Angle
                         });
                         break;
 
                     case SliderEventType.Repeat:
                         var time = (e.SpanIndex + 1) * SpanDuration;
-                        var pos = Path.PositionAt(time / Duration);
+                        var node = Path.NodeAt((float)time);
+
                         AddNested(new SliderRepeat
                         {
                             ParentSlider = this,
                             RepeatIndex = e.SpanIndex,
                             StartTime = StartTime + time,
-                            Angle = pos.Y
+                            Angle = node.Angle
                         });
                         break;
                 }
@@ -154,20 +138,5 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         public int RepeatCount { get; set; }
         public IList<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();
-
-        public readonly struct SliderNode : IComparable<SliderNode>
-        {
-            public float Time { get; }
-
-            public float Angle { get; }
-
-            public SliderNode(float time, float angle)
-            {
-                Time = time;
-                Angle = angle;
-            }
-
-            public int CompareTo(SliderNode other) => Time.CompareTo(other.Time);
-        }
     }
 }

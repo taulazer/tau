@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
-using osu.Framework.Bindables;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
@@ -28,11 +27,11 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
                 {
                     StartTime = 1000 + (timeDelta * i + (100 * i)),
                     Angle = angleDelta * i,
-                    Nodes = new BindableList<Slider.SliderNode>
+                    Path = new PolarSliderPath(new SliderNode[]
                     {
                         new(0, 0),
                         new(timeDelta * 0.5f, angleDelta)
-                    }
+                    })
                 });
             }
 
@@ -73,11 +72,11 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
                 {
                     StartTime = 1000 + (timeDelta * i + (100 * i)),
                     Angle = angleDelta * i,
-                    Nodes = new BindableList<Slider.SliderNode>
+                    Path = new PolarSliderPath(new SliderNode[]
                     {
                         new(0, 0),
                         new(timeDelta * 0.5f, angleDelta)
-                    },
+                    }),
                     // TODO: Sliders should automatically repeat. (?)
                     RepeatCount = repeats
                 });

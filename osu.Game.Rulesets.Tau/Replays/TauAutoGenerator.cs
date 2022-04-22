@@ -181,7 +181,7 @@ namespace osu.Game.Rulesets.Tau.Replays
 
             if (h is Slider s)
             {
-                foreach (var node in s.Nodes)
+                foreach (var node in s.Path.Nodes)
                 {
                     var pos = getGameplayPositionFromAngle(s.GetAbsoluteAngle(node));
                     AddFrameToReplay(new TauReplayFrame(h.StartTime + node.Time, pos, action));
