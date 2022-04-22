@@ -26,6 +26,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             bool capAdded = false;
 
             generatePathSegmnt(ref nodeIndex, ref capAdded, time, startTime, midTime);
+            nodeIndex--;
             var pos = path.Vertices.Any() ? path.Vertices[^1].Xy : Vector2.Zero;
             generatePathSegmnt(ref nodeIndex, ref capAdded, time, midTime, endTime);
 
