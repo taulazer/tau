@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -27,6 +30,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.LeftButton,
             TauAction.RightButton
         };
+
+        protected readonly BindableFloat NoteSize = new(16f);
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.NotesSize, NoteSize);
+        }
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
 

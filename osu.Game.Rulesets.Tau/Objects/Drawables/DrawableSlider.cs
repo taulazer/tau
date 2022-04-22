@@ -15,7 +15,6 @@ using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK.Graphics;
@@ -111,14 +110,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             repeatContainer.Clear(false);
         }
 
-        private float convertBeatSizeToSliderSize(float beatSize)
-            => Interpolation.ValueAt(beatSize, 2f, 8f, 10f, 25f);
+        private float convertNoteSizeToSliderSize(float beatSize)
+            => Interpolation.ValueAt(beatSize, 2f, 6f, 10f, 25f);
 
         [BackgroundDependencyLoader]
-        private void load(GameHost host, TauRulesetConfigManager config)
+        private void load(GameHost host)
         {
-            config?.BindWith(TauRulesetSettings.BeatSize, size);
-            size.BindValueChanged(value => path.PathRadius = convertBeatSizeToSliderSize(value.NewValue), true);
+            NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
             path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
