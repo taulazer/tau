@@ -84,7 +84,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         {
             base.CreateNestedHitObjects(cancellationToken);
 
-            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.CalculatedDistance, this.SpanCount(), null, cancellationToken);
+            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.Duration, this.SpanCount(), null, cancellationToken);
 
             int nodeIndex = 0;
 
