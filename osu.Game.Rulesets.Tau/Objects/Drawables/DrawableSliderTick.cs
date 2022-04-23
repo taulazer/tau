@@ -99,7 +99,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config)
         {
-            config?.BindWith(TauRulesetSettings.BeatSize, size);
+            config?.BindWith(TauRulesetSettings.NotesSize, size);
             size.BindValueChanged(value => DrawableCircle.Size = new Vector2(value.NewValue), true);
         }
 

@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         [JsonIgnore]
         public PolarSliderPath Path { get; set; }
-        
+
         /// <summary>
         /// The length of one span of this <see cref="Slider"/>.
         /// </summary>
@@ -91,22 +91,22 @@ namespace osu.Game.Rulesets.Tau.Objects
             void seek(float time)
             {
                 nodeIndex = 0;
-                while (nodeIndex > 0 && Nodes[nodeIndex - 1].Time > time)
+                while (nodeIndex > 0 && Path.Nodes[nodeIndex - 1].Time > time)
                     nodeIndex--;
-                while (nodeIndex + 1 < Nodes.Count && Nodes[nodeIndex + 1].Time <= time)
+                while (nodeIndex + 1 < Path.Nodes.Count && Path.Nodes[nodeIndex + 1].Time <= time)
                     nodeIndex++;
             }
 
             float angleAt(float time)
             {
                 seek(time);
-                if (nodeIndex + 1 == Nodes.Count)
-                    return Nodes[nodeIndex].Angle;
-                if (Nodes.Count == 1)
-                    return Nodes[0].Angle;
+                if (nodeIndex + 1 == Path.Nodes.Count)
+                    return Path.Nodes[nodeIndex].Angle;
+                if (Path.Nodes.Count == 1)
+                    return Path.Nodes[0].Angle;
 
-                var nodeA = Nodes[nodeIndex];
-                var nodeB = Nodes[nodeIndex + 1];
+                var nodeA = Path.Nodes[nodeIndex];
+                var nodeB = Path.Nodes[nodeIndex + 1];
                 var deltaAngle = Extensions.GetDeltaAngle(nodeB.Angle, nodeA.Angle);
                 var duration = nodeB.Time - nodeA.Time;
                 if (duration == 0)
