@@ -7,12 +7,10 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
@@ -20,10 +18,9 @@ using osu.Game.Rulesets.UI;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Tau.UI
-{
+namespace osu.Game.Rulesets.Tau.UI {
     [Cached]
-    public class TauPlayfield : Playfield
+    public partial class TauPlayfield : Playfield
     {
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container judgementAboveHitObjectLayer;
@@ -45,6 +42,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
+        public PlayfieldPiece PlayfieldPiece;
         public TauPlayfield()
         {
             RelativeSizeAxes = Axes.None;
@@ -54,7 +52,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             AddRangeInternal(new Drawable[]
             {
-                new PlayfieldPiece(),
+                PlayfieldPiece = new PlayfieldPiece(),
                 judgementLayer = new JudgementContainer<DrawableTauJudgement> { RelativeSizeAxes = Axes.Both },
                 new Container
                 {
@@ -152,45 +150,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 onLoaded?.Invoke(judgement);
 
                 return judgement;
-            }
-        }
-
-        private class PlayfieldPiece : CompositeDrawable
-        {
-            private readonly Box background;
-            private readonly Bindable<float> playfieldDimLevel = new(0.7f);
-
-            public PlayfieldPiece()
-            {
-                RelativeSizeAxes = Axes.Both;
-
-                AddInternal(new CircularContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Masking = true,
-                    BorderThickness = 3,
-                    BorderColour = AccentColour.Value,
-                    Child = background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black,
-                        Alpha = playfieldDimLevel.Default,
-                        AlwaysPresent = true
-                    }
-                });
-            }
-
-            [Resolved(canBeNull: true)]
-            private TauRulesetConfigManager config { get; set; }
-
-            protected override void LoadComplete()
-            {
-                config?.BindWith(TauRulesetSettings.PlayfieldDim, playfieldDimLevel);
-
-                playfieldDimLevel.BindValueChanged(v =>
-                {
-                    background.FadeTo(v.NewValue, 100);
-                }, true);
             }
         }
     }
