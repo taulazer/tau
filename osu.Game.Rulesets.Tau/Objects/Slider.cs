@@ -154,16 +154,14 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         private void updateNestedSamples()
         {
-            var firstSample = Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_NORMAL)
-                              ?? Samples.FirstOrDefault();
+            var firstSample = Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_NORMAL) ?? Samples.FirstOrDefault();
             var sampleList = new List<HitSampleInfo>();
             if (firstSample != null)
                 sampleList.Add(firstSample.With("slidertick"));
 
             foreach (var repeat in NestedHitObjects.OfType<SliderRepeat>())
                 repeat.Samples = this.GetNodeSamples(repeat.RepeatIndex + 1);
-            foreach (var tick in NestedHitObjects.OfType<SliderTick>())
-                tick.Samples = sampleList;
+
             if (HeadBeat != null)
                 HeadBeat.Samples = this.GetNodeSamples(0);
 
