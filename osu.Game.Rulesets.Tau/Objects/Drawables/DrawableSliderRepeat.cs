@@ -80,7 +80,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         protected override void UpdateHitStateTransforms ( ArmedState state ) {
-            base.UpdateHitStateTransforms( state );
             var velocity = -0.5f / (float)HitObject.TimePreempt;
             var time_fade_hit = DrawableSlider.fade_range / Math.Abs(velocity);
 
@@ -92,6 +91,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     DrawableBox.ClearTransforms();
                     DrawableBox.MoveToY( -0.5f + velocity * time_fade_hit, time_fade_hit );
 
+                    this.Delay( time_fade_hit ).Expire();
                     break;
             }
         }
