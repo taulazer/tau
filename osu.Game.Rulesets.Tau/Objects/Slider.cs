@@ -148,14 +148,12 @@ namespace osu.Game.Rulesets.Tau.Objects
                         break;
 
                     case SliderEventType.Repeat:
-                        var time = (e.SpanIndex + 1) * SpanDuration;
-                        var pos = Path.PositionAt(time / Duration);
                         AddNested(new SliderRepeat
                         {
                             ParentSlider = this,
                             RepeatIndex = e.SpanIndex,
-                            StartTime = StartTime + time,
-                            Angle = pos.Y
+                            StartTime = e.Time,
+                            Angle = angleAt((float)(e.Time - StartTime))
                         });
                         break;
 
