@@ -5,6 +5,7 @@ using System.Threading;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
+using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Objects;
@@ -34,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             return original switch
             {
-                IHasPathWithRepeats path => convertToSlider(original, path, isHard, beatmap.Difficulty).Yield(),
+                IHasPathWithRepeats path => convertToSlider(original, path, isHard, beatmap).Yield(),
                 _ => isHard && CanConvertToHardBeats ? convertToHardBeat(original).Yield() : convertToBeat(original).Yield()
             };
         }
@@ -65,7 +66,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 StartTime = original.StartTime,
             };
 
-        private TauHitObject convertToSlider(HitObject original, IHasPathWithRepeats data, bool isHard, IBeatmapDifficultyInfo info)
+        private TauHitObject convertToSlider(HitObject original, IHasPathWithRepeats data, bool isHard, IBeatmap beatmap)
         {
             TauHitObject convertBeat()
                 => CanConvertToHardBeats && isHard ? convertToHardBeat(original) : convertToBeat(original);
@@ -73,7 +74,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             if (!CanConvertToSliders)
                 return convertBeat();
 
-            if (data.Duration < IBeatmapDifficultyInfo.DifficultyRange(info.ApproachRate, 1800, 1200, 450) / SliderDivisor)
+            var difficultyInfo = beatmap.Difficulty;
+
+            if (data.Duration < IBeatmapDifficultyInfo.DifficultyRange(difficultyInfo.ApproachRate, 1800, 1200, 450) / SliderDivisor)
                 return convertBeat();
 
             var nodes = new List<SliderNode>();
@@ -117,7 +120,11 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 NodeSamples = data.NodeSamples,
                 RepeatCount = data.RepeatCount,
                 Angle = firstAngle,
-                Path = new PolarSliderPath(nodes.ToArray())
+                Path = new PolarSliderPath(nodes.ToArray()),
+
+                // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
+                // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
+                TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8 ? 4f / ((LegacyControlPointInfo)beatmap.ControlPointInfo).DifficultyPointAt(original.StartTime).SliderVelocity : 4
             };
         }
     }
