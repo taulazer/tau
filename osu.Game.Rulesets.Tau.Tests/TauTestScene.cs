@@ -1,20 +1,25 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Testing;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Tests.Visual;
 
-namespace osu.Game.Rulesets.Tau.Tests;
-
-public class TauTestScene : OsuTestScene
+namespace osu.Game.Rulesets.Tau.Tests
 {
-    [Cached]
-    private TauCachedProperties cachedProperties { get; set; } = new();
-
-    protected override void Dispose(bool isDisposing)
+    [ExcludeFromDynamicCompile]
+    public abstract class TauTestScene : OsuTestScene
     {
-        base.Dispose(isDisposing);
-        cachedProperties.Dispose();
-    }
+        [Cached]
+        private TauCachedProperties properties { get; set; } = new();
 
-    protected override Ruleset CreateRuleset()
-        => new TauRuleset();
+        protected TauCachedProperties Properties => properties;
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+            properties.Dispose();
+        }
+
+        protected override Ruleset CreateRuleset()
+            => new TauRuleset();
+    }
 }

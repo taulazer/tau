@@ -7,6 +7,15 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 {
     public class ClassicKiaiEffect : KiaiEffect<ClassicEmitter>
     {
+        public ClassicKiaiEffect(int initialSize)
+            : base(initialSize)
+        {
+        }
+
+        public ClassicKiaiEffect()
+            : base(20)
+        {
+        }
     }
 
     public class ClassicEmitter : Emitter

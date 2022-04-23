@@ -6,24 +6,21 @@ using osu.Framework.Utils;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Statistics;
-using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Tests.Beatmaps;
-using osu.Game.Tests.Visual;
 using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestScenePaddleDistribution : OsuTestScene
+    public class TestScenePaddleDistribution : TauTestScene
     {
-        private readonly TauCachedProperties properties = new();
-        private float angleRange => (float)properties.AngleRange.Value;
+        private float angleRange => (float)Properties.AngleRange.Value;
 
         [Test]
         public void TestManyDistributionEvents()
         {
             var beatmap = new TestBeatmap(new TauRuleset().RulesetInfo);
-            properties.SetRange(beatmap.Difficulty.CircleSize);
+            Properties.SetRange(beatmap.Difficulty.CircleSize);
 
             createTest(createDistributedHitEvents());
         }
@@ -32,7 +29,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         public void TestToCenter()
         {
             var beatmap = new TestBeatmap(new TauRuleset().RulesetInfo);
-            properties.SetRange(beatmap.Difficulty.CircleSize);
+            Properties.SetRange(beatmap.Difficulty.CircleSize);
 
             var events = new List<HitEvent>();
 
@@ -54,7 +51,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         public void TestToEdges()
         {
             var beatmap = new TestBeatmap(new TauRuleset().RulesetInfo);
-            properties.SetRange(beatmap.Difficulty.CircleSize);
+            Properties.SetRange(beatmap.Difficulty.CircleSize);
 
             var events = new List<HitEvent>();
 

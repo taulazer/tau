@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using JetBrains.Annotations;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -14,13 +16,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         where T : TauHitObject
     {
         public new T HitObject => (T)base.HitObject;
-
-        /// <summary>
-        /// Check to see whether or not this Hit object is in the paddle's range.
-        /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
-        /// </summary>
-        [CanBeNull]
-        public Func<float, ValidationResult> CheckValidation;
 
         protected DrawableTauHitObject(T obj)
             : base(obj)
@@ -35,6 +30,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.LeftButton,
             TauAction.RightButton
         };
+
+        protected readonly BindableFloat NoteSize = new(16f);
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.NotesSize, NoteSize);
+        }
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
 

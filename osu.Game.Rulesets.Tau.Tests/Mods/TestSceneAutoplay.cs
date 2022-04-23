@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
-using osu.Framework.Bindables;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
@@ -27,12 +27,12 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
                         new Slider
                         {
                             StartTime = 750,
-                            Nodes = new BindableList<Slider.SliderNode>
+                            Path = new PolarSliderPath(new SliderNode[]
                             {
                                 new(0, 0),
                                 new(50, -10),
                                 new(150, 10),
-                            },
+                            }),
                             RepeatCount = 1
                         },
                         new HardBeat
@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
                         }
                     }
                 },
-                PassCondition = () => Player.ScoreProcessor.JudgedHits >= 5,
+                PassCondition = () => Player.Results.Count(r => r.IsHit) >= 5,
             });
         }
     }

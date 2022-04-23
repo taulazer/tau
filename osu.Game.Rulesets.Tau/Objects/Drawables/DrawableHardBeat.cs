@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Alpha = 0f;
             AlwaysPresent = true;
 
-            AddInternal(new HardBeatPiece { RelativeSizeAxes = Axes.Both });
+            AddInternal(new HardBeatPiece { RelativeSizeAxes = Axes.Both, NoteSize = { BindTarget = NoteSize } });
         }
 
         [Resolved(canBeNull: true)]

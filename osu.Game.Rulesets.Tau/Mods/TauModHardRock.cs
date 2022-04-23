@@ -10,7 +10,6 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public void ApplyToHitObject(HitObject hitObject)
         {
-            // TODO: Change slider's angles too.
             if (hitObject is not IHasAngle angledHitObject)
                 return;
 

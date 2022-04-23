@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
@@ -22,8 +21,6 @@ namespace osu.Game.Rulesets.Tau.UI
             Origin = Anchor.Centre;
 
             Add(DrawablePaddle = new Paddle());
-
-            State.Value = Visibility.Hidden;
         }
 
         protected override void LoadComplete()
@@ -48,16 +45,6 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             this.FadeIn(250);
             DrawablePaddle.Show();
-        }
-
-        public override void Hide()
-        {
-            DrawablePaddle.Hide();
-
-            using (BeginDelayedSequence(250))
-            {
-                this.FadeOut(250);
-            }
         }
     }
 }

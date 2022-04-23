@@ -31,6 +31,8 @@ namespace osu.Game.Rulesets.Tau.Mods
         public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {
             var playfield = (TauPlayfield)drawableRuleset.Playfield;
+            playfield.ShouldShowPositionalEffects.Value = false;
+
             var hitObjectContainer = playfield.HitObjectContainer;
             var hocParent = (Container)playfield.HitObjectContainer.Parent;
 

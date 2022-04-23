@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
@@ -77,14 +76,20 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             if (data.Duration < IBeatmapDifficultyInfo.DifficultyRange(info.ApproachRate, 1800, 1200, 450) / SliderDivisor)
                 return convertBeat();
 
-            var nodes = new List<Slider.SliderNode>();
+            var nodes = new List<SliderNode>();
 
             float? lastAngle = null;
             float? lastTime = null;
+            float firstAngle = 0f;
 
             for (int t = 0; t < data.Duration; t += 20)
             {
                 float angle = (((IHasPosition)original).Position + data.CurvePositionAt(t / data.Duration)).GetHitObjectAngle();
+
+                if (t == 0)
+                    firstAngle = angle;
+
+                angle = Extensions.GetDeltaAngle(angle, firstAngle);
 
                 // We don't want sliders that switch angles too fast. We would default to a normal note in this case
                 if (!CanConvertImpossibleSliders)
@@ -93,16 +98,17 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
                 lastAngle = angle;
                 lastTime = t;
-                nodes.Add(new Slider.SliderNode(t, angle));
+                nodes.Add(new SliderNode(t, angle));
             }
 
             var finalAngle = (((IHasPosition)original).Position + data.CurvePositionAt(1)).GetHitObjectAngle();
+            finalAngle = Extensions.GetDeltaAngle(finalAngle, firstAngle);
 
             if (!CanConvertImpossibleSliders)
                 if (lastAngle.HasValue && MathF.Abs(Extensions.GetDeltaAngle(lastAngle.Value, finalAngle)) / Math.Abs(lastTime.Value - data.Duration) > 0.6)
                     return convertBeat();
 
-            nodes.Add(new Slider.SliderNode((float)data.Duration, finalAngle));
+            nodes.Add(new SliderNode((float)data.Duration, finalAngle));
 
             return new Slider
             {
@@ -110,7 +116,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 StartTime = original.StartTime,
                 NodeSamples = data.NodeSamples,
                 RepeatCount = data.RepeatCount,
-                Nodes = new BindableList<Slider.SliderNode>(nodes),
+                Angle = firstAngle,
+                Path = new PolarSliderPath(nodes.ToArray())
             };
         }
     }

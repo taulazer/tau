@@ -9,6 +9,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
+using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects;
@@ -20,9 +21,11 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public partial class DrawableSlider : DrawableTauHitObject<Slider>
+    public partial class DrawableSlider : DrawableAngledTauHitObject<Slider>
     {
         public DrawableSliderHead SliderHead => headContainer.Child;
+
+        private readonly BindableFloat size = new(16f);
 
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
@@ -109,9 +112,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             repeatContainer.Clear(false);
         }
 
+        private float convertNoteSizeToSliderSize(float beatSize)
+            => Interpolation.ValueAt(beatSize, 2f, 6f, 10f, 25f);
+
         [BackgroundDependencyLoader]
         private void load(GameHost host)
         {
+            NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
+
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
             path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
         }
@@ -173,8 +181,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         public BindableBool Tracking = new();
-        double trackingCheckpointInterval = 5;
-        List<bool> trackingCheckpoints = new();
+        private const double trackingCheckpointInterval = 5;
+        private readonly List<bool> trackingCheckpoints = new();
 
         protected override void Update()
         {
@@ -249,6 +257,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
             base.UpdateHitStateTransforms(state);
+
             if (state is ArmedState.Hit or ArmedState.Miss)
                 LifetimeEnd = Time.Current + FadeTime;
             else

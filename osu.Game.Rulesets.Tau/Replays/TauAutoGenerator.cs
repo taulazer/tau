@@ -61,8 +61,7 @@ namespace osu.Game.Rulesets.Tau.Replays
             var lastFrame = (TauReplayFrame)Frames[^1];
             var startPosition = h switch
             {
-                Beat b => getGameplayPositionFromAngle(b.Angle),
-                Slider s => getGameplayPositionFromAngle(s.HeadBeat.Angle),
+                IHasAngle ang => getGameplayPositionFromAngle(ang.Angle),
                 _ => lastFrame.Position
             };
 
@@ -142,7 +141,7 @@ namespace osu.Game.Rulesets.Tau.Replays
             // This is commented out due to an error being thrown while attempting to generate an Autoplay for this specific map: https://osu.ppy.sh/beatmapsets/1508499
             // Currently i'm just being lazy to actually fix the issue lmao
             // ~ Nora
-            /*if (index >= 0)
+            if (index >= 0)
             {
                 var previousFrame = (TauReplayFrame)Frames[index];
                 var previousActions = previousFrame.Actions;
@@ -163,32 +162,32 @@ namespace osu.Game.Rulesets.Tau.Replays
                     var endIndex = FindInsertionIndex(endFrame);
 
                     if (index < Frames.Count - 1)
-                        Frames.RemoveRange(index + 1, Math.Max(0, endIndex - (index - 1)));
+                        Frames.RemoveRange(index + 1, Math.Max(0, endIndex - (index + 1)));
 
-                    for (int i = 0; i < Frames.Count; i++)
+                    for (int j = index + 1; j < Frames.Count; ++j)
                     {
-                        var frame = (TauReplayFrame)Frames[i];
+                        var frame = (TauReplayFrame)Frames[j];
 
-                        if (i < Frames.Count - 1 || frame.Actions.SequenceEqual(previousActions))
+                        if (j < Frames.Count - 1 || frame.Actions.SequenceEqual(previousActions))
                         {
                             frame.Actions.Clear();
                             frame.Actions.Add(action);
                         }
                     }
                 }
-            }*/
+            }
 
             AddFrameToReplay(startFrame);
 
             if (h is Slider s)
             {
-                foreach (var node in s.Nodes)
+                foreach (var node in s.Path.Nodes)
                 {
-                    var pos = getGameplayPositionFromAngle(node.Angle);
+                    var pos = getGameplayPositionFromAngle(s.GetAbsoluteAngle(node));
                     AddFrameToReplay(new TauReplayFrame(h.StartTime + node.Time, pos, action));
                 }
 
-                endFrame.Position = getGameplayPositionFromAngle(s.Nodes.LastOrDefault().Angle);
+                endFrame.Position = getGameplayPositionFromAngle(s.GetAbsoluteAngle(s.Path.EndNode));
             }
 
             if (Frames[^1].Time <= endFrame.Time)

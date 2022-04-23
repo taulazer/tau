@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Utils;
+using osu.Game.Beatmaps;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
@@ -20,6 +22,16 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         [CanBeNull]
         private TauCursor cursor;
+
+        public TurbulenceKiaiEffect(int initialSize)
+            : base(initialSize)
+        {
+        }
+
+        public TurbulenceKiaiEffect()
+            : base(20)
+        {
+        }
 
         protected override void LoadComplete()
         {
@@ -57,6 +69,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         private TurbulenceKiaiEffect kiaiContainer => Parent as TurbulenceKiaiEffect;
         private List<Vortex> vortices => kiaiContainer.Vortices;
 
+        [Resolved(canBeNull: true)]
+        private IBeatmap beatmap { get; set; }
+
         protected override Drawable CreateAngularParticle()
             => new TriangleWithVelocity
             {
@@ -79,13 +94,22 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                     .Expire(true);
 
             particle.Velocity =
-                Extensions.GetCircularPosition(Distance + (RNG.NextSingle(1, 5) * 0.15f),
+                Extensions.GetCircularPosition(Distance + (RNG.NextSingle(1, 5) * getVelocityAmplitude()),
                     Settings.IsCircular
                         ? Vector2.Zero.GetDegreesFromPosition(particle.Position)
                         : Extensions.RandomBetween(Settings.Angle - 10, Settings.Angle + 10));
 
             if (Settings.Inversed)
                 particle.Velocity = -particle.Velocity;
+        }
+
+        private float getVelocityAmplitude()
+        {
+            if (beatmap == null)
+                return 0.15f;
+
+            var timingPoint = beatmap.ControlPointInfo.TimingPointAt(Time.Current);
+            return Interpolation.ValueAt(Math.Max(200, timingPoint.BPM), 0.05f, 0.3f, 60f, 300f);
         }
 
         private class TriangleWithVelocity : Triangle

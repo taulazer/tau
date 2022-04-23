@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
-using osu.Framework.Bindables;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
-using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class Slider : TauHitObject, IHasRepeats
+    public class Slider : AngledTauHitObject, IHasRepeats, IHasOffsetAngle
     {
         public double Duration
         {
-            get => Nodes.Max(n => n.Time);
+            get => Path.Duration;
             set { }
         }
 
@@ -44,22 +41,8 @@ namespace osu.Game.Rulesets.Tau.Objects
         [JsonIgnore]
         public SliderHeadBeat HeadBeat { get; protected set; }
 
-        public BindableList<SliderNode> Nodes { get; set; }
-
-        private SliderPath path;
-
         [JsonIgnore]
-        public SliderPath Path
-        {
-            get
-            {
-                if (path != null)
-                    return path;
-
-                var positions = Nodes.Select(node => new Vector2(node.Time, node.Angle)).ToList();
-                return path = new SliderPath(PathType.Linear, positions.ToArray());
-            }
-        }
+        public PolarSliderPath Path { get; set; }
 
         /// <summary>
         /// The length of one span of this <see cref="Slider"/>.
@@ -101,7 +84,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         {
             base.CreateNestedHitObjects(cancellationToken);
 
-            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Duration, this.SpanCount(), null, cancellationToken);
+            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.CalculatedDistance, this.SpanCount(), null, cancellationToken);
 
             foreach (var e in sliderEvents)
             {
@@ -110,19 +93,22 @@ namespace osu.Game.Rulesets.Tau.Objects
                     case SliderEventType.Head:
                         AddNested(HeadBeat = new SliderHeadBeat
                         {
+                            ParentSlider = this,
                             StartTime = StartTime,
-                            Angle = Nodes[0].Angle
+                            Angle = Path.Nodes[0].Angle
                         });
                         break;
 
                     case SliderEventType.Repeat:
                         var time = (e.SpanIndex + 1) * SpanDuration;
-                        var pos = Path.PositionAt(time / Duration);
+                        var node = Path.NodeAt((float)time);
+
                         AddNested(new SliderRepeat
                         {
+                            ParentSlider = this,
                             RepeatIndex = e.SpanIndex,
                             StartTime = StartTime + time,
-                            Angle = pos.Y
+                            Angle = node.Angle
                         });
                         break;
                 }
@@ -144,22 +130,11 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;
 
+        public float GetAbsoluteAngle(SliderNode node) => Angle + node.Angle;
+
+        public float GetOffsetAngle() => Path.EndNode.Angle;
+
         public int RepeatCount { get; set; }
         public IList<IList<HitSampleInfo>> NodeSamples { get; set; } = new List<IList<HitSampleInfo>>();
-
-        public readonly struct SliderNode : IComparable<SliderNode>
-        {
-            public float Time { get; }
-
-            public float Angle { get; }
-
-            public SliderNode(float time, float angle)
-            {
-                Time = time;
-                Angle = angle;
-            }
-
-            public int CompareTo(SliderNode other) => Time.CompareTo(other.Time);
-        }
     }
 }

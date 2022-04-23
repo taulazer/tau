@@ -78,14 +78,14 @@ namespace osu.Game.Rulesets.Tau.Mods
                 switch (h)
                 {
                     case DrawableBeat beat:
-                        handleBeat(beat);
+                        handleAngled(beat);
                         break;
 
                     case DrawableSlider slider:
                         if (!slider.SliderHead.IsHit)
-                            handleBeat(slider.SliderHead);
+                            handleAngled(slider.SliderHead);
 
-                        requiresHold |= slider.IsWithinPaddle;
+                        requiresHold |= slider.IsWithinPaddle();
                         break;
                 }
             }
@@ -101,13 +101,14 @@ namespace osu.Game.Rulesets.Tau.Mods
             else if (normal.isDown && time - lastStateChangeTime > AutoGenerator.KEY_UP_DELAY)
                 changeNormalState(false, time);
 
-            void handleBeat(DrawableBeat beat)
+            void handleAngled<T>(DrawableAngledTauHitObject<T> obj)
+                where T : AngledTauHitObject
             {
-                if (beat.CheckValidation != null && !beat.CheckValidation(beat.HitObject.Angle).IsValid)
+                if (!obj.IsWithinPaddle())
                     return;
 
-                Debug.Assert(beat.HitObject.HitWindows != null);
-                requiresHit |= beat.HitObject.HitWindows.CanBeHit(time - beat.HitObject.StartTime);
+                Debug.Assert(obj.HitObject.HitWindows != null);
+                requiresHit |= obj.HitObject.HitWindows.CanBeHit(time - obj.HitObject.StartTime);
             }
         }
 

@@ -59,8 +59,8 @@ namespace osu.Game.Rulesets.Tau.UI
                 },
                 new SettingsSlider<float>
                 {
-                    LabelText = "Beat Size",
-                    Current = config.GetBindable<float>(TauRulesetSettings.BeatSize),
+                    LabelText = "Notes Size",
+                    Current = config.GetBindable<float>(TauRulesetSettings.NotesSize),
                     KeyboardStep = 1f
                 },
             };

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using osu.Framework.Utils;
 using osuTK;
 
@@ -52,6 +53,14 @@ namespace osu.Game.Rulesets.Tau
             if (angle >= 360) angle %= 360;
         }
 
+        public static float Normalize(this float angle)
+        {
+            if (angle < 0) angle += 360;
+            if (angle >= 360) angle %= 360;
+
+            return angle;
+        }
+
         public static float Remap(this float value, float x1, float x2, float y1, float y2)
         {
             var m = (y2 - y1) / (x2 - x1);
@@ -59,5 +68,12 @@ namespace osu.Game.Rulesets.Tau
 
             return m * value + c;
         }
+
+        public static T ValueAtOrLastOr<T>(this IList<T> self, int index, T @default = default)
+            => index >= 0 && index < self.Count
+                   ? self[index]
+                   : self.Count > 0
+                       ? self[^1]
+                       : @default;
     }
 }

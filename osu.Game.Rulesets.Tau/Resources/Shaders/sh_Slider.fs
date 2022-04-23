@@ -1,4 +1,4 @@
-﻿#include "sh_Utils.h"
+#include "sh_Utils.h"
 #include "sh_TextureWrapping.h"
 
 varying highp vec2 v_Position;
@@ -17,18 +17,18 @@ uniform lowp sampler2D m_Sampler;
 
 void main(void) 
 {
-    v_Colour = gl_FragColor = toSRGB(v_Colour * wrappedSampler(wrap(v_TexCoord, v_TexRect), v_TexRect, m_Sampler, -0.9));
+    vec4 colour = toSRGB(v_Colour * wrappedSampler(wrap(v_TexCoord, v_TexRect), v_TexRect, m_Sampler, -0.9));
 
     vec2 diff = v_Position - centerPos;
     float dist = sqrt(diff.x * diff.x + diff.y * diff.y);
 
     if ( reverse != dist <= range ) 
     {
-        gl_FragColor = v_Colour;
+        gl_FragColor = colour;
     } 
     else 
     {
         float progress = abs(dist - range) / fadeRange;
-        gl_FragColor = vec4(mix(vec3(1.0, 0.0, 0.0), hitColor.xyz, v_Result), mix(hitColor.w * v_Colour.w, 0.0, progress));
+        gl_FragColor = vec4(mix(vec3(1.0, 0.0, 0.0), hitColor.xyz, v_Result), mix(hitColor.w * colour.w, 0.0, progress));
     }
 }

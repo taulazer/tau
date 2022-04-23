@@ -1,15 +1,6 @@
-﻿using osu.Framework.Bindables;
-
-namespace osu.Game.Rulesets.Tau.Objects
+﻿namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class Beat : TauHitObject, IHasAngle
+    public class Beat : AngledTauHitObject
     {
-        public BindableFloat AngleBindable = new();
-
-        public float Angle
-        {
-            get => AngleBindable.Value;
-            set => AngleBindable.Value = value;
-        }
     }
 }

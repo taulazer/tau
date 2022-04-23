@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -52,24 +51,24 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             => new()
             {
                 StartTime = Time.Current + timeOffset,
-                Nodes = new BindableList<Slider.SliderNode>(new[]
+                Path = new PolarSliderPath(new SliderNode[]
                 {
-                    new Slider.SliderNode(0, 0),
-                    new Slider.SliderNode(500, 90),
-                    new Slider.SliderNode(1000, 180),
-                    new Slider.SliderNode(1500, 270),
-                    new Slider.SliderNode(2000, 0),
-                    new Slider.SliderNode(2500, 90),
-                    new Slider.SliderNode(3000, 180),
-                    new Slider.SliderNode(3500, 270),
-                    new Slider.SliderNode(4000, 0),
-                    new Slider.SliderNode(4500, 90),
-                    new Slider.SliderNode(5000, 180),
-                    new Slider.SliderNode(5500, 270),
-                    new Slider.SliderNode(6000, 0),
-                    new Slider.SliderNode(6500, 90),
-                    new Slider.SliderNode(7000, 180),
-                    new Slider.SliderNode(7500, 270),
+                    new(0, 0),
+                    new(500, 90),
+                    new(1000, 180),
+                    new(1500, 270),
+                    new(2000, 0),
+                    new(2500, 90),
+                    new(3000, 180),
+                    new(3500, 270),
+                    new(4000, 0),
+                    new(4500, 90),
+                    new(5000, 180),
+                    new(5500, 270),
+                    new(6000, 0),
+                    new(6500, 90),
+                    new(7000, 180),
+                    new(7500, 270),
                 })
             };
 

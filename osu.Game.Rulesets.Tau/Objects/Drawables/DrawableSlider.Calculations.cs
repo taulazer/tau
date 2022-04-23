@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private void updatePath()
         {
             path.ClearVertices();
-            var nodes = HitObject.Nodes;
+            var nodes = HitObject.Path.Nodes;
             if (nodes.Count == 0)
                 return;
 
@@ -26,6 +26,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             bool capAdded = false;
 
             generatePathSegmnt(ref nodeIndex, ref capAdded, time, startTime, midTime);
+            nodeIndex--;
             var pos = path.Vertices.Any() ? path.Vertices[^1].Xy : Vector2.Zero;
             generatePathSegmnt(ref nodeIndex, ref capAdded, time, midTime, endTime);
 
@@ -35,7 +36,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private void generatePathSegmnt(ref int nodeIndex, ref bool capAdded, double time, double startTime, double endTime)
         {
-            var nodes = HitObject.Nodes;
+            var nodes = HitObject.Path.Nodes;
             if (nodeIndex >= nodes.Count)
                 return;
 
@@ -54,7 +55,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 var p = Extensions.GetCircularPosition(distanceAt(t), (float)angle);
                 var index = (int)(t / trackingCheckpointInterval);
-                path.AddVertex(new Vector3(p.X, p.Y, index >= 0 && index < trackingCheckpoints.Count ? (trackingCheckpoints[index] ? 1 : 0) : 1));
+                path.AddVertex(new Vector3(p.X, p.Y, trackingCheckpoints.ValueAtOrLastOr(index, true) ? 1 : 0));
             }
 
             do
@@ -85,13 +86,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         private bool checkIfTracking()
-            => IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => Actions.Contains(x));
+            => IsWithinPaddle() && TauActionInputManager.PressedActions.Any(x => Actions.Contains(x));
 
-        private float getCurrentAngle()
+        protected override float GetCurrentOffset()
             => Vector2.Zero.GetDegreesFromPosition(path.Position);
-
-        public bool IsWithinPaddle
-            => CheckValidation?.Invoke(getCurrentAngle()).IsValid ?? false;
 
         private TauInputManager tauActionInputManager;
 
