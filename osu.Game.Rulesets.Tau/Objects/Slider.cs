@@ -86,37 +86,10 @@ namespace osu.Game.Rulesets.Tau.Objects
 
             var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.Duration, this.SpanCount(), null, cancellationToken);
 
-            int nodeIndex = 0;
-
-            void seek(float time)
-            {
-                nodeIndex = 0;
-                while (nodeIndex > 0 && Path.Nodes[nodeIndex - 1].Time > time)
-                    nodeIndex--;
-                while (nodeIndex + 1 < Path.Nodes.Count && Path.Nodes[nodeIndex + 1].Time <= time)
-                    nodeIndex++;
-            }
-
-            float angleAt(float time)
-            {
-                seek(time);
-                if (nodeIndex + 1 == Path.Nodes.Count)
-                    return Path.Nodes[nodeIndex].Angle;
-                if (Path.Nodes.Count == 1)
-                    return Path.Nodes[0].Angle;
-
-                var nodeA = Path.Nodes[nodeIndex];
-                var nodeB = Path.Nodes[nodeIndex + 1];
-                var deltaAngle = Extensions.GetDeltaAngle(nodeB.Angle, nodeA.Angle);
-                var duration = nodeB.Time - nodeA.Time;
-                if (duration == 0)
-                    return nodeB.Angle;
-
-                return nodeA.Angle + deltaAngle * (time - nodeA.Time) / duration;
-            }
-
             foreach (var e in sliderEvents)
             {
+                var currentNode = Path.NodeAt((float)(e.Time - StartTime));
+
                 switch (e.Type)
                 {
                     case SliderEventType.Head:
@@ -134,7 +107,7 @@ namespace osu.Game.Rulesets.Tau.Objects
                             ParentSlider = this,
                             RepeatIndex = e.SpanIndex,
                             StartTime = e.Time,
-                            Angle = angleAt((float)(e.Time - StartTime))
+                            Angle = currentNode.Angle
                         });
                         break;
 
@@ -143,7 +116,7 @@ namespace osu.Game.Rulesets.Tau.Objects
                         {
                             ParentSlider = this,
                             StartTime = e.Time,
-                            Angle = angleAt((float)(e.Time - StartTime))
+                            Angle = currentNode.Angle
                         });
                         break;
                 }
