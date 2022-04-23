@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Objects;
@@ -22,6 +23,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         public bool CanConvertToSliders { get; set; } = true;
         public bool CanConvertImpossibleSliders { get; set; } = false;
         public int SliderDivisor { get; set; } = 4;
+        public RotationDirection? LockedDirection;
 
         public TauBeatmapConverter(Ruleset ruleset, IBeatmap beatmap)
             : base(beatmap, ruleset)
@@ -39,6 +41,24 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             };
         }
 
+        private float? lastLockedAngle;
+        float nextAngle ( float target ) {
+            if ( lastLockedAngle is null || LockedDirection is null ) {
+                lastLockedAngle = target;
+                return lastLockedAngle.Value;
+            }
+
+            var diff = Extensions.GetDeltaAngle( target, lastLockedAngle.Value );
+            if ( (diff > 0) == (LockedDirection == RotationDirection.Clockwise) ) {
+                lastLockedAngle = target;
+                return target;
+            }
+            else {
+                lastLockedAngle = lastLockedAngle.Value - diff;
+                return lastLockedAngle.Value;
+            }
+        }
+
         private TauHitObject convertToBeat(HitObject original)
         {
             float angle = original switch
@@ -54,7 +74,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
-                Angle = angle
+                Angle = nextAngle( angle )
             };
         }
 
@@ -67,8 +87,11 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         private TauHitObject convertToSlider(HitObject original, IHasPathWithRepeats data, bool isHard, IBeatmapDifficultyInfo info)
         {
-            TauHitObject convertBeat()
-                => CanConvertToHardBeats && isHard ? convertToHardBeat(original) : convertToBeat(original);
+            float? startLockedAngle = lastLockedAngle;
+            TauHitObject convertBeat() {
+                lastLockedAngle = startLockedAngle;
+                return CanConvertToHardBeats && isHard ? convertToHardBeat( original ) : convertToBeat( original );
+            }
 
             if (!CanConvertToSliders)
                 return convertBeat();
@@ -84,9 +107,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             for (int t = 0; t < data.Duration; t += 20)
             {
-                float angle = (((IHasPosition)original).Position + data.CurvePositionAt(t / data.Duration)).GetHitObjectAngle();
+                float angle = nextAngle((((IHasPosition)original).Position + data.CurvePositionAt(t / data.Duration)).GetHitObjectAngle());
 
-                if (t == 0)
+                if (t == 0) 
                     firstAngle = angle;
 
                 angle = Extensions.GetDeltaAngle(angle, firstAngle);
@@ -101,7 +124,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 nodes.Add(new SliderNode(t, angle));
             }
 
-            var finalAngle = (((IHasPosition)original).Position + data.CurvePositionAt(1)).GetHitObjectAngle();
+            var finalAngle = nextAngle((((IHasPosition)original).Position + data.CurvePositionAt(1)).GetHitObjectAngle());
             finalAngle = Extensions.GetDeltaAngle(finalAngle, firstAngle);
 
             if (!CanConvertImpossibleSliders)
