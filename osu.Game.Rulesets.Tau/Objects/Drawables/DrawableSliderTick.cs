@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 }
             };
 #else
-            return base.CreateDrawable();
+            return Empty();
 #endif
         }
 
