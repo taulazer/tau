@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Tau.Mods {
         public override string Name => "Traceable";
         public override string Acronym => "TC";
         public override ModType Type => ModType.Fun;
-        public override string Description => "Brim with no yankie";
+        public override string Description => "Yankie with no brim";
         public override double ScoreMultiplier => 1;
 
         public void ApplyToDrawableRuleset ( DrawableRuleset<TauHitObject> drawableRuleset ) {
