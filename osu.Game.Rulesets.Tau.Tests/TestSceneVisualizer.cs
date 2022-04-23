@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
@@ -12,13 +11,9 @@ namespace osu.Game.Rulesets.Tau.Tests
 {
     public class TestSceneVisualizer : TestScene
     {
-        private PlayfieldVisualizer visualizer;
-
-        [Test]
-        public void TestVisualizer()
+        public TestSceneVisualizer()
         {
-            Clear();
-
+            PlayfieldVisualizer visualizer;
             Add(new TauPlayfieldAdjustmentContainer
             {
                 Child = visualizer = new PlayfieldVisualizer
