@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Mods;
@@ -14,6 +15,8 @@ namespace osu.Game.Rulesets.Tau.UI
     public class TauCursor : GameplayCursorContainer
     {
         public readonly Paddle DrawablePaddle;
+        public readonly List<Paddle> AdditionalPaddles = new();
+        public IEnumerable<Paddle> AllPaddles => DrawablePaddle.Yield().Concat( AdditionalPaddles );
 
         public float AngleDistanceFromLastUpdate { get; private set; }
 
@@ -41,6 +44,14 @@ namespace osu.Game.Rulesets.Tau.UI
         [BackgroundDependencyLoader]
         private void load ( IReadOnlyList<Mod> mods ) {
             rotationLock = mods.OfType<TauModRoundabout>().FirstOrDefault()?.Direction.Value;
+            var dualMod = mods.OfType<TauModDual>().FirstOrDefault();
+            if ( dualMod != null ) {
+                for ( int i = 1; i < dualMod.PaddleCount.Value; i++ ) {
+                    var paddle = new Paddle();
+                    Add( paddle );
+                    AdditionalPaddles.Add( paddle );
+                }
+            }
         }
 
         /// <summary>
@@ -77,6 +88,9 @@ namespace osu.Game.Rulesets.Tau.UI
             }
 
             ActiveCursor.Position = ToLocalSpace( e.ScreenSpaceMousePosition );
+            for ( int i = 0; i < AdditionalPaddles.Count; i++ ) {
+                AdditionalPaddles[i].Rotation = DrawablePaddle.Rotation + ( 360 / ( AdditionalPaddles.Count + 1 ) ) * (i + 1);
+            }
 
             return false;
         }
@@ -85,6 +99,9 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             this.FadeIn(250);
             DrawablePaddle.Show();
+            foreach ( var i in AdditionalPaddles ) {
+                i.Show();
+            }
         }
     }
 }
