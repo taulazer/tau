@@ -113,7 +113,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         private float convertNoteSizeToSliderSize(float beatSize)
-            => Interpolation.ValueAt(beatSize, 2f, 6f, 10f, 25f);
+            => Interpolation.ValueAt(beatSize, 2f, 7f, 10f, 25f);
 
         [BackgroundDependencyLoader]
         private void load(GameHost host)
