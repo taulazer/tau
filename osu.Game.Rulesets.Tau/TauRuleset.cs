@@ -92,8 +92,18 @@ namespace osu.Game.Rulesets.Tau
                 HitResult.Great,
                 HitResult.Ok,
                 HitResult.Miss,
+
+                HitResult.LargeTickHit,
+                HitResult.LargeTickMiss
             };
         }
+
+        public override string GetDisplayNameForHitResult(HitResult result)
+            => result switch
+            {
+                HitResult.LargeTickHit => "Ticks",
+                _ => base.GetDisplayNameForHitResult(result)
+            };
 
         public override StatisticRow[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
         {
