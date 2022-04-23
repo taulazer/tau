@@ -88,7 +88,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             switch ( state ) {
                 case ArmedState.Hit or ArmedState.Miss:
-                    DrawableBox.ClearTransforms();
                     DrawableBox.MoveToY( -0.5f + velocity * time_fade_hit, time_fade_hit );
 
                     this.Delay( time_fade_hit ).Expire();
