@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using osu.Framework.Utils;
 using osuTK;
 
@@ -67,5 +68,12 @@ namespace osu.Game.Rulesets.Tau
 
             return m * value + c;
         }
+
+        public static T ValueAtOrLastOr<T>(this IList<T> self, int index, T @default = default)
+            => index >= 0 && index < self.Count
+                   ? self[index]
+                   : self.Count > 0
+                       ? self[^1]
+                       : @default;
     }
 }

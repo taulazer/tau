@@ -1,12 +1,16 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Utils;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
 {
     public class HardBeatPiece : CircularContainer
     {
+        public BindableFloat NoteSize = new(16f);
+
         public HardBeatPiece()
         {
             Masking = true;
@@ -24,6 +28,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
                 Alpha = 0,
                 AlwaysPresent = true
             };
+
+            NoteSize.BindValueChanged(value => BorderThickness = convertNoteSizeToThickness(value.NewValue));
         }
+
+        private float convertNoteSizeToThickness(float noteSize)
+            => Interpolation.ValueAt(noteSize, 4f, 10f, 10f, 25f);
     }
 }

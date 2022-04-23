@@ -15,8 +15,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
     public abstract class KiaiEffect<T> : DrawablePool<T>
         where T : Emitter, new()
     {
-        protected KiaiEffect()
-            : base(20, 50)
+        protected KiaiEffect(int initialSize)
+            : base(initialSize)
         {
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
@@ -106,7 +106,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         protected float Distance => Settings.Inversed ? 0.5f - Paddle.PADDLE_RADIUS : 0.5f;
 
-        protected const double Duration = 1500;
+        protected const double Duration = 1000;
 
         public void ApplyAnimations()
         {
@@ -137,11 +137,11 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         public struct EmitterSettings
         {
-            public float Angle { get; set; }
-            public int Amount { get; set; }
-            public Colour4 Colour { get; set; }
-            public bool IsCircular { get; set; }
-            public bool Inversed { get; set; }
+            public float Angle { get; init; }
+            public int Amount { get; init; }
+            public Colour4 Colour { get; init; }
+            public bool IsCircular { get; init; }
+            public bool Inversed { get; init; }
         }
     }
 }

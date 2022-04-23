@@ -112,7 +112,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         public void UpdateSliderPosition(float angle)
         {
-            updateAmplitudes(angle, 0.25f);
+            updateAmplitudes(angle, 0.15f);
         }
 
         private void updateAmplitudes(float angle, float multiplier)

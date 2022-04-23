@@ -3,6 +3,7 @@ using NUnit.Framework;
 using osu.Framework.Testing;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Mods;
+using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests.Mods
@@ -38,6 +39,13 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
             });
 
             AddAssert("pmc is of correct mode", () => pmc is { Mode: MaskingMode.FadeOut });
+
+            AddAssert("Positional effects are hidden", () =>
+            {
+                var playfield = (TauPlayfield)Player.DrawableRuleset.Playfield;
+
+                return !playfield.ShouldShowPositionalEffects.Value;
+            });
         }
     }
 }

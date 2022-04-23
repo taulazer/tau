@@ -34,6 +34,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private readonly Dictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new();
 
+        public BindableBool ShouldShowPositionalEffects = new(true);
+
         protected override GameplayCursorContainer CreateCursor() => new TauCursor();
 
         public new TauCursor Cursor => base.Cursor as TauCursor;
@@ -93,7 +95,9 @@ namespace osu.Game.Rulesets.Tau.UI
                 case DrawableSlider s:
                     s.CheckValidation = ang =>
                     {
-                        effectsContainer.TrackSlider(ang, s);
+                        if (ShouldShowPositionalEffects.Value)
+                            effectsContainer.TrackSlider(ang, s);
+
                         return checkPaddlePosition(ang);
                     };
                     break;
@@ -118,7 +122,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
-            effectsContainer.OnNewResult(judgedObject, result);
+            if (ShouldShowPositionalEffects.Value)
+                effectsContainer.OnNewResult(judgedObject, result);
 
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;

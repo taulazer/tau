@@ -9,6 +9,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
+using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects;
@@ -23,6 +24,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     public partial class DrawableSlider : DrawableAngledTauHitObject<Slider>
     {
         public DrawableSliderHead SliderHead => headContainer.Child;
+
+        private readonly BindableFloat size = new(16f);
 
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
@@ -115,9 +118,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             tickContainer.Clear(false);
         }
 
+        private float convertNoteSizeToSliderSize(float beatSize)
+            => Interpolation.ValueAt(beatSize, 2f, 6f, 10f, 25f);
+
         [BackgroundDependencyLoader]
         private void load(GameHost host)
         {
+            NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
+
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
             path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
         }

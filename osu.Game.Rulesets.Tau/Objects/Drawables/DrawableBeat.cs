@@ -5,7 +5,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
@@ -17,8 +16,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     public class DrawableBeat : DrawableAngledTauHitObject<Beat>
     {
         public Drawable DrawableBox;
-
-        private readonly BindableFloat size = new(16f);
 
         public DrawableBeat()
             : this(null)
@@ -41,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Origin = Anchor.Centre,
                 Alpha = 0,
                 AlwaysPresent = true,
-                Size = new Vector2(size.Default),
+                Size = new Vector2(NoteSize.Default),
                 Child = new BeatPiece()
             });
 
@@ -77,11 +74,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
         }
 
-        [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
+        [BackgroundDependencyLoader()]
+        private void load()
         {
-            config?.BindWith(TauRulesetSettings.BeatSize, size);
-            size.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
+            NoteSize.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
         }
 
         protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);

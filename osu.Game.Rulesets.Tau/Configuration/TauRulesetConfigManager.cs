@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Configuration
             SetDefault(TauRulesetSettings.ShowSliderEffects, true);
             SetDefault(TauRulesetSettings.KiaiType, KiaiType.Turbulence);
             SetDefault(TauRulesetSettings.PlayfieldDim, 0.7f, 0, 1, 0.01f);
-            SetDefault(TauRulesetSettings.BeatSize, 16f, 10, 25, 1f);
+            SetDefault(TauRulesetSettings.NotesSize, 16f, 10, 25, 1f);
         }
     }
 
@@ -30,6 +30,6 @@ namespace osu.Game.Rulesets.Tau.Configuration
         ShowSliderEffects, // There's no real reason to have a toggle for showing Kiai effects, as that's already handled under KiaiType
         KiaiType,
         PlayfieldDim,
-        BeatSize,
+        NotesSize,
     }
 }

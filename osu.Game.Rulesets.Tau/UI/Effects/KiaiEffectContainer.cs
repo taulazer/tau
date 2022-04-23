@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         private readonly TurbulenceKiaiEffect turbulenceEffect;
         private readonly Bindable<KiaiType> kiaiType = new();
 
-        public KiaiEffectContainer()
+        public KiaiEffectContainer(int initialSize = 20)
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
@@ -22,8 +22,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
             InternalChildren = new Drawable[]
             {
-                classicEffect = new ClassicKiaiEffect { Alpha = 0 },
-                turbulenceEffect = new TurbulenceKiaiEffect()
+                classicEffect = new ClassicKiaiEffect(initialSize) { Alpha = 0 },
+                turbulenceEffect = new TurbulenceKiaiEffect(initialSize)
             };
         }
 
