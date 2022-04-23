@@ -16,10 +16,12 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 
-namespace osu.Game.Rulesets.Tau.Objects.Drawables {
+namespace osu.Game.Rulesets.Tau.Objects.Drawables
+{
     public partial class DrawableSlider
     {
-        public partial class SliderPath {
+        public partial class SliderPath
+        {
             public class SliderPathDrawNode : DrawNode
             {
                 [StructLayout(LayoutKind.Sequential)]
@@ -94,9 +96,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
                     ticks.Dispose();
                     ticks = MemoryPool<(Quad, float, bool)>.Shared.Rent(Source.Ticks.Count());
                     innerTicks.Dispose();
-                    innerTicks = MemoryPool<Quad>.Shared.Rent( ticks.Length );
+                    innerTicks = MemoryPool<Quad>.Shared.Rent(ticks.Length);
                     int k = 0;
-                    foreach ( var i in Source.Ticks ) {
+
+                    foreach (var i in Source.Ticks)
+                    {
                         ticks[k] = (i.DrawableBox.ScreenSpaceDrawQuad, i.DrawableBox.Alpha, i.Result?.Type == Rulesets.Scoring.HitResult.Great);
                         innerTicks[k] = i.InnerDrawableBox.ScreenSpaceDrawQuad;
 
@@ -112,7 +116,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
 
                     var center = Source.PositionInBoundingBox(Vector2.Zero);
                     var edge = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2, 0));
-                    var fade = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2 + fade_range, 0));
+                    var fade = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2 + FADE_RANGE, 0));
 
                     centerPos = Source.ToScreenSpace(center);
                     range = (Source.ToScreenSpace(edge) - centerPos).Length;
@@ -292,31 +296,36 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
                         result = segResult;
                     }
 
-                    foreach ( var i in ticks ) {
-                        quadBatch.Add( new SliderTexturedVertex2D {
+                    foreach (var i in ticks)
+                    {
+                        quadBatch.Add(new SliderTexturedVertex2D
+                        {
                             Position = i.quad.BottomRight,
-                            TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
-                            Colour = Color4.White.Opacity( i.alpha ),//colourAt( lineRight.EndPoint ),
+                            TexturePosition = new Vector2(texRect.Left, texRect.Centre.Y),
+                            Colour = Color4.White.Opacity(i.alpha), //colourAt( lineRight.EndPoint ),
                             Result = i.result ? 1 : 0
-                        } );
-                        quadBatch.Add( new SliderTexturedVertex2D {
+                        });
+                        quadBatch.Add(new SliderTexturedVertex2D
+                        {
                             Position = i.quad.BottomLeft,
-                            TexturePosition = new Vector2( texRect.Left, texRect.Centre.Y ),
-                            Colour = Color4.White.Opacity( i.alpha ),//colourAt( lineRight.StartPoint ),
+                            TexturePosition = new Vector2(texRect.Left, texRect.Centre.Y),
+                            Colour = Color4.White.Opacity(i.alpha), //colourAt( lineRight.StartPoint ),
                             Result = i.result ? 1 : 0
-                        } );
-                        quadBatch.Add( new SliderTexturedVertex2D {
+                        });
+                        quadBatch.Add(new SliderTexturedVertex2D
+                        {
                             Position = i.quad.TopLeft,
-                            TexturePosition = new Vector2( texRect.Right, texRect.Centre.Y ),
-                            Colour = Color4.White.Opacity( i.alpha ),//firstMiddleColour,
+                            TexturePosition = new Vector2(texRect.Right, texRect.Centre.Y),
+                            Colour = Color4.White.Opacity(i.alpha), //firstMiddleColour,
                             Result = i.result ? 1 : 0
-                        } );
-                        quadBatch.Add( new SliderTexturedVertex2D {
+                        });
+                        quadBatch.Add(new SliderTexturedVertex2D
+                        {
                             Position = i.quad.TopRight,
-                            TexturePosition = new Vector2( texRect.Right, texRect.Centre.Y ),
-                            Colour = Color4.White.Opacity( i.alpha ),//secondMiddleColour,
+                            TexturePosition = new Vector2(texRect.Right, texRect.Centre.Y),
+                            Colour = Color4.White.Opacity(i.alpha), //secondMiddleColour,
                             Result = i.result ? 1 : 0
-                        } );
+                        });
                     }
                 }
 
@@ -328,12 +337,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
                         return;
 
                     bool value = true;
-                    GLWrapper.PushDepthInfo( new DepthInfo( depthTest: true, writeDepth: true, function: DepthFunction.Always ) );
+                    GLWrapper.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthFunction.Always));
                     maskShader.Bind();
                     maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
-                    foreach ( var i in innerTicks ) {
-                        DrawQuad( Texture.WhitePixel, i, Color4.Transparent );
+
+                    foreach (var i in innerTicks)
+                    {
+                        DrawQuad(Texture.WhitePixel, i, Color4.Transparent);
                     }
+
                     maskShader.Unbind();
                     GLWrapper.PopDepthInfo();
 
@@ -349,13 +361,16 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
 
                     shader.Unbind();
 
-                    GLWrapper.PushDepthInfo( new DepthInfo( depthTest: true, writeDepth: true, function: DepthFunction.Always ) );
+                    GLWrapper.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthFunction.Always));
                     maskShader.Bind();
                     value = false;
                     maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
-                    foreach ( var i in innerTicks ) {
-                        DrawQuad( Texture.WhitePixel, i, Color4.Transparent );
+
+                    foreach (var i in innerTicks)
+                    {
+                        DrawQuad(Texture.WhitePixel, i, Color4.Transparent);
                     }
+
                     maskShader.Unbind();
                     GLWrapper.PopDepthInfo();
                 }

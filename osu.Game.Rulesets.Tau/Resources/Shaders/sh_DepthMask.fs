@@ -18,6 +18,7 @@ uniform bool writeDepth;
 void main(void) 
 {
     gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+
     if (writeDepth) {
         gl_FragDepth = 0.0;
     }

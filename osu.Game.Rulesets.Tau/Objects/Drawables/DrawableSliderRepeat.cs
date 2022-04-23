@@ -23,7 +23,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
         }
 
-        protected override void Update () {
+        protected override void Update()
+        {
             base.Update();
 
             Alpha = 0.0f;
@@ -31,10 +32,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         public Drawable InnerDrawableBox;
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            AddInternal( InnerDrawableBox = new Container {
+            AddInternal(InnerDrawableBox = new Container
+            {
                 RelativePositionAxes = Axes.Both,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -42,18 +45,19 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 AlwaysPresent = true,
                 Size = DrawableBox.Size,
                 Child = new BeatPiece()
-            } );
+            });
 
-            DrawableBox.Size = Vector2.Multiply( DrawableBox.Size, 15f / 16f );
+            DrawableBox.Size = Vector2.Multiply(DrawableBox.Size, 15f / 16f);
             DrawableBox.Rotation = 45;
             InnerDrawableBox.Rotation = 45;
         }
 
-        protected override void UpdateAfterChildren () {
+        protected override void UpdateAfterChildren()
+        {
             base.UpdateAfterChildren();
 
             InnerDrawableBox.Position = DrawableBox.Position;
-            InnerDrawableBox.Size = Vector2.Multiply( DrawableBox.Size, 7.5f / 15f );
+            InnerDrawableBox.Size = Vector2.Multiply(DrawableBox.Size, 7.5f / 15f);
             InnerDrawableBox.Scale = DrawableBox.Scale;
         }
 
@@ -63,7 +67,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 ApplyResult(r => r.Type = DrawableSlider.Tracking.Value ? HitResult.Great : HitResult.Miss);
         }
 
-        protected override void OnApply () {
+        protected override void OnApply()
+        {
             base.OnApply();
 
             DrawableBox.Y = Properties?.InverseModEnabled.Value == true ? -1.0f : 0;
@@ -71,26 +76,29 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             DrawableBox.Alpha = 0;
         }
 
-        protected override void UpdateInitialTransforms () {
+        protected override void UpdateInitialTransforms()
+        {
             base.UpdateInitialTransforms();
 
-            DrawableBox.FadeIn( HitObject.TimeFadeIn );
+            DrawableBox.FadeIn(HitObject.TimeFadeIn);
 
-            DrawableBox.MoveToY( -0.5f, HitObject.TimePreempt );
+            DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
         }
 
-        protected override void UpdateHitStateTransforms ( ArmedState state ) {
+        protected override void UpdateHitStateTransforms(ArmedState state)
+        {
             var velocity = -0.5f / (float)HitObject.TimePreempt;
-            var time_fade_hit = DrawableSlider.fade_range / Math.Abs(velocity);
+            var timeFadeHit = DrawableSlider.FADE_RANGE / Math.Abs(velocity);
 
-            if ( Properties?.InverseModEnabled.Value == true )
+            if (Properties?.InverseModEnabled.Value == true)
                 velocity *= -1;
 
-            switch ( state ) {
+            switch (state)
+            {
                 case ArmedState.Hit or ArmedState.Miss:
-                    DrawableBox.MoveToY( -0.5f + velocity * time_fade_hit, time_fade_hit );
+                    DrawableBox.MoveToY(-0.5f + velocity * timeFadeHit, timeFadeHit);
 
-                    this.Delay( time_fade_hit ).Expire();
+                    this.Delay(timeFadeHit).Expire();
                     break;
             }
         }
