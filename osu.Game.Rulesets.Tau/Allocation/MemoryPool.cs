@@ -31,6 +31,9 @@ namespace osu.Game.Rulesets.Tau.Allocation
             value.CopyTo(arr, 0);
             return new RentedArray<T>(backing, arr, value.Count);
         }
+
+        public RentedArray<T> Rent(int size)
+            => new(backing, backing.Rent(size), size);
     }
 
     public struct RentedArray<T> : IDisposable
@@ -45,6 +48,8 @@ namespace osu.Game.Rulesets.Tau.Allocation
             this.rented = rented;
             Length = length;
         }
+
+        public Span<T>.Enumerator GetEnumerator() => rented.AsSpan(0, Length).GetEnumerator();
 
         public ref T this[int i] => ref rented[i];
         public ref T this[Index i] => ref rented[i];

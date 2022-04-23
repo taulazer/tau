@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         [Resolved(canBeNull: true)]
-        private TauCachedProperties properties { get; set; }
+        protected TauCachedProperties Properties { get; private set; }
 
         protected override void UpdateInitialTransforms()
         {
@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             DrawableBox.FadeIn(HitObject.TimeFadeIn);
 
-            if (properties != null && properties.InverseModEnabled.Value)
+            if (Properties != null && Properties.InverseModEnabled.Value)
                 DrawableBox.MoveToY(-1.0f);
 
             DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
@@ -92,7 +92,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             const double time_fade_hit = 250, time_fade_miss = 400;
             var offset = new Vector2(0, -.1f);
 
-            if (properties != null && properties.InverseModEnabled.Value)
+            if (Properties != null && Properties.InverseModEnabled.Value)
                 offset.Y = -offset.Y;
 
             switch (state)
