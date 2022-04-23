@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -11,10 +9,8 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Utils;
-using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Configuration;
-using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 using osuTK.Graphics;
@@ -87,9 +83,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(ShaderManager shaders, TauRulesetConfigManager config, IReadOnlyList<Mod> mods)
+        private void load(ShaderManager shaders, TauRulesetConfigManager config)
         {
-            ApplyFade = mods.Any( x => x is TauModTraceable );
             shader = shaders.Load( "VisualizerPositionAndColour", "VisualizerFade" );
 
             config?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualizer);
