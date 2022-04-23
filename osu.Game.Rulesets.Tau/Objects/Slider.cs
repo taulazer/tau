@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Tau.Objects
                 if (path != null)
                     return path;
 
-                var positions = Nodes.Select(node => new Vector2(node.Time, node.Angle)).ToList();
+                var positions = Nodes.Select(node => new Vector2(node.Time * 99999999, node.Angle)).ToList();
                 return path = new SliderPath(PathType.Linear, positions.ToArray());
             }
         }
@@ -105,6 +105,35 @@ namespace osu.Game.Rulesets.Tau.Objects
 
             var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Duration, this.SpanCount(), null, cancellationToken);
 
+            int nodeIndex = 0;
+
+            void seek(float time)
+            {
+                nodeIndex = 0;
+                while (nodeIndex > 0 && Nodes[nodeIndex - 1].Time > time)
+                    nodeIndex--;
+                while (nodeIndex + 1 < Nodes.Count && Nodes[nodeIndex + 1].Time <= time)
+                    nodeIndex++;
+            }
+
+            float angleAt(float time)
+            {
+                seek(time);
+                if (nodeIndex + 1 == Nodes.Count)
+                    return Nodes[nodeIndex].Angle;
+                if (Nodes.Count == 1)
+                    return Nodes[0].Angle;
+
+                var nodeA = Nodes[nodeIndex];
+                var nodeB = Nodes[nodeIndex + 1];
+                var deltaAngle = Extensions.GetDeltaAngle(nodeB.Angle, nodeA.Angle);
+                var duration = nodeB.Time - nodeA.Time;
+                if (duration == 0)
+                    return nodeB.Angle;
+
+                return nodeA.Angle + deltaAngle * (time - nodeA.Time) / duration;
+            }
+
             foreach (var e in sliderEvents)
             {
                 switch (e.Type)
@@ -129,6 +158,15 @@ namespace osu.Game.Rulesets.Tau.Objects
                             Angle = pos.Y
                         });
                         break;
+
+                    case SliderEventType.Tick:
+                        AddNested(new SliderTick()
+                        {
+                            ParentSlider = this,
+                            StartTime = e.Time,
+                            Angle = angleAt((float)(e.Time - StartTime))
+                        });
+                        break;
                 }
             }
 
@@ -137,9 +175,16 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         private void updateNestedSamples()
         {
+            var firstSample = Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_NORMAL)
+                              ?? Samples.FirstOrDefault();
+            var sampleList = new List<HitSampleInfo>();
+            if (firstSample != null)
+                sampleList.Add(firstSample.With("slidertick"));
+
             foreach (var repeat in NestedHitObjects.OfType<SliderRepeat>())
                 repeat.Samples = this.GetNodeSamples(repeat.RepeatIndex + 1);
-
+            foreach (var tick in NestedHitObjects.OfType<SliderTick>())
+                tick.Samples = sampleList;
             if (HeadBeat != null)
                 HeadBeat.Samples = this.GetNodeSamples(0);
 
