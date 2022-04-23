@@ -44,7 +44,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Child = new BeatPiece()
             } );
 
-            DrawableBox.Size = Vector2.Multiply( DrawableBox.Size, 1.25f );
+            DrawableBox.Size = Vector2.Multiply( DrawableBox.Size, 15.25f / 16f );
             DrawableBox.Rotation = 45;
             InnerDrawableBox.Rotation = 45;
         }
@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateAfterChildren();
 
             InnerDrawableBox.Position = DrawableBox.Position;
-            InnerDrawableBox.Size = Vector2.Multiply( DrawableBox.Size, 0.65f );
+            InnerDrawableBox.Size = Vector2.Multiply( DrawableBox.Size, 8.47f / 15.25f );
             InnerDrawableBox.Scale = DrawableBox.Scale;
         }
 

@@ -97,7 +97,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables {
                     innerTicks = MemoryPool<Quad>.Shared.Rent( ticks.Length );
                     int k = 0;
                     foreach ( var i in Source.Ticks ) {
-                        ticks[k] = (i.DrawableBox.ScreenSpaceDrawQuad, i.DrawableBox.Alpha, i.Result.Type == Rulesets.Scoring.HitResult.Great);
+                        ticks[k] = (i.DrawableBox.ScreenSpaceDrawQuad, i.DrawableBox.Alpha, i.Result?.Type == Rulesets.Scoring.HitResult.Great);
                         innerTicks[k] = i.InnerDrawableBox.ScreenSpaceDrawQuad;
 
                         k++;
