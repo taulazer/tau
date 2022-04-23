@@ -1,61 +1,53 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
+﻿using osu.Game.Rulesets.Scoring;
 using osu.Framework.Graphics;
+
+#if SHOW_TICKS
 using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.UI;
+using osu.Framework.Graphics.Shapes;
 using osuTK;
+using osuTK.Graphics;
+#endif
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableSliderTick : DrawableAngledTauHitObject<SliderTick>
+    public class DrawableSliderTick : DrawableBeat
     {
         public DrawableSlider DrawableSlider => (DrawableSlider)ParentHitObject;
 
-        private readonly BindableFloat size = new(12f);
-
         public override bool DisplayResult => false;
 
-        public DrawableSliderTick(SliderTick hitObject)
+        public DrawableSliderTick()
+        {
+        }
+
+        public DrawableSliderTick(Beat hitObject)
             : base(hitObject)
         {
-            Name = "Tick track";
-            Anchor = Anchor.Centre;
-            Origin = Anchor.Centre;
-            RelativeSizeAxes = Axes.Both;
-            Size = Vector2.One;
+        }
 
-            AddInternal(new Container
+        protected override Drawable CreateDrawable()
+        {
+#if SHOW_TICKS
+            return new Container
             {
                 RelativePositionAxes = Axes.Both,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
+                Alpha = 0,
                 AlwaysPresent = true,
-                Size = new Vector2(size.Default),
-                Children = new Drawable[]
+                Size = new Vector2(NoteSize.Default),
+                Child = new Circle
                 {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Colour = Color4.Red
                 }
-            });
-
-            angleBindable.BindValueChanged(r => Rotation = r.NewValue);
+            };
+#else
+            return base.CreateDrawable();
+#endif
         }
-
-        private readonly BindableFloat angleBindable = new();
-
-        protected override void OnApply()
-        {
-            base.OnApply();
-            angleBindable.BindTo(HitObject.AngleBindable);
-        }
-
-        protected override void OnFree()
-        {
-            base.OnFree();
-            angleBindable.UnbindFrom(HitObject.AngleBindable);
-        }
-
-        [Resolved(canBeNull: true)]
-        private TauCachedProperties properties { get; set; }
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
