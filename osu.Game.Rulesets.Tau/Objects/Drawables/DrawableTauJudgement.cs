@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected SkinnableLighting Lighting { get; private set; }
 
         [Resolved]
-        private OsuConfigManager config { get; set; }
+        private TauRulesetConfigManager config { get; set; }
 
         [Resolved(canBeNull: true)]
         private TauPlayfield playfield { get; set; }
@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override void ApplyHitAnimations()
         {
-            var hitLightingEnabled = config.Get<bool>(OsuSetting.HitLighting);
+            var hitLightingEnabled = config.Get<bool>(TauRulesetSettings.HitLighting);
 
             Lighting.Alpha = 0;
 

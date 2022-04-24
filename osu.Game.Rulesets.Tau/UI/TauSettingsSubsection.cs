@@ -30,6 +30,12 @@ namespace osu.Game.Rulesets.Tau.UI
                     LabelText = "Show Visualizer",
                     Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
                 },
+                new SettingsCheckbox
+                {
+                    LabelText = "Hit lighting",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.HitLighting),
+                    WarningText = "This has been moved into the ruleset settings to reduce the chance of Tau breaking."
+                },
                 new SettingsSlider<float>
                 {
                     LabelText = "Playfield dim",
