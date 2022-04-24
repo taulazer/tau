@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
-using osu.Framework.Utils;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
@@ -91,9 +90,10 @@ namespace osu.Game.Rulesets.Tau.Objects
             if (index == Nodes.Count)
                 return start;
 
-            var angle = Interpolation.ValueAt(time, start.Angle, end.Angle, start.Time, end.Time);
+            var deltaAngle = Extensions.GetDeltaAngle(end.Angle, start.Angle);
+            var duration = end.Time - start.Time;
 
-            return new SliderNode(time, angle);
+            return new SliderNode(time, start.Angle + deltaAngle * (time - start.Time) / duration);
         }
 
         private void invalidate()

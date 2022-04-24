@@ -51,7 +51,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (CheckValidation == null)
                 return;
 
-            var delta = CheckValidation(HitObject.Angle + GetCurrentOffset()).DeltaFromPaddleCenter;
+            var delta = CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).DeltaFromPaddleCenter;
             var beatResult = (TauJudgementResult)result;
 
             if (result.IsHit)
