@@ -29,6 +29,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
+        private readonly Container<DrawableSliderTick> tickContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
         private readonly CircularContainer maskingContainer;
         private readonly Cached drawCache = new();
@@ -71,6 +72,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 },
                 headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
+                tickContainer = new Container<DrawableSliderTick> {RelativeSizeAxes = Axes.Both},
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
@@ -93,6 +95,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case DrawableSliderRepeat repeat:
                     repeatContainer.Add(repeat);
                     break;
+
+                case DrawableSliderTick tick:
+                    tickContainer.Add(tick);
+                    break;
             }
         }
 
@@ -101,6 +107,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 SliderRepeat repeat => new DrawableSliderRepeat(repeat),
                 SliderHeadBeat head => new DrawableSliderHead(head),
+                SliderTick tick => new DrawableSliderTick(tick),
                 _ => base.CreateNestedHitObject(hitObject)
             };
 
@@ -110,6 +117,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             headContainer.Clear(false);
             repeatContainer.Clear(false);
+            tickContainer.Clear(false);
         }
 
         private float convertNoteSizeToSliderSize(float beatSize)

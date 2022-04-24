@@ -31,7 +31,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             RelativeSizeAxes = Axes.Both;
             Size = Vector2.One;
 
-            AddInternal(DrawableBox = new Container
+            AddInternal(DrawableBox = CreateDrawable());
+
+            angleBindable.BindValueChanged(r => Rotation = r.NewValue);
+        }
+
+        protected virtual Drawable CreateDrawable()
+            => new Container
             {
                 RelativePositionAxes = Axes.Both,
                 Anchor = Anchor.Centre,
@@ -40,10 +46,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 AlwaysPresent = true,
                 Size = new Vector2(NoteSize.Default),
                 Child = new BeatPiece()
-            });
-
-            angleBindable.BindValueChanged(r => Rotation = r.NewValue);
-        }
+            };
 
         private readonly BindableFloat angleBindable = new();
 
