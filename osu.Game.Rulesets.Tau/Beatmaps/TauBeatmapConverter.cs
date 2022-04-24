@@ -71,7 +71,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 ComboOffset = comboData?.ComboOffset ?? 0,
             };
 
-        private TauHitObject convertToSlider(HitObject original, IHasCombo comboData IHasPathWithRepeats data, bool isHard, IBeatmap beatmap)
+        private TauHitObject convertToSlider(HitObject original, IHasCombo comboData, IHasPathWithRepeats data, bool isHard, IBeatmap beatmap)
         {
             TauHitObject convertBeat()
                 => CanConvertToHardBeats && isHard ? convertToHardBeat(original, comboData) : convertToBeat(original, comboData);
