@@ -17,6 +17,7 @@ using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osuTK;
+using osuTK.Graphics.ES30;
 using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace osu.Game.Rulesets.Tau.Mods
@@ -71,7 +72,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             RelativeSizeAxes = Axes.Both;
 
-            InternalChild = new BufferedContainer
+            InternalChild = new BufferedContainer(new[] { RenderbufferInternalFormat.DepthComponent16 })
             {
                 RelativeSizeAxes = Axes.Both,
                 Size = new Vector2(1.5f),

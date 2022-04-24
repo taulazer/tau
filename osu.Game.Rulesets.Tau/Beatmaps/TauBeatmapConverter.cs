@@ -32,15 +32,16 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         protected override IEnumerable<TauHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken)
         {
             bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
+            var comboData = original as IHasCombo;
 
             return original switch
             {
-                IHasPathWithRepeats path => convertToSlider(original, path, isHard, beatmap).Yield(),
-                _ => isHard && CanConvertToHardBeats ? convertToHardBeat(original).Yield() : convertToBeat(original).Yield()
+                IHasPathWithRepeats path => convertToSlider(original, comboData, path, isHard, beatmap).Yield(),
+                _ => isHard && CanConvertToHardBeats ? convertToHardBeat(original, comboData).Yield() : convertToBeat(original, comboData).Yield()
             };
         }
 
-        private TauHitObject convertToBeat(HitObject original)
+        private TauHitObject convertToBeat(HitObject original, IHasCombo comboData)
         {
             float angle = original switch
             {
@@ -55,21 +56,25 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
-                Angle = angle
+                Angle = angle,
+                NewCombo = comboData?.NewCombo ?? false,
+                ComboOffset = comboData?.ComboOffset ?? 0,
             };
         }
 
-        private TauHitObject convertToHardBeat(HitObject original) =>
+        private TauHitObject convertToHardBeat(HitObject original, IHasCombo comboData) =>
             new HardBeat
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
+                NewCombo = comboData?.NewCombo ?? false,
+                ComboOffset = comboData?.ComboOffset ?? 0,
             };
 
-        private TauHitObject convertToSlider(HitObject original, IHasPathWithRepeats data, bool isHard, IBeatmap beatmap)
+        private TauHitObject convertToSlider(HitObject original, IHasCombo comboData IHasPathWithRepeats data, bool isHard, IBeatmap beatmap)
         {
             TauHitObject convertBeat()
-                => CanConvertToHardBeats && isHard ? convertToHardBeat(original) : convertToBeat(original);
+                => CanConvertToHardBeats && isHard ? convertToHardBeat(original, comboData) : convertToBeat(original, comboData);
 
             if (!CanConvertToSliders)
                 return convertBeat();
@@ -121,6 +126,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 RepeatCount = data.RepeatCount,
                 Angle = firstAngle,
                 Path = new PolarSliderPath(nodes.ToArray()),
+                NewCombo = comboData?.NewCombo ?? false,
+                ComboOffset = comboData?.ComboOffset ?? 0,
 
                 // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
                 // this results in more (or less) ticks being generated in <v8 maps for the same time duration.

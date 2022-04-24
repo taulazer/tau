@@ -77,6 +77,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
 
+            path.Ticks = repeatContainer;
+
             Tracking.BindValueChanged(updateSlidingSample);
         }
 
@@ -258,7 +260,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private OsuColour colour { get; set; }
 
         public double Velocity => (TauPlayfield.BaseSize.X / 2) / HitObject.TimePreempt;
-        public double FadeTime => fade_range / Velocity;
+        public double FadeTime => FADE_RANGE / Velocity;
 
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
