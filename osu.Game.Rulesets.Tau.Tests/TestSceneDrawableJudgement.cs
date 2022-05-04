@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Extensions;
-using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
 using osu.Framework.Testing;
+using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Skinning;
 
@@ -21,9 +19,10 @@ namespace osu.Game.Rulesets.Tau.Tests
 {
     public class TestSceneDrawableJudgement : TauSkinnableTestScene
     {
-        private readonly List<DrawablePool<TestDrawableTauJudgement>> pools;
+        [Resolved]
+        private OsuConfigManager config { get; set; }
 
-        private readonly BindableBool hitLighting = new BindableBool();
+        private readonly List<DrawablePool<TestDrawableTauJudgement>> pools;
 
         public TestSceneDrawableJudgement()
         {
@@ -35,17 +34,10 @@ namespace osu.Game.Rulesets.Tau.Tests
             }
         }
 
-        [BackgroundDependencyLoader]
-        private void load()
-        {
-            var config = (TauRulesetConfigManager)RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
-            config.BindWith(TauRulesetSettings.HitLighting, hitLighting);
-        }
-
         [Test]
         public void TestHitLightingDisabled()
         {
-            AddStep("hit Lighting disabled", () => hitLighting.Value = false);
+            AddStep("hit Lighting disabled", () => config.SetValue(OsuSetting.HitLighting, false));
 
             showResult(HitResult.Great);
 
@@ -57,7 +49,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         [Test]
         public void TestHitLightingEnabled()
         {
-            AddStep("hit Lighting enabled", () => hitLighting.Value = true);
+            AddStep("hit Lighting enabled", () => config.SetValue(OsuSetting.HitLighting, true));
 
             showResult(HitResult.Great);
 
