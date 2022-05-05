@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Input;
 using osu.Game.Beatmaps;
@@ -40,7 +41,12 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override void RequestResume(Action continueResume)
         {
-            // We know we have a resume overlay, no need to check if we don't have one.
+            // Ignore all automation mods
+            if (Mods.All(m => m.Type == ModType.Automation))
+            {
+                continueResume();
+                return;
+            }
 
             ResumeOverlay.GameplayCursor = Cursor;
             ResumeOverlay.ResumeAction = continueResume;
