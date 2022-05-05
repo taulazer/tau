@@ -36,8 +36,8 @@ namespace osu.Game.Rulesets.Tau.Mods
         {
             var converter = (TauBeatmapConverter)beatmapConverter;
 
-            converter.CanConvertToHardBeats = !ToggleHardBeats.Value;
-            converter.CanConvertToSliders = !ToggleSliders.Value;
+            converter.CanConvertToHardBeats = ToggleHardBeats.Value;
+            converter.CanConvertToSliders = ToggleSliders.Value;
             converter.SliderDivisor = SlidersDivisionLevel.Value;
         }
     }
