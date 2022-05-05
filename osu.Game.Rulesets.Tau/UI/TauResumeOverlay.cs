@@ -92,13 +92,10 @@ namespace osu.Game.Rulesets.Tau.UI
                 var rotation = Rotation - 90;
                 rotation.NormalizeAngle();
 
-                if (angle < rotation)
-                    return false;
+                var range = ((float)angleRange / 2) * 0.25;
+                var delta = Math.Abs(Extensions.GetDeltaAngle((float)(rotation + (range)), angle));
 
-                var range = rotation + ((float)angleRange * 0.25f);
-                range.NormalizeAngle();
-
-                return !(angle > range);
+                return !(delta > range);
             }
 
             [Resolved]
