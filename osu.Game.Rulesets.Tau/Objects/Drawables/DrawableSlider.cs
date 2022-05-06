@@ -70,6 +70,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             PathRadius = 4,
+                            PathDistance = PathDistance
                         },
                     }
                 },
