@@ -23,13 +23,13 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         protected override Drawable CreateAngularParticle()
             => new Triangle
             {
-                Position = Extensions.GetCircularPosition(Distance, Settings.Angle)
+                Position = Extensions.FromPolarCoordinates(Distance, Settings.Angle)
             };
 
         protected override Drawable CreateCircularParticle()
             => new Triangle
             {
-                Position = Extensions.GetCircularPosition(
+                Position = Extensions.FromPolarCoordinates(
                     (RNG.NextSingle() * 0.15f) * 0.15f + Distance,
                     RNG.NextSingle() * 360f)
             };
@@ -48,9 +48,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         private void addTransformsForAngled(Drawable particle)
         {
-            particle.MoveTo(Extensions.GetCircularPosition(
+            particle.MoveTo(Extensions.FromPolarCoordinates(
                              (RNG.NextSingle() * 0.15f) * (Settings.Inversed ? -1f : 1f) + Distance,
-                             Extensions.RandomBetween(Settings.Angle - 10, Settings.Angle + 10)),
+                             RNG.NextSingle(Settings.Angle - 10, Settings.Angle + 10)),
                          Duration, Easing.OutQuint)
                     .ResizeTo(new Vector2(RNG.Next(0, 5)), Duration, Easing.OutQuint);
         }
@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         private void addTransformsForCircular(Drawable particle)
         {
             particle.MoveTo(
-                         Extensions.GetCircularPosition(
+                         Extensions.FromPolarCoordinates(
                              (RNG.NextSingle() * 0.15f) * (Settings.Inversed ? -1f : 2f) + Distance,
                              Vector2.Zero.GetDegreesFromPosition(particle.Position)), Duration,
                          Easing.OutQuint)

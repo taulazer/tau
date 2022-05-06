@@ -80,7 +80,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                     {
                         RelativeSizeAxes = Axes.Both,
                         RelativePositionAxes = Axes.Y,
-                        Y = Extensions.GetCircularPosition(-.6f, 0).Y,
+                        Y = Extensions.FromPolarCoordinates(-.6f, 0).Y,
                         Children = new Drawable[]
                         {
                             pool,

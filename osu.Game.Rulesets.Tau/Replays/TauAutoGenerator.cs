@@ -206,7 +206,7 @@ namespace osu.Game.Rulesets.Tau.Replays
         /// </remarks>
         private double getReactionTime(double timeInstant) => ApplyModsToRate(timeInstant, 100);
 
-        private Vector2 getGameplayPositionFromAngle(float angle) => Extensions.GetCircularPosition(CURSOR_DISTANCE, angle) + new Vector2(Offset);
+        private Vector2 getGameplayPositionFromAngle(float angle) => Extensions.FromPolarCoordinates(CURSOR_DISTANCE, angle) + new Vector2(Offset);
 
         #endregion
 

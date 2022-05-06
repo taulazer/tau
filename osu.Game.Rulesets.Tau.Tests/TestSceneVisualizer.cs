@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Tests
 
             AddStep("Beat hit", () => visualizer.OnNewResult(new DrawableBeat(new Beat())));
             AddStep("Hard beat hit", () => visualizer.OnNewResult(new DrawableHardBeat(new HardBeat())));
-            AddStep("Slider hit", () => visualizer.UpdateSliderPosition(0f));
+            AddStep("Slider hit", () => visualizer.UpdateAmplitudes(0f, 0.15f));
         }
     }
 }

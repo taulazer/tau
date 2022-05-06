@@ -68,6 +68,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             });
         }
 
+        /// <summary>
+        /// Should return whether or not a <see cref="DrawableHitObject"/> has the correct set of parameters for it to be hit.
+        /// </summary>
         protected virtual bool CheckForValidation() => true;
 
         protected virtual void ApplyCustomResult(JudgementResult result) { }

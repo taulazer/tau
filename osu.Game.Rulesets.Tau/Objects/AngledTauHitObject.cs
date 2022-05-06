@@ -2,6 +2,9 @@
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
+    /// <summary>
+    /// A <see cref="TauHitObject"/> that has an angle parameter.
+    /// </summary>
     public class AngledTauHitObject : TauHitObject, IHasAngle
     {
         public BindableFloat AngleBindable = new();
