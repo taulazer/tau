@@ -23,20 +23,22 @@ namespace osu.Game.Rulesets.Tau.Statistics
         private Container barsContainer;
 
         private readonly TauCachedProperties properties = new();
-        private readonly IReadOnlyList<HitEvent> hitEvents;
+        private readonly IReadOnlyList<HitEvent> beatHitEvents;
+        private readonly IReadOnlyList<HitEvent> sliderHitEvents;
 
         private double angleRange => properties.AngleRange.Value;
 
         public PaddleDistributionGraph(IReadOnlyList<HitEvent> hitEvents, IBeatmap beatmap)
         {
-            this.hitEvents = hitEvents.Where(e => e.HitObject.HitWindows is not HitWindows.EmptyHitWindows && e.HitObject is Beat && e.Result.IsHit()).ToList();
+            beatHitEvents = hitEvents.Where(e => e.HitObject.HitWindows is not HitWindows.EmptyHitWindows && e.HitObject is Beat && e.Result.IsHit()).ToList();
+            sliderHitEvents = hitEvents.Where(e => e.HitObject is Slider && e.Result.IsHit()).ToList(); // Note that this will only count the end of the sliders.
             properties.SetRange(beatmap.Difficulty.CircleSize);
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            if (hitEvents == null || hitEvents.Count == 0)
+            if (beatHitEvents == null || beatHitEvents.Count == 0)
                 return;
 
             var paddedAngleRange = angleRange + 2; // 2° padding horizontally
@@ -49,7 +51,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                 {
                     RelativeSizeAxes = Axes.Both,
                     RelativePositionAxes = Axes.Y,
-                    Y = 0.06f,
+                    Y = 0.05f,
                     Scale = new Vector2(1),
                     FillAspectRatio = 1,
                     FillMode = FillMode.Fit,
@@ -107,7 +109,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Height = 0.26f,
-                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(-0.2f)),
+                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(-0.1f)),
                         }
                     }
                 },
@@ -153,7 +155,35 @@ namespace osu.Game.Rulesets.Tau.Statistics
             float radius = Height * 2;
             int totalDistributionBins = (int)angleRange + 1;
 
-            int[] bins = new int[totalDistributionBins];
+            int[] beatBins = calculateBins(totalDistributionBins, beatHitEvents);
+            int[] sliderBins = calculateBins(totalDistributionBins, sliderHitEvents);
+
+            int maxBeatCount = beatBins.Max();
+            int maxSliderCount = sliderBins.Max();
+
+            if (maxSliderCount > 0)
+                for (int i = 0; i < sliderBins.Length; i++)
+                    barsContainer.Add(new Bar
+                    {
+                        Origin = Anchor.TopLeft,
+                        Colour = Color4Extensions.FromHex("#00AAFF"),
+                        Height = Math.Max(0.075f, (float)sliderBins[i] / maxSliderCount) * 0.3f,
+                        Position = Extensions.GetCircularPosition(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
+                    });
+
+            if (maxBeatCount > 0)
+                for (int i = 0; i < beatBins.Length; i++)
+                    barsContainer.Add(new Bar
+                    {
+                        Colour = Color4Extensions.FromHex("#66FFCC"),
+                        Height = Math.Max(0.075f, (float)beatBins[i] / maxBeatCount) * 0.3f,
+                        Position = Extensions.GetCircularPosition(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
+                    });
+        }
+
+        private int[] calculateBins(int totalBins, IReadOnlyList<HitEvent> hitEvents)
+        {
+            int[] bins = new int[totalBins];
 
             foreach (var hit in hitEvents)
             {
@@ -164,14 +194,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                 bins[index]++;
             }
 
-            int maxCount = bins.Max();
-
-            for (int i = 0; i < bins.Length; i++)
-                barsContainer.Add(new Bar
-                {
-                    Height = Math.Max(0.075f, (float)bins[i] / maxCount) * 0.3f,
-                    Position = Extensions.GetCircularPosition(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
-                });
+            return bins;
         }
 
         private class Bar : CompositeDrawable
@@ -179,16 +202,12 @@ namespace osu.Game.Rulesets.Tau.Statistics
             public Bar()
             {
                 Anchor = Anchor.TopCentre;
-                Origin = Anchor.TopCentre;
+                Origin = Anchor.TopRight;
 
                 RelativeSizeAxes = Axes.Y;
-                Width = 5;
+                Width = 2.5f;
 
-                InternalChild = new Circle
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4Extensions.FromHex("#66FFCC")
-                };
+                InternalChild = new Circle { RelativeSizeAxes = Axes.Both };
             }
         }
     }

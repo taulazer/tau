@@ -39,7 +39,11 @@ namespace osu.Game.Rulesets.Tau.Tests
                 {
                     events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
                         new Vector2(i - (angleRange / 2), 0)));
+                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
+                        new Vector2(i - (angleRange / 2), 0)));
                     events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
+                        new Vector2((angleRange / 2) - i, 0)));
+                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
                         new Vector2((angleRange / 2) - i, 0)));
                 }
             }
@@ -61,7 +65,11 @@ namespace osu.Game.Rulesets.Tau.Tests
                 {
                     events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
                         new Vector2(i - (angleRange / 2), 0)));
+                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
+                        new Vector2(i - (angleRange / 2), 0)));
                     events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
+                        new Vector2((angleRange / 2) - i, 0)));
+                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
                         new Vector2((angleRange / 2) - i, 0)));
                 }
             }
@@ -103,8 +111,13 @@ namespace osu.Game.Rulesets.Tau.Tests
             var hitEvents = new List<HitEvent>();
 
             for (int i = 0; i < 100; i++)
+            {
                 hitEvents.Add(new HitEvent(i - 25, HitResult.Perfect, new Beat(), new Beat(),
                     new Vector2(RNG.NextSingle(-(angleRange / 2), angleRange / 2), 0)));
+
+                hitEvents.Add(new HitEvent(i - 25, HitResult.Perfect, new Slider(), new Slider(),
+                    new Vector2(RNG.NextSingle(-(angleRange / 2), angleRange / 2), 0)));
+            }
 
             return hitEvents;
         }
