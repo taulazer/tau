@@ -32,10 +32,10 @@ namespace osu.Game.Rulesets.Tau.Statistics
         private readonly IReadOnlyList<HitEvent> beatHitEvents;
         private readonly IReadOnlyList<HitEvent> sliderHitEvents;
 
-        private double angleRange => properties.AngleRange.Value;
+        private readonly BindableBool showSliders = new(true);
+        private readonly BindableBool showBeats = new(true);
 
-        private BindableBool showSliders = new(true);
-        private BindableBool showBeats = new(true);
+        private double angleRange => properties.AngleRange.Value;
 
         public PaddleDistributionGraph(IReadOnlyList<HitEvent> hitEvents, IBeatmap beatmap)
         {
