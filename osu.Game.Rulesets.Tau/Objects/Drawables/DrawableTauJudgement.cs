@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (properties != null && properties.InverseModEnabled.Value)
                 distance = 0.4f;
 
-            Position = Extensions.GetCircularPosition(distance, angle);
+            Position = Extensions.FromPolarCoordinates(distance, angle);
             Rotation = angle;
         }
 

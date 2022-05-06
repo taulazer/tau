@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             if (cursor == null)
                 return;
 
-            Vortices[0].Position = Extensions.GetCircularPosition((properties?.InverseModEnabled?.Value ?? false) ? 120 : 420, cursor.DrawablePaddle.Rotation);
+            Vortices[0].Position = Extensions.FromPolarCoordinates((properties?.InverseModEnabled?.Value ?? false) ? 120 : 420, cursor.DrawablePaddle.Rotation);
             Vortices[0].Speed = cursor.AngleDistanceFromLastUpdate * 5;
         }
     }
@@ -75,13 +75,13 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         protected override Drawable CreateAngularParticle()
             => new TriangleWithVelocity
             {
-                Position = Extensions.GetCircularPosition(Distance, Settings.Angle)
+                Position = Extensions.FromPolarCoordinates(Distance, Settings.Angle)
             };
 
         protected override Drawable CreateCircularParticle()
             => new TriangleWithVelocity
             {
-                Position = Extensions.GetCircularPosition(Distance, RNG.NextSingle() * 360f)
+                Position = Extensions.FromPolarCoordinates(Distance, RNG.NextSingle() * 360f)
             };
 
         protected override void ApplyHitAnimation(Drawable drawable)
@@ -94,10 +94,10 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                     .Expire(true);
 
             particle.Velocity =
-                Extensions.GetCircularPosition(Distance + (RNG.NextSingle(1, 5) * getVelocityAmplitude()),
+                Extensions.FromPolarCoordinates(Distance + (RNG.NextSingle(1, 5) * getVelocityAmplitude()),
                     Settings.IsCircular
                         ? Vector2.Zero.GetDegreesFromPosition(particle.Position)
-                        : Extensions.RandomBetween(Settings.Angle - 10, Settings.Angle + 10));
+                        : RNG.NextSingle(Settings.Angle - 10, Settings.Angle + 10));
 
             if (Settings.Inversed)
                 particle.Velocity = -particle.Velocity;

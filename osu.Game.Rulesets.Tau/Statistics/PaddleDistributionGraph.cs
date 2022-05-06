@@ -211,7 +211,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                         Origin = Anchor.TopLeft,
                         Colour = sliderBins.Length / 2 == i ? Color4.White : Color4Extensions.FromHex("#00AAFF"),
                         Height = Math.Max(0.075f, (float)sliderBins[i] / maxSliderCount) * 0.3f,
-                        Position = Extensions.GetCircularPosition(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
+                        Position = Extensions.FromPolarCoordinates(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
                     });
 
             if (maxBeatCount > 0)
@@ -220,7 +220,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                     {
                         Colour = sliderBins.Length / 2 == i ? Color4.White : Color4Extensions.FromHex("#66FFCC"),
                         Height = Math.Max(0.075f, (float)beatBins[i] / maxBeatCount) * 0.3f,
-                        Position = Extensions.GetCircularPosition(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
+                        Position = Extensions.FromPolarCoordinates(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
                     });
         }
 

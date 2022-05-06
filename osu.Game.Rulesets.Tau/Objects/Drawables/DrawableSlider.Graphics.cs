@@ -252,6 +252,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Invalidate(Invalidation.DrawSize);
             }
 
+            /// <summary>
+            /// Adds a vertex position to the slider.
+            /// </summary>
+            /// <param name="pos">The vertex position, where Z is used as the alpha.</param>
             public void AddVertex(Vector3 pos)
             {
                 vertices.Add(pos);

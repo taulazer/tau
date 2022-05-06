@@ -42,6 +42,11 @@ namespace osu.Game.Rulesets.Tau.Objects
             }
         }
 
+        /// <summary>
+        /// Gets a new list of <see cref="SliderNode"/> between the start and end time.
+        /// </summary>
+        /// <param name="start">The start time to collect nodes.</param>
+        /// <param name="end">The end time to collect nodes.</param>
         public Span<SliderNode> NodesBetween(float start, float end)
         {
             int? index = null;
@@ -71,15 +76,19 @@ namespace osu.Game.Rulesets.Tau.Objects
             return CollectionsMarshal.AsSpan(Nodes).Slice((int)index, (int)length);
         }
 
-        public SliderNode NodeAt(float time)
+        /// <summary>
+        /// Interpolates the list of <see cref="Nodes"/> and returns the current angle at the set time.
+        /// </summary>
+        /// <param name="time">The time to get the angle at.</param>
+        public float AngleAt(float time)
         {
             var last = Nodes.LastOrDefault();
 
             if (time <= 0)
-                return Nodes.First();
+                return Nodes.First().Angle;
 
             if (time >= last.Time)
-                return last;
+                return last.Angle;
 
             var closest = Nodes.OrderBy(n => Math.Abs(time - n.Time)).ToArray();
             var start = closest[0];
@@ -88,18 +97,12 @@ namespace osu.Game.Rulesets.Tau.Objects
             var index = Nodes.BinarySearch(start);
 
             if (index == Nodes.Count)
-                return start;
+                return start.Angle;
 
             var deltaAngle = Extensions.GetDeltaAngle(end.Angle, start.Angle);
             var duration = end.Time - start.Time;
 
-            return new SliderNode(time, start.Angle + deltaAngle * (time - start.Time) / duration);
-        }
-
-        private void invalidate()
-        {
-            pathCache.Invalidate();
-            version.Value++;
+            return start.Angle + deltaAngle * (time - start.Time) / duration;
         }
 
         private void ensureValid()

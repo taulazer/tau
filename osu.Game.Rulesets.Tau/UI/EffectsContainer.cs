@@ -64,6 +64,11 @@ namespace osu.Game.Rulesets.Tau.UI
         private const double tracking_threshold = 75;
         private double currentTrackingTime;
 
+        /// <summary>
+        /// Updates any tracking children with the current angle.
+        /// </summary>
+        /// <param name="angle">The current angle the slider is at.</param>
+        /// <param name="slider">The actual <see cref="DrawableSlider"/> that is emitting this function.</param>
         public void TrackSlider(float angle, DrawableSlider slider)
         {
             if (!slider.Tracking.Value || !slider.HitObject.Kiai)
@@ -76,7 +81,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             currentTrackingTime = 0;
             sliderEffects.UpdateSliderPosition(angle);
-            visualizer.UpdateSliderPosition(angle);
+            visualizer.UpdateAmplitudes(angle, 0.15f);
         }
     }
 }
