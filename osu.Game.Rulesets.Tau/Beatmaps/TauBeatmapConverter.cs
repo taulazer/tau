@@ -125,7 +125,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 NodeSamples = data.NodeSamples,
                 RepeatCount = data.RepeatCount,
                 Angle = firstAngle,
-                Path = new PolarSliderPath(nodes.ToArray()),
+                Path = new PolarSliderPath(nodes),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
 
