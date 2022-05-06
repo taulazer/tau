@@ -83,7 +83,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             NoteSize.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
         }
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement)
+            => new TauJudgementResult(HitObject, judgement);
 
         [Resolved]
         private OsuColour colour { get; set; }
