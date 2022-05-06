@@ -166,7 +166,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                     barsContainer.Add(new Bar
                     {
                         Origin = Anchor.TopLeft,
-                        Colour = Color4Extensions.FromHex("#00AAFF"),
+                        Colour = sliderBins.Length / 2 == i ? Color4.White : Color4Extensions.FromHex("#00AAFF"),
                         Height = Math.Max(0.075f, (float)sliderBins[i] / maxSliderCount) * 0.3f,
                         Position = Extensions.GetCircularPosition(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
                     });
@@ -175,7 +175,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                 for (int i = 0; i < beatBins.Length; i++)
                     barsContainer.Add(new Bar
                     {
-                        Colour = Color4Extensions.FromHex("#66FFCC"),
+                        Colour = sliderBins.Length / 2 == i ? Color4.White : Color4Extensions.FromHex("#66FFCC"),
                         Height = Math.Max(0.075f, (float)beatBins[i] / maxBeatCount) * 0.3f,
                         Position = Extensions.GetCircularPosition(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
                     });
