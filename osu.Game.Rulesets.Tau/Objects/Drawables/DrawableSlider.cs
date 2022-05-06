@@ -27,6 +27,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private readonly BindableFloat size = new(16f);
 
+        public float PathDistance = TauPlayfield.BaseSize.X / 2;
+
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
         private readonly Container<DrawableSliderTick> tickContainer;
@@ -67,12 +69,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            PathRadius = 4
+                            PathRadius = 4,
                         },
                     }
                 },
                 headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
-                tickContainer = new Container<DrawableSliderTick> {RelativeSizeAxes = Axes.Both},
+                tickContainer = new Container<DrawableSliderTick> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
@@ -149,6 +151,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 inversed = true;
                 maskingContainer.Masking = false;
                 path.Reverse = inversed;
+                // PathDistance = path.PathDistance = TauPlayfield.BaseSize.X;
             }
         }
 
@@ -259,7 +262,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [Resolved]
         private OsuColour colour { get; set; }
 
-        public double Velocity => (TauPlayfield.BaseSize.X / 2) / HitObject.TimePreempt;
+        public double Velocity => PathDistance / HitObject.TimePreempt;
         public double FadeTime => FADE_RANGE / Velocity;
 
         protected override void UpdateHitStateTransforms(ArmedState state)

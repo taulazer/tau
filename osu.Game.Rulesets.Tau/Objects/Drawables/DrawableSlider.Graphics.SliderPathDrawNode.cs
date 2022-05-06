@@ -11,7 +11,6 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Tau.Allocation;
-using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
@@ -115,8 +114,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     textureShader = Source.textureShader;
 
                     var center = Source.PositionInBoundingBox(Vector2.Zero);
-                    var edge = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2, 0));
-                    var fade = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2 + FADE_RANGE, 0));
+                    var edge = Source.PositionInBoundingBox(new Vector2(Source.PathDistance, 0));
+                    var fade = Source.PositionInBoundingBox(new Vector2(Source.PathDistance + FADE_RANGE, 0));
 
                     centerPos = Source.ToScreenSpace(center);
                     range = (Source.ToScreenSpace(edge) - centerPos).Length;

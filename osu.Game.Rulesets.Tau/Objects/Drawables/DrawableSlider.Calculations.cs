@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -45,11 +44,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             const double delta_time = 20;
             const double max_angle_per_ms = 5;
-            var radius = TauPlayfield.BaseSize.X / 2;
 
             float distanceAt(double t) => inversed
-                                              ? (float)(2 * radius - (time - t) / HitObject.TimePreempt * radius)
-                                              : (float)((time - t) / HitObject.TimePreempt * radius);
+                                              ? (float)(2 * PathDistance - (time - t) / HitObject.TimePreempt * PathDistance)
+                                              : (float)((time - t) / HitObject.TimePreempt * PathDistance);
 
             void addVertex(double t, double angle)
             {

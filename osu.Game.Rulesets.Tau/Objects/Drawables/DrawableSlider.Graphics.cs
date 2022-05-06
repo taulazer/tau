@@ -47,6 +47,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             private readonly List<Vector3> vertices = new();
 
+            public float PathDistance;
+
             public IReadOnlyList<Vector3> Vertices
             {
                 get => vertices;
