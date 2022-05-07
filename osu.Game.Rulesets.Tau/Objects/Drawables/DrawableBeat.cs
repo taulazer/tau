@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
@@ -31,7 +30,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             RelativeSizeAxes = Axes.Both;
             Size = Vector2.One;
 
-            AddInternal(DrawableBox = new Container
+            AddInternal(DrawableBox = CreateDrawable());
+        }
+
+        protected virtual Drawable CreateDrawable()
+            => new Container
             {
                 RelativePositionAxes = Axes.Both,
                 Anchor = Anchor.Centre,
@@ -40,27 +43,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 AlwaysPresent = true,
                 Size = new Vector2(NoteSize.Default),
                 Child = new BeatPiece()
-            });
-
-            angleBindable.BindValueChanged(r => Rotation = r.NewValue);
-        }
-
-        private readonly BindableFloat angleBindable = new();
-
-        protected override void OnApply()
-        {
-            base.OnApply();
-            angleBindable.BindTo(HitObject.AngleBindable);
-        }
-
-        protected override void OnFree()
-        {
-            base.OnFree();
-            angleBindable.UnbindFrom(HitObject.AngleBindable);
-        }
+            };
 
         [Resolved(canBeNull: true)]
-        private TauCachedProperties properties { get; set; }
+        protected TauCachedProperties Properties { get; private set; }
 
         protected override void UpdateInitialTransforms()
         {
@@ -68,7 +54,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             DrawableBox.FadeIn(HitObject.TimeFadeIn);
 
-            if (properties != null && properties.InverseModEnabled.Value)
+            if (Properties != null && Properties.InverseModEnabled.Value)
                 DrawableBox.MoveToY(-1.0f);
 
             DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
@@ -80,7 +66,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             NoteSize.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
         }
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement)
+            => new TauJudgementResult(HitObject, judgement);
 
         [Resolved]
         private OsuColour colour { get; set; }
@@ -92,7 +79,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             const double time_fade_hit = 250, time_fade_miss = 400;
             var offset = new Vector2(0, -.1f);
 
-            if (properties != null && properties.InverseModEnabled.Value)
+            if (Properties != null && Properties.InverseModEnabled.Value)
                 offset.Y = -offset.Y;
 
             switch (state)

@@ -6,6 +6,6 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override IconUsage? Icon => TauIcons.ModFadeIn;
         protected override MaskingMode Mode => MaskingMode.FadeIn;
-        protected override float InitialCoverage => 0.3f;
+        protected override float InitialCoverage => 0.25f;
     }
 }

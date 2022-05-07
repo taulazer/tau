@@ -1,27 +1,34 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup Label="Project">
-        <TargetFramework>net6.0</TargetFramework>
-        <AssemblyTitle>osu.Game.Rulesets.Tau</AssemblyTitle>
-        <OutputType>Library</OutputType>
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <RootNamespace>osu.Game.Rulesets.Tau</RootNamespace>
-        <LangVersion>default</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup>
-        <AssemblyName>osu.Game.Rulesets.Tau</AssemblyName>
-    </PropertyGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Resources\**" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="ppy.osu.Game" Version="2022.418.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Update="Objects\Drawables\DrawableSlider.Calculations.cs">
-            <DependentUpon>DrawableSlider.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Objects\Drawables\DrawableSlider.Graphics.cs">
-            <DependentUpon>DrawableSlider.cs</DependentUpon>
-        </Compile>
-    </ItemGroup>
+  <PropertyGroup Label="Project">
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyTitle>osu.Game.Rulesets.Tau</AssemblyTitle>
+    <OutputType>Library</OutputType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RootNamespace>osu.Game.Rulesets.Tau</RootNamespace>
+    <LangVersion>default</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>osu.Game.Rulesets.Tau</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\Shaders\sh_DepthMask.fs" />
+    <None Remove="Resources\Shaders\sh_DepthMask.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ppy.osu.Game" Version="2022.501.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Objects\Drawables\DrawableSlider.Calculations.cs">
+      <DependentUpon>DrawableSlider.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Objects\Drawables\DrawableSlider.Graphics.cs">
+      <DependentUpon>DrawableSlider.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Objects\Drawables\DrawableSlider.Graphics.SliderPathDrawNode.cs">
+      <DependentUpon>DrawableSlider.Graphics.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

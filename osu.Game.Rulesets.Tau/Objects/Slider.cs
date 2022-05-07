@@ -84,10 +84,12 @@ namespace osu.Game.Rulesets.Tau.Objects
         {
             base.CreateNestedHitObjects(cancellationToken);
 
-            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.CalculatedDistance, this.SpanCount(), null, cancellationToken);
+            var sliderEvents = SliderEventGenerator.Generate(StartTime, SpanDuration, Velocity, TickDistance, Path.Duration, this.SpanCount(), null, cancellationToken);
 
             foreach (var e in sliderEvents)
             {
+                var currentAngle = Path.AngleAt((float)(e.Time - StartTime));
+
                 switch (e.Type)
                 {
                     case SliderEventType.Head:
@@ -100,15 +102,21 @@ namespace osu.Game.Rulesets.Tau.Objects
                         break;
 
                     case SliderEventType.Repeat:
-                        var time = (e.SpanIndex + 1) * SpanDuration;
-                        var node = Path.NodeAt((float)time);
-
                         AddNested(new SliderRepeat
                         {
                             ParentSlider = this,
                             RepeatIndex = e.SpanIndex,
-                            StartTime = StartTime + time,
-                            Angle = node.Angle
+                            StartTime = e.Time,
+                            Angle = currentAngle
+                        });
+                        break;
+
+                    case SliderEventType.Tick:
+                        AddNested(new SliderTick()
+                        {
+                            ParentSlider = this,
+                            StartTime = e.Time,
+                            Angle = currentAngle
                         });
                         break;
                 }

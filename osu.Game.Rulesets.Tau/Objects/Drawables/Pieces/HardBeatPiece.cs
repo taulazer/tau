@@ -33,6 +33,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
         }
 
         private float convertNoteSizeToThickness(float noteSize)
-            => Interpolation.ValueAt(noteSize, 4f, 10f, 10f, 25f);
+            => Interpolation.ValueAt(noteSize, 3f, 15f, 10f, 25f);
     }
 }

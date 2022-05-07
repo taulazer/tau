@@ -45,6 +45,8 @@ namespace osu.Game.Rulesets.Tau
         public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
         public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
+        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
+
         public override Drawable CreateIcon() => new TauIcon(this);
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
@@ -96,8 +98,18 @@ namespace osu.Game.Rulesets.Tau
                 HitResult.Great,
                 HitResult.Ok,
                 HitResult.Miss,
+
+                HitResult.LargeTickHit,
+                HitResult.LargeTickMiss
             };
         }
+
+        public override string GetDisplayNameForHitResult(HitResult result)
+            => result switch
+            {
+                HitResult.LargeTickHit => "Ticks",
+                _ => base.GetDisplayNameForHitResult(result)
+            };
 
         public override StatisticRow[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
         {

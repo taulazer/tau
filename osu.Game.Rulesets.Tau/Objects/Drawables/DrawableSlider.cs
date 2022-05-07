@@ -12,9 +12,11 @@ using osu.Framework.Platform;
 using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Graphics;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK.Graphics;
@@ -27,8 +29,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private readonly BindableFloat size = new(16f);
 
+        public float PathDistance = TauPlayfield.BaseSize.X / 2;
+
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
+        private readonly Container<DrawableSliderTick> tickContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
         private readonly CircularContainer maskingContainer;
         private readonly Cached drawCache = new();
@@ -66,14 +71,18 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            PathRadius = 4
+                            PathRadius = 4,
+                            PathDistance = PathDistance
                         },
                     }
                 },
                 headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
+                tickContainer = new Container<DrawableSliderTick> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
+
+            path.Ticks = repeatContainer;
 
             Tracking.BindValueChanged(updateSlidingSample);
         }
@@ -91,6 +100,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case DrawableSliderRepeat repeat:
                     repeatContainer.Add(repeat);
                     break;
+
+                case DrawableSliderTick tick:
+                    tickContainer.Add(tick);
+                    break;
             }
         }
 
@@ -99,6 +112,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 SliderRepeat repeat => new DrawableSliderRepeat(repeat),
                 SliderHeadBeat head => new DrawableSliderHead(head),
+                SliderTick tick => new DrawableSliderTick(tick),
                 _ => base.CreateNestedHitObject(hitObject)
             };
 
@@ -108,10 +122,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             headContainer.Clear(false);
             repeatContainer.Clear(false);
+            tickContainer.Clear(false);
         }
 
         private float convertNoteSizeToSliderSize(float beatSize)
-            => Interpolation.ValueAt(beatSize, 2f, 6f, 10f, 25f);
+            => Interpolation.ValueAt(beatSize, 2f, 7f, 10f, 25f);
 
         [BackgroundDependencyLoader]
         private void load(GameHost host)
@@ -139,6 +154,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 inversed = true;
                 maskingContainer.Masking = false;
                 path.Reverse = inversed;
+                // PathDistance = path.PathDistance = TauPlayfield.BaseSize.X;
             }
         }
 
@@ -243,14 +259,21 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     res.ForcefullyApplyResult(r => r.Type = result);
             }
 
-            ApplyResult(r => r.Type = result);
+            ApplyResult(r =>
+            {
+                r.Type = result;
+                ApplyCustomResult(r);
+            });
         }
+
+        protected override JudgementResult CreateResult(Judgement judgement)
+            => new TauJudgementResult(HitObject, judgement);
 
         [Resolved]
         private OsuColour colour { get; set; }
 
-        public double Velocity => (TauPlayfield.BaseSize.X / 2) / HitObject.TimePreempt;
-        public double FadeTime => fade_range / Velocity;
+        public double Velocity => PathDistance / HitObject.TimePreempt;
+        public double FadeTime => FADE_RANGE / Velocity;
 
         protected override void UpdateHitStateTransforms(ArmedState state)
         {

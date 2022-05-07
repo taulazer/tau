@@ -7,6 +7,9 @@ using osu.Game.Rulesets.Tau.Judgements;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
+    /// <summary>
+    /// Abstracted class to handle any angular hit objects. e.g. <see cref="DrawableBeat"/> or <see cref="DrawableSlider"/>.
+    /// </summary>
     public abstract class DrawableAngledTauHitObject<T> : DrawableTauHitObject<T>
         where T : AngledTauHitObject
     {
@@ -51,13 +54,16 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (CheckValidation == null)
                 return;
 
-            var delta = CheckValidation(HitObject.Angle + GetCurrentOffset()).DeltaFromPaddleCenter;
+            var delta = CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).DeltaFromPaddleCenter;
             var beatResult = (TauJudgementResult)result;
 
             if (result.IsHit)
                 beatResult.DeltaAngle = delta;
         }
 
+        /// <summary>
+        /// The offset to apply when checking if the <see cref="DrawableAngledTauHitObject{T}"/> is in the paddle.
+        /// </summary>
         protected virtual float GetCurrentOffset() => 0f;
     }
 }
