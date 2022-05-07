@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
     public class TauModShowoffAutoplay : ModAutoplay {
         public override IconUsage? Icon => FontAwesome.Regular.Eye;
-        public override Type[] IncompatibleMods => Array.Empty<Type>().Concat( new[] { typeof( TauModAutopilot ) } ).ToArray();
+        public override Type[] IncompatibleMods => base.IncompatibleMods.Concat( new[] { typeof( TauModAutopilot ) } ).ToArray();
 
         public override ModReplayData CreateReplayData ( IBeatmap beatmap, IReadOnlyList<Mod> mods )
             => new( new ShowoffAutoGenerator( beatmap, mods ).Generate(), new ModCreatedUser { Username = "Redez" } );
