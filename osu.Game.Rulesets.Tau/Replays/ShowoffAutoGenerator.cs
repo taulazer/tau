@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
 using osu.Game.Beatmaps;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Mods;
@@ -20,12 +21,17 @@ public class ShowoffAutoGenerator : AutoGenerator {
 
     float paddleHalfSize;
     int paddleCount = 1;
+    RotationDirection? rotationDirection;
     public ShowoffAutoGenerator ( IBeatmap beatmap, IReadOnlyList<Mod> mods ) : base( beatmap ) {
         var props = new TauCachedProperties();
         props.SetRange( beatmap.Difficulty.CircleSize );
-        paddleHalfSize = (float)(props.AngleRange.Value / 2) * 0.6f; // for safety
+        paddleHalfSize = (float)(props.AngleRange.Value / 2) * 0.65f; // it doesnt look good if we catch with the literal edge
         if ( mods.OfType<TauModDual>().FirstOrDefault() is TauModDual dual ) {
             paddleCount = dual.PaddleCount.Value;
+        }
+
+        if ( mods.OfType<TauModRoundabout>().FirstOrDefault() is TauModRoundabout round ) {
+            rotationDirection = round.Direction.Value;
         }
     }
 
@@ -41,6 +47,7 @@ public class ShowoffAutoGenerator : AutoGenerator {
     LinkedList<TauReplayFrame> createMovementFrames () {
         double lastTime = double.NegativeInfinity;
         float lastAngle = 0;
+        int paddleIndex = 0;
         Vector2 lastPosition = Centre + new Vector2( 0, -CURSOR_DISTANCE );
         LinkedList<TauReplayFrame> frames = new();
 
@@ -48,11 +55,13 @@ public class ShowoffAutoGenerator : AutoGenerator {
             switch ( i ) {
                 case Beat beat:
                     waitUntil( beat.StartTime - beat.TimePreempt );
+                    choosePaddleFor( beat.Angle );
                     moveTo( beat.Angle, beat.StartTime, lazy: isLazy( beat.Angle ) );
                     break;
 
                 case Slider slider:
                     waitUntil( slider.StartTime - slider.TimePreempt );
+                    choosePaddleFor( slider.Angle );
                     moveTo( slider.Angle, slider.StartTime, lazy: isLazy( slider.Angle ) );
                     foreach ( var node in slider.Path.Nodes ) {
                         moveTo( slider.Angle + node.Angle, slider.StartTime + node.Time, smooth: true, lazy: true );
@@ -61,8 +70,35 @@ public class ShowoffAutoGenerator : AutoGenerator {
             }
         }
 
+        float getRotationLockedDelta ( float to, float from ) {
+            var delta = Extensions.GetDeltaAngle( to, from );
+
+            if ( rotationDirection is RotationDirection.Clockwise ) {
+                if ( delta < 0 )
+                    delta += 360;
+            }
+            else if ( rotationDirection is RotationDirection.Counterclockwise ) {
+                if ( delta > 0 )
+                    delta -= 360;
+            }
+
+            return delta;
+        }
+
+        void choosePaddleFor ( float angle ) {
+            paddleIndex = Enumerable.Range( 0, paddleCount )
+                .MinBy( x =>
+                    ( MathF.Abs( Extensions.GetDeltaAngle( angle, lastAngle + x * 360f / paddleCount ) ) <= paddleHalfSize ? 0 : 1 ) *
+                    MathF.Abs( getRotationLockedDelta( angle, lastAngle + x * 360f / paddleCount ) )
+                );
+        }
+
+        float getRawDeltaAngle ( float to ) {
+            return Extensions.GetDeltaAngle( to, lastAngle + paddleIndex * 360f / paddleCount );
+        }
+
         float getDeltaAngle ( float to ) {
-            return Extensions.GetDeltaAngle( to, lastAngle );
+            return getRotationLockedDelta( to, lastAngle + paddleIndex * 360f / paddleCount );
         }
 
         bool isLazy ( float angle ) {
@@ -87,23 +123,23 @@ public class ShowoffAutoGenerator : AutoGenerator {
         }
 
         bool moveTo ( float angle, double time, bool smooth = false, bool lazy = false ) {
-            bool moved = true;
             var duration = time - lastTime;
+            var rawDelta = getRawDeltaAngle( angle );
             var delta = getDeltaAngle( angle );
 
-            if ( MathF.Abs( delta ) <= paddleHalfSize ) {
-                moved = false;
-                angle = lastAngle;
+            if ( MathF.Abs( rawDelta ) <= paddleHalfSize ) {
+                addAngleFrame( time, lastAngle, CURSOR_DISTANCE );
+                return false;
             }
-            else if ( lazy ) {
-                angle = lastAngle + ( delta - MathF.Sign( delta ) * paddleHalfSize );
+            else if ( lazy && MathF.Abs( delta ) < 180 /* roundabout doesnt let you catch in the opposite direction */ ) {
+                angle = lastAngle + delta - MathF.Sign( delta ) * paddleHalfSize;
             }
 
-            if ( !smooth || duration == 0 ) {
-                addAngleFrame( time, angle, CURSOR_DISTANCE );
+            if ( duration == 0 || ( !smooth && rotationDirection is null ) ) {
+                addAngleFrame( time, lastAngle + delta, CURSOR_DISTANCE );
             }
             else {
-                int steps = (int)(MathF.Abs( delta ) / 5);
+                int steps = (int)(MathF.Abs( delta ) / ( smooth ? 5 : 45 ));
                 var startTime = lastTime;
                 var startAngle = lastAngle;
                 for ( int i = 0; i <= steps; i++ ) {
@@ -111,7 +147,7 @@ public class ShowoffAutoGenerator : AutoGenerator {
                 }
             }
 
-            return moved;
+            return true;
         }
 
         return frames;

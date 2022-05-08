@@ -41,8 +41,11 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
 
-        [BackgroundDependencyLoader]
+        [BackgroundDependencyLoader(permitNulls: true)]
         private void load ( IReadOnlyList<Mod> mods ) {
+            if ( mods is null )
+                return;
+
             rotationLock = mods.OfType<TauModRoundabout>().FirstOrDefault()?.Direction.Value;
             var dualMod = mods.OfType<TauModDual>().FirstOrDefault();
             if ( dualMod != null ) {

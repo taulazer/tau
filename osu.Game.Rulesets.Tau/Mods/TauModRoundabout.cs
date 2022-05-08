@@ -30,6 +30,6 @@ namespace osu.Game.Rulesets.Tau.Mods {
             ((TauBeatmapConverter)beatmapConverter).LockedDirection = Direction.Value;
         }
 
-        public override Type[] IncompatibleMods => new Type[] { typeof(ModAutoplay) };
+        public override Type[] IncompatibleMods => new Type[] { typeof(TauModAutoplay) };
     }
 }

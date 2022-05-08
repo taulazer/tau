@@ -181,7 +181,11 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 return convertToNonSlider(original);
 
             var nodes = new List<SliderNode>();
-            var direction = Math.Sign(getHitObjectAngle(beatmap.HitObjects.GetPrevious(original)));
+            var direction = LockedDirection switch {
+                RotationDirection.Clockwise => 1,
+                RotationDirection.Counterclockwise => -1,
+                _ => Math.Sign( getHitObjectAngle( beatmap.HitObjects.GetPrevious( original ) ) )
+            }; 
 
             if (direction == 0)
                 direction = 1; // Direction should always default to Clockwise.
@@ -205,6 +209,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 }
             }
 
+            lastLockedAngle = currentAngle - 90 * direction;
             return new Slider
             {
                 Samples = original.Samples,
