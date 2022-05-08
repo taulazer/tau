@@ -2,8 +2,8 @@
 {
     public enum KiaiType
     {
-        Turbulent,
+        Turbulence,
         Classic,
-        Disabled
+        None
     }
 }

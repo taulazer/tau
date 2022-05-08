@@ -4,7 +4,7 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public abstract class TauSkinnableTestScene : SkinnableTestScene
+    public class TauSkinnableTestScene : SkinnableTestScene
     {
         private Container content;
 

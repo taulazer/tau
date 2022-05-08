@@ -15,6 +15,11 @@ namespace osu.Game.Rulesets.Tau.UI
         {
         }
 
+        private SettingsCheckbox showEffects;
+        private SettingsCheckbox showSliderEffects;
+        private SettingsCheckbox showVisualizer;
+        private SettingsEnumDropdown<KiaiType> kiaiType;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -25,35 +30,47 @@ namespace osu.Game.Rulesets.Tau.UI
 
             Children = new Drawable[]
             {
-                new SettingsCheckbox
+                showEffects = new SettingsCheckbox
+                {
+                    LabelText = "Show Effects",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowEffects)
+                },
+                showSliderEffects = new SettingsCheckbox
+                {
+                    LabelText = "Show Slider Effects",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowSliderEffects)
+                },
+                showVisualizer = new SettingsCheckbox
                 {
                     LabelText = "Show Visualizer",
                     Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
                 },
-                new SettingsCheckbox
+                kiaiType = new SettingsEnumDropdown<KiaiType>()
                 {
-                    LabelText = "Hit lighting",
-                    Current = config.GetBindable<bool>(TauRulesetSettings.HitLighting),
+                    LabelText = "Kiai Type",
+                    Current = config.GetBindable<KiaiType>(TauRulesetSettings.KiaiType)
                 },
                 new SettingsSlider<float>
                 {
-                    LabelText = "Playfield dim",
+                    LabelText = "Playfield Dim",
                     Current = config.GetBindable<float>(TauRulesetSettings.PlayfieldDim),
                     KeyboardStep = 0.01f,
                     DisplayAsPercentage = true
                 },
                 new SettingsSlider<float>
                 {
-                    LabelText = "Beat Size",
-                    Current = config.GetBindable<float>(TauRulesetSettings.BeatSize),
+                    LabelText = "Notes Size",
+                    Current = config.GetBindable<float>(TauRulesetSettings.NotesSize),
                     KeyboardStep = 1f
                 },
-                new SettingsEnumDropdown<KiaiType>
-                {
-                    LabelText = "Kiai Effect",
-                    Current = config.GetBindable<KiaiType>(TauRulesetSettings.KiaiEffect),
-                }
             };
+
+            showEffects.Current.BindValueChanged(v =>
+            {
+                showSliderEffects.Current.Disabled = !v.NewValue;
+                showVisualizer.Current.Disabled = !v.NewValue;
+                kiaiType.Current.Disabled = !v.NewValue;
+            }, true);
         }
     }
 }

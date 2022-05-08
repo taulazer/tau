@@ -14,19 +14,11 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-
-            // Calculated from osu!stable as 512 (default gamefield size) / 640 (default window size)
             Size = new Vector2(.6f);
+            FillMode = FillMode.Fit;
+            FillAspectRatio = 1;
 
-            InternalChild = new Container
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                FillMode = FillMode.Fit,
-                FillAspectRatio = 1,
-                Child = content = new ScalingContainer { RelativeSizeAxes = Axes.Both }
-            };
+            InternalChild = content = new ScalingContainer { RelativeSizeAxes = Axes.Both };
         }
 
         /// <summary>
@@ -38,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 base.Update();
 
-                Scale = new Vector2(Parent.ChildSize.X / TauPlayfield.BASE_SIZE.X);
+                Scale = new Vector2(Parent.ChildSize.X / TauPlayfield.BaseSize.X);
 
                 Size = Vector2.Divide(Vector2.One, Scale);
             }

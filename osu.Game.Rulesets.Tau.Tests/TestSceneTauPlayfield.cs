@@ -1,35 +1,27 @@
-﻿using System;
-using osu.Framework.Graphics;
-using osu.Framework.IO.Stores;
-using osu.Game.Beatmaps.ControlPoints;
-using osu.Game.Rulesets.Tau.Beatmaps;
+﻿using osu.Framework.Graphics;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Tau.UI;
-using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneTauPlayfield : TauSkinnableTestScene
+    public class TestSceneTauPlayfield : TauTestScene
     {
         public TestSceneTauPlayfield()
         {
-            TauBeatmap beatmap;
-
-            AddStep("set beatmap", () =>
+            Add(new TauPlayfieldAdjustmentContainer
             {
-                Beatmap.Value = CreateWorkingBeatmap(beatmap = new TauBeatmap());
-                beatmap.ControlPointInfo.Add(0, new TimingControlPoint { BeatLength = 1000 });
-                Beatmap.Value.Track.Start();
+                Children = new Drawable[]
+                {
+                    new Box
+                    {
+                        Colour = Color4.Red,
+                        Alpha = 0.2f,
+                        RelativeSizeAxes = Axes.Both
+                    },
+                    new TauPlayfield()
+                }
             });
-
-            AddStep("Load playfield", () => SetContents(_ => new TauPlayfield(Beatmap.Value.BeatmapInfo.Difficulty)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.6f),
-                FillAspectRatio = 1,
-                FillMode = FillMode.Fit
-            }));
         }
     }
 }

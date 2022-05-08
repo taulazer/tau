@@ -1,27 +1,30 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneBeat : TauSkinnableTestScene
+    public class TestSceneBeat : TauTestScene
     {
         private int depthIndex;
 
         public TestSceneBeat()
         {
-            AddStep("Miss Single", () => SetContents(_ => testSingle()));
-            AddStep("Hit Single", () => SetContents(_ => testSingle(true)));
-            AddStep("Miss Stream", () => SetContents(_ => testStream()));
-            AddStep("Hit Stream", () => SetContents(_ => testStream(true)));
-            AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject hitObject && hitObject.AllJudged == false));
+            TauPlayfieldAdjustmentContainer container;
+            Add(container = new TauPlayfieldAdjustmentContainer());
+
+            AddStep("Miss Single", () => container.Child = testSingle());
+            AddStep("Hit Single", () => container.Child = testSingle(true));
+            AddStep("Miss Stream", () => Add(testStream()));
+            AddStep("Hit Stream", () => Add(testStream(true)));
+            AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject<Beat> { AllJudged: false }));
         }
 
         private Drawable testSingle(bool auto = false, double timeOffset = 0, float angle = 0)
@@ -44,10 +47,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
 
         private Drawable testStream(bool auto = false)
         {
-            var playfield = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-            };
+            var playfield = new TauPlayfieldAdjustmentContainer();
 
             for (int i = 0; i <= 1000; i += 100)
             {

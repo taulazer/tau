@@ -10,18 +10,14 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public void ApplyToHitObject(HitObject hitObject)
         {
-            var tauObject = (TauHitObject)hitObject;
-            while (tauObject.Angle < 0) tauObject.Angle += 360;
-            tauObject.Angle %= 360;
+            if (hitObject is not IHasAngle angledHitObject)
+                return;
 
-            var newAngle = 0.0f;
+            var newAngle = angledHitObject.Angle;
+            newAngle -= 180;
+            newAngle.NormalizeAngle();
 
-            if (tauObject.Angle >= 0 && tauObject.Angle < 180)
-                newAngle = 90 + (90 - tauObject.Angle);
-            else if (tauObject.Angle >= 180)
-                newAngle = 270 + (270 - tauObject.Angle);
-
-            tauObject.Angle = newAngle;
+            angledHitObject.Angle = newAngle;
         }
     }
 }

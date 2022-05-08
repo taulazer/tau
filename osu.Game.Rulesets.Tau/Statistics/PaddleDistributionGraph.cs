@@ -8,9 +8,15 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Testing;
 using osu.Game.Beatmaps;
+using osu.Game.Graphics;
+using osu.Game.Graphics.Sprites;
+using osu.Game.Overlays;
+using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Screens.Ranking.Expanded.Accuracy;
 using osuTK;
 using osuTK.Graphics;
@@ -19,36 +25,73 @@ namespace osu.Game.Rulesets.Tau.Statistics
 {
     public class PaddleDistributionGraph : CompositeDrawable
     {
-        private readonly IReadOnlyList<HitEvent> hitEvents;
+        private Container beatsBarContainer;
+        private Container slidersBarContainer;
 
-        private const float bin_per_angle = 1f;
-        private readonly float angleRange;
-        private Container barsContainer;
+        private readonly TauCachedProperties properties = new();
+        private readonly IReadOnlyList<HitEvent> beatHitEvents;
+        private readonly IReadOnlyList<HitEvent> sliderHitEvents;
+
+        private readonly BindableBool showSliders = new(true);
+        private readonly BindableBool showBeats = new(true);
+
+        private double angleRange => properties.AngleRange.Value;
 
         public PaddleDistributionGraph(IReadOnlyList<HitEvent> hitEvents, IBeatmap beatmap)
         {
-            this.hitEvents = hitEvents.Where(e => !(e.HitObject.HitWindows is HitWindows.EmptyHitWindows) && e.HitObject is Beat && e.Result.IsHit()).ToList();
-
-            angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(beatmap.BeatmapInfo.Difficulty.CircleSize, 75, 25, 10);
+            beatHitEvents = hitEvents.Where(e => e.HitObject.HitWindows is not HitWindows.EmptyHitWindows && e.HitObject is Beat && e.Result.IsHit()).ToList();
+            sliderHitEvents = hitEvents.Where(e => e.HitObject is Slider && e.Result.IsHit()).ToList(); // Note that this will only count the end of the sliders.
+            properties.SetRange(beatmap.Difficulty.CircleSize);
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            if (hitEvents == null || hitEvents.Count == 0)
+            if (beatHitEvents == null || beatHitEvents.Count == 0)
                 return;
 
-            var paddedAngleRange = angleRange + (1 * 2); // 2° padding horizontally
+            var paddedAngleRange = angleRange + 2; // 2° padding horizontally
 
             FillMode = FillMode.Fit;
 
             InternalChildren = new Drawable[]
             {
-                barsContainer = new Container
+                new FillFlowContainer()
+                {
+                    Width = 150,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new Vector2(4),
+                    Children = new Drawable[]
+                    {
+                        new DistributionCheckbox
+                        {
+                            LabelText = "Sliders",
+                            Current = { BindTarget = showSliders }
+                        },
+                        new DistributionCheckbox(OverlayColourScheme.Green)
+                        {
+                            LabelText = "Beats",
+                            Current = { BindTarget = showBeats },
+                        }
+                    }
+                },
+                beatsBarContainer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     RelativePositionAxes = Axes.Y,
-                    Y = 0.06f,
+                    Y = 0.05f,
+                    Scale = new Vector2(1),
+                    FillAspectRatio = 1,
+                    FillMode = FillMode.Fit,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                },
+                slidersBarContainer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Y,
+                    Y = 0.05f,
                     Scale = new Vector2(1),
                     FillAspectRatio = 1,
                     FillMode = FillMode.Fit,
@@ -106,7 +149,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
                             Height = 0.26f,
-                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(-0.2f)),
+                            Colour = ColourInfo.GradientVertical(Color4.White, Color4.White.Opacity(-0.1f)),
                         }
                     }
                 },
@@ -137,7 +180,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                             Origin = Anchor.Centre,
                             Current = new BindableDouble(paddedAngleRange / 360),
                             InnerRadius = 0.05f,
-                            Rotation = -paddedAngleRange / 2,
+                            Rotation = (float)(-paddedAngleRange / 2),
                             Y = 0.0035f
                         }
                     }
@@ -145,33 +188,56 @@ namespace osu.Game.Rulesets.Tau.Statistics
             };
 
             createBars();
+
+            showSliders.BindValueChanged(v => { slidersBarContainer.FadeTo(v.NewValue ? 1f : 0.25f, 500, Easing.OutQuint); });
+            showBeats.BindValueChanged(v => { beatsBarContainer.FadeTo(v.NewValue ? 1f : 0.25f, 500, Easing.OutQuint); });
         }
 
         private void createBars()
         {
             float radius = Height * 2;
-            int totalDistributionBins = (int)(angleRange / bin_per_angle) + 1;
+            int totalDistributionBins = (int)angleRange + 1;
 
-            int[] bins = new int[totalDistributionBins];
+            int[] beatBins = calculateBins(totalDistributionBins, beatHitEvents);
+            int[] sliderBins = calculateBins(totalDistributionBins, sliderHitEvents);
+
+            int maxBeatCount = beatBins.Max();
+            int maxSliderCount = sliderBins.Max();
+
+            if (maxSliderCount > 0)
+                for (int i = 0; i < sliderBins.Length; i++)
+                    slidersBarContainer.Add(new Bar
+                    {
+                        Origin = Anchor.TopLeft,
+                        Colour = sliderBins.Length / 2 == i ? Color4.White : Color4Extensions.FromHex("#00AAFF"),
+                        Height = Math.Max(0.075f, (float)sliderBins[i] / maxSliderCount) * 0.3f,
+                        Position = Extensions.FromPolarCoordinates(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
+                    });
+
+            if (maxBeatCount > 0)
+                for (int i = 0; i < beatBins.Length; i++)
+                    beatsBarContainer.Add(new Bar
+                    {
+                        Colour = sliderBins.Length / 2 == i ? Color4.White : Color4Extensions.FromHex("#66FFCC"),
+                        Height = Math.Max(0.075f, (float)beatBins[i] / maxBeatCount) * 0.3f,
+                        Position = Extensions.FromPolarCoordinates(radius - 17, i - (float)(angleRange / 2)) + new Vector2(0, radius),
+                    });
+        }
+
+        private int[] calculateBins(int totalBins, IReadOnlyList<HitEvent> hitEvents)
+        {
+            int[] bins = new int[totalBins];
 
             foreach (var hit in hitEvents)
             {
                 var angle = hit.Position?.X ?? 0;
-                angle += angleRange / 2;
+                angle += (float)angleRange / 2;
+                var index = Math.Clamp((int)MathF.Round(angle), 0, (int)angleRange);
 
-                var index = MathF.Round((int)(angle / bin_per_angle), MidpointRounding.AwayFromZero);
-
-                bins[(int)index]++;
+                bins[index]++;
             }
 
-            int maxCount = bins.Max();
-
-            for (int i = 0; i < bins.Length; i++)
-                barsContainer.Add(new Bar
-                {
-                    Height = Math.Max(0.075f, (float)bins[i] / maxCount) * 0.3f,
-                    Position = Extensions.GetCircularPosition(radius - 17, (i * bin_per_angle) - (angleRange / 2)) + new Vector2(0, radius),
-                });
+            return bins;
         }
 
         private class Bar : CompositeDrawable
@@ -179,16 +245,33 @@ namespace osu.Game.Rulesets.Tau.Statistics
             public Bar()
             {
                 Anchor = Anchor.TopCentre;
-                Origin = Anchor.TopCentre;
+                Origin = Anchor.TopRight;
 
                 RelativeSizeAxes = Axes.Y;
-                Width = 5;
+                Width = 2.5f;
 
-                InternalChild = new Circle
+                InternalChild = new Circle { RelativeSizeAxes = Axes.Both };
+            }
+        }
+
+        private class DistributionCheckbox : SettingsCheckbox
+        {
+            [Cached]
+            private OverlayColourProvider colourProvider;
+
+            public DistributionCheckbox(OverlayColourScheme scheme = OverlayColourScheme.Blue)
+            {
+                colourProvider = new OverlayColourProvider(scheme);
+            }
+
+            [BackgroundDependencyLoader]
+            private void load()
+            {
+                Current.BindValueChanged(v =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4Extensions.FromHex("#66FFCC")
-                };
+                    var spriteText = Control.ChildrenOfType<OsuSpriteText>().FirstOrDefault();
+                    spriteText.Font = OsuFont.GetFont(weight: v.NewValue ? FontWeight.SemiBold : FontWeight.Regular);
+                }, true);
             }
         }
     }

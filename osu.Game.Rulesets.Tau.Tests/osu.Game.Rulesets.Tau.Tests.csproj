@@ -1,30 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <StartupObject>osu.Game.Rulesets.Tau.Tests.VisualTestRunner</StartupObject>
-    <LangVersion>8</LangVersion>
-  </PropertyGroup>
-  <ItemGroup Label="Service">
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
-  <PropertyGroup>
-    <GenerateProgramFile>false</GenerateProgramFile>
-    <AssemblyName>osu.Game.Rulesets.Tau.Tests</AssemblyName>
-  </PropertyGroup>
-  <ItemGroup Label="Package References">
-    <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\osu.Game.Rulesets.Tau\osu.Game.Rulesets.Tau.csproj" />
-  </ItemGroup>
-  <PropertyGroup Label="Project">
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>osu.Game.Rulesets.Tau.Tests</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\**\*" />
-  </ItemGroup>
+    <PropertyGroup>
+        <StartupObject>osu.Game.Rulesets.Tau.Tests.VisualTestRunner</StartupObject>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+    <ItemGroup Label="Service">
+        <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    </ItemGroup>
+    <PropertyGroup>
+        <GenerateProgramFile>false</GenerateProgramFile>
+        <AssemblyName>osu.Game.Rulesets.Tau.Tests</AssemblyName>
+    </PropertyGroup>
+    <ItemGroup Label="Package References">
+        <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\osu.Game.Rulesets.Tau\osu.Game.Rulesets.Tau.csproj" />
+    </ItemGroup>
+    <PropertyGroup Label="Project">
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>osu.Game.Rulesets.Tau.Tests</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\**\*" />
+    </ItemGroup>
 </Project>

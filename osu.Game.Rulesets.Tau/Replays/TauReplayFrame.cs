@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using osu.Game.Beatmaps;
 using osu.Game.Replays.Legacy;
 using osu.Game.Rulesets.Replays;
@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Tau.Replays
 {
     public class TauReplayFrame : ReplayFrame, IConvertibleReplayFrame
     {
-        public List<TauAction> Actions = new List<TauAction>();
+        public List<TauAction> Actions = new();
         public Vector2 Position;
 
         public TauReplayFrame()
@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Replays
 
         public LegacyReplayFrame ToLegacy(IBeatmap beatmap)
         {
-            ReplayButtonState state = ReplayButtonState.None;
+            var state = ReplayButtonState.None;
 
             if (Actions.Contains(TauAction.LeftButton)) state |= ReplayButtonState.Left1;
             if (Actions.Contains(TauAction.RightButton)) state |= ReplayButtonState.Right1;

@@ -2,15 +2,17 @@
 {
     public class DrawableSliderHead : DrawableBeat
     {
-        public new SliderHeadBeat HitObject => (SliderHeadBeat)base.HitObject;
+        public DrawableSlider DrawableSlider => (DrawableSlider)ParentHitObject;
 
         public DrawableSliderHead()
         {
         }
 
-        public DrawableSliderHead(SliderHeadBeat obj)
-            : base(obj)
+        public DrawableSliderHead(Beat hitObject)
+            : base(hitObject)
         {
         }
+
+        protected override float GetCurrentOffset() => DrawableSlider.HitObject.Angle;
     }
 }

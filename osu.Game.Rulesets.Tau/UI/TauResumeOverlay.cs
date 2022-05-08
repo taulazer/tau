@@ -1,32 +1,34 @@
 ﻿using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
-using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Screens.Play;
 using osuTK;
 using osuTK.Graphics;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
     public class TauResumeOverlay : ResumeOverlay
     {
-        private readonly float angleRange;
+        [Resolved]
+        private TauCachedProperties properties { get; set; }
+
+        private double angleRange => properties.AngleRange.Value;
+
         private TauClickToResumeContainer clickContainer;
         private Container container;
-        private AbsoluteCursor absoluteCursor;
+        private TauCursor cursor;
 
         protected override string Message => "Move the cursor to the highlighted area.";
-
-        public TauResumeOverlay(BeatmapDifficulty difficulty)
-        {
-            angleRange = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.CircleSize, 75, 25, 10);
-        }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -36,36 +38,39 @@ namespace osu.Game.Rulesets.Tau.UI
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(4),
-                FillAspectRatio = 1, // 1:1
+                Size = new Vector2(4f),
+                FillAspectRatio = 1,
                 FillMode = FillMode.Fit,
-                Alpha = 0f,
                 Children = new Drawable[]
                 {
-                    clickContainer = new TauClickToResumeContainer(angleRange)
+                    new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Black,
+                        Alpha = 0.25f
+                    },
+                    clickContainer = new TauClickToResumeContainer()
                     {
                         RelativeSizeAxes = Axes.Both,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Colour = Color4.Orange,
                         Current = new BindableDouble((angleRange / 360) * 0.25f),
                         ResumeRequested = Resume
                     }
                 }
             });
 
-            Add(absoluteCursor = new AbsoluteCursor
-            {
-                Alpha = 0
-            });
+            Add(cursor = new TauCursor());
         }
 
         protected override void PopIn()
         {
             base.PopIn();
 
-            absoluteCursor.Show();
-            clickContainer.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(ToScreenSpace(GameplayCursor.ActiveCursor.DrawPosition)) - ((angleRange * 0.25f) / 2);
+            GameplayCursor.ActiveCursor.Hide();
+            cursor.Show();
+            clickContainer.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(ToScreenSpace(GameplayCursor.ActiveCursor.DrawPosition)) -
+                                      (((float)angleRange * 0.25f) / 2);
             container.FadeIn(200);
         }
 
@@ -73,55 +78,77 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             base.PopOut();
             container.FadeOut(200);
-            absoluteCursor.Hide();
+            cursor.Hide();
+            GameplayCursor?.ActiveCursor?.Show();
         }
 
         private class TauClickToResumeContainer : CircularProgress, IKeyBindingHandler<TauAction>
         {
-            public override bool Contains(Vector2 screenSpacePos) => CheckForValidation(ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(screenSpacePos) - 90);
+            public override bool Contains(Vector2 screenSpacePos)
+                => checkForValidation(ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(screenSpacePos) - 90);
 
-            public bool CheckForValidation(float angle)
+            private bool checkForValidation(float angle)
             {
-                var rotation = Rotation + 270;
+                var rotation = Rotation - 90;
+                rotation.NormalizeAngle();
 
-                if (rotation >= 360)
-                    rotation -= 360;
+                var range = ((float)angleRange / 2) * 0.25;
+                var delta = Math.Abs(Extensions.GetDeltaAngle((float)(rotation + (range)), angle));
 
-                if (angle < rotation)
-                    return false;
-
-                var range = Rotation + 270 + (AngleRange * 0.25f);
-
-                if (range >= 360)
-                    range -= 360;
-
-                if (angle > range)
-                    return false;
-
-                return true;
+                return !(delta > range);
             }
 
+            [Resolved]
+            private TauCachedProperties properties { get; set; }
+
+            private double angleRange => properties.AngleRange.Value;
+
             public Action ResumeRequested;
-            public readonly float AngleRange;
 
-            public TauClickToResumeContainer(float angleRange)
+            public TauClickToResumeContainer()
             {
-                AngleRange = angleRange;
                 RelativeSizeAxes = Axes.Both;
+                Colour = Color4Extensions.FromHex(@"FF0040");
+                Texture = generateTexture(0.25f);
+            }
 
-                Alpha = 0.25f;
+            private Texture generateTexture(float opacity)
+            {
+                const int width = 128;
+
+                var image = new Image<Rgba32>(width, 1);
+
+                var gradientTextureHorizontal = new Texture(1, width, true);
+
+                image.ProcessPixelRows(rows =>
+                {
+                    var row = rows.GetRowSpan(0);
+
+                    for (int i = 0; i < width; i++)
+                    {
+                        var alpha = (float)i / (width - 1);
+                        alpha = 1 - alpha;
+                        alpha *= opacity;
+                        alpha += 0.025f;
+                        row[i] = new Rgba32(1f, 1f, 1f, alpha);
+                    }
+                });
+
+                gradientTextureHorizontal.SetData(new TextureUpload(image));
+
+                return gradientTextureHorizontal;
             }
 
             protected override bool OnHover(HoverEvent e)
             {
-                this.FadeTo(0.5f, 200);
+                this.FadeColour(Color4Extensions.FromHex(@"00FFAA"), 200);
 
                 return base.OnHover(e);
             }
 
             protected override void OnHoverLost(HoverLostEvent e)
             {
-                this.FadeTo(0.25f, 200);
+                this.FadeColour(Color4Extensions.FromHex(@"FF0040"), 200);
 
                 base.OnHoverLost(e);
             }

@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
@@ -14,13 +14,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected SkinnableLighting Lighting { get; private set; }
 
         [Resolved]
-        private TauRulesetConfigManager config { get; set; }
+        private OsuConfigManager config { get; set; }
 
         [Resolved(canBeNull: true)]
-        private TauPlayfield playfield { get; set; }
+        private TauCachedProperties properties { get; set; }
 
-        [BackgroundDependencyLoader]
-        private void load()
+        public DrawableTauJudgement()
         {
             RelativePositionAxes = Axes.Both;
             Scale = new Vector2(1.66f);
@@ -44,21 +43,26 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Lighting.ResetAnimation();
             Lighting.SetColourFrom(JudgedObject, Result);
 
-            var angle = 0f;
+            var angle = JudgedObject switch
+            {
+                DrawableAngledTauHitObject<Slider> { HitObject: IHasOffsetAngle ang } => ang.GetAbsoluteAngle(),
+                DrawableAngledTauHitObject<Beat> { HitObject: IHasOffsetAngle ang } => ang.GetAbsoluteAngle(),
+                DrawableBeat b => b.HitObject.Angle,
+                _ => 0f
+            };
 
-            if (JudgedObject is DrawableBeat b)
-                angle = b.HitObject.Angle;
+            var distance = 0.6f;
 
-            if (JudgedObject is DrawableSlider s)
-                angle = s.HitObject.Nodes.Last().Angle;
+            if (properties != null && properties.InverseModEnabled.Value)
+                distance = 0.4f;
 
-            Position = Extensions.GetCircularPosition((playfield?.Inversed ?? false) ? .3f : .6f, angle);
+            Position = Extensions.FromPolarCoordinates(distance, angle);
             Rotation = angle;
         }
 
         protected override void ApplyHitAnimations()
         {
-            var hitLightingEnabled = config.Get<bool>(TauRulesetSettings.HitLighting);
+            var hitLightingEnabled = config.Get<bool>(OsuSetting.HitLighting);
 
             Lighting.Alpha = 0;
 

@@ -1,108 +1,221 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Graphics;
+using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Replays;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
-using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Replays
 {
-    public class TauAutoGenerator : AutoGenerator
+    public class TauAutoGenerator : TauAutoGeneratorBase
     {
-        protected Replay Replay;
-
         public new Beatmap<TauHitObject> Beatmap => (Beatmap<TauHitObject>)base.Beatmap;
 
-        /// <summary>
-        /// The "reaction time" in ms between "seeing" a new hit object and moving to "react" to it.
-        /// </summary>
-        private const double reaction_time = 200;
+        #region Constants
 
-        public TauAutoGenerator(IBeatmap beatmap)
-            : base(beatmap)
+        /// <summary>
+        /// What easing to use when moving between hitobjects
+        /// </summary>
+        private Easing preferredEasing => Easing.Out;
+
+        #endregion
+
+        #region Construction / Initialization
+
+        public TauAutoGenerator(IBeatmap beatmap, IReadOnlyList<Mod> mods)
+            : base(beatmap, mods)
         {
-            Replay = new Replay();
         }
 
-        /// <summary>
-        /// Which button (left or right) to use for the current hitobject.
-        /// Even means LMB will be used to click, odd means RMB will be used.
-        /// This keeps track of the button previously used for alt/singletap logic.
-        /// </summary>
-        private int buttonIndex;
+        #endregion
 
-        private const float offset = 768 / 2f;
-        private const float cursor_distance = 250;
+        #region Generator
+
+        private int buttonIndex1;
+
+        private int buttonIndex2;
 
         public override Replay Generate()
         {
-            //add some frames at the beginning so the cursor doesnt suddenly appear on the first note
-            Replay.Frames.Add(new TauReplayFrame(-100000, new Vector2(offset, offset + 150)));
-            Replay.Frames.Add(new TauReplayFrame(Beatmap.HitObjects[0].StartTime - reaction_time, new Vector2(offset, offset + 150)));
+            if (Beatmap.HitObjects.Count == 0)
+                return Replay;
 
-            float prevAngle = 0;
-            double lastTime = 0;
+            buttonIndex1 = 0;
+            buttonIndex2 = 0;
 
-            for (int i = 0; i < Beatmap.HitObjects.Count; i++)
+            AddFrameToReplay(new TauReplayFrame(-100000, new Vector2(Offset, Offset + 150)));
+
+            foreach (var h in Beatmap.HitObjects)
+                addHitObjectReplay(h);
+
+            return Replay;
+        }
+
+        private void addHitObjectReplay(TauHitObject h)
+        {
+            var lastFrame = (TauReplayFrame)Frames[^1];
+            var startPosition = h switch
             {
-                TauHitObject h = Beatmap.HitObjects[i];
-                double releaseDelay = KEY_UP_DELAY;
+                IHasAngle ang => getGameplayPositionFromAngle(ang.Angle),
+                _ => lastFrame.Position
+            };
 
-                if (i + 1 < Beatmap.HitObjects.Count)
-                    releaseDelay = Math.Min(KEY_UP_DELAY, Beatmap.HitObjects[i + 1].StartTime - h.GetEndTime());
+            // Do some nice easing for cursor movements
+            if (Frames.Count > 0)
+            {
+                moveToHitObject(h, startPosition, preferredEasing);
+            }
 
-                switch (h)
+            addHitObjectClickFrames(h, startPosition);
+        }
+
+        private void moveToHitObject(TauHitObject h, Vector2 targetPos, Easing easing)
+        {
+            var lastFrame = (TauReplayFrame)Frames[^1];
+
+            var waitTime = h.StartTime - Math.Max(0.0, h.TimePreempt - getReactionTime(h.StartTime - h.TimePreempt));
+            var hasWaited = false;
+
+            if (waitTime > lastFrame.Time)
+            {
+                lastFrame = new TauReplayFrame(waitTime, lastFrame.Position) { Actions = lastFrame.Actions };
+                hasWaited = true;
+                AddFrameToReplay(lastFrame);
+            }
+
+            var timeDifference = ApplyModsToTimeDelta(lastFrame.Time, h.StartTime);
+            var lastLastFrame = Frames.Count >= 2 ? (TauReplayFrame)Frames[^2] : null;
+
+            if (timeDifference > 0)
+            {
+                if (lastLastFrame != null && lastFrame is TauKeyUpReplayFrame && !hasWaited)
                 {
-                    case Slider slider:
-                        //Make the cursor stay at the last note's position if there's enough time between the notes
-                        if (i > 0 && h.StartTime - lastTime > reaction_time)
-                        {
-                            Replay.Frames.Add(new TauReplayFrame(h.StartTime - reaction_time, Extensions.GetCircularPosition(cursor_distance, prevAngle) + new Vector2(offset)));
+                    lastFrame.Position = Interpolation.ValueAt(lastFrame.Time, lastFrame.Position, targetPos, lastLastFrame.Time, h.StartTime, easing);
+                }
 
-                            buttonIndex = (int)TauAction.LeftButton;
-                        }
+                var lastPosition = lastFrame.Position;
 
-                        var buttonUsed = (TauAction)(buttonIndex++ % 2);
-
-                        foreach (var node in slider.Nodes)
-                        {
-                            Replay.Frames.Add(new TauReplayFrame(h.StartTime + node.Time, Extensions.GetCircularPosition(cursor_distance, node.Angle) + new Vector2(offset), buttonUsed));
-                        }
-
-                        Replay.Frames.Add(new TauReplayFrame(h.GetEndTime() + releaseDelay, ((TauReplayFrame)Replay.Frames.Last()).Position));
-                        prevAngle = slider.Nodes.Last().Angle;
-                        lastTime = h.GetEndTime() + releaseDelay;
-
-                        break;
-
-                    case HardBeat _:
-                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, ((TauReplayFrame)Replay.Frames.Last()).Position, TauAction.HardButton1));
-                        Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, ((TauReplayFrame)Replay.Frames.Last()).Position));
-                        lastTime = h.GetEndTime() + releaseDelay;
-
-                        break;
-
-                    case Beat _:
-                        //Make the cursor stay at the last note's position if there's enough time between the notes
-                        if (i > 0 && h.StartTime - lastTime > reaction_time)
-                        {
-                            Replay.Frames.Add(new TauReplayFrame(h.StartTime - reaction_time, Extensions.GetCircularPosition(cursor_distance, prevAngle) + new Vector2(offset)));
-
-                            buttonIndex = (int)TauAction.LeftButton;
-                        }
-
-                        Replay.Frames.Add(new TauReplayFrame(h.StartTime, Extensions.GetCircularPosition(cursor_distance, h.Angle) + new Vector2(offset), (TauAction)(buttonIndex++ % 2)));
-                        Replay.Frames.Add(new TauReplayFrame(h.StartTime + releaseDelay, Extensions.GetCircularPosition(cursor_distance, h.Angle) + new Vector2(offset)));
-                        prevAngle = h.Angle;
-                        lastTime = h.GetEndTime() + releaseDelay;
-
-                        break;
+                for (double time = lastFrame.Time + GetFrameDelay(lastFrame.Time); time < h.StartTime; time += GetFrameDelay(time))
+                {
+                    Vector2 currentPosition = Interpolation.ValueAt(time, lastPosition, targetPos, lastFrame.Time, h.StartTime, easing);
+                    AddFrameToReplay(new TauReplayFrame((int)time, new Vector2(currentPosition.X, currentPosition.Y)) { Actions = lastFrame.Actions });
                 }
             }
 
-            return Replay;
+            if (h is HardBeat)
+            {
+                // Start alternating once the time separation is too small (faster than ~225BPM).
+                if (timeDifference is > 0 and < 266)
+                    buttonIndex2++;
+                else
+                    buttonIndex2 = 0;
+            }
+            else
+            {
+                // Start alternating once the time separation is too small (faster than ~225BPM).
+                if (timeDifference is > 0 and < 266)
+                    buttonIndex1++;
+                else
+                    buttonIndex1 = 0;
+            }
+        }
+
+        private void addHitObjectClickFrames(TauHitObject h, Vector2 startPosition)
+        {
+            var action = buttonIndex1 % 2 == 0 ? TauAction.LeftButton : TauAction.RightButton;
+            if (h is HardBeat)
+                action = buttonIndex2 % 2 == 0 ? TauAction.HardButton1 : TauAction.HardButton2;
+
+            var startFrame = new TauReplayFrame(h.StartTime, startPosition, action);
+
+            double hEndTime = h.GetEndTime() + KEY_UP_DELAY;
+            var endFrame = new TauKeyUpReplayFrame(hEndTime, startPosition);
+
+            var index = FindInsertionIndex(startFrame) - 1;
+
+            // This is commented out due to an error being thrown while attempting to generate an Autoplay for this specific map: https://osu.ppy.sh/beatmapsets/1508499
+            // Currently i'm just being lazy to actually fix the issue lmao
+            // ~ Nora
+            if (index >= 0)
+            {
+                var previousFrame = (TauReplayFrame)Frames[index];
+                var previousActions = previousFrame.Actions;
+
+                if (previousActions.Any())
+                {
+                    if (previousActions.Contains(action))
+                    {
+                        if (h is HardBeat)
+                            action = action == TauAction.HardButton1 ? TauAction.HardButton2 : TauAction.HardButton1;
+                        else
+                            action = action == TauAction.LeftButton ? TauAction.RightButton : TauAction.LeftButton;
+
+                        startFrame.Actions.Clear();
+                        startFrame.Actions.Add(action);
+                    }
+
+                    var endIndex = FindInsertionIndex(endFrame);
+
+                    if (index < Frames.Count - 1)
+                        Frames.RemoveRange(index + 1, Math.Max(0, endIndex - (index + 1)));
+
+                    for (int j = index + 1; j < Frames.Count; ++j)
+                    {
+                        var frame = (TauReplayFrame)Frames[j];
+
+                        if (j < Frames.Count - 1 || frame.Actions.SequenceEqual(previousActions))
+                        {
+                            frame.Actions.Clear();
+                            frame.Actions.Add(action);
+                        }
+                    }
+                }
+            }
+
+            AddFrameToReplay(startFrame);
+
+            if (h is Slider s)
+            {
+                foreach (var node in s.Path.Nodes)
+                {
+                    var pos = getGameplayPositionFromAngle(s.GetAbsoluteAngle(node));
+                    AddFrameToReplay(new TauReplayFrame(h.StartTime + node.Time, pos, action));
+                }
+
+                endFrame.Position = getGameplayPositionFromAngle(s.GetAbsoluteAngle(s.Path.EndNode));
+            }
+
+            if (Frames[^1].Time <= endFrame.Time)
+                AddFrameToReplay(endFrame);
+        }
+
+        #endregion
+
+        #region Helper subroutines
+
+        /// <summary>
+        /// Calculates the "reaction time" in ms between "seeing" a new hit object and moving to "react" to it.
+        /// </summary>
+        /// <remarks>
+        /// Already superhuman, but still somewhat realistic.
+        /// </remarks>
+        private double getReactionTime(double timeInstant) => ApplyModsToRate(timeInstant, 100);
+
+        private Vector2 getGameplayPositionFromAngle(float angle) => Extensions.FromPolarCoordinates(CURSOR_DISTANCE, angle) + new Vector2(Offset);
+
+        #endregion
+
+        private class TauKeyUpReplayFrame : TauReplayFrame
+        {
+            public TauKeyUpReplayFrame(double time, Vector2 position)
+                : base(time, position)
+            {
+            }
         }
     }
 }

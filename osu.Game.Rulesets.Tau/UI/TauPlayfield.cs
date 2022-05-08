@@ -1,18 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
-using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
-using osu.Framework.Utils;
-using osu.Game.Beatmaps;
-using osu.Game.Beatmaps.ControlPoints;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -21,13 +16,7 @@ using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
-using osu.Game.Rulesets.Tau.Skinning;
-using osu.Game.Rulesets.Tau.Skinning.Default;
-using osu.Game.Rulesets.Tau.UI.Components;
-using osu.Game.Rulesets.Tau.UI.Cursor;
-using osu.Game.Rulesets.Tau.UI.Particles;
 using osu.Game.Rulesets.UI;
-using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
 
@@ -36,189 +25,111 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauPlayfield : Playfield
     {
-        private readonly TauCursor cursor;
-        private readonly Container judgementLayer;
-        private readonly Container<KiaiHitExplosion> kiaiExplosionContainer;
-        private readonly OrderedHitPolicy hitPolicy;
-        private readonly IDictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new Dictionary<HitResult, DrawablePool<DrawableTauJudgement>>();
+        private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
+        private readonly Container judgementAboveHitObjectLayer;
+        private readonly EffectsContainer effectsContainer;
 
-        protected override GameplayCursorContainer CreateCursor() => cursor;
+        public static readonly Vector2 BaseSize = new(768);
+        public static readonly Bindable<Color4> AccentColour = new(Color4Extensions.FromHex(@"FF0040"));
 
-        public readonly ParticleEmitter SliderParticleEmitter;
+        private readonly Dictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new();
 
-        public bool Inversed;
+        public BindableBool ShouldShowPositionalEffects = new(true);
 
-        public static readonly Vector2 BASE_SIZE = new Vector2(768, 768);
+        protected override GameplayCursorContainer CreateCursor() => new TauCursor();
 
-        public static readonly Bindable<Color4> ACCENT_COLOR = new Bindable<Color4>(Color4Extensions.FromHex(@"FF0040"));
+        public new TauCursor Cursor => base.Cursor as TauCursor;
+
+        [Resolved]
+        private TauCachedProperties tauCachedProperties { get; set; }
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
-        private readonly CircularContainer ring;
-
-        public TauPlayfield(BeatmapDifficulty difficulty)
+        public TauPlayfield()
         {
             RelativeSizeAxes = Axes.None;
-            cursor = new TauCursor(difficulty);
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Size = new Vector2(768);
+            Size = BaseSize;
 
             AddRangeInternal(new Drawable[]
             {
-                new VisualisationContainer(),
-                new SkinnableDrawable(new TauSkinComponent(TauSkinComponents.Ring), _ => new PlayfieldPiece()),
+                new PlayfieldPiece(),
+                judgementLayer = new JudgementContainer<DrawableTauJudgement> { RelativeSizeAxes = Axes.Both },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
-                judgementLayer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                },
-                kiaiExplosionContainer = new Container<KiaiHitExplosion>
-                {
-                    Name = "Kiai hit explosions",
-                    RelativeSizeAxes = Axes.Both,
-                    FillMode = FillMode.Fit,
-                    Blending = BlendingParameters.Additive,
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                },
-                SliderParticleEmitter = new ParticleEmitter
-                {
-                    Name = "Slider particle emitter",
-                    RelativeSizeAxes = Axes.Both,
-                }
+                effectsContainer = new EffectsContainer(),
+                judgementAboveHitObjectLayer = new Container { RelativeSizeAxes = Axes.Both },
             });
 
-            hitPolicy = new OrderedHitPolicy(HitObjectContainer);
             NewResult += onNewResult;
 
-            var hitWindows = new TauHitWindows();
+            var hitWindows = new TauHitWindow();
 
             foreach (var result in Enum.GetValues(typeof(HitResult)).OfType<HitResult>().Where(r => r > HitResult.None && hitWindows.IsHitResultAllowed(r)))
                 poolDictionary.Add(result, new DrawableJudgementPool(result, onJudgmentLoaded));
 
             AddRangeInternal(poolDictionary.Values);
-
-            SliderParticleEmitter.Vortices.Add(new Vortex
-            {
-                Speed = 10,
-                Scale = new Vector2(10),
-                Position = Extensions.GetCircularPosition(-40, 0),
-            });
         }
 
-        protected override void Update()
+        [BackgroundDependencyLoader]
+        private void load()
         {
-            SliderParticleEmitter.Vortices[0].Position = Extensions.GetCircularPosition(Inversed ? 120 : 420, cursor.PaddleDrawable.Rotation);
-            SliderParticleEmitter.Vortices[0].Velocity = new Vector2(20, -20);
-
-            base.Update();
-        }
-
-        private void onJudgmentLoaded(DrawableTauJudgement judgement)
-        {
-            judgementLayer.Add(judgement.ProxiedAboveHitObjectsContent);
-        }
-
-        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
-
-        [BackgroundDependencyLoader(true)]
-        private void load(ISkinSource skin, TauRulesetConfigManager config)
-        {
-            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
-            ACCENT_COLOR.Value = skin?.GetConfig<TauSkinColour, Color4>(TauSkinColour.Accent)?.Value ?? Color4Extensions.FromHex(@"FF0040");
-
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
 
-            RegisterPool<Slider, DrawableSlider>(3);
-            RegisterPool<SliderHeadBeat, DrawableSliderHead>(3);
+            RegisterPool<Slider, DrawableSlider>(5);
+            RegisterPool<SliderHeadBeat, DrawableSliderHead>(5);
+            RegisterPool<SliderRepeat, DrawableSliderRepeat>(5);
+            RegisterPool<SliderTick, DrawableSliderTick>(10);
         }
 
         protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
         {
             base.OnNewDrawableHitObject(drawableHitObject);
 
-            if (drawableHitObject is DrawableTauHitObject t)
+            switch (drawableHitObject)
             {
-                t.CheckHittable = hitPolicy.IsHittable;
-                t.CheckValidation = CheckIfWeCanValidate;
+                case DrawableSlider s:
+                    s.CheckValidation = ang =>
+                    {
+                        if (ShouldShowPositionalEffects.Value)
+                            effectsContainer.TrackSlider(ang, s);
+
+                        return checkPaddlePosition(ang);
+                    };
+                    break;
+
+                case DrawableBeat beat:
+                    beat.CheckValidation = checkPaddlePosition;
+                    break;
             }
         }
 
-        protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new TauHitObjectLifetimeEntry(hitObject);
-
-        public (bool, float) CheckIfWeCanValidate(float angle)
+        private ValidationResult checkPaddlePosition(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(cursor.PaddleDrawable.Rotation, angle);
+            var angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
 
-            return (Math.Abs(angleDiff) <= cursor.AngleRange / 2, angleDiff);
+            return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
         }
 
-        [Resolved]
-        private OsuColour colour { get; set; }
-
-        public void CreateSliderEffect(float angle)
+        private void onJudgmentLoaded(DrawableTauJudgement judgement)
         {
-            if ((int)Time.Current % 12 != 0) return;
-
-            kiaiExplosionContainer.Add(new KiaiHitExplosion(ACCENT_COLOR.Value, particleAmount: 1)
-            {
-                Position = Extensions.GetCircularPosition(.5f, angle),
-                Angle = angle,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+            judgementAboveHitObjectLayer.Add(judgement.ProxiedAboveHitObjectsContent);
         }
 
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
-            hitPolicy.HandleHit(judgedObject);
+            if (ShouldShowPositionalEffects.Value)
+                effectsContainer.OnNewResult(judgedObject, result);
 
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
             judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
-
-            if (judgedObject.HitObject.Kiai && result.Type != HitResult.Miss)
-            {
-                float angle = judgedObject switch
-                {
-                    DrawableBeat b => b.HitObject.Angle,
-                    DrawableSlider s => s.HitObject.Nodes.Last().Angle,
-                    _ => 0
-                };
-
-                var isHardBeat = judgedObject is DrawableHardBeat;
-
-                switch (effect.Value)
-                {
-                    case KiaiType.Turbulent:
-                        for (int i = 0; i < (isHardBeat ? RNG.Next(60, 100) : RNG.Next(3, 9)); i++)
-                        {
-                            SliderParticleEmitter.AddParticle((isHardBeat ? RNG.NextSingle(0, 360) : angle), Inversed, result.Type);
-                        }
-
-                        break;
-
-                    case KiaiType.Classic:
-                        kiaiExplosionContainer.Add(new KiaiHitExplosion(colour.ForHitResult(judgedObject.Result.Type), judgedObject is DrawableHardBeat, Inversed, judgedObject is DrawableHardBeat ? 32 : 10)
-                        {
-                            Position = judgedObject is DrawableHardBeat ? Vector2.Zero : Extensions.GetCircularPosition(.5f, angle),
-                            Angle = angle,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        });
-
-                        break;
-                }
-            }
         }
 
         private class DrawableJudgementPool : DrawablePool<DrawableTauJudgement>
@@ -245,64 +156,42 @@ namespace osu.Game.Rulesets.Tau.UI
             }
         }
 
-        private class VisualisationContainer : BeatSyncedContainer
+        private class PlayfieldPiece : CompositeDrawable
         {
-            private PlayfieldVisualisation visualisation;
-            private bool firstKiaiBeat = true;
-            private int kiaiBeatIndex;
-            private readonly Bindable<bool> showVisualisation = new Bindable<bool>(true);
+            private readonly Box background;
+            private readonly Bindable<float> playfieldDimLevel = new(0.7f);
 
-            [BackgroundDependencyLoader(true)]
-            private void load(TauRulesetConfigManager settings)
+            public PlayfieldPiece()
             {
                 RelativeSizeAxes = Axes.Both;
-                Anchor = Anchor.Centre;
-                Origin = Anchor.Centre;
 
-                Child = visualisation = new PlayfieldVisualisation
+                AddInternal(new CircularContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    FillMode = FillMode.Fit,
-                    FillAspectRatio = 1,
-                    Blending = BlendingParameters.Additive,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Colour = Color4.Transparent
-                };
-
-                settings?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualisation);
-                showVisualisation.BindValueChanged(value => { visualisation.FadeTo(value.NewValue ? 1 : 0, 500); });
+                    Masking = true,
+                    BorderThickness = 3,
+                    BorderColour = AccentColour.Value,
+                    Child = background = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Black,
+                        Alpha = playfieldDimLevel.Default,
+                        AlwaysPresent = true
+                    }
+                });
             }
+
+            [Resolved(canBeNull: true)]
+            private TauRulesetConfigManager config { get; set; }
 
             protected override void LoadComplete()
             {
-                base.LoadComplete();
-                visualisation.AccentColour = ACCENT_COLOR.Value.Opacity(0.5f);
-                showVisualisation.TriggerChange();
-            }
+                config?.BindWith(TauRulesetSettings.PlayfieldDim, playfieldDimLevel);
 
-            protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
-            {
-                if (effectPoint.KiaiMode)
+                playfieldDimLevel.BindValueChanged(v =>
                 {
-                    kiaiBeatIndex += 1;
-
-                    if (firstKiaiBeat)
-                    {
-                        visualisation.FlashColour(visualisation.AccentColour.Opacity(0.5f), timingPoint.BeatLength * 4, Easing.In);
-                        firstKiaiBeat = false;
-
-                        return;
-                    }
-
-                    if (kiaiBeatIndex >= 5)
-                        visualisation.FlashColour(visualisation.AccentColour.Opacity(0.25f), timingPoint.BeatLength, Easing.In);
-                }
-                else
-                {
-                    firstKiaiBeat = true;
-                    kiaiBeatIndex = 0;
-                }
+                    background.FadeTo(v.NewValue, 100);
+                }, true);
             }
         }
     }

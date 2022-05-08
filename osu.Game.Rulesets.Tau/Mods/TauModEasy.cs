@@ -2,8 +2,8 @@
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModEasy : ModEasy
+    public class TauModEasy : ModEasyWithExtraLives
     {
-        public override string Description => @"Larger hit area, more forgiving HP drain, less accuracy required, and three lives!";
+        public override string Description => @"Larger paddle, more forgiving HP drain, less accuracy required, and three lives!";
     }
 }

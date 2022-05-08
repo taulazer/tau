@@ -16,16 +16,18 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override string Description => "Removes certain aspects of the game.";
         public override ModType Type => ModType.Conversion;
 
-        [SettingSource("No sliders conversion", "Completely disables sliders altogether.")]
-        public Bindable<bool> ToggleSliders { get; } = new Bindable<bool>(true);
+        [SettingSource("Sliders conversion", "Completely disables sliders altogether.")]
+        public Bindable<bool> ToggleSliders { get; } = new Bindable<bool>(false);
 
-        [SettingSource("No hard beats conversion", "Completely disables hard beats altogether.")]
-        public Bindable<bool> ToggleHardBeats { get; } = new Bindable<bool>(true);
+        [SettingSource("Hard beats conversion", "Completely disables hard beats altogether.")]
+        public Bindable<bool> ToggleHardBeats { get; } = new Bindable<bool>(false);
 
+        // maybe replace this with `BeatDivisorControl`?
         [SettingSource("Slider division level", "The minimum slider length divisor.")]
         public BindableInt SlidersDivisionLevel { get; } = new BindableInt
         {
             Value = 2,
+            Default = 2,
             MinValue = 1,
             MaxValue = 64
         };
@@ -34,9 +36,9 @@ namespace osu.Game.Rulesets.Tau.Mods
         {
             var converter = (TauBeatmapConverter)beatmapConverter;
 
-            converter.CanConvertToSliders = !ToggleSliders.Value;
-            converter.CanConvertToHardBeats = !ToggleHardBeats.Value;
-            converter.SliderDivisionLevel = SlidersDivisionLevel.Value;
+            converter.CanConvertToHardBeats = ToggleHardBeats.Value;
+            converter.CanConvertToSliders = ToggleSliders.Value;
+            converter.SliderDivisor = SlidersDivisionLevel.Value;
         }
     }
 }

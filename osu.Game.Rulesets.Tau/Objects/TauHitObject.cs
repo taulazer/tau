@@ -7,23 +7,22 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Scoring;
-using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public abstract class TauHitObject : HitObject, IHasComboInformation, IHasPosition
+    public class TauHitObject : HitObject, IHasComboInformation
     {
+        public double TimePreempt = 600;
+        public double TimeFadeIn = 100;
+
+        protected override HitWindows CreateHitWindows() => new TauHitWindow();
         public override Judgement CreateJudgement() => new TauJudgement();
 
-        public double TimePreempt = 600;
-        public double TimeFadeIn = 400;
-
-        public BindableFloat AngleBindable = new BindableFloat();
-
-        public float Angle
+        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
         {
-            get => AngleBindable.Value;
-            set => AngleBindable.Value = value;
+            base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
+
+            TimePreempt = IBeatmapDifficultyInfo.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
         }
 
         public virtual bool NewCombo { get; set; }
@@ -34,14 +33,6 @@ namespace osu.Game.Rulesets.Tau.Objects
         {
             get => ComboOffsetBindable.Value;
             set => ComboOffsetBindable.Value = value;
-        }
-
-        public Bindable<int> ComboIndexWithOffsetsBindable { get; } = new Bindable<int>();
-
-        public int ComboIndexWithOffsets
-        {
-            get => ComboIndexWithOffsetsBindable.Value;
-            set => ComboIndexWithOffsetsBindable.Value = value;
         }
 
         public Bindable<int> IndexInCurrentComboBindable { get; } = new Bindable<int>();
@@ -60,6 +51,14 @@ namespace osu.Game.Rulesets.Tau.Objects
             set => ComboIndexBindable.Value = value;
         }
 
+        public Bindable<int> ComboIndexWithOffsetsBindable { get; } = new Bindable<int>();
+
+        public int ComboIndexWithOffsets
+        {
+            get => ComboIndexWithOffsetsBindable.Value;
+            set => ComboIndexWithOffsetsBindable.Value = value;
+        }
+
         public Bindable<bool> LastInComboBindable { get; } = new Bindable<bool>();
 
         public bool LastInCombo
@@ -67,21 +66,5 @@ namespace osu.Game.Rulesets.Tau.Objects
             get => LastInComboBindable.Value;
             set => LastInComboBindable.Value = value;
         }
-
-        protected override HitWindows CreateHitWindows() => new TauHitWindows();
-
-        protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, IBeatmapDifficultyInfo difficulty)
-        {
-            base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
-
-            TimePreempt = (float)IBeatmapDifficultyInfo.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
-            TimeFadeIn = 100;
-        }
-
-        #region Editor Implementation.
-        public float X { get; set; }
-        public float Y { get; set; }
-        public Vector2 Position { get; set; }
-        #endregion
     }
 }

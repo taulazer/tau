@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.UI;

@@ -1,39 +1,105 @@
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Judgements;
+using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public abstract class DrawableTauHitObject : DrawableHitObject<TauHitObject>
+    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>, ICanApplyResult
+        where T : TauHitObject
     {
-        protected DrawableTauHitObject(TauHitObject obj)
+        public new T HitObject => (T)base.HitObject;
+
+        protected DrawableTauHitObject(T obj)
             : base(obj)
         {
         }
 
-        public Func<float, (bool, float)> CheckValidation;
-
         /// <summary>
-        /// A list of keys which can result in hits for this HitObject.
+        /// A list of <see cref="TauAction"/>s that denotes which keys can trigger this Hit object.
         /// </summary>
-        protected virtual TauAction[] HitActions { get; set; } =
+        protected virtual TauAction[] Actions { get; } =
         {
-            TauAction.RightButton,
             TauAction.LeftButton,
+            TauAction.RightButton
         };
 
-        /// <summary>
-        /// The action that caused this <see cref="DrawableHit"/> to be hit.
-        /// </summary>
-        protected TauAction? HitAction { get; set; }
+        protected readonly BindableFloat NoteSize = new(16f);
+
+        [BackgroundDependencyLoader(true)]
+        private void load(TauRulesetConfigManager config)
+        {
+            config?.BindWith(TauRulesetSettings.NotesSize, NoteSize);
+        }
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
 
-        public Func<DrawableHitObject, double, bool> CheckHittable;
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        {
+            Debug.Assert(HitObject.HitWindows != null);
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);
+            if (!userTriggered)
+            {
+                if (!HitObject.HitWindows.CanBeHit(timeOffset))
+                    ApplyResult(r => r.Type = HitResult.Miss);
 
-        public void MissForcefully() => ApplyResult(r => r.Type = r.Judgement.MinResult);
+                return;
+            }
+
+            if (!CheckForValidation())
+                return;
+
+            var result = HitObject.HitWindows.ResultFor(timeOffset);
+
+            if (result == HitResult.None)
+                return;
+
+            ApplyResult(r =>
+            {
+                r.Type = result;
+                ApplyCustomResult(r);
+            });
+        }
+
+        /// <summary>
+        /// Should return whether or not a <see cref="DrawableHitObject"/> has the correct set of parameters for it to be hit.
+        /// </summary>
+        protected virtual bool CheckForValidation() => true;
+
+        protected virtual void ApplyCustomResult(JudgementResult result) { }
+
+        public bool OnPressed(KeyBindingPressEvent<TauAction> e)
+        {
+            if (Judged)
+                return false;
+
+            return Actions.Contains(e.Action) && UpdateResult(true);
+        }
+
+        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
+        {
+        }
+
+        public void ForcefullyApplyResult(Action<JudgementResult> application)
+            => ApplyResult(application);
+    }
+
+    public struct ValidationResult
+    {
+        public bool IsValid;
+        public float DeltaFromPaddleCenter;
+
+        public ValidationResult(bool isValid, float delta)
+        {
+            IsValid = isValid;
+            DeltaFromPaddleCenter = delta;
+        }
     }
 }

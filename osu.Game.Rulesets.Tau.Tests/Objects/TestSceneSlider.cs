@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
@@ -11,42 +11,31 @@ using osu.Game.Rulesets.Tau.Objects.Drawables;
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneSlider : TauSkinnableTestScene
+    public class TestSceneSlider : TauTestScene
     {
         private int depthIndex;
 
-        public TestSceneSlider()
+        [Test]
+        public void TestSingleSlider()
         {
-            AddStep("Miss Single", () => SetContents(_ => testSingle()));
-            AddStep("Hit Single", () => SetContents(_ => testSingle(true)));
-            AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject hitObject && hitObject.AllJudged == false));
+            AddStep("Miss Single", () => Add(testSingle()));
+            AddStep("Hit Single", () => Add(testSingle(true)));
+            AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableSlider { AllJudged: false }));
         }
 
-        private Drawable testSingle(bool auto = false)
+        [Test]
+        public void TestSliderPerformance()
         {
-            var slider = new Slider
-            {
-                StartTime = Time.Current + 1000,
-                Nodes = new BindableList<SliderNode>(new[]
-                {
-                    new SliderNode(0, 0),
-                    new SliderNode(500, 90),
-                    new SliderNode(1000, 180),
-                    new SliderNode(1500, 270),
-                    new SliderNode(2000, 0),
-                    new SliderNode(2500, 90),
-                    new SliderNode(3000, 180),
-                    new SliderNode(3500, 270),
-                    new SliderNode(4000, 0),
-                    new SliderNode(4500, 90),
-                    new SliderNode(5000, 180),
-                    new SliderNode(5500, 270),
-                    new SliderNode(6000, 0),
-                    new SliderNode(6500, 90),
-                    new SliderNode(7000, 180),
-                    new SliderNode(7500, 270),
-                })
-            };
+            AddStep("Miss Single", () => AddRange(testMultiple(100)));
+            AddStep("Hit Single", () => AddRange(testMultiple(100, true)));
+        }
+
+        private IEnumerable<Drawable> testMultiple(int count, bool auto = false)
+            => Enumerable.Range(0, count).Select(x => testSingle(auto, 1000 + x * 100));
+
+        private Drawable testSingle(bool auto = false, double timeOffset = 1000)
+        {
+            var slider = createSlider(timeOffset);
 
             slider.ApplyDefaults(new ControlPointInfo(), new BeatmapDifficulty());
 
@@ -57,6 +46,31 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
                 Depth = depthIndex++
             };
         }
+
+        private Slider createSlider(double timeOffset)
+            => new()
+            {
+                StartTime = Time.Current + timeOffset,
+                Path = new PolarSliderPath(new SliderNode[]
+                {
+                    new(0, 0),
+                    new(500, 90),
+                    new(1000, 180),
+                    new(1500, 270),
+                    new(2000, 0),
+                    new(2500, 90),
+                    new(3000, 180),
+                    new(3500, 270),
+                    new(4000, 0),
+                    new(4500, 90),
+                    new(5000, 180),
+                    new(5500, 270),
+                    new(6000, 0),
+                    new(6500, 90),
+                    new(7000, 180),
+                    new(7500, 270),
+                })
+            };
 
         private class TestDrawableSlider : DrawableSlider
         {

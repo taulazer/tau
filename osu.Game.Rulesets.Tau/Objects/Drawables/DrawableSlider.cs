@@ -4,59 +4,52 @@ using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input.Bindings;
-using osu.Framework.Input.Events;
-using osu.Framework.Timing;
+using osu.Framework.Platform;
 using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Graphics;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Configuration;
-using osu.Game.Rulesets.Tau.Skinning;
+using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
-using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableSlider : DrawableTauHitObject, IKeyBindingHandler<TauAction>
+    public partial class DrawableSlider : DrawableAngledTauHitObject<Slider>
     {
-        private readonly Path path;
+        public DrawableSliderHead SliderHead => headContainer.Child;
 
-        public new Slider HitObject => base.HitObject as Slider;
+        private readonly BindableFloat size = new(16f);
 
-        public DrawableSliderHead HeadBeat => headContainer.Child;
+        public float PathDistance = TauPlayfield.BaseSize.X / 2;
 
-        private CircularContainer maskingContainer;
+        private readonly SliderPath path;
+        private readonly Container<DrawableSliderHead> headContainer;
+        private readonly Container<DrawableSliderTick> tickContainer;
+        private readonly Container<DrawableSliderRepeat> repeatContainer;
+        private readonly CircularContainer maskingContainer;
+        private readonly Cached drawCache = new();
+        private readonly PausableSkinnableSound slidingSample;
 
         private bool inversed;
-
-        [Resolved(canBeNull: true)]
-        private TauPlayfield playfield { get; set; }
-
-        [Resolved]
-        private OsuColour colour { get; set; }
-
-        private Container<DrawableSliderHead> headContainer;
-        private PausableSkinnableSound slidingSample;
 
         public DrawableSlider()
             : this(null)
         {
         }
 
-        public DrawableSlider(TauHitObject obj)
+        public DrawableSlider(Slider obj)
             : base(obj)
         {
-            Size = new Vector2(768);
+            Size = TauPlayfield.BaseSize;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
@@ -64,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 maskingContainer = new CircularContainer
                 {
-                    Masking = true,
+                    Masking = false,
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
@@ -74,77 +67,117 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Alpha = 0,
                             AlwaysPresent = true
                         },
-                        path = new SmoothPath
+                        path = new SliderPath
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            PathRadius = 5,
-                            AutoSizeAxes = Axes.None,
-                            Size = TauPlayfield.BASE_SIZE
+                            PathRadius = 4,
+                            PathDistance = PathDistance
                         },
-                        headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
-                        slidingSample = new PausableSkinnableSound { Looping = true }
                     }
                 },
+                headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
+                tickContainer = new Container<DrawableSliderTick> { RelativeSizeAxes = Axes.Both },
+                repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
+                slidingSample = new PausableSkinnableSound { Looping = true }
             });
-        }
 
-        public void ApplyInverseChanges()
-        {
-            inversed = true;
-            maskingContainer.Masking = false;
-
-            // Max diameter of paths are much larger when they come from outside the ring, so we need extra canvas space
-            path.Size = new Vector2(768 * 2);
-        }
-
-        private readonly Bindable<KiaiType> effect = new Bindable<KiaiType>();
-
-        [BackgroundDependencyLoader(true)]
-        private void load(ISkinSource skin, TauRulesetConfigManager config)
-        {
-            path.Colour = skin.GetConfig<TauSkinColour, Color4>(TauSkinColour.Slider)?.Value ?? Color4.White;
-            config?.BindWith(TauRulesetSettings.KiaiEffect, effect);
+            path.Ticks = repeatContainer;
 
             Tracking.BindValueChanged(updateSlidingSample);
         }
 
+        protected override void AddNestedHitObject(DrawableHitObject hitObject)
+        {
+            base.AddNestedHitObject(hitObject);
+
+            switch (hitObject)
+            {
+                case DrawableSliderHead head:
+                    headContainer.Child = head;
+                    break;
+
+                case DrawableSliderRepeat repeat:
+                    repeatContainer.Add(repeat);
+                    break;
+
+                case DrawableSliderTick tick:
+                    tickContainer.Add(tick);
+                    break;
+            }
+        }
+
+        protected override DrawableHitObject CreateNestedHitObject(HitObject hitObject)
+            => hitObject switch
+            {
+                SliderRepeat repeat => new DrawableSliderRepeat(repeat),
+                SliderHeadBeat head => new DrawableSliderHead(head),
+                SliderTick tick => new DrawableSliderTick(tick),
+                _ => base.CreateNestedHitObject(hitObject)
+            };
+
+        protected override void ClearNestedHitObjects()
+        {
+            base.ClearNestedHitObjects();
+
+            headContainer.Clear(false);
+            repeatContainer.Clear(false);
+            tickContainer.Clear(false);
+        }
+
+        private float convertNoteSizeToSliderSize(float beatSize)
+            => Interpolation.ValueAt(beatSize, 2f, 7f, 10f, 25f);
+
+        [BackgroundDependencyLoader]
+        private void load(GameHost host)
+        {
+            NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
+
+            host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
+            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
+        }
+
+        [Resolved]
+        private TauCachedProperties properties { get; set; }
+
+        private double totalTimeHeld;
+
         protected override void OnApply()
         {
             base.OnApply();
+            path.FadeColour = colour.ForHitResult(HitResult.Perfect);
+
             totalTimeHeld = 0;
+
+            if (properties.InverseModEnabled.Value)
+            {
+                inversed = true;
+                maskingContainer.Masking = false;
+                path.Reverse = inversed;
+                // PathDistance = path.PathDistance = TauPlayfield.BaseSize.X;
+            }
         }
 
         protected override void OnFree()
         {
             base.OnFree();
+            trackingCheckpoints.Clear();
 
             slidingSample.Samples = null;
         }
 
         protected override void LoadSamples()
         {
-            base.LoadSamples();
+            // Note: base.LoadSamples() isn't called since the slider plays the tail's hitsounds for the time being.
 
             if (HitObject.SampleControlPoint == null)
             {
-                throw new InvalidOperationException($"{nameof(HitObject)}s must always have an attached {nameof(HitObject.SampleControlPoint)}."
-                                                    + $" This is an indication that {nameof(HitObject.ApplyDefaults)} has not been invoked on {this}.");
+                throw new InvalidOperationException($"{nameof(HitObject)}s must always have an attached {nameof(HitObject.SampleControlPoint)}." +
+                                                    $" This is an indication that {nameof(HitObject.ApplyDefaults)} has not been invoked on {this}.");
             }
 
-            var slidingSamples = new List<ISampleInfo>();
-
-            var normalSample = HitObject.Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_NORMAL);
-
-            if (normalSample != null)
-                slidingSamples.Add(HitObject.SampleControlPoint.ApplyTo(normalSample).With("sliderslide"));
-
-            var whistleSample = HitObject.Samples.FirstOrDefault(s => s.Name == HitSampleInfo.HIT_WHISTLE);
-
-            if (whistleSample != null)
-                slidingSamples.Add(HitObject.SampleControlPoint.ApplyTo(whistleSample).With("sliderwhistle"));
-
-            slidingSample.Samples = slidingSamples.ToArray();
+            Samples.Samples = HitObject.TailSamples.Select(s => HitObject.SampleControlPoint.ApplyTo(s)).Cast<ISampleInfo>().ToArray();
+            slidingSample.Samples = HitObject.CreateSlidingSamples().Select(s => HitObject.SampleControlPoint.ApplyTo(s)).Cast<ISampleInfo>().ToArray();
         }
 
         public override void StopAllSamples()
@@ -161,203 +194,95 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 slidingSample?.Stop();
         }
 
-        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        public BindableBool Tracking = new();
+        private const double trackingCheckpointInterval = 5;
+        private readonly List<bool> trackingCheckpoints = new();
+
+        protected override void Update()
         {
-            Debug.Assert(HitObject.HitWindows != null);
+            base.Update();
 
-            if (Time.Current > HitObject.GetEndTime())
+            // This gives us about the same performance as if we were to just would update the path without this.
+            // The catch is that with this, we're giving the Update thread more breathing room to update everything
+            // else instead of worrying with updating the path vertices every update frame.
+            if (!drawCache.IsValid)
             {
-                double percentage = totalTimeHeld / HitObject.Duration;
-
-                HitResult result;
-
-                if (percentage > .66) result = HitResult.Great;
-                else if (percentage > .33) result = HitResult.Ok;
-                else result = HitResult.Miss;
-
-                ApplyResult(r => r.Type = result);
-            }
-        }
-
-        protected override void AddNestedHitObject(DrawableHitObject hitObject)
-        {
-            base.AddNestedHitObject(hitObject);
-
-            switch (hitObject)
-            {
-                case DrawableSliderHead head:
-                    headContainer.Child = head;
-
-                    break;
-            }
-        }
-
-        protected override DrawableHitObject CreateNestedHitObject(HitObject hitObject)
-        {
-            switch (hitObject)
-            {
-                case SliderHeadBeat head:
-                    return new DrawableSliderHead(head);
-            }
-
-            return base.CreateNestedHitObject(hitObject);
-        }
-
-        protected override void ClearNestedHitObjects()
-        {
-            base.ClearNestedHitObjects();
-
-            headContainer.Clear(false);
-        }
-
-        double totalTimeHeld = 0;
-
-        public readonly Bindable<bool> Tracking = new Bindable<bool>();
-
-        protected override void UpdateAfterChildren()
-        {
-            base.UpdateAfterChildren();
-            path.ClearVertices();
-
-            float maxDistance = TauPlayfield.BASE_SIZE.X / 2;
-
-            for (double t = Math.Max(Time.Current, HitObject.StartTime + HitObject.Nodes.First().Time);
-                 t < Math.Min(Time.Current + HitObject.TimePreempt, HitObject.StartTime + HitObject.Nodes.Last().Time);
-                 t += 20) // Generate vertex every 20ms
-            {
-                var currentNode = HitObject.Nodes.Last(x => t >= HitObject.StartTime + x.Time);
-                var nextNode = HitObject.Nodes.GetNext(currentNode);
-
-                double nodeStart = HitObject.StartTime + currentNode.Time;
-                double nodeEnd = HitObject.StartTime + nextNode.Time;
-                double duration = nodeEnd - nodeStart;
-
-                float actualProgress = (float)((t - nodeStart) / duration);
-
-                // Larger the time, the further in it is.
-                float distanceFromCentre = (float)(1 - ((t - Time.Current) / HitObject.TimePreempt)) * maxDistance;
-
-                if (inversed)
-                    distanceFromCentre = (maxDistance * 2) - distanceFromCentre;
-
-                // Angle calc
-                float difference = (nextNode.Angle - currentNode.Angle) % 360;
-
-                if (difference > 180) difference -= 360;
-                else if (difference < -180) difference += 360;
-
-                float targetAngle = (float)Interpolation.Lerp(currentNode.Angle, currentNode.Angle + difference, actualProgress);
-
-                path.AddVertex(Extensions.GetCircularPosition(distanceFromCentre, targetAngle));
-            }
-
-            //Check if the last node is visible
-            if (Time.Current + HitObject.TimePreempt > HitObject.StartTime + HitObject.Nodes.Last().Time)
-            {
-                double timeDiff = HitObject.StartTime + HitObject.Nodes.Last().Time - Time.Current;
-                double progress = 1 - (timeDiff / HitObject.TimePreempt);
-
-                float endNodeDistanceFromCentre = (float)(progress * maxDistance);
-
-                if (inversed)
-                    endNodeDistanceFromCentre = (maxDistance * 2) - endNodeDistanceFromCentre;
-
-                path.AddVertex(Extensions.GetCircularPosition(endNodeDistanceFromCentre, HitObject.Nodes.Last().Angle));
-            }
-
-            path.Position = path.Vertices.Any() ? path.Vertices.First() : new Vector2(0);
-            path.OriginPosition = path.Vertices.Any() ? path.PositionInBoundingBox(path.Vertices.First()) : base.OriginPosition;
-
-            if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
-            {
-                if (Tracking.Value == false)
-                    Tracking.Value = true;
-            }
-            else
-            {
-                if (Tracking.Value)
-                    Tracking.Value = false;
+                updatePath();
+                drawCache.Validate();
             }
 
             if (Time.Current < HitObject.StartTime || Time.Current >= HitObject.GetEndTime()) return;
 
-            if (IsWithinPaddle && TauActionInputManager.PressedActions.Any(x => HitActions.Contains(x)))
+            // ReSharper disable once AssignmentInConditionalExpression
+            if (Tracking.Value = checkIfTracking())
             {
-                if (!HitObject.Kiai)
-                    playfield?.CreateSliderEffect(Vector2.Zero.GetDegreesFromPosition(path.Position));
-
                 totalTimeHeld += Time.Elapsed;
+            }
 
-                if (!HitObject.Kiai)
-                    return;
+            var trackingCheckpointIndex = (int)((Time.Current - HitObject.StartTime) / trackingCheckpointInterval);
 
-                var angle = Vector2.Zero.GetDegreesFromPosition(path.Position);
-                Drawable particle = Empty();
-                const int duration = 1500;
-
-                switch (effect.Value)
-                {
-                    case KiaiType.Turbulent:
-                        if ((int)totalTimeHeld % 8 == 0)
-                            playfield.SliderParticleEmitter.AddParticle(angle, inversed);
-
-                        break;
-
-                    case KiaiType.Classic:
-                        if ((int)Time.Current % 8 != 0)
-                            break;
-
-                        particle = new Triangle
-                        {
-                            Position = Extensions.GetCircularPosition(380, angle),
-                            Rotation = (float)RNG.NextDouble() * 360f,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Size = new Vector2(RNG.Next(5, 15)),
-                            Clock = new FramedClock(),
-                            Alpha = RNG.NextSingle(0.25f, 1f),
-                            Blending = BlendingParameters.Additive,
-                            Colour = TauPlayfield.ACCENT_COLOR.Value
-                        };
-
-                        particle.MoveTo(Extensions.GetCircularPosition(inversed ? -((RNG.NextSingle() * 75) + 390) : ((RNG.NextSingle() * 75) + 390), angle), duration, Easing.OutQuint)
-                                .RotateTo(RNG.NextSingle(-720, 720), duration).FadeOut(duration).Expire();
-
-                        playfield.SliderParticleEmitter.Add(particle);
-
-                        break;
-                }
+            if (trackingCheckpointIndex >= 0)
+            {
+                while (trackingCheckpoints.Count <= trackingCheckpointIndex)
+                    trackingCheckpoints.Add(trackingCheckpoints.Count == 0 ? Tracking.Value : trackingCheckpoints[^1]);
+                trackingCheckpoints[trackingCheckpointIndex] = Tracking.Value;
             }
         }
 
-        public bool OnPressed(KeyBindingPressEvent<TauAction> e) => HitActions.Contains(e.Action) && !Tracking.Value;
-
-        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
+        protected override void UpdateInitialTransforms()
         {
+            base.UpdateInitialTransforms();
+
+            this.FadeInFromZero(HitObject.TimeFadeIn);
         }
+
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        {
+            Debug.Assert(HitObject.HitWindows != null);
+
+            if (!(Time.Current > HitObject.GetEndTime())) return;
+
+            double percentage = totalTimeHeld / HitObject.Duration;
+            var result = percentage switch
+            {
+                > .85 => HitResult.Great,
+                > .50 => HitResult.Ok,
+                _ => HitResult.Miss
+            };
+
+            // Some nested hitobjects may not be judged before the tail, so we need to make sure that we have them all judged beforehand.
+            // Thanks osu!.
+            // ~ Nora
+            foreach (var nested in NestedHitObjects.Where(n => !n.AllJudged))
+            {
+                if (nested is ICanApplyResult res)
+                    res.ForcefullyApplyResult(r => r.Type = result);
+            }
+
+            ApplyResult(r =>
+            {
+                r.Type = result;
+                ApplyCustomResult(r);
+            });
+        }
+
+        protected override JudgementResult CreateResult(Judgement judgement)
+            => new TauJudgementResult(HitObject, judgement);
+
+        [Resolved]
+        private OsuColour colour { get; set; }
+
+        public double Velocity => PathDistance / HitObject.TimePreempt;
+        public double FadeTime => FADE_RANGE / Velocity;
 
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
             base.UpdateHitStateTransforms(state);
 
-            switch (state)
-            {
-                case ArmedState.Idle:
-                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-
-                    break;
-
-                case ArmedState.Hit:
-                case ArmedState.Miss:
-                    Expire();
-
-                    break;
-            }
+            if (state is ArmedState.Hit or ArmedState.Miss)
+                LifetimeEnd = Time.Current + FadeTime;
+            else
+                LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
         }
-
-        public bool IsWithinPaddle => CheckValidation?.Invoke(Vector2.Zero.GetDegreesFromPosition(path.Position)).Item1 ?? false;
-
-        private TauInputManager tauActionInputManager;
-        internal TauInputManager TauActionInputManager => tauActionInputManager ??= GetContainingInputManager() as TauInputManager;
     }
 }

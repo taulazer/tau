@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Game.Rulesets.Tau.UI;
@@ -9,6 +10,9 @@ namespace osu.Game.Rulesets.Tau.Tests
 {
     public class TestSceneResumeOverlay : OsuManualInputManagerTestScene
     {
+        [Cached]
+        private TauCachedProperties properties { get; set; } = new();
+
         public TestSceneResumeOverlay()
         {
             ManualTauInputManager tauInputManager;
@@ -22,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                 Children = new Drawable[]
                 {
                     cursor = new CursorContainer(),
-                    resume = new TauResumeOverlay(CreateBeatmap(new TauRuleset().RulesetInfo).BeatmapInfo.Difficulty)
+                    resume = new TauResumeOverlay()
                     {
                         GameplayCursor = cursor
                     }

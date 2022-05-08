@@ -11,9 +11,9 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
     {
         public override IEnumerable<BeatmapStatistic> GetStatistics()
         {
-            int beats = HitObjects.Count(b => b is Beat);
-            int sliders = HitObjects.Count(b => b is Slider);
-            int hardbeats = HitObjects.Count(b => b is HardBeat);
+            int beats = HitObjects.Count(c => c is Beat and not SliderHeadBeat and not SliderRepeat and not SliderTick);
+            int sliders = HitObjects.Count(s => s is Slider);
+            int hardBeats = HitObjects.Count(hb => hb is HardBeat);
 
             return new[]
             {
@@ -35,8 +35,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 },
                 new BeatmapStatistic
                 {
-                    Name = "HardBeat count",
-                    Content = hardbeats.ToString(),
+                    Name = "Hard Beat count",
+                    Content = hardBeats.ToString(),
                     CreateIcon = () => new SpriteIcon
                     {
                         Icon = FontAwesome.Regular.Circle,
