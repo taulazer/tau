@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         public bool CanConvertToHardBeats { get; set; } = true;
         public bool CanConvertToSliders { get; set; } = true;
-        public bool CanConvertImpossibleSliders { get; set; } = false;
+        public bool CanConvertImpossibleSliders { get; set; }
         public int SliderDivisor { get; set; } = 4;
 
         public TauBeatmapConverter(Ruleset ruleset, IBeatmap beatmap)
