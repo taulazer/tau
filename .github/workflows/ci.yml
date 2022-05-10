@@ -55,9 +55,8 @@ jobs:
         with:
           severity: info
           color: '#00FFAA'
-          description: "[${{ github.run_number }}] [${{ github.head_commit.message }}](${{ github.head_commit.url }})"
+          description: "[${{ github.run_number }}] [${{ github.event.head_commit.message }}](${{ github.event.head_commit.url }})"
           details: "Build was a success!"
-          file: "osu.Game.Rulesets.Tau/bin/Debug/net6.0/osu.Game.Rulesets.Tau.dll"
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           
       - name: Discord failure
@@ -66,7 +65,7 @@ jobs:
         with:
           severity: error
           color: '#FF0040'
-          description: "[${{ github.run_number }}] [${{ github.head_commit.message }}](${{ github.head_commit.url }})"
+          description: "[${{ github.run_number }}] [${{ github.event.head_commit.message }}](${{ github.event.head_commit.url }})"
           details: "Build was a failure."
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
