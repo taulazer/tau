@@ -49,15 +49,27 @@ jobs:
           path: "osu.Game.Rulesets.Tau/bin/Debug/net6.0"
           retention-days: 90
 
-      - name: Send file to discord
+      - name: Discord success
         uses: appleboy/discord-action@master
+        if: ${{ success() }}
+        with:
+          webhook_id: ${{ secrets.WEBHOOK_ID }}
+          webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+          color: "#00FFAA"
+          username: "Github"
+          file: "osu.Game.Rulesets.Tau/bin/Debug/net6.0/osu.Game.Rulesets.Tau.dll"
+          message: "[${{ github.run_number }}] ${{ github.head_commit.message }}"
+          
+          
+      - name: Discord failure
+        uses: appleboy/discord-action@master
+        if: ${{ failure() }}
         with:
           webhook_id: ${{ secrets.WEBHOOK_ID }}
           webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
           color: "#FF0040"
           username: "Github"
-          file: "osu.Game.Rulesets.Tau/bin/Debug/net6.0/osu.Game.Rulesets.Tau.dll"
-          message: "[${{ github.run_number }}] ${{ github.workflow }}"
+          message: "[${{ github.run_number }}] ${{ github.head_commit.message }} | Failed"
 
   test:
     name: Test
