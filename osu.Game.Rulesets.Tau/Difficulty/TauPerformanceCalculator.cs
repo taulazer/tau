@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Difficulty.Skills;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Scoring;
 
@@ -20,27 +21,21 @@ public class TauPerformanceCalculator : PerformanceCalculator
     protected override PerformanceAttributes CreatePerformanceAttributes(ScoreInfo score, DifficultyAttributes attributes)
     {
         var tauAttributes = (TauDifficultyAttributes)attributes;
-
-        accuracy = score.Accuracy;
-        scoreMaxCombo = score.MaxCombo;
-        countGreat = score.Statistics.GetValueOrDefault(HitResult.Great);
-        countOk = score.Statistics.GetValueOrDefault(HitResult.Ok);
-        countMeh = score.Statistics.GetValueOrDefault(HitResult.Meh);
-        countMiss = score.Statistics.GetValueOrDefault(HitResult.Miss);
+        context = new TauPerformanceContext(score, tauAttributes);
 
         // Mod multipliers here, let's just set to default osu! value.
-        double multiplier = 1.12;
+        const double mod_multiplier = 1.12;
 
-        double aimValue = computeAimValue(score, tauAttributes);
-        double accuracyValue = computeAccuracyValue(score, tauAttributes);
+        double aimValue = Aim.ComputePerformance(context);
+        double accuracyValue = computeAccuracy(context);
 
         double totalValue = Math.Pow(
             Math.Pow(aimValue, 1.1) +
             Math.Pow(accuracyValue, 1.1),
             1.0 / 1.1
-        ) * multiplier;
+        ) * mod_multiplier;
 
-        return new TauPerformanceAttribute()
+        return new TauPerformanceAttribute
         {
             Aim = aimValue,
             Accuracy = accuracyValue,
@@ -48,27 +43,17 @@ public class TauPerformanceCalculator : PerformanceCalculator
         };
     }
 
-    private double computeAimValue(ScoreInfo score, TauDifficultyAttributes attributes)
+    private double computeAccuracy(TauPerformanceContext context)
     {
-        double rawAim = attributes.AimDifficulty;
-        double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0; // TODO: Figure values here.
-
-        aimValue *= accuracy;
-
-        return aimValue;
-    }
-
-    private double computeAccuracyValue(ScoreInfo score, TauDifficultyAttributes attributes)
-    {
-        if (score.Mods.Any(mod => mod is TauModRelax))
+        if (context.Score.Mods.Any(mod => mod is TauModRelax))
             return 0.0;
 
         // This percentage only considers HitCircles of any value - in this part of the calculation we focus on hitting the timing hit window.
         double betterAccuracyPercentage;
-        int amountHitObjectsWithAccuracy = attributes.HitCircleCount;
+        int amountHitObjectsWithAccuracy = context.DifficultyAttributes.HitCircleCount;
 
         if (amountHitObjectsWithAccuracy > 0)
-            betterAccuracyPercentage = ((countGreat - (totalHits - amountHitObjectsWithAccuracy)) * 6 + countOk * 2 + countMeh) / (double)(amountHitObjectsWithAccuracy * 6);
+            betterAccuracyPercentage = ((context.CountGreat - (totalHits() - amountHitObjectsWithAccuracy)) * 6 + context.CountOk * 2) / (double)(amountHitObjectsWithAccuracy * 6);
         else
             betterAccuracyPercentage = 0;
 
@@ -78,12 +63,15 @@ public class TauPerformanceCalculator : PerformanceCalculator
 
         // Lots of arbitrary values from testing.
         // Considering to use derivation from perfect accuracy in a probabilistic manner - assume normal distribution.
-        double accuracyValue = Math.Pow(1.52163, attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 24) * 2.83;
+        double accuracyValue = Math.Pow(1.52163, context.DifficultyAttributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 24) * 2.83;
 
         // Bonus for many hitcircles - it's harder to keep good accuracy up for longer.
         accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0, 0.3));
         return accuracyValue;
+
+        int totalHits() => context.CountGreat + context.CountOk + context.CountMiss;
     }
+}
 
 public struct TauPerformanceContext
 {
