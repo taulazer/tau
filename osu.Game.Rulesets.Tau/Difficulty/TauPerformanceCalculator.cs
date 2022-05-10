@@ -10,12 +10,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty;
 
 public class TauPerformanceCalculator : PerformanceCalculator
 {
-    private double accuracy;
-    private int scoreMaxCombo;
-    private int countGreat;
-    private int countOk;
-    private int countMeh;
-    private int countMiss;
+    private TauPerformanceContext context;
 
     public TauPerformanceCalculator()
         : base(new TauRuleset())
@@ -90,5 +85,20 @@ public class TauPerformanceCalculator : PerformanceCalculator
         return accuracyValue;
     }
 
-    private int totalHits => countGreat + countOk + countMeh + countMiss;
+public struct TauPerformanceContext
+{
+    public double Accuracy => Score.Accuracy;
+    public int ScoreMaxCombo => Score.MaxCombo;
+    public int CountGreat => Score.Statistics.GetValueOrDefault(HitResult.Great);
+    public int CountOk => Score.Statistics.GetValueOrDefault(HitResult.Ok);
+    public int CountMiss => Score.Statistics.GetValueOrDefault(HitResult.Miss);
+
+    public ScoreInfo Score { get; set; }
+    public TauDifficultyAttributes DifficultyAttributes { get; set; }
+
+    public TauPerformanceContext(ScoreInfo score, TauDifficultyAttributes attributes)
+    {
+        Score = score;
+        DifficultyAttributes = attributes;
+    }
 }
