@@ -1,3 +1,4 @@
+using System;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
@@ -27,5 +28,17 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             return 0;
         }
+
+        #region PP Calculation
+        public static double ComputePerformance(TauPerformanceContext context)
+        {
+            double rawAim = context.DifficultyAttributes.AimDifficulty;
+            double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0; // TODO: Figure values here.
+
+            aimValue *= context.Accuracy;
+
+            return aimValue;
+        }
+        #endregion
     }
 }
