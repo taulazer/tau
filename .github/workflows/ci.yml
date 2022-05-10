@@ -56,8 +56,8 @@ jobs:
           webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
           color: "#FF0040"
           username: "Github"
-          file: ".osu.Game.Rulesets.Tau/bin/Debug/net6.0/osu.Game.Rulesets.Tau.dll"
-          message: "[${{ github.run_number }}] ${{ github.action }}"
+          file: "osu.Game.Rulesets.Tau/bin/Debug/net6.0/osu.Game.Rulesets.Tau.dll"
+          message: "[${{ github.run_number }}] ${{ github.workflow }}"
 
   test:
     name: Test
