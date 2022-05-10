@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
         }
 
-        [BackgroundDependencyLoader()]
+        [BackgroundDependencyLoader]
         private void load()
         {
             NoteSize.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);

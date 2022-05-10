@@ -134,7 +134,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
-            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
+            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, _ => Color4.White);
         }
 
         [Resolved]

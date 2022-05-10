@@ -270,7 +270,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                 Current.BindValueChanged(v =>
                 {
                     var spriteText = Control.ChildrenOfType<OsuSpriteText>().FirstOrDefault();
-                    spriteText.Font = OsuFont.GetFont(weight: v.NewValue ? FontWeight.SemiBold : FontWeight.Regular);
+                    spriteText!.Font = OsuFont.GetFont(weight: v.NewValue ? FontWeight.SemiBold : FontWeight.Regular);
                 }, true);
             }
         }
