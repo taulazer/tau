@@ -3,6 +3,7 @@ using System.Linq;
 using osu.Game.Audio;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
+using osu.Game.Rulesets.Tau.Beatmaps;
 using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 
@@ -21,26 +22,19 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
             };
         }
 
-        protected override bool IsConvertedCorrectly(IEnumerable<HitObject> hitObjects)
+        protected override void CreateAsserts(IEnumerable<HitObject> hitObjects)
         {
-            // TODO: These should probably be asserts.
-            if (!hitObjects.Any(o => o is Slider))
-                return false;
+            AddAssert("Hitobjects are of correct type", () => hitObjects.Any(o => o is Slider));
 
             var slider = hitObjects.FirstOrDefault() as Slider;
 
-            if (slider is not { Duration: 1000 })
-                return false;
+            AddAssert("Slider is not null", () => slider != null);
+            AddAssert("Slider has correct duration", () => slider!.Duration == 1000);
 
             var original = CreateHitObjects().FirstOrDefault() as ConvertSlider;
 
-            if (slider.Angle != original!.CurvePositionAt(0).GetHitObjectAngle())
-                return false;
-
-            if (slider.GetAbsoluteAngle(slider.Path.EndNode) != original!.CurvePositionAt(1).GetHitObjectAngle())
-                return false;
-
-            return true;
+            AddAssert("Slider has correct starting angle", () => slider!.Angle == original.CurvePositionAt(0).GetHitObjectAngle());
+            AddAssert("Slider has correct ending angle", () => slider!.GetAbsoluteAngle(slider.Path.EndNode) == original.CurvePositionAt(1).GetHitObjectAngle());
         }
 
         private class ConvertSlider : HitObject, IHasPathWithRepeats, IHasPosition

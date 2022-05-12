@@ -17,10 +17,11 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
             yield return new YPositionalHitObject { StartTime = 1500, Y = 96 };
         }
 
-        protected override bool IsConvertedCorrectly(IEnumerable<HitObject> hitObjects)
+        protected override void CreateAsserts(IEnumerable<HitObject> hitObjects)
         {
+            AddAssert("Objects are of correct type", () => hitObjects.All(o => o is Beat));
             var beats = hitObjects.Cast<Beat>();
-            return beats.All(b => b.Angle == 90);
+            AddAssert("Beats are all correct angle", () => beats.All(b => b.Angle == 90));
         }
 
         private class AngledHitObject : HitObject, IHasAngle

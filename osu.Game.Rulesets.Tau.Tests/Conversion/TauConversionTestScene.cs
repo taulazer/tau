@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
     {
         protected abstract IEnumerable<HitObject> CreateHitObjects();
 
-        protected abstract bool IsConvertedCorrectly(IEnumerable<HitObject> hitObjects);
+        protected abstract void CreateAsserts(IEnumerable<HitObject> hitObjects);
 
         protected virtual bool PassCondition(IEnumerable<HitObject> hitObjects)
             => Player.Results.Count(r => r.IsHit) >= hitObjects.Count();
@@ -30,13 +30,13 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
                 PassCondition = () => PassCondition(hitObjects)
             });
 
-            AddAssert("Is converted correctly", () =>
+            AddStep("Create converts asserts", () =>
             {
                 var beatmap = CreateBeatmap(Ruleset.Value);
                 var converter = Ruleset.Value.CreateInstance().CreateBeatmapConverter(beatmap);
                 var converted = converter.Convert();
 
-                return IsConvertedCorrectly(converted.HitObjects);
+                CreateAsserts(converted.HitObjects);
             });
         }
     }
