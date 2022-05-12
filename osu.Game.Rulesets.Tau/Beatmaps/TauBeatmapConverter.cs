@@ -125,7 +125,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             nodes.Add(new SliderNode((float)data.Duration, finalAngle));
 
-            return new Slider
+            var slider = new Slider
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
@@ -135,13 +135,18 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 Path = new PolarSliderPath(nodes.ToArray()),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
+            };
 
+            if (beatmap.ControlPointInfo is LegacyControlPointInfo legacyControlPointInfo)
+            {
                 // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
                 // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
-                TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
-                                             ? 4f / ((LegacyControlPointInfo)beatmap.ControlPointInfo).DifficultyPointAt(original.StartTime).SliderVelocity
-                                             : 4
-            };
+                slider.TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
+                    ? 4f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
+                    : 4;
+            }
+
+            return slider;
         }
 
         private TauHitObject convertToSliderSpinner(HitObject original, IHasCombo comboData, IHasDuration duration, IBeatmap beatmap)
