@@ -146,8 +146,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
                 // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
                 slider.TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
-                    ? 4f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
-                    : 4;
+                                                    ? 4f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
+                                                    : 4;
             }
 
             return slider;
@@ -188,17 +188,29 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 }
             }
 
-            return new Slider
+            // For some reason, while this does solve the wrong duration for "spinners", this also somehow "slows down" the path of the slider.
+            // Will need to do some investigation as to why this is the case.
+            nodes.Add(new SliderNode((float)duration.Duration, 0));
+
+            var slider = new Slider
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
                 Path = new PolarSliderPath(nodes.ToArray()),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
-                TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
-                                             ? 4f / ((LegacyControlPointInfo)beatmap.ControlPointInfo).DifficultyPointAt(original.StartTime).SliderVelocity
-                                             : 4
             };
+
+            if (beatmap.ControlPointInfo is LegacyControlPointInfo legacyControlPointInfo)
+            {
+                // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
+                // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
+                slider.TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
+                                                    ? 4f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
+                                                    : 4;
+            }
+
+            return slider;
         }
     }
 
