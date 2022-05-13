@@ -40,9 +40,10 @@ public class TauPerformanceCalculator : PerformanceCalculator
         return new TauPerformanceAttribute
         {
             Aim = aimValue,
+            Speed = speedValue,
             Accuracy = accuracyValue,
             Total = totalValue,
-            EffectiveMissCount = calculateEffectiveMissCount(tauAttributes, context)
+            EffectiveMissCount = calculateEffectiveMissCount(context)
         };
     }
 
@@ -73,14 +74,14 @@ public class TauPerformanceCalculator : PerformanceCalculator
         return accuracyValue;
     }
 
-    public double calculateEffectiveMissCount(TauDifficultyAttributes attributes, TauPerformanceContext context)
+    public double calculateEffectiveMissCount(TauPerformanceContext context)
     {
         // Guess the number of misses + slider breaks from combo
         double comboBasedMissCount = 0.0;
 
-        if (attributes.SliderCount > 0)
+        if (context.DifficultyAttributes.SliderCount > 0)
         {
-            double fullComboThreshold = attributes.MaxCombo - 0.1 * attributes.SliderCount;
+            double fullComboThreshold = context.DifficultyAttributes.MaxCombo - 0.1 * context.DifficultyAttributes.SliderCount;
             if (context.ScoreMaxCombo < fullComboThreshold)
                 comboBasedMissCount = fullComboThreshold / Math.Max(1.0, context.ScoreMaxCombo);
         }

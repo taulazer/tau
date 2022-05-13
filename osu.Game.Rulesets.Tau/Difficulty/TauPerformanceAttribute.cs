@@ -9,6 +9,9 @@ public class TauPerformanceAttribute : PerformanceAttributes
     [JsonProperty("aim")]
     public double Aim { get; set; }
 
+    [JsonProperty("speed")]
+    public double Speed { get; set; }
+
     [JsonProperty("accuracy")]
     public double Accuracy { get; set; }
 
@@ -24,5 +27,7 @@ public class TauPerformanceAttribute : PerformanceAttributes
 
         yield return new PerformanceDisplayAttribute(nameof(Aim), "Aim", Aim);
         yield return new PerformanceDisplayAttribute(nameof(Accuracy), "Accuracy", Accuracy);
+        yield return new PerformanceDisplayAttribute(nameof(Speed), "Speed", Speed);
+
     }
 }
