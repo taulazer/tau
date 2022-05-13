@@ -33,9 +33,14 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         public double DrainRate { get; set; }
 
         /// <summary>
-        /// The number of hitcircles in the beatmap.
+        /// The number of notes in the beatmap.
         /// </summary>
         public int NotesCount { get; set; }
+
+        /// <summary>
+        /// The number of sliders in the beatmap.
+        /// </summary>
+        public int SliderCount { get; set; }
 
         public override IEnumerable<(int attributeId, object value)> ToDatabaseAttributes()
         {
