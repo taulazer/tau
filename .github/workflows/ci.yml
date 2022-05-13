@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/inspectcode
-          key: inspectcode-${{ hashFiles('.config/dotnet-tools.json') }}-${{ hashFiles('.github/workflows/ci.yml' ) }}
+          key: inspectcode-${{ hashFiles('.config/dotnet-tools.json', '.github/workflows/ci.yml', 'osu.Game.Rulesets.Tau.sln*', '.editorconfig', '.globalconfig') }}
 
       - name: Dotnet code style
         run: dotnet build -c Debug osu.Game.Rulesets.Tau.sln -p:EnforceCodeStyleInBuild=true
@@ -58,7 +58,7 @@ jobs:
           description: "[${{ github.run_number }}] [${{ github.event.head_commit.message }}](${{ github.event.head_commit.url }})"
           details: "Build was a success!"
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-          
+
       - name: Discord failure
         uses: naoei/discord-webhook-notify@master
         if: ${{ failure() }}
