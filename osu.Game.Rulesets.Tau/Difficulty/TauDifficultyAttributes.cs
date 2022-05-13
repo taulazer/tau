@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         /// <summary>
         /// The number of hitcircles in the beatmap.
         /// </summary>
-        public int HitCircleCount { get; set; }
+        public int NotesCount { get; set; }
 
         public override IEnumerable<(int attributeId, object value)> ToDatabaseAttributes()
         {
