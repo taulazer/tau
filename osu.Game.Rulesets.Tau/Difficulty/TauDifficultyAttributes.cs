@@ -9,6 +9,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         [JsonProperty("aim_difficulty")]
         public double AimDifficulty { get; set; }
 
+        [JsonProperty("speed_difficulty")]
+        public double SpeedDifficulty { get; set; }
+
         /// <summary>
         /// The perceived approach rate inclusive of rate-adjusting mods (DT/HT/etc).
         /// </summary>
@@ -53,7 +56,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 yield return v;
 
             yield return (ATTRIB_ID_AIM, AimDifficulty);
-            //yield return (ATTRIB_ID_SPEED, SpeedDifficulty);
+            yield return (ATTRIB_ID_SPEED, SpeedDifficulty);
             yield return (ATTRIB_ID_OVERALL_DIFFICULTY, OverallDifficulty);
             yield return (ATTRIB_ID_APPROACH_RATE, ApproachRate);
             yield return (ATTRIB_ID_MAX_COMBO, MaxCombo);
@@ -65,7 +68,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             base.FromDatabaseAttributes(values);
 
             AimDifficulty = values[ATTRIB_ID_AIM];
-            //SpeedDifficulty = values[ATTRIB_ID_SPEED];
+            SpeedDifficulty = values[ATTRIB_ID_SPEED];
             OverallDifficulty = values[ATTRIB_ID_OVERALL_DIFFICULTY];
             ApproachRate = values[ATTRIB_ID_APPROACH_RATE];
             MaxCombo = (int)values[ATTRIB_ID_MAX_COMBO];

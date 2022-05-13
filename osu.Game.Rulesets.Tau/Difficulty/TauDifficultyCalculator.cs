@@ -19,6 +19,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
     {
         private readonly TauCachedProperties properties = new();
         private double hitWindowGreat;
+        private const double difficultyMultiplier = 0.153;
 
         public TauDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
             : base(ruleset, beatmap)
@@ -30,15 +31,27 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             if (beatmap.HitObjects.Count == 0)
                 return new DifficultyAttributes { Mods = mods };
 
-            var aim = Math.Sqrt(skills[0].DifficultyValue()) * 0.153;
-            var speed = skills[1].DifficultyValue();
+            var aim = Math.Sqrt(skills[0].DifficultyValue()) * difficultyMultiplier;
+            var speed = Math.Sqrt(skills[1].DifficultyValue()) * difficultyMultiplier;
 
             double preempt = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
+
+            double baseAimPerformance = Math.Pow(5 * Math.Max(1, aim / 0.0675) - 4, 3) / 100000;
+            double baseSpeedPerformance = Math.Pow(5 * Math.Max(1, speed / 0.0675) - 4, 3) / 100000;
+
+            double basePerformance =
+                Math.Pow(
+                    Math.Pow(baseAimPerformance, 1.1) +
+                    Math.Pow(baseSpeedPerformance, 1.1), 1.0 / 1.1
+                );
+
+            double starRating = basePerformance > 0.00001 ? Math.Cbrt(1.12) * 0.027 * (Math.Cbrt(100000 / Math.Pow(2, 1 / 1.1) * basePerformance) + 4) : 0;
 
             return new TauDifficultyAttributes
             {
                 AimDifficulty = aim,
-                StarRating = aim, // TODO: Include speed.
+                SpeedDifficulty = speed,
+                StarRating = starRating,
                 Mods = mods,
                 MaxCombo = beatmap.GetMaxCombo(),
                 OverallDifficulty = (80 - hitWindowGreat) / 6,
@@ -76,7 +89,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             return new Skill[]
             {
                 new Aim(mods),
-                new Speed(mods)
+                new Speed(mods, hitWindowGreat)
             };
         }
     }
