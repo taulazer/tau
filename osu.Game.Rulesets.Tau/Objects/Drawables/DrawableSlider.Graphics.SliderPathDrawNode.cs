@@ -66,7 +66,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 private float radius;
                 private IShader shader;
                 private IShader maskShader;
-                private IShader textureShader;
 
                 // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
                 // per primitive (triangles in this case). Otherwise overflowing the batch will result in wrong
@@ -111,7 +110,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     radius = Source.PathRadius;
                     shader = Source.hitFadeTextureShader;
                     maskShader = Source.depthMaskShader;
-                    textureShader = Source.textureShader;
 
                     var center = Source.PositionInBoundingBox(Vector2.Zero);
                     var edge = Source.PositionInBoundingBox(new Vector2(Source.PathDistance, 0));
@@ -256,7 +254,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         Colour = colourAt(lineLeft.EndPoint),
                         Result = endResult
                     });
-                    ;
+
                     quadBatch.Add(new SliderTexturedVertex2D
                     {
                         Position = new Vector2(screenLineLeft.StartPoint.X, screenLineLeft.StartPoint.Y),
