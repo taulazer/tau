@@ -28,10 +28,12 @@ public class TauPerformanceCalculator : PerformanceCalculator
 
         double aimValue = Aim.ComputePerformance(context);
         double accuracyValue = computeAccuracy(context);
+        double speedValue = Speed.ComputePerformance(context);
 
         double totalValue = Math.Pow(
             Math.Pow(aimValue, 1.1) +
-            Math.Pow(accuracyValue, 1.1),
+            Math.Pow(accuracyValue, 1.1) +
+            Math.Pow(speedValue, 1.1),
             1.0 / 1.1
         ) * mod_multiplier;
 

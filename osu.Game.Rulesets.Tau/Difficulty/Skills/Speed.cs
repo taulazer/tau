@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
+using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Difficulty.Skills
@@ -164,5 +166,49 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         }
 
         protected override double CalculateInitialStrain(double time) => (currentStrain * currentRhythm) * strainDecay(time - Previous[0].StartTime);
+
+        #region PP Calculation
+
+        public static double ComputePerformance(TauPerformanceContext context)
+        {
+            TauDifficultyAttributes attributes = context.DifficultyAttributes;
+            double speedValue = Math.Pow(5.0 * Math.Max(1.0, attributes.SpeedDifficulty / 0.0675) - 4.0, 3.0) / 100000.0;
+
+            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, context.TotalHits / 2000.0) +
+                                 (context.TotalHits > 2000 ? Math.Log10(context.TotalHits / 2000.0) * 0.5 : 0.0);
+            speedValue *= lengthBonus;
+
+            // Penalize misses by assessing # of misses relative to the total # of objects. Default a 3% reduction for any # of misses.
+            if (context.EffectiveMissCount > 0)
+                speedValue *= 0.97 * Math.Pow(1 - Math.Pow(context.EffectiveMissCount / context.TotalHits, 0.775), Math.Pow(context.EffectiveMissCount, .875));
+
+            speedValue *= getComboScalingFactor(context);
+
+            double approachRateFactor = 0.0;
+            if (attributes.ApproachRate > 10.33)
+                approachRateFactor = 0.3 * (attributes.ApproachRate - 10.33);
+
+            speedValue *= 1.0 + approachRateFactor * lengthBonus; // Buff for longer maps with high AR.
+
+            if (context.Score.Mods.Any(m => m is TauModFadeIn))
+            {
+                // We want to give more reward for lower AR when it comes to aim and Fade In. This nerfs high AR and buffs lower AR.
+                speedValue *= 1.0 + 0.04 * (12.0 - attributes.ApproachRate);
+            }
+
+            // Scale the speed value with accuracy and OD.
+            speedValue *= (0.95 + Math.Pow(attributes.OverallDifficulty, 2) / 750) * Math.Pow(context.Accuracy, (14.5 - Math.Max(attributes.OverallDifficulty, 8)) / 2);
+
+            // Scale the speed value with # of 50s to punish doubletapping.
+            //speedValue *= Math.Pow(0.98, context.CountOk < context.TotalHits / 500.0 ? 0 : context.CountMeh - context.TotalHits / 500.0);
+
+            return speedValue;
+        }
+
+        private static double getComboScalingFactor(TauPerformanceContext context) => context.DifficultyAttributes.MaxCombo <= 0
+            ? 1.0
+            : Math.Min(Math.Pow(context.ScoreMaxCombo, 0.8) / Math.Pow(context.DifficultyAttributes.MaxCombo, 0.8), 1.0);
+
+        #endregion
     }
 }
