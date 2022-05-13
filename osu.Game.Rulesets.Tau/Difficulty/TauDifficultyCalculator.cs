@@ -54,7 +54,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 StarRating = starRating,
                 Mods = mods,
                 MaxCombo = beatmap.GetMaxCombo(),
-                OverallDifficulty = (80 - hitWindowGreat) / 6,
+                OverallDifficulty = beatmap.Difficulty.OverallDifficulty,
                 ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5,
                 NotesCount = beatmap.HitObjects.Count(h => h is Beat and not SliderHeadBeat and not SliderRepeat and not SliderTick),
                 SliderCount = beatmap.HitObjects.Count(s => s is Slider),
