@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
-using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Tau.Mods;
@@ -10,7 +9,7 @@ using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 {
-    public class Speed : StrainSkill
+    public class Speed : TauStrainSkill
     {
         private const double single_spacing_threshold = 125;
         private const double rhythm_multiplier = 0.75;
@@ -26,8 +25,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private double currentStrain;
         private double currentRhythm;
 
-        protected int ReducedSectionCount => 5;
-        protected double DifficultyMultiplier => 1.04;
+        protected override int ReducedSectionCount => 5;
+        protected override double DifficultyMultiplier => 1.04;
         protected override int HistoryLength => 32;
 
         public Speed(Mod[] mods, double hitWindowGreat)
