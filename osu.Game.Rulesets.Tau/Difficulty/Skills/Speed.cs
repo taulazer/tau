@@ -146,7 +146,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (strainTime < min_speed_bonus)
                 speedBonus = 1 + 0.75 * Math.Pow((min_speed_bonus - strainTime) / speed_balancing_factor, 2);
 
-            double travelDistance = tauCurrObj?.Distance ?? 0;
+            double travelDistance = Math.Abs(tauCurrObj?.Distance ?? 0);
             double distance = Math.Min(single_spacing_threshold, travelDistance + Math.Abs(tauPrevObj.Distance)); // tauCurrobj.Disance used to be MinJumpDistance, replace if found alternate.
 
             return (speedBonus + speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5)) / strainTime;
@@ -156,7 +156,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
         protected override double StrainValueAt(DifficultyHitObject current)
         {
-            currentStrain += strainDecay(current.DeltaTime);
+            currentStrain *= strainDecay(current.DeltaTime);
             currentStrain += strainValueOf(current) * skillMultiplier;
 
             currentRhythm = calculateRhythmBonus(current);
