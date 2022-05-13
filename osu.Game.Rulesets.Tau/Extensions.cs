@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using osu.Game.Rulesets.Objects;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau
@@ -42,20 +41,6 @@ namespace osu.Game.Rulesets.Tau
             if (angle < 0f) angle += 360f;
 
             return angle + 90;
-        }
-
-        /// <summary>
-        /// Gets the theta angle from the playfield's center.
-        /// Note that this only works for legacy sizing (512x384)
-        /// </summary>
-        /// <param name="target">The target <see cref="HitObject"/> position.</param>
-        public static float GetHitObjectAngle(this Vector2 target)
-        {
-            var offset = new Vector2(256, 192) - target;
-            var temp = MathHelper.RadiansToDegrees(MathF.Atan2(offset.X, -offset.Y)) - 180;
-            NormalizeAngle(ref temp);
-
-            return temp;
         }
 
         /// <summary>
