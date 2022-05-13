@@ -16,12 +16,12 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         {
             var tauObject = current as TauDifficultyHitObject;
 
-            throw new System.NotImplementedException();
+            return 0;
         }
 
         protected override double CalculateInitialStrain(double time)
         {
-            throw new System.NotImplementedException();
+            return 0;
         }
     }
 }

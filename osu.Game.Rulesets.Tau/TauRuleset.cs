@@ -45,6 +45,7 @@ namespace osu.Game.Rulesets.Tau
         public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
         public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
+        public override PerformanceCalculator CreatePerformanceCalculator() => new TauPerformanceCalculator();
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
 
         public override Drawable CreateIcon() => new TauIcon(this);
