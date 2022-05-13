@@ -40,9 +40,12 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 AimDifficulty = aim,
                 StarRating = aim, // TODO: Include speed.
                 Mods = mods,
-                MaxCombo = beatmap.HitObjects.Count,
+                MaxCombo = beatmap.GetMaxCombo(),
                 OverallDifficulty = (80 - hitWindowGreat) / 6,
                 ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5,
+                NotesCount = beatmap.HitObjects.Count(h => h is Beat and not SliderHeadBeat and not SliderRepeat and not SliderTick),
+                SliderCount = beatmap.HitObjects.Count(s => s is Slider),
+                HardBeatCount = beatmap.HitObjects.Count(hb => hb is HardBeat)
             };
         }
 

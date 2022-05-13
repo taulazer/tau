@@ -42,6 +42,11 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         /// </summary>
         public int SliderCount { get; set; }
 
+        /// <summary>
+        /// The number of sliders in the beatmap.
+        /// </summary>
+        public int HardBeatCount { get; set; }
+
         public override IEnumerable<(int attributeId, object value)> ToDatabaseAttributes()
         {
             foreach (var v in base.ToDatabaseAttributes())
