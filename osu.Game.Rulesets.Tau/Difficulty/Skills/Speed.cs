@@ -55,9 +55,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             for (int i = rhythmStart; i > 0; i--)
             {
-                TauDifficultyHitObject currObj = (TauDifficultyHitObject)Previous[i - 1];
-                TauDifficultyHitObject prevObj = (TauDifficultyHitObject)Previous[i];
-                TauDifficultyHitObject lastObj = (TauDifficultyHitObject)Previous[i + 1];
+                TauAngledDifficultyHitObject currObj = (TauAngledDifficultyHitObject)Previous[i - 1];
+                TauAngledDifficultyHitObject prevObj = (TauAngledDifficultyHitObject)Previous[i];
+                TauAngledDifficultyHitObject lastObj = (TauAngledDifficultyHitObject)Previous[i + 1];
 
                 double currHistoricalDecay = (history_time_max - (current.StartTime - currObj.StartTime)) / history_time_max; // scales note 0 to 1 from history to now
 
@@ -125,16 +125,16 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private double strainValueOf(DifficultyHitObject current)
         {
             // derive strainTime for calculation
-            var tauPrevObj = (TauAngledDifficultyHitObject)current;
-            var tauCurrObj = Previous.Count > 0 ? (TauAngledDifficultyHitObject)Previous[0] : null;
+            var tauCurrObj = (TauAngledDifficultyHitObject)current;
+            var tauPrevObj = Previous.Count > 0 ? (TauAngledDifficultyHitObject)Previous[0] : null;
 
-            double strainTime = tauPrevObj.StrainTime;
+            double strainTime = tauCurrObj.StrainTime;
             double greatWindowFull = greatWindow * 2;
             double speedWindowRatio = strainTime / greatWindowFull;
 
             // Aim to nerf cheesy rhythms (Very fast consecutive doubles with large deltatimes between)
-            if (tauCurrObj != null && strainTime < greatWindowFull && tauCurrObj.StrainTime > strainTime)
-                strainTime = Interpolation.Lerp(tauCurrObj.StrainTime, strainTime, speedWindowRatio);
+            if (tauPrevObj != null && strainTime < greatWindowFull && tauPrevObj.StrainTime > strainTime)
+                strainTime = Interpolation.Lerp(tauPrevObj.StrainTime, strainTime, speedWindowRatio);
 
             // Cap deltatime to the OD 300 hitwindow.
             // 0.93 is derived from making sure 260bpm OD8 streams aren't nerfed harshly, whilst 0.92 limits the effect of the cap.
