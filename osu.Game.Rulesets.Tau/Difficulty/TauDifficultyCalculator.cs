@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 MaxCombo = beatmap.GetMaxCombo(),
                 OverallDifficulty = beatmap.Difficulty.OverallDifficulty,
                 ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5,
-                NotesCount = beatmap.HitObjects.Count(h => h is Beat and not SliderHeadBeat and not SliderRepeat and not SliderTick),
+                NotesCount = beatmap.HitObjects.Count(h => h is Beat),
                 SliderCount = beatmap.HitObjects.Count(s => s is Slider),
                 HardBeatCount = beatmap.HitObjects.Count(hb => hb is HardBeat),
                 SliderFactor = aimRating > 0 ? aimRatingNoSliders / aimRating : 1
@@ -91,7 +91,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             hitWindowGreat = hitWindows.WindowFor(HitResult.Great) / clockRate;
             return new Skill[]
             {
-                new Aim(mods, typeof(Beat), typeof(Slider)),
+                new Aim(mods, typeof(Beat), typeof(SliderRepeat), typeof(Slider)),
                 new Aim(mods, typeof(Beat)),
                 new Speed(mods, hitWindowGreat)
             };
