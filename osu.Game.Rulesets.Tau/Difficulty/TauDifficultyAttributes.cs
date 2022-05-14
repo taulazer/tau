@@ -22,6 +22,14 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         public double ApproachRate { get; set; }
 
         /// <summary>
+        /// Describes how much of <see cref="AimDifficulty"/> is contributed to by hitcircles or sliders.
+        /// A value closer to 1.0 indicates most of <see cref="AimDifficulty"/> is contributed by hitcircles.
+        /// A value closer to 0.0 indicates most of <see cref="AimDifficulty"/> is contributed by sliders.
+        /// </summary>
+        [JsonProperty("slider_factor")]
+        public double SliderFactor { get; set; }
+
+        /// <summary>
         /// The perceived overall difficulty inclusive of rate-adjusting mods (DT/HT/etc).
         /// </summary>
         /// <remarks>
@@ -61,6 +69,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             yield return (ATTRIB_ID_APPROACH_RATE, ApproachRate);
             yield return (ATTRIB_ID_MAX_COMBO, MaxCombo);
             yield return (ATTRIB_ID_DIFFICULTY, StarRating);
+            yield return (ATTRIB_ID_SLIDER_FACTOR, SliderFactor);
         }
 
         public override void FromDatabaseAttributes(IReadOnlyDictionary<int, double> values)
@@ -73,6 +82,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             ApproachRate = values[ATTRIB_ID_APPROACH_RATE];
             MaxCombo = (int)values[ATTRIB_ID_MAX_COMBO];
             StarRating = values[ATTRIB_ID_DIFFICULTY];
+            SliderFactor = values[ATTRIB_ID_SLIDER_FACTOR];
         }
     }
 }

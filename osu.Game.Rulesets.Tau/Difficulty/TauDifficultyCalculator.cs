@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
     {
         private readonly TauCachedProperties properties = new();
         private double hitWindowGreat;
-        private double difficultyMultiplier = 0.0825;
+        private const double difficulty_multiplier = 0.0825;
 
         public TauDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
             : base(ruleset, beatmap)
@@ -31,12 +31,14 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             if (beatmap.HitObjects.Count == 0)
                 return new DifficultyAttributes { Mods = mods };
 
-            var aim = Math.Sqrt(skills[0].DifficultyValue()) * difficultyMultiplier;
-            var speed = Math.Sqrt(skills[1].DifficultyValue()) * difficultyMultiplier;
+            double aimRating = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
+
+            double aimRatingNoSliders = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
+            double speed = Math.Sqrt(skills[2].DifficultyValue()) * difficulty_multiplier;
 
             double preempt = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
 
-            double baseAimPerformance = Math.Pow(5 * Math.Max(1, aim / 0.0675) - 4, 3) / 100000;
+            double baseAimPerformance = Math.Pow(5 * Math.Max(1, aimRating / 0.0675) - 4, 3) / 100000;
             double baseSpeedPerformance = Math.Pow(5 * Math.Max(1, speed / 0.0675) - 4, 3) / 100000;
 
             double basePerformance =
@@ -49,7 +51,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
 
             return new TauDifficultyAttributes
             {
-                AimDifficulty = aim,
+                AimDifficulty = aimRating,
                 SpeedDifficulty = speed,
                 StarRating = starRating,
                 Mods = mods,
@@ -58,7 +60,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5,
                 NotesCount = beatmap.HitObjects.Count(h => h is Beat and not SliderHeadBeat and not SliderRepeat and not SliderTick),
                 SliderCount = beatmap.HitObjects.Count(s => s is Slider),
-                HardBeatCount = beatmap.HitObjects.Count(hb => hb is HardBeat)
+                HardBeatCount = beatmap.HitObjects.Count(hb => hb is HardBeat),
+                SliderFactor = aimRating > 0 ? aimRatingNoSliders / aimRating : 1
             };
         }
 
@@ -88,7 +91,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             hitWindowGreat = hitWindows.WindowFor(HitResult.Great) / clockRate;
             return new Skill[]
             {
-                new Aim(mods),
+                new Aim(mods, typeof(Beat), typeof(Slider)),
+                new Aim(mods, typeof(Beat)),
                 new Speed(mods, hitWindowGreat)
             };
         }
