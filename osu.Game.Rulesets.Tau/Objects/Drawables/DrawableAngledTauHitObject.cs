@@ -45,6 +45,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             angleBindable.UnbindFrom(HitObject.AngleBindable);
         }
 
+        protected override JudgementResult CreateResult(Judgement judgement)
+            => new TauJudgementResult(HitObject, judgement);
+
         protected override bool CheckForValidation() => IsWithinPaddle();
 
         public bool IsWithinPaddle() => CheckValidation != null && CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).IsValid;
