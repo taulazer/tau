@@ -24,18 +24,22 @@ public class TauPerformanceCalculator : PerformanceCalculator
         context = new TauPerformanceContext(score, tauAttributes);
 
         // Mod multipliers here, let's just set to default osu! value.
-        const double mod_multiplier = 1.12;
+        double multiplier = 1.12;
 
         double aimValue = Aim.ComputePerformance(context);
         double accuracyValue = computeAccuracy(context);
         double speedValue = Speed.ComputePerformance(context);
+        double effectiveMissCount = calculateEffectiveMissCount(context);
+
+        if (score.Mods.Any(m => m is TauModNoFail))
+            multiplier *= Math.Max(0.90, 1.0 - 0.02 * effectiveMissCount);
 
         double totalValue = Math.Pow(
             Math.Pow(aimValue, 1.1) +
             Math.Pow(accuracyValue, 1.1) +
             Math.Pow(speedValue, 1.1),
             1.0 / 1.1
-        ) * mod_multiplier;
+        ) * multiplier;
 
         return new TauPerformanceAttribute
         {
@@ -43,7 +47,7 @@ public class TauPerformanceCalculator : PerformanceCalculator
             Speed = speedValue,
             Accuracy = accuracyValue,
             Total = totalValue,
-            EffectiveMissCount = calculateEffectiveMissCount(context)
+            EffectiveMissCount = effectiveMissCount
         };
     }
 
@@ -91,6 +95,7 @@ public class TauPerformanceCalculator : PerformanceCalculator
 
         return Math.Max(context.CountMiss, comboBasedMissCount);
     }
+
 }
 
 public struct TauPerformanceContext
