@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             double currVelocity = tauCurrObj.Distance / tauCurrObj.DeltaTime;
 
-            if (AllowedObjectTypes.Any(t => t == typeof(Slider)) && tauLastObj.BaseObject is Slider && tauLastObj.TravelDistance < tauCurrObj.AngleRange / 2)
+            if (AllowedObjectTypes.Any(t => t == typeof(Slider)) && tauLastObj.BaseObject is Slider && tauLastObj.TravelDistance < tauCurrObj.AngleRange)
             {
                 double travelVelocity = tauLastObj.TravelDistance / tauLastObj.TravelTime; // calculate the slider velocity from slider head to slider end.
                 double movementVelocity = tauCurrObj.Distance / tauCurrObj.DeltaTime; // calculate the movement velocity from slider end to current object
@@ -50,7 +50,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double aimStrain = currVelocity;
 
             // Sliders should be treated as beats if their travel distance is short enough.
-            if (tauLastObj.TravelTime != 0 && tauLastObj.TravelDistance >= tauCurrObj.AngleRange / 2)
+            if (tauLastObj.TravelTime != 0 && tauLastObj.TravelDistance >= tauCurrObj.AngleRange)
             {
                 // Reward sliders based on velocity.
                 sliderBonus = tauLastObj.TravelDistance / tauLastObj.TravelTime;
