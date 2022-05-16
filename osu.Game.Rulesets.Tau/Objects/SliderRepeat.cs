@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class SliderRepeat : Beat, IHasOffsetAngle
+    public class SliderRepeat : AngledTauHitObject, IHasOffsetAngle
     {
         public int RepeatIndex { get; set; }
 
