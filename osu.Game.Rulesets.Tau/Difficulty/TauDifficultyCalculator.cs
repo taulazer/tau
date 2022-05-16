@@ -9,6 +9,7 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Tau.Difficulty.Skills;
+using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI;
@@ -35,6 +36,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty
 
             double aimRatingNoSliders = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double speed = Math.Sqrt(skills[2].DifficultyValue()) * difficulty_multiplier;
+
+            if (mods.Any(m => m is TauModRelax))
+                speed = 0.0;
 
             double preempt = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
 
