@@ -2,9 +2,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
-using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
 using osuTK;
@@ -30,11 +28,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             RelativeSizeAxes = Axes.Both;
             Size = Vector2.One;
 
-            AddInternal(DrawableBox = CreateDrawable());
-        }
-
-        protected virtual Drawable CreateDrawable()
-            => new Container
+            AddInternal(DrawableBox = new Container
             {
                 RelativePositionAxes = Axes.Both,
                 Anchor = Anchor.Centre,
@@ -43,7 +37,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 AlwaysPresent = true,
                 Size = new Vector2(NoteSize.Default),
                 Child = new BeatPiece()
-            };
+            });
+        }
 
         [Resolved(canBeNull: true)]
         protected TauCachedProperties Properties { get; private set; }
@@ -65,9 +60,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             NoteSize.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
         }
-
-        protected override JudgementResult CreateResult(Judgement judgement)
-            => new TauJudgementResult(HitObject, judgement);
 
         [Resolved]
         private OsuColour colour { get; set; }

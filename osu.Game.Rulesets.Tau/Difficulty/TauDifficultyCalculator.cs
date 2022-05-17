@@ -9,6 +9,7 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Tau.Difficulty.Skills;
+using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Scoring;
 using osu.Game.Rulesets.Tau.UI;
@@ -36,6 +37,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             double aimRatingNoSliders = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double speed = Math.Sqrt(skills[2].DifficultyValue()) * difficulty_multiplier;
 
+            if (mods.Any(m => m is TauModRelax))
+                speed = 0.0;
+
             double preempt = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
 
             double baseAimPerformance = Math.Pow(5 * Math.Max(1, aimRating / 0.0675) - 4, 3) / 100000;
@@ -58,7 +62,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 MaxCombo = beatmap.GetMaxCombo(),
                 OverallDifficulty = beatmap.Difficulty.OverallDifficulty,
                 ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5,
-                NotesCount = beatmap.HitObjects.Count(h => h is Beat and not SliderHeadBeat and not SliderRepeat and not SliderTick),
+                NotesCount = beatmap.HitObjects.Count(h => h is Beat),
                 SliderCount = beatmap.HitObjects.Count(s => s is Slider),
                 HardBeatCount = beatmap.HitObjects.Count(hb => hb is HardBeat),
                 SliderFactor = aimRating > 0 ? aimRatingNoSliders / aimRating : 1
@@ -91,7 +95,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             hitWindowGreat = hitWindows.WindowFor(HitResult.Great) / clockRate;
             return new Skill[]
             {
-                new Aim(mods, typeof(Beat), typeof(Slider)),
+                new Aim(mods, typeof(Beat), typeof(SliderRepeat), typeof(Slider)),
                 new Aim(mods, typeof(Beat)),
                 new Speed(mods, hitWindowGreat)
             };

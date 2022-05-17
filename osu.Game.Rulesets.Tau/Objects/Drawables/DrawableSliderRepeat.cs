@@ -5,22 +5,43 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osuTK;
 using System;
+using osu.Framework.Allocation;
+using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableSliderRepeat : DrawableBeat
+    public class DrawableSliderRepeat : DrawableAngledTauHitObject<SliderRepeat>
     {
+        public Drawable DrawableBox;
+
         public DrawableSlider DrawableSlider => (DrawableSlider)ParentHitObject;
 
         public override bool DisplayResult => false;
 
         public DrawableSliderRepeat()
+            : this(null)
         {
         }
 
-        public DrawableSliderRepeat(Beat hitObject)
+        public DrawableSliderRepeat(SliderRepeat hitObject)
             : base(hitObject)
         {
+            Name = "Repeat track";
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+            RelativeSizeAxes = Axes.Both;
+            Size = Vector2.One;
+
+            AddInternal(DrawableBox = new Container
+            {
+                RelativePositionAxes = Axes.Both,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Alpha = 0,
+                AlwaysPresent = true,
+                Size = new Vector2(NoteSize.Default),
+                Child = new BeatPiece()
+            });
         }
 
         protected override void Update()
@@ -32,6 +53,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         public Drawable InnerDrawableBox;
+
+        [Resolved(canBeNull: true)]
+        protected TauCachedProperties Properties { get; private set; }
+
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            NoteSize.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
+        }
 
         protected override void LoadComplete()
         {

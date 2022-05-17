@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             double currVelocity = tauCurrObj.Distance / tauCurrObj.DeltaTime;
 
-            if (AllowedObjectTypes.Any(t => t == typeof(Slider)) && tauLastObj.BaseObject is Slider)
+            if (AllowedObjectTypes.Any(t => t == typeof(Slider)) && tauLastObj.BaseObject is Slider && tauLastObj.TravelDistance < tauCurrObj.AngleRange)
             {
                 double travelVelocity = tauLastObj.TravelDistance / tauLastObj.TravelTime; // calculate the slider velocity from slider head to slider end.
                 double movementVelocity = tauCurrObj.Distance / tauCurrObj.DeltaTime; // calculate the movement velocity from slider end to current object
@@ -49,7 +49,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double sliderBonus = 0;
             double aimStrain = currVelocity;
 
-            if (tauLastObj.TravelTime != 0)
+            // Sliders should be treated as beats if their travel distance is short enough.
+            if (tauLastObj.TravelTime != 0 && tauLastObj.TravelDistance >= tauCurrObj.AngleRange)
             {
                 // Reward sliders based on velocity.
                 sliderBonus = tauLastObj.TravelDistance / tauLastObj.TravelTime;
@@ -68,7 +69,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             double rawAim = context.DifficultyAttributes.AimDifficulty;
             double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0; // TODO: Figure values here.
 
-            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, context.TotalHits / 2000.0) +
+            double lengthBonus = 0.95 +
+                                 0.4 * Math.Min(1.0, context.TotalHits / 2000.0) +
                                  (context.TotalHits > 2000 ? Math.Log10(context.TotalHits / 2000.0) * 0.5 : 0.0); // TODO: Figure values here.
             aimValue *= lengthBonus;
             TauDifficultyAttributes attributes = context.DifficultyAttributes;
@@ -83,15 +85,18 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             // Penalize misses by assessing # of misses relative to the total # of objects. Default a 3% reduction for any # of misses.
             if (context.EffectiveMissCount > 0)
-                aimValue *= 0.97 * Math.Pow(1 - Math.Pow(context.EffectiveMissCount / context.TotalHits, 0.775), context.EffectiveMissCount); // TODO: Figure values here.
+                aimValue *= 0.97 *
+                            Math.Pow(1 - Math.Pow(context.EffectiveMissCount / context.TotalHits, 0.775), context.EffectiveMissCount); // TODO: Figure values here.
 
             // We assume 15% of sliders in a map are difficult since there's no way to tell from the performance calculator.
             double estimateDifficultSliders = attributes.SliderCount * 0.15;
 
             if (attributes.SliderCount > 0)
             {
-                double estimateSliderEndsDropped = Math.Clamp(Math.Min(context.CountOk + context.CountMiss, attributes.MaxCombo - context.ScoreMaxCombo), 0, estimateDifficultSliders);
-                double sliderNerfFactor = (1 - attributes.SliderFactor) * Math.Pow(1 - estimateSliderEndsDropped / estimateDifficultSliders, 3) + attributes.SliderFactor;
+                double estimateSliderEndsDropped = Math.Clamp(Math.Min(context.CountOk + context.CountMiss, attributes.MaxCombo - context.ScoreMaxCombo), 0,
+                    estimateDifficultSliders);
+                double sliderNerfFactor = (1 - attributes.SliderFactor) * Math.Pow(1 - estimateSliderEndsDropped / estimateDifficultSliders, 3) +
+                                          attributes.SliderFactor;
                 aimValue *= sliderNerfFactor;
             }
 
