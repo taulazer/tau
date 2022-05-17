@@ -118,7 +118,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         /// <param name="multiplier">The multiplier for the amplitude.</param>
         public void UpdateAmplitudes(float angle, float multiplier)
         {
-            var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser), 0, bars_per_visualiser);
+            var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser), 0, bars_per_visualiser - 1);
             amplitudes[barIndex] += multiplier;
 
             for (int i = 1; i <= bar_spread; i++)
