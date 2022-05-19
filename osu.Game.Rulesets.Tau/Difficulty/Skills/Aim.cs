@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private Type[] AllowedObjectTypes;
 
         protected override int HistoryLength => 2;
-        protected override double SkillMultiplier => 60;
+        protected override double SkillMultiplier => 50;
         private const double slider_multiplier = 1.5;
         protected override double StrainDecayBase => 0.2;
 
@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (tauCurrObj.Distance == 0)
                 return 0;
 
-            if (!(tauCurrObj.Distance >= tauCurrObj.AngleRange / 2)) return 0;
+            if (!(tauCurrObj.Distance >= tauCurrObj.AngleRange)) return 0;
 
             double currVelocity = tauCurrObj.Distance / tauCurrObj.StrainTime;
 

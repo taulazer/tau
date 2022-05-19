@@ -26,8 +26,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties)
             : base(hitObject, lastObject, clockRate, properties)
         {
-            float distance = Math.Abs(Extensions.GetDeltaAngle(BaseObject.Angle, LastObject.Angle));
-            Distance = distance - AngleRange;
+            Distance = Math.Abs(Extensions.GetDeltaAngle(BaseObject.Angle, LastObject.Angle));
 
             if (hitObject is Slider slider)
             {
