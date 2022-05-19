@@ -31,17 +31,17 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             var tauCurrObj = (TauAngledDifficultyHitObject)current;
             var tauLastObj = (TauAngledDifficultyHitObject)Previous[0];
 
-            if (tauCurrObj.Distance == 0 || tauCurrObj.DeltaTime == 0)
+            if (tauCurrObj.Distance == 0)
                 return 0;
 
             if (!(tauCurrObj.Distance >= tauCurrObj.AngleRange / 2)) return 0;
 
-            double currVelocity = tauCurrObj.Distance / tauCurrObj.DeltaTime;
+            double currVelocity = tauCurrObj.Distance / tauCurrObj.StrainTime;
 
             if (AllowedObjectTypes.Any(t => t == typeof(Slider)) && tauLastObj.BaseObject is Slider && tauLastObj.TravelDistance < tauCurrObj.AngleRange)
             {
                 double travelVelocity = tauLastObj.TravelDistance / tauLastObj.TravelTime; // calculate the slider velocity from slider head to slider end.
-                double movementVelocity = tauCurrObj.Distance / tauCurrObj.DeltaTime; // calculate the movement velocity from slider end to current object
+                double movementVelocity = tauCurrObj.Distance / tauCurrObj.StrainTime; // calculate the movement velocity from slider end to current object
 
                 currVelocity = Math.Max(currVelocity, movementVelocity + travelVelocity); // take the larger total combined velocity.
             }
