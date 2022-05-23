@@ -49,11 +49,12 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         {
             bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
             var comboData = original as IHasCombo;
+            var sample = original is IHasPathWithRepeats c ? c.NodeSamples[0] : null;
 
             if (isHard && CanConvertToHardBeats)
-                return convertToHardBeat(original, comboData);
+                return convertToHardBeat(original, comboData, sample);
 
-            return convertToBeat(original, comboData);
+            return convertToBeat(original, comboData, sample);
         }
 
         private float getHitObjectAngle(HitObject original)
@@ -66,20 +67,20 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 _ => 0
             };
 
-        private TauHitObject convertToBeat(HitObject original, IHasCombo comboData)
+        private TauHitObject convertToBeat(HitObject original, IHasCombo comboData, IList<HitSampleInfo> samples = null)
             => new Beat
             {
-                Samples = original.Samples,
+                Samples = samples ?? original.Samples,
                 StartTime = original.StartTime,
                 Angle = getHitObjectAngle(original),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
             };
 
-        private TauHitObject convertToHardBeat(HitObject original, IHasCombo comboData)
+        private TauHitObject convertToHardBeat(HitObject original, IHasCombo comboData, IList<HitSampleInfo> samples = null)
             => new HardBeat
             {
-                Samples = original.Samples,
+                Samples = samples ?? original.Samples,
                 StartTime = original.StartTime,
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
