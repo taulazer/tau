@@ -11,6 +11,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         [JsonProperty("speed_difficulty")]
         public double SpeedDifficulty { get; set; }
 
+        [JsonProperty("complexity_difficulty")]
+        public double ComplexityDifficulty { get; set; }
+
         /// <summary>
         /// The perceived approach rate inclusive of rate-adjusting mods (DT/HT/etc).
         /// </summary>
