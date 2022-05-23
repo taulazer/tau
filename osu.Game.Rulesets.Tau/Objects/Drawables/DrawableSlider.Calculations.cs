@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -13,74 +14,46 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (nodes.Count == 0)
                 return;
 
-            var time = Time.Current - HitObject.StartTime + HitObject.TimePreempt;
-            var startTime = Math.Max(time - HitObject.TimePreempt - FadeTime, nodes[0].Time);
-            var midTime = Math.Max(time - HitObject.TimePreempt, nodes[0].Time);
-            var endTime = Math.Min(time, nodes[^1].Time);
+            double time = Time.Current - HitObject.StartTime + HitObject.TimePreempt;
+            double startTime = Math.Max(time - HitObject.TimePreempt - FadeTime, nodes[0].Time);
+            double midTime = Math.Max(time - HitObject.TimePreempt, nodes[0].Time);
+            double endTime = Math.Min(time, nodes[^1].Time);
 
             if (time < startTime)
                 return;
 
-            int nodeIndex = 0;
             bool capAdded = false;
+            var polarPath = HitObject.Path;
 
-            generatePathSegmnt(ref nodeIndex, ref capAdded, time, startTime, midTime);
-            nodeIndex--;
-            var pos = path.Vertices.Any() ? path.Vertices[^1].Xy : Vector2.Zero;
-            generatePathSegmnt(ref nodeIndex, ref capAdded, time, midTime, endTime);
-
-            path.Position = pos;
-            path.OriginPosition = path.PositionInBoundingBox(pos);
-        }
-
-        private void generatePathSegmnt(ref int nodeIndex, ref bool capAdded, double time, double startTime, double endTime)
-        {
-            var nodes = HitObject.Path.Nodes;
-            if (nodeIndex >= nodes.Count)
-                return;
-
-            while (nodeIndex + 1 < nodes.Count && nodes[nodeIndex + 1].Time <= startTime)
-                nodeIndex++;
-
-            const double delta_time = 20;
-            const double max_angle_per_ms = 5;
+            float radius = TauPlayfield.BaseSize.X / 2;
 
             float distanceAt(double t) => inversed
-                                              ? (float)(2 * PathDistance - (time - t) / HitObject.TimePreempt * PathDistance)
-                                              : (float)((time - t) / HitObject.TimePreempt * PathDistance);
+                                              ? (float)(2 * radius - (time - t) / HitObject.TimePreempt * radius)
+                                              : (float)((time - t) / HitObject.TimePreempt * radius);
 
             void addVertex(double t, double angle)
             {
                 var p = Extensions.FromPolarCoordinates(distanceAt(t), (float)angle);
-                var index = (int)(t / trackingCheckpointInterval);
+                int index = (int)(t / trackingCheckpointInterval);
+
                 path.AddVertex(new Vector3(p.X, p.Y, trackingCheckpoints.ValueAtOrLastOr(index, true) ? 1 : 0));
             }
 
-            do
+            foreach (var segment in polarPath.SegmentsBetween((float)startTime, (float)endTime))
             {
-                var prevNode = nodes[nodeIndex];
-                var nextNode = nodeIndex + 1 < nodes.Count ? nodes[nodeIndex + 1] : prevNode;
-
-                var from = Math.Max(startTime, prevNode.Time);
-                var to = Math.Min(endTime, nextNode.Time);
-                var duration = nextNode.Time - prevNode.Time;
-
-                var deltaAngle = Extensions.GetDeltaAngle(nextNode.Angle, prevNode.Angle);
-                var anglePerMs = duration != 0 ? deltaAngle / duration : 0;
-                var timeStep = Math.Min(delta_time, Math.Abs(max_angle_per_ms / anglePerMs));
-
-                if (!capAdded)
-                    addVertex(from, prevNode.Angle + anglePerMs * (from - prevNode.Time));
-                for (var t = from + timeStep; t < to; t += timeStep)
-                    addVertex(t, prevNode.Angle + anglePerMs * (t - prevNode.Time));
-                if (duration != 0)
-                    addVertex(to, prevNode.Angle + anglePerMs * (to - prevNode.Time));
-                else
-                    addVertex(to, nextNode.Angle);
+                foreach (var node in segment.Split(excludeFirst: capAdded))
+                {
+                    addVertex(node.Time, node.Angle);
+                }
 
                 capAdded = true;
-                nodeIndex++;
-            } while (nodeIndex < nodes.Count && nodes[nodeIndex].Time < endTime);
+            }
+
+            var midNode = polarPath.NodeAt((float)midTime);
+            var pos = Extensions.FromPolarCoordinates(distanceAt(midNode.Time), midNode.Angle);
+
+            path.Position = pos;
+            path.OriginPosition = path.PositionInBoundingBox(pos);
         }
 
         private bool checkIfTracking()
