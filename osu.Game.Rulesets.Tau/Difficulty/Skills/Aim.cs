@@ -28,6 +28,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (Previous.Count <= 1)
                 return 0;
 
+            if (current is not TauAngledDifficultyHitObject || Previous[0] is not TauAngledDifficultyHitObject)
+                return 0;
+
             var tauCurrObj = (TauAngledDifficultyHitObject)current;
             var tauLastObj = (TauAngledDifficultyHitObject)Previous[0];
 

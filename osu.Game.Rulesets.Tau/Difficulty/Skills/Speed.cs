@@ -55,9 +55,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             for (int i = rhythmStart; i > 0; i--)
             {
-                TauAngledDifficultyHitObject currObj = (TauAngledDifficultyHitObject)Previous[i - 1];
-                TauAngledDifficultyHitObject prevObj = (TauAngledDifficultyHitObject)Previous[i];
-                TauAngledDifficultyHitObject lastObj = (TauAngledDifficultyHitObject)Previous[i + 1];
+                var currObj = (TauDifficultyHitObject)Previous[i - 1];
+                var prevObj = (TauDifficultyHitObject)Previous[i];
+                var lastObj = (TauDifficultyHitObject)Previous[i + 1];
 
                 double currHistoricalDecay = (history_time_max - (current.StartTime - currObj.StartTime)) / history_time_max; // scales note 0 to 1 from history to now
 
@@ -125,8 +125,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private double strainValueOf(DifficultyHitObject current)
         {
             // derive strainTime for calculation
-            var tauCurrObj = (TauAngledDifficultyHitObject)current;
-            var tauPrevObj = Previous.Count > 0 ? (TauAngledDifficultyHitObject)Previous[0] : null;
+            var tauCurrObj = (TauDifficultyHitObject)current;
+            var tauPrevObj = Previous.Count > 0 ? (TauDifficultyHitObject)Previous[0] : null;
 
             double strainTime = tauCurrObj.StrainTime;
             double greatWindowFull = greatWindow * 2;
@@ -146,8 +146,13 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (strainTime < min_speed_bonus)
                 speedBonus = 1 + 0.75 * Math.Pow((min_speed_bonus - strainTime) / speed_balancing_factor, 2);
 
-            double travelDistance = Math.Abs((double)tauCurrObj?.Distance);
-            double distance = Math.Min(single_spacing_threshold, travelDistance + Math.Abs(tauPrevObj?.Distance ?? 0)); // tauCurrobj.Disance used to be MinJumpDistance, replace if found alternate.
+            double distance = single_spacing_threshold;
+
+            if (current is TauAngledDifficultyHitObject currAngled && (Previous.Count > 0 && Previous[0] is TauAngledDifficultyHitObject lastAngled))
+            {
+                double travelDistance = Math.Abs((double)currAngled?.Distance);
+                distance = Math.Min(single_spacing_threshold, travelDistance + Math.Abs(lastAngled?.Distance ?? 0)); // tauCurrobj.Disance used to be MinJumpDistance, replace if found alternate.
+            }
 
             return (speedBonus + speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5)) / strainTime;
         }

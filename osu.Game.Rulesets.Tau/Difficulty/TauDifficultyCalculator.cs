@@ -77,11 +77,13 @@ namespace osu.Game.Rulesets.Tau.Difficulty
 
             foreach (var hitObject in beatmap.HitObjects.Cast<TauHitObject>())
             {
-                if (hitObject is not AngledTauHitObject)
-                    continue;
-
                 if (lastObject != null)
-                    yield return new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties);
+                {
+                    if (hitObject is AngledTauHitObject)
+                        yield return new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties);
+                    else
+                        yield return new TauDifficultyHitObject(hitObject, lastObject, clockRate);
+                }
 
                 lastObject = hitObject;
             }
