@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         public new AngledTauHitObject LastObject => (AngledTauHitObject)base.LastObject;
 
         /// <summary>
-        /// Normalised distance between the start and end position of this <see cref="OsuDifficultyHitObject"/>.
+        /// Normalised distance between the start and end position of this <see cref="TauAngledDifficultyHitObject"/>.
         /// </summary>
         public double TravelDistance { get; private set; }
 
@@ -21,11 +21,16 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         /// </summary>
         public double TravelTime { get; private set; }
 
+        private readonly TauCachedProperties properties;
+
+        public double AngleRange => properties.AngleRange.Value;
+
         public readonly double Distance;
 
         public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties)
-            : base(hitObject, lastObject, clockRate, properties)
+            : base(hitObject, lastObject, clockRate)
         {
+            this.properties = properties;
             Distance = Math.Abs(Extensions.GetDeltaAngle(BaseObject.Angle, LastObject.Angle));
 
             if (hitObject is Slider slider)
