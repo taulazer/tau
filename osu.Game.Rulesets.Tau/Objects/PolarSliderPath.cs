@@ -22,15 +22,6 @@ namespace osu.Game.Rulesets.Tau.Objects
         public readonly BindableList<SliderNode> Nodes = new();
         private readonly Cached pathCache = new();
 
-        public PolarSliderPath()
-        {
-            Nodes.BindCollectionChanged((_, _) =>
-            {
-                // TODO ensure the list is sorted
-                invalidate();
-            });
-        }
-
         public PolarSliderPath(IEnumerable<SliderNode> nodes)
         {
             Nodes.AddRange(nodes);
@@ -56,7 +47,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         }
 
         // we are expecting the inputs to be similar, and as such caching the current seeker position speeds the process up
-        int nodeIndex;
+        private int nodeIndex;
 
         /// <summary>
         /// Seeks the <see cref="nodeIndex"/> such that the node at <see cref="nodeIndex"/> is before or at <paramref name="time"/>
@@ -99,7 +90,7 @@ namespace osu.Game.Rulesets.Tau.Objects
             seekTo(time);
             var from = Nodes[nodeIndex];
             var to = Nodes[nodeIndex + 1];
-            var delta = Extensions.GetDeltaAngle(to.Angle, from.Angle);
+            float delta = Extensions.GetDeltaAngle(to.Angle, from.Angle);
 
             // no need to check for div by 0 because the seek skips over 0-duration nodes
             return new(time, from.Angle + delta * (time - from.Time) / (to.Time - from.Time));
@@ -146,12 +137,12 @@ namespace osu.Game.Rulesets.Tau.Objects
             if (Nodes.Count <= 0)
                 return 0;
 
-            var length = 0f;
+            float length = 0f;
             float lastAngle = Nodes[0].Angle;
 
             foreach (var node in Nodes)
             {
-                var delta = Extensions.GetDeltaAngle(node.Angle, lastAngle);
+                float delta = Extensions.GetDeltaAngle(node.Angle, lastAngle);
 
                 if (MathF.Abs(delta) > halfTolerance)
                 {
@@ -196,8 +187,8 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         public SegmentNodesEnumerable Split(float timeStep = 20, float maxAnglePerMs = 5, bool excludeFirst = false, bool excludeLast = false)
         {
-            var duration = Duration;
-            var delta = DeltaAngle;
+            float duration = Duration;
+            float delta = DeltaAngle;
             int steps;
 
             if (duration == 0)
@@ -206,7 +197,7 @@ namespace osu.Game.Rulesets.Tau.Objects
             }
             else
             {
-                var anglePerMs = delta / duration;
+                float anglePerMs = delta / duration;
                 timeStep = Math.Min(timeStep, Math.Abs(maxAnglePerMs / anglePerMs));
                 steps = (int)MathF.Ceiling(duration / timeStep);
             }
@@ -222,11 +213,11 @@ namespace osu.Game.Rulesets.Tau.Objects
         public override string ToString() => $"({From}) -> ({To})";
     }
 
-    public struct NodesEnumerable : IEnumerable<SliderNode>
+    public readonly struct NodesEnumerable : IEnumerable<SliderNode>
     {
-        int index;
-        float endTime;
-        PolarSliderPath path;
+        private readonly int index;
+        private readonly float endTime;
+        private readonly PolarSliderPath path;
 
         public NodesEnumerable(int index, float endTime, PolarSliderPath path)
         {
@@ -235,7 +226,7 @@ namespace osu.Game.Rulesets.Tau.Objects
             this.path = path;
         }
 
-        public Enumerator GetEnumerator() => new(index, endTime, path);
+        public NodesEnumerator GetEnumerator() => new(index, endTime, path);
 
         IEnumerator<SliderNode> IEnumerable<SliderNode>.GetEnumerator()
         {
@@ -246,13 +237,13 @@ namespace osu.Game.Rulesets.Tau.Objects
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<SliderNode>)this).GetEnumerator();
 
-        public struct Enumerator
+        public struct NodesEnumerator
         {
-            int index;
-            float endTime;
-            PolarSliderPath path;
+            private int index;
+            private readonly float endTime;
+            private readonly PolarSliderPath path;
 
-            public Enumerator(int index, float endTime, PolarSliderPath path)
+            public NodesEnumerator(int index, float endTime, PolarSliderPath path)
             {
                 this.index = index - 1;
                 this.endTime = endTime;
@@ -274,12 +265,12 @@ namespace osu.Game.Rulesets.Tau.Objects
         }
     }
 
-    public struct SegmentsEnumerable : IEnumerable<SliderSegment>
+    public readonly struct SegmentsEnumerable : IEnumerable<SliderSegment>
     {
-        int index;
-        float startTime;
-        float endTime;
-        PolarSliderPath path;
+        private readonly int index;
+        private readonly float startTime;
+        private readonly float endTime;
+        private readonly PolarSliderPath path;
 
         public SegmentsEnumerable(int index, float startTime, float endTime, PolarSliderPath path)
         {
@@ -298,16 +289,16 @@ namespace osu.Game.Rulesets.Tau.Objects
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<SliderSegment>)this).GetEnumerator();
 
-        public Enumerator GetEnumerator() => new(index, startTime, endTime, path);
+        public SegmentsEnumerator GetEnumerator() => new(index, startTime, endTime, path);
 
-        public struct Enumerator
+        public struct SegmentsEnumerator
         {
-            int index;
-            float startTime;
-            float endTime;
-            PolarSliderPath path;
+            private int index;
+            private readonly float startTime;
+            private readonly float endTime;
+            private readonly PolarSliderPath path;
 
-            public Enumerator(int index, float startTime, float endTime, PolarSliderPath path)
+            public SegmentsEnumerator(int index, float startTime, float endTime, PolarSliderPath path)
             {
                 this.index = index - 1;
                 this.startTime = startTime;
@@ -332,8 +323,8 @@ namespace osu.Game.Rulesets.Tau.Objects
                 {
                     var from = path.Nodes[index];
                     var to = path.Nodes[index + 1];
-                    var deltaAngle = Extensions.GetDeltaAngle(to.Angle, from.Angle);
-                    var duration = to.Time - from.Time;
+                    float deltaAngle = Extensions.GetDeltaAngle(to.Angle, from.Angle);
+                    float duration = to.Time - from.Time;
 
                     if (to.Time > endTime && duration != 0)
                     {
@@ -351,11 +342,11 @@ namespace osu.Game.Rulesets.Tau.Objects
         }
     }
 
-    public struct SegmentNodesEnumerable : IEnumerable<SliderNode>
+    public readonly struct SegmentNodesEnumerable : IEnumerable<SliderNode>
     {
-        SliderNode from;
-        SliderNode to;
-        int steps;
+        private readonly SliderNode from;
+        private readonly SliderNode to;
+        private readonly int steps;
 
         public SegmentNodesEnumerable(SliderNode from, SliderNode to, int steps)
         {
@@ -364,7 +355,7 @@ namespace osu.Game.Rulesets.Tau.Objects
             this.steps = steps;
         }
 
-        public Enumerator GetEnumerator() => new(from, to, steps);
+        public SegmentNodesEnumerator GetEnumerator() => new(from, to, steps);
 
         IEnumerator<SliderNode> IEnumerable<SliderNode>.GetEnumerator()
         {
@@ -375,15 +366,15 @@ namespace osu.Game.Rulesets.Tau.Objects
         IEnumerator IEnumerable.GetEnumerator()
             => ((IEnumerable<SliderNode>)this).GetEnumerator();
 
-        public struct Enumerator
+        public struct SegmentNodesEnumerator
         {
-            SliderNode from;
-            int steps;
-            int current = -1;
-            float span;
-            float timeSpan;
+            private int current = -1;
+            private readonly SliderNode from;
+            private readonly int steps;
+            private readonly float span;
+            private readonly float timeSpan;
 
-            public Enumerator(SliderNode from, SliderNode to, int steps)
+            public SegmentNodesEnumerator(SliderNode from, SliderNode to, int steps)
             {
                 this.from = from;
                 this.steps = steps;

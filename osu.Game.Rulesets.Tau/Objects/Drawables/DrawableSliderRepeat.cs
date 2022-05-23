@@ -31,7 +31,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             AlwaysPresent = true;
         }
 
-        public Drawable InnerDrawableBox = new Container {
+        public Drawable InnerDrawableBox = new Container
+        {
             RelativePositionAxes = Axes.Both,
             Anchor = Anchor.Centre,
             Origin = Anchor.Centre,
