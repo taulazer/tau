@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
                 return 0;
 
             var tauCurrObj = (TauAngledDifficultyHitObject)current;
-            var tauLastObj = (TauAngledDifficultyHitObject)Previous[0];
+            var tauLastObj = (TauAngledDifficultyHitObject)Previous[0]; // TODO: "Last Object" should be the last available angled hit object.
 
             if (tauCurrObj.Distance == 0)
                 return 0;
