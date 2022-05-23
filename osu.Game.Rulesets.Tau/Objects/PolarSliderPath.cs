@@ -5,8 +5,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
-using osu.Framework.Graphics.Containers;
-using osuTK.Graphics.ES20;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {

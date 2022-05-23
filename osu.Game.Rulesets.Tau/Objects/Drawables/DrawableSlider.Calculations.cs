@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -30,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 : (float)( ( time - t ) / HitObject.TimePreempt * radius );
 
             void addVertex ( double t, double angle ) {
-                var p = Extensions.GetCircularPosition( distanceAt( t ), (float)angle );
+                var p = Extensions.FromPolarCoordinates( distanceAt( t ), (float)angle );
                 var index = (int)( t / trackingCheckpointInterval );
 
                 path.AddVertex( new Vector3( p.X, p.Y, trackingCheckpoints.ValueAtOrLastOr( index, true ) ? 1 : 0 ) );
@@ -44,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
 
             var midNode = polarPath.NodeAt( (float)midTime );
-            var pos = Extensions.GetCircularPosition( distanceAt( midNode.Time ), midNode.Angle );
+            var pos = Extensions.FromPolarCoordinates( distanceAt( midNode.Time ), midNode.Angle );
 
             path.Position = pos;
             path.OriginPosition = path.PositionInBoundingBox(pos);
