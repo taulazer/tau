@@ -12,6 +12,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         /// </summary>
         public double TravelDistance { get; private set; }
 
+        public double LazyTravelDistance { get; private set; }
+
         /// <summary>
         /// The time taken to travel through <see cref="TravelDistance"/>, with a minimum value of 25ms for a non-zero distance.
         /// </summary>
@@ -41,6 +43,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
             if (hitObject is Slider slider)
             {
                 TravelDistance = slider.Path.CalculatedDistance;
+                LazyTravelDistance = slider.Path.CalculateLazyDistance((float)(AngleRange / 2));
                 TravelTime = slider.Duration;
             }
         }

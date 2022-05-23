@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             if (AllowedObjectTypes.Any(t => t == typeof(Slider)) && tauLastObj.BaseObject is Slider && tauLastObj.TravelDistance < tauCurrObj.AngleRange)
             {
-                double travelVelocity = tauLastObj.TravelDistance / tauLastObj.TravelTime; // calculate the slider velocity from slider head to slider end.
+                double travelVelocity = tauLastObj.LazyTravelDistance / tauLastObj.TravelTime; // calculate the slider velocity from slider head to slider end.
                 double movementVelocity = tauCurrObj.Distance / tauCurrObj.StrainTime; // calculate the movement velocity from slider end to current object
 
                 currVelocity = Math.Max(currVelocity, movementVelocity + travelVelocity); // take the larger total combined velocity.
