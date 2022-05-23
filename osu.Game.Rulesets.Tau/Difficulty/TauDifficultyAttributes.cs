@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using osu.Game.Rulesets.Difficulty;
 
@@ -57,32 +56,5 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         /// The number of sliders in the beatmap.
         /// </summary>
         public int HardBeatCount { get; set; }
-
-        public override IEnumerable<(int attributeId, object value)> ToDatabaseAttributes()
-        {
-            foreach (var v in base.ToDatabaseAttributes())
-                yield return v;
-
-            yield return (ATTRIB_ID_AIM, AimDifficulty);
-            yield return (ATTRIB_ID_SPEED, SpeedDifficulty);
-            yield return (ATTRIB_ID_OVERALL_DIFFICULTY, OverallDifficulty);
-            yield return (ATTRIB_ID_APPROACH_RATE, ApproachRate);
-            yield return (ATTRIB_ID_MAX_COMBO, MaxCombo);
-            yield return (ATTRIB_ID_DIFFICULTY, StarRating);
-            yield return (ATTRIB_ID_SLIDER_FACTOR, SliderFactor);
-        }
-
-        public override void FromDatabaseAttributes(IReadOnlyDictionary<int, double> values)
-        {
-            base.FromDatabaseAttributes(values);
-
-            AimDifficulty = values[ATTRIB_ID_AIM];
-            SpeedDifficulty = values[ATTRIB_ID_SPEED];
-            OverallDifficulty = values[ATTRIB_ID_OVERALL_DIFFICULTY];
-            ApproachRate = values[ATTRIB_ID_APPROACH_RATE];
-            MaxCombo = (int)values[ATTRIB_ID_MAX_COMBO];
-            StarRating = values[ATTRIB_ID_DIFFICULTY];
-            SliderFactor = values[ATTRIB_ID_SLIDER_FACTOR];
-        }
     }
 }
