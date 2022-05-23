@@ -31,7 +31,16 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
             : base(hitObject, lastObject, clockRate)
         {
             this.properties = properties;
-            Distance = Math.Abs(Extensions.GetDeltaAngle(BaseObject.Angle, LastObject.Angle));
+
+            if (hitObject is AngledTauHitObject firstAngled && lastObject is AngledTauHitObject lastAngled)
+            {
+                float offset = 0;
+
+                if (lastAngled is IHasOffsetAngle offsetAngle)
+                    offset = offsetAngle.GetOffsetAngle();
+
+                Distance = Math.Abs(Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.Angle + offset).Normalize()));
+            }
 
             if (hitObject is Slider slider)
             {
