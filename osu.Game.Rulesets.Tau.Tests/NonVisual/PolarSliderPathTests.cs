@@ -1,5 +1,4 @@
-﻿using NuGet.ContentModel;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using osu.Game.Rulesets.Tau.Objects;
 using System.Linq;
 
