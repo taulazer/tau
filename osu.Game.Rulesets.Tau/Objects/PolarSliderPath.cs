@@ -5,6 +5,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
+using osu.Framework.Graphics.Containers;
+using osuTK.Graphics.ES20;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
@@ -70,139 +72,10 @@ namespace osu.Game.Rulesets.Tau.Objects
             return new(nodeIndex + 1, end, this);
         }
 
-        public struct NodesEnumerable : IEnumerable<SliderNode>
-        {
-            int index;
-            float endTime;
-            PolarSliderPath path;
-
-            public NodesEnumerable(int index, float endTime, PolarSliderPath path)
-            {
-                this.index = index;
-                this.endTime = endTime;
-                this.path = path;
-            }
-
-            public Enumerator GetEnumerator() => new(index, endTime, path);
-
-            IEnumerator<SliderNode> IEnumerable<SliderNode>.GetEnumerator()
-            {
-                var index = this.index - 1;
-                while (index + 1 < path.Nodes.Count && path.Nodes[index + 1].Time < endTime)
-                {
-                    index++;
-                    yield return path.Nodes[index];
-                }
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-                => ((IEnumerable<SliderNode>)this).GetEnumerator();
-
-            public ref struct Enumerator
-            {
-                int index;
-                float endTime;
-                PolarSliderPath path;
-
-                public Enumerator(int index, float endTime, PolarSliderPath path)
-                {
-                    this.index = index - 1;
-                    this.endTime = endTime;
-                    this.path = path;
-                }
-
-                public bool MoveNext()
-                {
-                    if (index + 1 < path.Nodes.Count && path.Nodes[index + 1].Time < endTime) {
-                        index++;
-                        return true;
-                    }
-                    return false;
-                }
-
-                public SliderNode Current => path.Nodes[index];
-            }
-        }
-
         public SegmentsEnumerable SegmentsBetween (float start, float end)
         {
             seekTo(start);
-            return new(nodeIndex, start, end, this);
-        }
-
-        public struct SegmentsEnumerable : IEnumerable<SliderSegment>
-        {
-            int index;
-            float startTime;
-            float endTime;
-            PolarSliderPath path;
-
-            public SegmentsEnumerable(int index, float startTime, float endTime, PolarSliderPath path)
-            {
-                this.index = index;
-                this.startTime = startTime;
-                this.endTime = endTime;
-                this.path = path;
-            }
-
-            IEnumerator<SliderSegment> IEnumerable<SliderSegment>.GetEnumerator ()
-            {
-                foreach (var i in this)
-                    yield return i;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator ()
-                => ((IEnumerable<SliderSegment>)this).GetEnumerator();
-
-            public Enumerator GetEnumerator() => new(index, startTime, endTime, path);
-
-            public struct Enumerator
-            {
-                int index;
-                float startTime;
-                float endTime;
-                PolarSliderPath path;
-
-                public Enumerator(int index, float startTime, float endTime, PolarSliderPath path)
-                {
-                    this.index = index - 1;
-                    this.startTime = startTime;
-                    this.endTime = endTime;
-                    this.path = path;
-                }
-
-                public bool MoveNext()
-                {
-                    if (index + 2 < path.Nodes.Count && path.Nodes[index + 1].Time <= endTime)
-                    {
-                        index++;
-                        return true;
-                    }
-                    return false;
-                }
-
-                public SliderSegment Current
-                {
-                    get
-                    {
-                        var from = path.Nodes[index];
-                        var to = path.Nodes[index + 1];
-                        var deltaAngle = Extensions.GetDeltaAngle(to.Angle, from.Angle);
-                        var duration = to.Time - from.Time;
-
-                        if (to.Time > endTime && duration != 0)
-                        {
-                            to = new(endTime, from.Angle + deltaAngle * (endTime - from.Time) / duration);
-                        }
-                        if (from.Time < startTime && duration != 0)
-                        {
-                            from = new(startTime, from.Angle + deltaAngle * (startTime - from.Time) / duration);
-                        }
-
-                        return new(from, to);
-                    }
-                }
-            }
+            return new(Math.Max( nodeIndex - 1, 0 ), start, end, this);
         }
 
         /// <summary>
@@ -311,6 +184,185 @@ namespace osu.Game.Rulesets.Tau.Objects
             To = to;
         }
 
+        public SegmentNodesEnumerable Split (float timeStep = 20, float maxAnglePerMs = 5, bool excludeFirst = false, bool excludeLast = false)
+        {
+            var duration = Duration;
+            var delta = DeltaAngle;
+            int steps;
+            if ( duration == 0 ) {
+                steps = (int)MathF.Ceiling(MathF.Abs( delta ) / maxAnglePerMs);
+            }
+            else {
+                var anglePerMs = delta / duration;
+                timeStep = Math.Min( timeStep, Math.Abs( maxAnglePerMs / anglePerMs ) );
+                steps = (int)MathF.Ceiling( duration / timeStep );
+            }
+
+            steps += 2;
+            return new(
+                excludeFirst ? new( From.Time + duration / steps, From.Angle + delta / steps ) : From,
+                excludeLast ? new( To.Time - duration / steps, To.Angle - delta / steps ) : To,
+                steps - ( excludeFirst ? 1 : 0 ) - ( excludeLast ? 1 : 0 )
+            );
+        }
+
         public override string ToString() => $"({From}) -> ({To})";
+    }
+
+    public struct NodesEnumerable : IEnumerable<SliderNode> {
+        int index;
+        float endTime;
+        PolarSliderPath path;
+
+        public NodesEnumerable ( int index, float endTime, PolarSliderPath path ) {
+            this.index = index;
+            this.endTime = endTime;
+            this.path = path;
+        }
+
+        public Enumerator GetEnumerator () => new( index, endTime, path );
+
+        IEnumerator<SliderNode> IEnumerable<SliderNode>.GetEnumerator () {
+            foreach ( var i in this )
+                yield return i;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator ()
+            => ( (IEnumerable<SliderNode>)this ).GetEnumerator();
+
+        public struct Enumerator {
+            int index;
+            float endTime;
+            PolarSliderPath path;
+
+            public Enumerator ( int index, float endTime, PolarSliderPath path ) {
+                this.index = index - 1;
+                this.endTime = endTime;
+                this.path = path;
+            }
+
+            public bool MoveNext () {
+                if ( index + 1 < path.Nodes.Count && path.Nodes[index + 1].Time < endTime ) {
+                    index++;
+                    return true;
+                }
+                return false;
+            }
+
+            public SliderNode Current => path.Nodes[index];
+        }
+    }
+
+    public struct SegmentsEnumerable : IEnumerable<SliderSegment> {
+        int index;
+        float startTime;
+        float endTime;
+        PolarSliderPath path;
+
+        public SegmentsEnumerable ( int index, float startTime, float endTime, PolarSliderPath path ) {
+            this.index = index;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.path = path;
+        }
+
+        IEnumerator<SliderSegment> IEnumerable<SliderSegment>.GetEnumerator () {
+            foreach ( var i in this )
+                yield return i;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator ()
+            => ( (IEnumerable<SliderSegment>)this ).GetEnumerator();
+
+        public Enumerator GetEnumerator () => new( index, startTime, endTime, path );
+
+        public struct Enumerator {
+            int index;
+            float startTime;
+            float endTime;
+            PolarSliderPath path;
+
+            public Enumerator ( int index, float startTime, float endTime, PolarSliderPath path ) {
+                this.index = index - 1;
+                this.startTime = startTime;
+                this.endTime = endTime;
+                this.path = path;
+            }
+
+            public bool MoveNext () {
+                if ( index + 2 < path.Nodes.Count && path.Nodes[index + 1].Time <= endTime ) {
+                    index++;
+                    return true;
+                }
+                return false;
+            }
+
+            public SliderSegment Current {
+                get {
+                    var from = path.Nodes[index];
+                    var to = path.Nodes[index + 1];
+                    var deltaAngle = Extensions.GetDeltaAngle( to.Angle, from.Angle );
+                    var duration = to.Time - from.Time;
+
+                    if ( to.Time > endTime && duration != 0 ) {
+                        to = new( endTime, from.Angle + deltaAngle * ( endTime - from.Time ) / duration );
+                    }
+                    if ( from.Time < startTime && duration != 0 ) {
+                        from = new( startTime, from.Angle + deltaAngle * ( startTime - from.Time ) / duration );
+                    }
+
+                    return new( from, to );
+                }
+            }
+        }
+    }
+
+    public struct SegmentNodesEnumerable : IEnumerable<SliderNode> {
+        SliderNode from;
+        SliderNode to;
+        int steps;
+
+        public SegmentNodesEnumerable ( SliderNode from, SliderNode to, int steps ) {
+            this.from = from;
+            this.to = to;
+            this.steps = steps;
+        }
+
+        public Enumerator GetEnumerator () => new( from, to, steps );
+
+        IEnumerator<SliderNode> IEnumerable<SliderNode>.GetEnumerator () {
+            foreach ( var i in this )
+                yield return i;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator ()
+            => ( (IEnumerable<SliderNode>)this ).GetEnumerator();
+
+        public struct Enumerator {
+            SliderNode from;
+            int steps;
+            int current = -1;
+            float span;
+            float timeSpan;
+
+            public Enumerator ( SliderNode from, SliderNode to, int steps ) {
+                this.from = from;
+                this.steps = steps;
+                if ( steps <= 1 ) {
+                    span = 0;
+                    timeSpan = 0;
+                }
+                else {
+                    span = Extensions.GetDeltaAngle( to.Angle, from.Angle ) / ( steps - 1 );
+                    timeSpan = ( to.Time - from.Time ) / ( steps - 1 );
+                }
+            }
+
+            public bool MoveNext () {
+                return ++current < steps;
+            }
+
+            public SliderNode Current => new( from.Time + timeSpan * current, from.Angle + span * current );
+        }
     }
 }
