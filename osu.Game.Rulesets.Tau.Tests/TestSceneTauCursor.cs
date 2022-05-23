@@ -6,10 +6,9 @@ namespace osu.Game.Rulesets.Tau.Tests
 {
     public class TestSceneTauCursor : OsuManualInputManagerTestScene
     {
-        private readonly TauCursor cursor;
-
         public TestSceneTauCursor()
         {
+            TauCursor cursor;
             Add(cursor = new TauCursor());
 
             AddStep("Reset cursor", () => { InputManager.MoveMouseTo(cursor, new Vector2(0, -50)); });

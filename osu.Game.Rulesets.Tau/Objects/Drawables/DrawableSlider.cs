@@ -12,9 +12,11 @@ using osu.Framework.Platform;
 using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Graphics;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
 using osuTK.Graphics;
@@ -26,6 +28,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableSliderHead SliderHead => headContainer.Child;
 
         private readonly BindableFloat size = new(16f);
+
+        public float PathDistance = TauPlayfield.BaseSize.X / 2;
 
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
@@ -67,12 +71,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            PathRadius = 4
+                            PathRadius = 4,
+                            PathDistance = PathDistance
                         },
                     }
                 },
                 headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
-                tickContainer = new Container<DrawableSliderTick> {RelativeSizeAxes = Axes.Both},
+                tickContainer = new Container<DrawableSliderTick> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
             });
@@ -129,7 +134,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
-            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
+            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, _ => Color4.White);
         }
 
         [Resolved]
@@ -149,6 +154,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 inversed = true;
                 maskingContainer.Masking = false;
                 path.Reverse = inversed;
+                // PathDistance = path.PathDistance = TauPlayfield.BaseSize.X;
             }
         }
 
@@ -253,13 +259,20 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     res.ForcefullyApplyResult(r => r.Type = result);
             }
 
-            ApplyResult(r => r.Type = result);
+            ApplyResult(r =>
+            {
+                r.Type = result;
+                ApplyCustomResult(r);
+            });
         }
+
+        protected override JudgementResult CreateResult(Judgement judgement)
+            => new TauJudgementResult(HitObject, judgement);
 
         [Resolved]
         private OsuColour colour { get; set; }
 
-        public double Velocity => (TauPlayfield.BaseSize.X / 2) / HitObject.TimePreempt;
+        public double Velocity => PathDistance / HitObject.TimePreempt;
         public double FadeTime => FADE_RANGE / Velocity;
 
         protected override void UpdateHitStateTransforms(ArmedState state)

@@ -17,17 +17,17 @@ namespace osu.Game.Rulesets.Tau.Tests.NonVisual
                 new(400, 50),
             });
 
-            Assert.AreEqual(50, path.NodeAt(-50).Angle);
-            Assert.AreEqual(50, path.NodeAt(0).Angle);
-            Assert.AreEqual(55, path.NodeAt(50).Angle);
-            Assert.AreEqual(60, path.NodeAt(100).Angle);
-            Assert.AreEqual(65, path.NodeAt(150).Angle);
-            Assert.AreEqual(70, path.NodeAt(200).Angle);
-            Assert.AreEqual(65, path.NodeAt(250).Angle);
-            Assert.AreEqual(60, path.NodeAt(300).Angle);
-            Assert.AreEqual(55, path.NodeAt(350).Angle);
-            Assert.AreEqual(50, path.NodeAt(400).Angle);
-            Assert.AreEqual(50, path.NodeAt(450).Angle);
+            Assert.AreEqual(50, path.AngleAt(-50));
+            Assert.AreEqual(50, path.AngleAt(0));
+            Assert.AreEqual(55, path.AngleAt(50));
+            Assert.AreEqual(60, path.AngleAt(100));
+            Assert.AreEqual(65, path.AngleAt(150));
+            Assert.AreEqual(70, path.AngleAt(200));
+            Assert.AreEqual(65, path.AngleAt(250));
+            Assert.AreEqual(60, path.AngleAt(300));
+            Assert.AreEqual(55, path.AngleAt(350));
+            Assert.AreEqual(50, path.AngleAt(400));
+            Assert.AreEqual(50, path.AngleAt(450));
         }
 
         [Test]
@@ -39,12 +39,12 @@ namespace osu.Game.Rulesets.Tau.Tests.NonVisual
                 new(200, 10),
             });
 
-            Assert.AreEqual(-10, path.NodeAt(-50).Angle);
-            Assert.AreEqual(-10, path.NodeAt(0).Angle);
-            Assert.AreEqual(-5, path.NodeAt(50).Angle);
-            Assert.AreEqual(0, path.NodeAt(100).Angle);
-            Assert.AreEqual(5, path.NodeAt(150).Angle);
-            Assert.AreEqual(10, path.NodeAt(200).Angle);
+            Assert.AreEqual(-10, path.AngleAt(-50));
+            Assert.AreEqual(-10, path.AngleAt(0));
+            Assert.AreEqual(-5, path.AngleAt(50));
+            Assert.AreEqual(0, path.AngleAt(100));
+            Assert.AreEqual(5, path.AngleAt(150));
+            Assert.AreEqual(10, path.AngleAt(200));
         }
 
         [Test]

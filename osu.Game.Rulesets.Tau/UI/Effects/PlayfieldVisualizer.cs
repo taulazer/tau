@@ -93,31 +93,32 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             switch (judgedObject.HitObject)
             {
                 case IHasOffsetAngle offset:
-                    updateAmplitudes(offset.GetAbsoluteAngle(), 0.5f);
+                    UpdateAmplitudes(offset.GetAbsoluteAngle(), 0.5f);
                     break;
 
                 case IHasAngle angle:
-                    updateAmplitudes(angle.Angle, 0.5f);
+                    UpdateAmplitudes(angle.Angle, 0.5f);
                     break;
 
                 case HardBeat _:
                     for (int i = 0; i < 360; i += 90)
                     {
-                        updateAmplitudes(i, 0.5f);
+                        UpdateAmplitudes(i, 0.5f);
                     }
 
                     break;
             }
         }
 
-        public void UpdateSliderPosition(float angle)
+        /// <summary>
+        /// Update the amplitudes for the visualizer.
+        /// This spreads for the amount of <see cref="bar_spread"/>.
+        /// </summary>
+        /// <param name="angle">The angle that should be "hit".</param>
+        /// <param name="multiplier">The multiplier for the amplitude.</param>
+        public void UpdateAmplitudes(float angle, float multiplier)
         {
-            updateAmplitudes(angle, 0.15f);
-        }
-
-        private void updateAmplitudes(float angle, float multiplier)
-        {
-            var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser), 0, bars_per_visualiser);
+            var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser), 0, bars_per_visualiser - 1);
             amplitudes[barIndex] += multiplier;
 
             for (int i = 1; i <= bar_spread; i++)

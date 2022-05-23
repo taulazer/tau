@@ -42,10 +42,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             public IEnumerable<DrawableSliderRepeat> Ticks = Array.Empty<DrawableSliderRepeat>();
             private IShader depthMaskShader { get; set; }
-            private IShader textureShader { get; set; }
             private IShader hitFadeTextureShader { get; set; }
 
             private readonly List<Vector3> vertices = new();
+
+            public float PathDistance;
 
             public IReadOnlyList<Vector3> Vertices
             {
@@ -216,7 +217,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             [BackgroundDependencyLoader]
             private void load(ShaderManager shaders)
             {
-                textureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
                 depthMaskShader = shaders.Load("DepthMask", "DepthMask");
                 hitFadeTextureShader = shaders.Load("SliderPositionAndColour", "Slider");
             }
@@ -226,7 +226,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 var localPos = ToLocalSpace(screenSpacePos);
                 float pathRadiusSquared = PathRadius * PathRadius;
 
-                foreach (var (t, alpha) in segments)
+                foreach (var (t, _) in segments)
                 {
                     if (t.DistanceSquaredToPoint(localPos) <= pathRadiusSquared)
                         return true;
@@ -250,6 +250,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Invalidate(Invalidation.DrawSize);
             }
 
+            /// <summary>
+            /// Adds a vertex position to the slider.
+            /// </summary>
+            /// <param name="pos">The vertex position, where Z is used as the alpha.</param>
             public void AddVertex(Vector3 pos)
             {
                 vertices.Add(pos);

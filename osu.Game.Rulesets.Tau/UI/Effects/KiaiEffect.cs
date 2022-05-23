@@ -12,6 +12,10 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
+    /// <summary>
+    /// An abstracted Kiai effect that can be used to display different kinds of particles.
+    /// </summary>
+    /// <typeparam name="T">The effect emitter</typeparam>
     public abstract class KiaiEffect<T> : DrawablePool<T>
         where T : Emitter, new()
     {
@@ -43,6 +47,11 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             emitter.ApplyAnimations();
         }
 
+        /// <summary>
+        /// Creates 2 particles for the emitter.
+        /// Note that this is mainly used in high frequencies and should primarily be made with a higher initialSize.
+        /// </summary>
+        /// <param name="angle">The angle to position the particles at.</param>
         public void UpdateSliderPosition(float angle)
         {
             var emitter = Get(e => e.Apply(new Emitter.EmitterSettings
@@ -76,6 +85,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             }));
     }
 
+    /// <summary>
+    /// Creates, handles, and animates particles.
+    /// </summary>
     public abstract class Emitter : PoolableDrawable
     {
         private readonly List<Drawable> particles = new();
@@ -88,6 +100,10 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             Blending = BlendingParameters.Additive;
         }
 
+        /// <summary>
+        /// Clears, creates, and applies default settings to particles.
+        /// </summary>
+        /// <param name="settings">The setting to apply to this emitter.</param>
         public void Apply(EmitterSettings settings)
         {
             Settings = settings;
@@ -108,6 +124,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         protected const double Duration = 1000;
 
+        /// <summary>
+        /// Applies animation to each particles.
+        /// </summary>
         public void ApplyAnimations()
         {
             AddRangeInternal(particles);
@@ -137,10 +156,30 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
         public struct EmitterSettings
         {
+            /// <summary>
+            /// The angle this emitter should be rotated at.
+            /// </summary>
             public float Angle { get; init; }
+
+            /// <summary>
+            /// The amount of particles this emitter should produce.
+            /// </summary>
             public int Amount { get; init; }
+
+            /// <summary>
+            /// The colour for all of the particles.
+            /// </summary>
             public Colour4 Colour { get; init; }
+
+            /// <summary>
+            /// Whether or not the particles should be spread out circularly.
+            /// Note that this will nullify <see cref="Angle"/>.
+            /// </summary>
             public bool IsCircular { get; init; }
+
+            /// <summary>
+            /// Whether or not the particles should be spewed inwards or outwards.
+            /// </summary>
             public bool Inversed { get; init; }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables

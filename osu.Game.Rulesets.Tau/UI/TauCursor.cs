@@ -23,14 +23,6 @@ namespace osu.Game.Rulesets.Tau.UI
             Add(DrawablePaddle = new Paddle());
         }
 
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            using (BeginDelayedSequence(50))
-                Show();
-        }
-
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             var rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
@@ -39,12 +31,6 @@ namespace osu.Game.Rulesets.Tau.UI
             ActiveCursor.Position = ToLocalSpace(e.ScreenSpaceMousePosition);
 
             return false;
-        }
-
-        public override void Show()
-        {
-            this.FadeIn(250);
-            DrawablePaddle.Show();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
     {
         public override IEnumerable<BeatmapStatistic> GetStatistics()
         {
-            int beats = HitObjects.Count(c => c is Beat and not SliderHeadBeat and not SliderRepeat);
+            int beats = HitObjects.Count(c => c is Beat and not SliderHeadBeat and not SliderRepeat and not SliderTick);
             int sliders = HitObjects.Count(s => s is Slider);
             int hardBeats = HitObjects.Count(hb => hb is HardBeat);
 

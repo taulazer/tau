@@ -6,7 +6,7 @@ using osu.Framework.Graphics.UserInterface;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
-    public class Paddle : VisibilityContainer
+    public class Paddle : Container
     {
         public const float PADDLE_RADIUS = 0.05f;
 
@@ -34,25 +34,19 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             };
         }
 
+        private readonly BindableDouble angleRange = new(75);
+
         [BackgroundDependencyLoader(true)]
         private void load(TauCachedProperties props)
         {
             if (props != null)
                 angleRange.BindTo(props.AngleRange);
-        }
 
-        private readonly BindableDouble angleRange = new(75);
-
-        protected override void PopIn()
-        {
-            paddle.TransformBindableTo(paddle.Current, angleRange.Value / 360, 500, Easing.InExpo);
-            paddle.RotateTo((float)(-angleRange.Value / 2), 500, Easing.InExpo);
-        }
-
-        protected override void PopOut()
-        {
-            paddle.TransformBindableTo(paddle.Current, 0, 500, Easing.InExpo);
-            paddle.RotateTo(0, 500, Easing.InExpo);
+            angleRange.BindValueChanged(r =>
+            {
+                paddle.Current.Value = r.NewValue / 360;
+                paddle.Rotation = (float)(-r.NewValue / 2);
+            }, true);
         }
     }
 }

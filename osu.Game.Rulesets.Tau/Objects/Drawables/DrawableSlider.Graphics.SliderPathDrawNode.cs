@@ -11,7 +11,6 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Tau.Allocation;
-using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
@@ -67,7 +66,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 private float radius;
                 private IShader shader;
                 private IShader maskShader;
-                private IShader textureShader;
 
                 // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
                 // per primitive (triangles in this case). Otherwise overflowing the batch will result in wrong
@@ -112,11 +110,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     radius = Source.PathRadius;
                     shader = Source.hitFadeTextureShader;
                     maskShader = Source.depthMaskShader;
-                    textureShader = Source.textureShader;
 
                     var center = Source.PositionInBoundingBox(Vector2.Zero);
-                    var edge = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2, 0));
-                    var fade = Source.PositionInBoundingBox(new Vector2(TauPlayfield.BaseSize.X / 2 + FADE_RANGE, 0));
+                    var edge = Source.PositionInBoundingBox(new Vector2(Source.PathDistance, 0));
+                    var fade = Source.PositionInBoundingBox(new Vector2(Source.PathDistance + FADE_RANGE, 0));
 
                     centerPos = Source.ToScreenSpace(center);
                     range = (Source.ToScreenSpace(edge) - centerPos).Length;
@@ -257,7 +254,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         Colour = colourAt(lineLeft.EndPoint),
                         Result = endResult
                     });
-                    ;
+
                     quadBatch.Add(new SliderTexturedVertex2D
                     {
                         Position = new Vector2(screenLineLeft.StartPoint.X, screenLineLeft.StartPoint.Y),

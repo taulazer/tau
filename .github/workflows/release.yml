@@ -36,6 +36,10 @@ jobs:
           # Installation:
           To install this ruleset just simply put this .DLL file onto your `osu/Rulesets` directory under `%appdata%`/.
           osu!lazer will do the rest for you.
+
+          ---
+
+          Have a feature to suggest? Or encountered a bug? Or just want to chat with other people interested in tau? [Join the discord server](https://discord.gg/GZ9R9vjFNW)!
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@master
@@ -43,6 +47,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./osu.Game.Rulesets.Tau/bin/Release/netstandard2.1/osu.Game.Rulesets.Tau.dll
+        asset_path: ./osu.Game.Rulesets.Tau/bin/Release/net6.0/osu.Game.Rulesets.Tau.dll
         asset_name: osu.Game.Rulesets.Tau.dll
         asset_content_type: application/vnd.microsoft.portable-executable

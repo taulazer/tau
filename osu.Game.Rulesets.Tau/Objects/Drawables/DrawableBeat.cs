@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
@@ -32,8 +31,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Size = Vector2.One;
 
             AddInternal(DrawableBox = CreateDrawable());
-
-            angleBindable.BindValueChanged(r => Rotation = r.NewValue);
         }
 
         protected virtual Drawable CreateDrawable()
@@ -47,20 +44,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Size = new Vector2(NoteSize.Default),
                 Child = new BeatPiece()
             };
-
-        private readonly BindableFloat angleBindable = new();
-
-        protected override void OnApply()
-        {
-            base.OnApply();
-            angleBindable.BindTo(HitObject.AngleBindable);
-        }
-
-        protected override void OnFree()
-        {
-            base.OnFree();
-            angleBindable.UnbindFrom(HitObject.AngleBindable);
-        }
 
         [Resolved(canBeNull: true)]
         protected TauCachedProperties Properties { get; private set; }
@@ -77,13 +60,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
         }
 
-        [BackgroundDependencyLoader()]
+        [BackgroundDependencyLoader]
         private void load()
         {
             NoteSize.BindValueChanged(value => DrawableBox.Size = new Vector2(value.NewValue), true);
         }
 
-        protected override JudgementResult CreateResult(Judgement judgement) => new TauJudgementResult(HitObject, judgement);
+        protected override JudgementResult CreateResult(Judgement judgement)
+            => new TauJudgementResult(HitObject, judgement);
 
         [Resolved]
         private OsuColour colour { get; set; }
