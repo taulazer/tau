@@ -88,7 +88,7 @@ namespace osu.Game.Rulesets.Tau.Objects
 
             foreach (var e in sliderEvents)
             {
-                var currentAngle = Path.AngleAt((float)(e.Time - StartTime));
+                float currentAngle = Path.AngleAt((float)(e.Time - StartTime));
 
                 switch (e.Type)
                 {

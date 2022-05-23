@@ -52,7 +52,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             AlwaysPresent = true;
         }
 
-        public Drawable InnerDrawableBox;
+        public Drawable InnerDrawableBox = new Container
+        {
+            RelativePositionAxes = Axes.Both,
+            Anchor = Anchor.Centre,
+            Origin = Anchor.Centre,
+            Alpha = 0,
+            AlwaysPresent = true,
+            Child = new BeatPiece()
+        };
 
         [Resolved(canBeNull: true)]
         protected TauCachedProperties Properties { get; private set; }
@@ -66,16 +74,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            AddInternal(InnerDrawableBox = new Container
-            {
-                RelativePositionAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Alpha = 0,
-                AlwaysPresent = true,
-                Size = DrawableBox.Size,
-                Child = new BeatPiece()
-            });
+            InnerDrawableBox.Size = DrawableBox.Size;
+            AddInternal(InnerDrawableBox);
 
             DrawableBox.Size = Vector2.Multiply(DrawableBox.Size, 15f / 16f);
             DrawableBox.Rotation = 45;

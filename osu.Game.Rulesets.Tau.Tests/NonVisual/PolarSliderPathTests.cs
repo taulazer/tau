@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using osu.Game.Rulesets.Tau.Objects;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Tau.Tests.NonVisual
 {
@@ -84,6 +85,35 @@ namespace osu.Game.Rulesets.Tau.Tests.NonVisual
             Assert.AreEqual(0, path.Version.Value);
             Assert.AreEqual(40, path.CalculatedDistance);
             Assert.AreEqual(0, path.Version.Value);
+            Assert.AreEqual(20, path.CalculateLazyDistance(10));
+            Assert.AreEqual(0, path.CalculateLazyDistance(20));
+        }
+
+        [Test]
+        public void TestSegments()
+        {
+            var path = new PolarSliderPath(new SliderNode[]
+            {
+                new(0, 50),
+                new(200, 70),
+                new(400, 50),
+            });
+
+            var segments = path.SegmentsBetween(100, 300).ToArray();
+            Assert.AreEqual(2, segments.Length);
+            Assert.AreEqual(60, segments[0].From.Angle);
+            Assert.AreEqual(60, segments[1].To.Angle);
+
+            segments = path.SegmentsBetween(50, 100).ToArray();
+            Assert.AreEqual(1, segments.Length);
+            Assert.AreEqual(55, segments[0].From.Angle);
+            Assert.AreEqual(60, segments[0].To.Angle);
+
+            segments = path.SegmentsBetween(0, 400).ToArray();
+            Assert.AreEqual(2, segments.Length);
+            Assert.AreEqual(50, segments[0].From.Angle);
+            Assert.AreEqual(70, segments[0].To.Angle);
+            Assert.AreEqual(50, segments[1].To.Angle);
         }
     }
 }
