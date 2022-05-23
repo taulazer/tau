@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
     {
         private readonly TauCachedProperties properties = new();
         private double hitWindowGreat;
+
         private const double difficulty_multiplier = 0.0825;
 
         public TauDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
@@ -33,22 +34,27 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 return new DifficultyAttributes { Mods = mods };
 
             double aimRating = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
-
             double aimRatingNoSliders = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double speed = Math.Sqrt(skills[2].DifficultyValue()) * difficulty_multiplier;
+            double complexity = Math.Sqrt(skills[3].DifficultyValue()) * difficulty_multiplier;
 
             if (mods.Any(m => m is TauModRelax))
+            {
                 speed = 0.0;
+                complexity = 0.0;
+            }
 
             double preempt = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
 
             double baseAimPerformance = Math.Pow(5 * Math.Max(1, aimRating / 0.0675) - 4, 3) / 100000;
             double baseSpeedPerformance = Math.Pow(5 * Math.Max(1, speed / 0.0675) - 4, 3) / 100000;
+            double baseComplexityPerformance = Math.Pow(5 * Math.Max(1, complexity / 0.0675) - 4, 3) / 100000;
 
             double basePerformance =
                 Math.Pow(
                     Math.Pow(baseAimPerformance, 1.1) +
-                    Math.Pow(baseSpeedPerformance, 1.1), 1.0 / 1.1
+                    Math.Pow(baseSpeedPerformance, 1.1) +
+                    Math.Pow(baseComplexityPerformance, 1.1), 1.0 / 1.1
                 );
 
             double starRating = basePerformance > 0.00001 ? Math.Cbrt(1.12) * 0.027 * (Math.Cbrt(100000 / Math.Pow(2, 1 / 1.1) * basePerformance) + 4) : 0;
@@ -57,6 +63,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             {
                 AimDifficulty = aimRating,
                 SpeedDifficulty = speed,
+                ComplexityDifficulty = complexity,
                 StarRating = starRating,
                 Mods = mods,
                 MaxCombo = beatmap.GetMaxCombo(),
@@ -99,7 +106,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             {
                 new Aim(mods, typeof(Beat), typeof(SliderRepeat), typeof(Slider)),
                 new Aim(mods, typeof(Beat)),
-                new Speed(mods, hitWindowGreat)
+                new Speed(mods, hitWindowGreat),
+                new Complexity(mods)
             };
         }
     }
