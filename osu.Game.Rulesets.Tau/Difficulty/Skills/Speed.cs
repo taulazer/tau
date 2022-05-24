@@ -61,7 +61,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
                 double currHistoricalDecay = (history_time_max - (current.StartTime - currObj.StartTime)) / history_time_max; // scales note 0 to 1 from history to now
 
-                currHistoricalDecay = Math.Min((double)(Previous.Count - i) / Previous.Count, currHistoricalDecay); // either we're limited by time or limited by object count.
+                currHistoricalDecay =
+                    Math.Min((double)(Previous.Count - i) / Previous.Count, currHistoricalDecay); // either we're limited by time or limited by object count.
 
                 double currDelta = currObj.StrainTime;
                 double prevDelta = prevObj.StrainTime;
@@ -151,7 +152,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (current is TauAngledDifficultyHitObject currAngled && (Previous.Count > 0 && Previous[0] is TauAngledDifficultyHitObject lastAngled))
             {
                 double travelDistance = Math.Abs((double)currAngled?.Distance);
-                distance = Math.Min(single_spacing_threshold, travelDistance + Math.Abs(lastAngled?.Distance ?? 0)); // tauCurrobj.Disance used to be MinJumpDistance, replace if found alternate.
+                distance = Math.Min(single_spacing_threshold,
+                    travelDistance + Math.Abs(lastAngled?.Distance ?? 0)); // tauCurrobj.Disance used to be MinJumpDistance, replace if found alternate.
             }
 
             return (speedBonus + speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5)) / strainTime;
@@ -178,8 +180,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             TauDifficultyAttributes attributes = context.DifficultyAttributes;
             double speedValue = Math.Pow(5.0 * Math.Max(1.0, attributes.SpeedDifficulty / 0.0675) - 4.0, 3.0) / 100000.0;
 
-            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, context.TotalHits / 2000.0) +
-                                 (context.TotalHits > 2000 ? Math.Log10(context.TotalHits / 2000.0) * 0.5 : 0.0);
+            double lengthBonus =
+                0.95 + 0.4 * Math.Min(1.0, context.TotalHits / 2000.0) + (context.TotalHits > 2000 ? Math.Log10(context.TotalHits / 2000.0) * 0.5 : 0.0);
             speedValue *= lengthBonus;
 
             // Penalize misses by assessing # of misses relative to the total # of objects. Default a 3% reduction for any # of misses.

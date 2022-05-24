@@ -27,19 +27,18 @@ public class TauPerformanceCalculator : PerformanceCalculator
         double multiplier = 1.12;
 
         double aimValue = Aim.ComputePerformance(context);
-        double accuracyValue = computeAccuracy(context);
         double speedValue = Speed.ComputePerformance(context);
+        double accuracyValue = computeAccuracy(context);
         double effectiveMissCount = calculateEffectiveMissCount(context);
 
         if (score.Mods.Any(m => m is TauModNoFail))
             multiplier *= Math.Max(0.90, 1.0 - 0.02 * effectiveMissCount);
 
         double totalValue = Math.Pow(
-            Math.Pow(aimValue, 1.1) +
-            Math.Pow(accuracyValue, 1.1) +
-            Math.Pow(speedValue, 1.1),
-            1.0 / 1.1
-        ) * multiplier;
+                                Math.Pow(aimValue, 1.1) + Math.Pow(accuracyValue, 1.1) + Math.Pow(speedValue, 1.1),
+                                1.0 / 1.1
+                            ) *
+                            multiplier;
 
         return new TauPerformanceAttribute
         {
@@ -61,7 +60,8 @@ public class TauPerformanceCalculator : PerformanceCalculator
         int amountHitObjectsWithAccuracy = context.DifficultyAttributes.NotesCount;
 
         if (amountHitObjectsWithAccuracy > 0)
-            betterAccuracyPercentage = ((context.CountGreat - (context.TotalHits - amountHitObjectsWithAccuracy)) * 6 + context.CountOk * 2) / (double)(amountHitObjectsWithAccuracy * 6);
+            betterAccuracyPercentage = ((context.CountGreat - (context.TotalHits - amountHitObjectsWithAccuracy)) * 6 + context.CountOk * 2) /
+                                       (double)(amountHitObjectsWithAccuracy * 6);
         else
             betterAccuracyPercentage = 0;
 
@@ -95,7 +95,6 @@ public class TauPerformanceCalculator : PerformanceCalculator
 
         return Math.Max(context.CountMiss, comboBasedMissCount);
     }
-
 }
 
 public struct TauPerformanceContext
