@@ -2,6 +2,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Rulesets.Tau.Edit.Blueprints.HitObjects;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
@@ -13,7 +14,7 @@ namespace osu.Game.Rulesets.Tau.Edit.Blueprints;
 public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
 {
     protected new DrawableBeat DrawableObject => (DrawableBeat)base.DrawableObject;
-    protected readonly BeatPiece SelectionPiece;
+    protected readonly BeatBlueprintPiece SelectionPiece;
     protected readonly Box Distance;
 
     public BeatSelectionBlueprint(Beat hitObject)
@@ -21,7 +22,7 @@ public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
     {
         InternalChildren = new Drawable[]
         {
-            SelectionPiece = new BeatPiece(),
+            SelectionPiece = new BeatBlueprintPiece(),
             Distance = new Box
             {
                 Anchor = Anchor.Centre,
@@ -41,7 +42,7 @@ public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
         base.Update();
 
         SelectionPiece.Rotation = Distance.Rotation = DrawableObject.Rotation;
-        SelectionPiece.Position = Extensions.FromPolarCoordinates(-DrawableObject.DrawableBox.Y, DrawableObject.Rotation);
+        SelectionPiece.Position = Extensions.FromPolarCoordinates(DrawableObject.DrawableBox.Y, DrawableObject.Rotation);
 
         Distance.Height = -DrawableObject.DrawableBox.Y;
     }

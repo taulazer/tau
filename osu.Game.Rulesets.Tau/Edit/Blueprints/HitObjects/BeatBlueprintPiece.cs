@@ -17,13 +17,12 @@ public class BeatBlueprintPiece : BlueprintPiece<Beat>
     public BeatBlueprintPiece()
     {
         Origin = Anchor.Centre;
-        Size = new Vector2(NoteSize.Default);
+        Size = new Vector2(NoteSize.Default * 1.25f);
         Anchor = Anchor.Centre;
         RelativePositionAxes = Axes.Both;
 
         InternalChild = new Container
         {
-            Masking = true,
             BorderThickness = 10,
             BorderColour = Color4.Yellow,
             RelativeSizeAxes = Axes.Both,
@@ -32,7 +31,6 @@ public class BeatBlueprintPiece : BlueprintPiece<Beat>
                 new Box
                 {
                     AlwaysPresent = true,
-                    Alpha = 0,
                     RelativeSizeAxes = Axes.Both
                 }
             }
@@ -43,10 +41,5 @@ public class BeatBlueprintPiece : BlueprintPiece<Beat>
     private void load(OsuColour colours)
     {
         Colour = colours.Yellow;
-    }
-
-    public void UpdateFrom(Beat hitObject)
-    {
-        base.UpdateFrom(hitObject);
     }
 }
