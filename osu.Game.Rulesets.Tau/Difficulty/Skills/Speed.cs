@@ -205,10 +205,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             // Scale the speed value with accuracy and OD.
             speedValue *= (0.95 + Math.Pow(attributes.OverallDifficulty, 2) / 750) * Math.Pow(context.Accuracy, (14.5 - Math.Max(attributes.OverallDifficulty, 8)) / 2);
 
-            // Scale the speed value with # of 50s to punish doubletapping.
-            //speedValue *= Math.Pow(0.98, context.CountOk < context.TotalHits / 500.0 ? 0 : context.CountMeh - context.TotalHits / 500.0);
-
-            return speedValue;
+           return speedValue;
         }
 
         private static double getComboScalingFactor(TauPerformanceContext context) => context.DifficultyAttributes.MaxCombo <= 0

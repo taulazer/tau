@@ -21,7 +21,9 @@ public class TauPerformanceCalculator : PerformanceCalculator
     protected override PerformanceAttributes CreatePerformanceAttributes(ScoreInfo score, DifficultyAttributes attributes)
     {
         var tauAttributes = (TauDifficultyAttributes)attributes;
+
         context = new TauPerformanceContext(score, tauAttributes);
+        double effectiveMissCount = context.EffectiveMissCount = calculateEffectiveMissCount(context);
 
         // Mod multipliers here, let's just set to default osu! value.
         double multiplier = 1.12;
@@ -29,13 +31,13 @@ public class TauPerformanceCalculator : PerformanceCalculator
         double aimValue = Aim.ComputePerformance(context);
         double speedValue = Speed.ComputePerformance(context);
         double accuracyValue = computeAccuracy(context);
-        double effectiveMissCount = calculateEffectiveMissCount(context);
+        double complexityValue = Complexity.CalculatePerformance(context);
 
         if (score.Mods.Any(m => m is TauModNoFail))
             multiplier *= Math.Max(0.90, 1.0 - 0.02 * effectiveMissCount);
 
         double totalValue = Math.Pow(
-                                Math.Pow(aimValue, 1.1) + Math.Pow(accuracyValue, 1.1) + Math.Pow(speedValue, 1.1),
+                                Math.Pow(aimValue, 1.1) + Math.Pow(accuracyValue, 1.1) + Math.Pow(speedValue, 1.1) + Math.Pow(complexityValue, 1.1),
                                 1.0 / 1.1
                             ) *
                             multiplier;
@@ -45,6 +47,7 @@ public class TauPerformanceCalculator : PerformanceCalculator
             Aim = aimValue,
             Speed = speedValue,
             Accuracy = accuracyValue,
+            Complexity = complexityValue,
             Total = totalValue,
             EffectiveMissCount = effectiveMissCount
         };
@@ -105,8 +108,7 @@ public struct TauPerformanceContext
     public int CountOk => Score.Statistics.GetValueOrDefault(HitResult.Ok);
     public int CountMiss => Score.Statistics.GetValueOrDefault(HitResult.Miss);
 
-    public double EffectiveMissCount => 0.0;
-
+    public double EffectiveMissCount { get; set; }
     public int TotalHits => CountGreat + CountOk + CountMiss;
 
     public ScoreInfo Score { get; set; }
@@ -116,5 +118,6 @@ public struct TauPerformanceContext
     {
         Score = score;
         DifficultyAttributes = attributes;
+        EffectiveMissCount = 0.0;
     }
 }
