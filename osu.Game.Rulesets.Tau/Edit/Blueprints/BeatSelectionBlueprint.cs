@@ -41,9 +41,9 @@ public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
         base.Update();
 
         SelectionPiece.Rotation = Distance.Rotation = DrawableObject.Rotation;
-        SelectionPiece.Position = Extensions.FromPolarCoordinates(DrawableObject.DrawableBox.Y, DrawableObject.Rotation);
+        SelectionPiece.Position = Extensions.FromPolarCoordinates(-DrawableObject.DrawableBox.Y, DrawableObject.Rotation);
 
-        Distance.Height = DrawableObject.DrawableBox.Y;
+        Distance.Height = -DrawableObject.DrawableBox.Y;
     }
 
     public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.DrawableBox.ScreenSpaceDrawQuad.Centre;
