@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
                     offset = offsetAngle.GetOffsetAngle();
 
                 Distance = Math.Abs(Math.Max(0, Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)) - AngleRange / 2));
-                StrainTime = Math.Max(StrainTime, (hitObject.StartTime - lastAngled.StartTime) / clockRate);
+                StrainTime = Math.Max(StrainTime, StartTime - lastAngled.StartTime);
             }
 
             if (hitObject is Slider slider)
