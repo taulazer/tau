@@ -9,9 +9,11 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Tau.Edit.Blueprints;
 using osu.Game.Rulesets.Tau.Edit.Tools;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Screens.Edit.Components.TernaryButtons;
+using osu.Game.Screens.Edit.Compose.Components;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Edit;
@@ -25,6 +27,9 @@ public class TauHitObjectComposer : HitObjectComposer<TauHitObject>
 
     private readonly Bindable<TernaryState> angluarGridSnapToggle = new();
     private TauAngularPositionSnapGrid angularPositionSnapGrid;
+
+    protected override ComposeBlueprintContainer CreateBlueprintContainer()
+        => new TauBlueprintContainer(this);
 
     protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => new HitObjectCompositionTool[]
     {
