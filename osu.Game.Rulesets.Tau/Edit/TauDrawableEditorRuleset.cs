@@ -14,7 +14,7 @@ public class TauDrawableEditorRuleset : TauDrawableRuleset
     {
     }
 
-    public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new TauPlayfieldAdjustmentContainer(1f);
+    public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new TauPlayfieldAdjustmentContainer(0.9f);
     protected override Playfield CreatePlayfield() => new TauEditorPlayfield();
 
     public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
