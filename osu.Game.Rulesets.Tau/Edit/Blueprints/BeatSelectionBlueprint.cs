@@ -5,7 +5,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Tau.Edit.Blueprints.HitObjects;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
-using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osuTK;
 using osuTK.Graphics;
 
@@ -44,7 +43,7 @@ public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
         SelectionPiece.Rotation = Distance.Rotation = DrawableObject.Rotation;
         SelectionPiece.Position = Extensions.FromPolarCoordinates(DrawableObject.DrawableBox.Y, DrawableObject.Rotation);
 
-        Distance.Height = -DrawableObject.DrawableBox.Y;
+        Distance.Height = DrawableObject.DrawableBox.Y;
     }
 
     public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.DrawableBox.ScreenSpaceDrawQuad.Centre;
