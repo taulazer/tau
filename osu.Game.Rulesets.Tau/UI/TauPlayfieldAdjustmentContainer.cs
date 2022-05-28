@@ -10,11 +10,11 @@ namespace osu.Game.Rulesets.Tau.UI
         protected override Container<Drawable> Content => content;
         private readonly Container content;
 
-        public TauPlayfieldAdjustmentContainer()
+        public TauPlayfieldAdjustmentContainer(float scale = 0.6f)
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Size = new Vector2(.6f);
+            Size = new Vector2(scale);
             FillMode = FillMode.Fit;
             FillAspectRatio = 1;
 

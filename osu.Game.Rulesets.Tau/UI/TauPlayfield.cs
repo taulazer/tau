@@ -27,7 +27,8 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container judgementAboveHitObjectLayer;
-        private readonly EffectsContainer effectsContainer;
+
+        public readonly EffectsContainer EffectsContainer;
 
         public static readonly Vector2 BaseSize = new(768);
         public static readonly Bindable<Color4> AccentColour = new(Color4Extensions.FromHex(@"FF0040"));
@@ -61,7 +62,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
-                effectsContainer = new EffectsContainer(),
+                EffectsContainer = new EffectsContainer(),
                 judgementAboveHitObjectLayer = new Container { RelativeSizeAxes = Axes.Both },
             });
 
@@ -97,7 +98,7 @@ namespace osu.Game.Rulesets.Tau.UI
                     s.CheckValidation = ang =>
                     {
                         if (ShouldShowPositionalEffects.Value)
-                            effectsContainer.TrackSlider(ang, s);
+                            EffectsContainer.TrackSlider(ang, s);
 
                         return checkPaddlePosition(ang);
                     };
@@ -124,7 +125,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             if (ShouldShowPositionalEffects.Value)
-                effectsContainer.OnNewResult(judgedObject, result);
+                EffectsContainer.OnNewResult(judgedObject, result);
 
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;

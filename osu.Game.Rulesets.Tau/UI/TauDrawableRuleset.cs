@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public class TauDrawableRuleset : DrawableRuleset<TauHitObject>
     {
-        public TauDrawableRuleset(TauRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
+        public TauDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             : base(ruleset, beatmap, mods)
         {
         }

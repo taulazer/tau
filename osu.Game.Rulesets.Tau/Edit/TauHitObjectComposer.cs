@@ -3,18 +3,19 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Game.Beatmaps;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Edit.Blueprints;
 using osu.Game.Rulesets.Tau.Edit.Tools;
 using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Edit.Components.TernaryButtons;
 using osu.Game.Screens.Edit.Compose.Components;
-using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Edit;
 
@@ -30,6 +31,9 @@ public class TauHitObjectComposer : HitObjectComposer<TauHitObject>
 
     protected override ComposeBlueprintContainer CreateBlueprintContainer()
         => new TauBlueprintContainer(this);
+
+    protected override DrawableRuleset<TauHitObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
+        => new TauDrawableEditorRuleset(ruleset, beatmap, mods);
 
     protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => new HitObjectCompositionTool[]
     {
