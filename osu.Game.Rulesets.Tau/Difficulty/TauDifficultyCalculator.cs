@@ -80,15 +80,26 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             properties.SetRange(beatmap.Difficulty.CircleSize);
 
             TauHitObject lastObject = null;
+            var objects = new List<DifficultyHitObject>();
 
             foreach (var hitObject in beatmap.HitObjects.Cast<TauHitObject>())
             {
                 if (lastObject != null)
                 {
                     if (hitObject is AngledTauHitObject)
-                        yield return new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties);
+                    {
+                        var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties, objects);
+                        yield return obj;
+
+                        objects.Add(obj);
+                    }
                     else
-                        yield return new TauDifficultyHitObject(hitObject, lastObject, clockRate);
+                    {
+                        var obj = new TauDifficultyHitObject(hitObject, lastObject, clockRate, objects);
+                        yield return obj;
+
+                        objects.Add(obj);
+                    }
                 }
 
                 lastObject = hitObject;
