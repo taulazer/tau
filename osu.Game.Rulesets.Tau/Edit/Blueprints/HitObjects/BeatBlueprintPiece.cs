@@ -26,6 +26,7 @@ public class BeatBlueprintPiece : BlueprintPiece<Beat>
             BorderThickness = 10,
             BorderColour = Color4.Yellow,
             RelativeSizeAxes = Axes.Both,
+            Masking = true,
             Children = new Drawable[]
             {
                 new Box
