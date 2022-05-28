@@ -43,4 +43,7 @@ public class BeatBlueprintPiece : BlueprintPiece<Beat>
     {
         Colour = colours.Yellow;
     }
+
+    public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
+        => DrawRectangle.Inflate(10).Contains(ToLocalSpace(screenSpacePos));
 }

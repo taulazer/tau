@@ -50,5 +50,5 @@ public class BeatSelectionBlueprint : TauSelectionBlueprint<Beat>
 
     public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => SelectionPiece.ReceivePositionalInputAt(screenSpacePos);
 
-    public override Quad SelectionQuad => DrawableObject.DrawableBox.ScreenSpaceDrawQuad.AABB;
+    public override Quad SelectionQuad => DrawableObject.DrawableBox.ScreenSpaceDrawQuad.AABB.Inflate(5);
 }
