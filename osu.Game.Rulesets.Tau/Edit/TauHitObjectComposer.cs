@@ -15,8 +15,8 @@ public class TauHitObjectComposer : HitObjectComposer<TauHitObject>
 
     protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => new[]
     {
-        new BeatCompositionTool()
-      // new TauSliderCompostitionTool(),
-      // new TauHardBeatCompostitionTool()
+        new BeatCompositionTool(),
+        new SliderCompositionTool(),
+        new HardBeatCompositionTool()
     };
 }

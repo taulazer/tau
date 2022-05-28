@@ -4,7 +4,6 @@ using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Edit.Tools;
 using osu.Game.Rulesets.Tau.Edit.Blueprints;
 using osu.Game.Rulesets.Tau.Objects;
-using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Edit.Tools;
 
@@ -17,8 +16,7 @@ public class BeatCompositionTool : HitObjectCompositionTool
 
     public override Drawable CreateIcon() => new SpriteIcon
     {
-        Icon = FontAwesome.Solid.Square,
-        Scale = new Vector2(.7f)
+        Icon = FontAwesome.Solid.Square
     };
 
     public override PlacementBlueprint CreatePlacementBlueprint() => new BeatPlacementBlueprint();
