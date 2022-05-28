@@ -80,6 +80,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             properties.SetRange(beatmap.Difficulty.CircleSize);
 
             TauHitObject lastObject = null;
+            TauAngledDifficultyHitObject lastAngled = null;
             var objects = new List<DifficultyHitObject>();
 
             foreach (var hitObject in beatmap.HitObjects.Cast<TauHitObject>())
@@ -88,22 +89,19 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 {
                     if (hitObject is AngledTauHitObject)
                     {
-                        var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties, objects);
-                        yield return obj;
-
+                        var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties, lastAngled);
                         objects.Add(obj);
+
+                        lastAngled = obj;
                     }
                     else
-                    {
-                        var obj = new TauDifficultyHitObject(hitObject, lastObject, clockRate, objects);
-                        yield return obj;
-
-                        objects.Add(obj);
-                    }
+                        objects.Add(new TauDifficultyHitObject(hitObject, lastObject, clockRate));
                 }
 
                 lastObject = hitObject;
             }
+
+            return objects;
         }
 
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate)

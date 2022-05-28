@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
@@ -29,13 +27,10 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         public double Distance;
 
-        public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties,
-                                            List<DifficultyHitObject> objects)
-            : base(hitObject, lastObject, clockRate, objects)
+        public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties, TauAngledDifficultyHitObject lastAngled)
+            : base(hitObject, lastObject, clockRate)
         {
             this.properties = properties;
-
-            var lastAngled = GetPrevious<TauAngledDifficultyHitObject>();
 
             if (hitObject is AngledTauHitObject firstAngled && lastAngled != null)
             {
@@ -52,7 +47,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
             {
                 TravelDistance = slider.Path.CalculatedDistance;
                 LazyTravelDistance = slider.Path.CalculateLazyDistance((float)(AngleRange / 2));
-                TravelTime = slider.Duration;
+                TravelTime = slider.Duration / clockRate;
             }
         }
     }
