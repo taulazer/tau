@@ -155,19 +155,39 @@ namespace osu.Game.Rulesets.Tau.Objects
         }
     }
 
-    public readonly struct SliderNode : IComparable<SliderNode>
+    public struct SliderNode : IComparable<SliderNode>
     {
         public float Time { get; }
 
-        public float Angle { get; }
+        private float angle;
+
+        [JsonProperty]
+        public float Angle
+        {
+            get => angle;
+            set
+            {
+                if (value == angle)
+                    return;
+
+                angle = value;
+                Changed?.Invoke();
+            }
+        }
 
         public SliderNode(float time, float angle)
+            : this()
         {
-            Time = time;
             Angle = angle;
+            Time = time;
         }
 
         public int CompareTo(SliderNode other) => Time.CompareTo(other.Time);
+
+        /// <summary>
+        /// Invoked when any property of this <see cref="T:osu.Game.Rulesets.Objects.PathControlPoint" /> is changed.
+        /// </summary>
+        public event Action Changed;
 
         public override string ToString() => $"T: {Time} | A: {Angle}";
     }

@@ -42,6 +42,9 @@ namespace osu.Game.Rulesets.Tau.Objects
         public SliderHeadBeat HeadBeat { get; protected set; }
 
         [JsonIgnore]
+        public SliderTick EndBeat { get; protected set; }
+
+        [JsonIgnore]
         public PolarSliderPath Path { get; set; }
 
         /// <summary>
@@ -113,6 +116,15 @@ namespace osu.Game.Rulesets.Tau.Objects
 
                     case SliderEventType.Tick:
                         AddNested(new SliderTick()
+                        {
+                            ParentSlider = this,
+                            StartTime = e.Time,
+                            Angle = currentAngle
+                        });
+                        break;
+
+                    case SliderEventType.LegacyLastTick: //Used to state the end of the slider, only used for editor selection.
+                        AddNested(EndBeat = new SliderTick
                         {
                             ParentSlider = this,
                             StartTime = e.Time,

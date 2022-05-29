@@ -3,6 +3,7 @@ using System.Linq;
 using osu.Framework.Input;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Tau.Edit.Blueprints.Sliders;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Screens.Edit.Compose.Components;
 using osuTK;
@@ -33,6 +34,9 @@ public class TauBlueprintContainer : ComposeBlueprintContainer
         {
             case Beat beat:
                 return new BeatSelectionBlueprint(beat);
+
+            case Slider slider:
+                return new SliderSelectionBlueprint(slider);
         }
 
         return base.CreateHitObjectBlueprintFor(hitObject);
