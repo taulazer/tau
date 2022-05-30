@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         public double DrainRate { get; set; }
 
         /// <summary>
-        /// The number of notes in the beatmap.
+        /// The number of regular beats in the beatmap.
         /// </summary>
         public int NotesCount { get; set; }
 
@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         public int SliderCount { get; set; }
 
         /// <summary>
-        /// The number of sliders in the beatmap.
+        /// The number of hard beats in the beatmap.
         /// </summary>
         public int HardBeatCount { get; set; }
     }

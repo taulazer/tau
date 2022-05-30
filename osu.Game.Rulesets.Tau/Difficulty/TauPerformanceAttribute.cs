@@ -32,6 +32,5 @@ public class TauPerformanceAttribute : PerformanceAttributes
         yield return new PerformanceDisplayAttribute(nameof(Accuracy), "Accuracy", Accuracy);
         yield return new PerformanceDisplayAttribute(nameof(Speed), "Speed", Speed);
         yield return new PerformanceDisplayAttribute(nameof(Complexity), "Complexity", Complexity);
-
     }
 }
