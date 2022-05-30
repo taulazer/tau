@@ -63,8 +63,8 @@ public class TauPerformanceCalculator : PerformanceCalculator
         int amountHitObjectsWithAccuracy = context.DifficultyAttributes.NotesCount;
 
         if (amountHitObjectsWithAccuracy > 0)
-            betterAccuracyPercentage = ((context.CountGreat - (context.TotalHits - amountHitObjectsWithAccuracy)) * 6 + context.CountOk * 2) /
-                                       (double)(amountHitObjectsWithAccuracy * 6);
+            betterAccuracyPercentage = ((context.CountGreat - (context.TotalHits - amountHitObjectsWithAccuracy)) * 3 + context.CountOk) /
+                                       (double)(amountHitObjectsWithAccuracy * 3);
         else
             betterAccuracyPercentage = 0;
 
