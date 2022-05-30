@@ -2,6 +2,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Tau.Objects;
@@ -17,7 +18,7 @@ public class SliderSelectionBlueprint : TauSelectionBlueprint<Slider>
 {
     protected new DrawableSlider DrawableObject => (DrawableSlider)base.DrawableObject;
 
-        // protected SliderBodyPiece BodyPiece { get; private set; }
+    //protected SliderBodyPiece BodyPiece { get; private set; }
     protected SliderCircleOverlay HeadOverlay { get; private set; }
     protected SliderCircleOverlay TailOverlay { get; private set; }
 
@@ -39,7 +40,7 @@ public class SliderSelectionBlueprint : TauSelectionBlueprint<Slider>
     [Resolved(CanBeNull = true)]
     private BindableBeatDivisor beatDivisor { get; set; }
 
-    //public override Quad SelectionQuad => BodyPiece.ScreenSpaceDrawQuad;
+    public override Quad SelectionQuad => DrawableObject.ScreenSpaceDrawQuad;
 
     private readonly BindableList<SliderNode> sliderNodes = new BindableList<SliderNode>();
     private readonly IBindable<int> pathVersion = new Bindable<int>();
@@ -128,10 +129,19 @@ public class SliderSelectionBlueprint : TauSelectionBlueprint<Slider>
     // }
 
     // Always refer to the drawable object's slider body so subsequent movement deltas are calculated with updated positions.
-    // public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.SliderBody?.ToScreenSpace(DrawableObject.SliderBody.PathOffset)
-    //                                                      ?? BodyPiece.ToScreenSpace(BodyPiece.PathStartLocation);
+    public override Vector2 ScreenSpaceSelectionPoint => DrawableObject.ToScreenSpace(DrawableObject.Position);
 
-    protected virtual SliderCircleOverlay CreateCircleOverlay(Slider slider, SliderPosition position) => new SliderCircleOverlay(slider, position);
+    protected override void OnSelected()
+    {
+        AddInternal(NodeVisualiser = new PathNodeVisualiser(HitObject, true)
+        {
+            //RemoveControlPointsRequested = removeNodes
+        });
+
+        base.OnSelected();
+    }
+
+    protected virtual SliderCircleOverlay CreateCircleOverlay(Slider slider, SliderPosition position) => new(slider, position);
 }
 
 public enum SliderPosition

@@ -9,6 +9,7 @@ using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Screens.Edit;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
@@ -34,6 +35,9 @@ public class SliderNodePiece : BlueprintPiece<Slider>
 
     [Resolved]
     private OsuColour colours { get; set; }
+
+    [Resolved]
+    private EditorClock clock { get; set; }
 
     private IBindable<float> sliderAngle;
 
@@ -189,7 +193,7 @@ public class SliderNodePiece : BlueprintPiece<Slider>
     private void updateMarkerDisplay()
     {
         float radius = TauPlayfield.BaseSize.X / 2;
-        Position = Extensions.FromPolarCoordinates(-(float)((SliderNode.Time - ) / slider.TimePreempt * radius), SliderNode.Angle);
+        Position = Extensions.FromPolarCoordinates((float)(((SliderNode.Time + slider.StartTime) - clock.Time.Current) / slider.TimePreempt * radius), -SliderNode.Angle);
 
         markerRing.Alpha = IsSelected.Value ? 1 : 0;
 

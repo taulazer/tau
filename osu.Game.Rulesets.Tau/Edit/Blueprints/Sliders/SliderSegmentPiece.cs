@@ -1,8 +1,11 @@
-﻿using osu.Framework.Bindables;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Screens.Edit;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Edit.Blueprints.Sliders;
@@ -17,6 +20,9 @@ public class SliderSegmentPiece : CompositeDrawable
 
     private IBindable<float> sliderAngle;
     private IBindable<int> pathVersion;
+
+    [Resolved]
+    private EditorClock clock { get; set; }
 
     public SliderSegmentPiece(Slider slider, int nodeIndex)
     {
@@ -53,7 +59,8 @@ public class SliderSegmentPiece : CompositeDrawable
     /// </summary>
     private void updateConnectingPath()
     {
-        Position = Extensions.FromPolarCoordinates(SliderNode.Time, SliderNode.Angle);
+        float radius = TauPlayfield.BaseSize.X / 2;
+        Position = Extensions.FromPolarCoordinates(-(float)(((SliderNode.Time + slider.StartTime) - clock.Time.Current) / slider.TimePreempt * radius), SliderNode.Angle);
 
         path.ClearVertices();
 
@@ -62,7 +69,7 @@ public class SliderSegmentPiece : CompositeDrawable
             return;
 
         path.AddVertex(Vector3.Zero);
-        path.AddVertex(new Vector3(slider.Path.Nodes[nextIndex].Time - SliderNode.Time, slider.Path.Nodes[nextIndex].Angle - SliderNode.Angle, 1));
+        path.AddVertex(new Vector3(SliderNode.Time, SliderNode.Angle, 1));
 
         path.OriginPosition = path.PositionInBoundingBox(Vector2.Zero);
     }
