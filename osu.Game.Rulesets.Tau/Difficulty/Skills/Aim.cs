@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private readonly Type[] allowedHitObjects;
 
         protected override int HistoryLength => 10;
-        protected override double SkillMultiplier => 50;
+        protected override double SkillMultiplier => 20;
         private const double slider_multiplier = 1.5;
         protected override double StrainDecayBase => 0.2;
 
@@ -23,9 +23,13 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             this.allowedHitObjects = allowedHitObjects;
         }
 
+        // https://www.desmos.com/calculator/xvfmj66s1o
+        private double calculateVelocity(double distance, double time)
+            => distance / (Math.Pow(time / 100, 2) + 20);
+
         private double calculateStrain(TauAngledDifficultyHitObject current, TauAngledDifficultyHitObject last)
         {
-            double velocity = current.Distance / current.StrainTime;
+            double velocity = calculateVelocity(current.Distance, current.StrainTime);
 
             if (!allowedHitObjects.Any(t => t == typeof(Slider) && last.BaseObject is Slider))
                 return velocity;
@@ -36,7 +40,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
                 return velocity;
 
             double travelVelocity = last.LazyTravelDistance / last.TravelTime;
-            double movementVelocity = current.Distance / current.StrainTime;
+            double movementVelocity = calculateVelocity(current.Distance, current.StrainTime);
 
             velocity = Math.Max(velocity, movementVelocity + travelVelocity);
             velocity += (last.LazyTravelDistance / last.TravelTime) * slider_multiplier;
