@@ -23,9 +23,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             this.allowedHitObjects = allowedHitObjects;
         }
 
-        // https://www.desmos.com/calculator/2edrdrqwqk
+        // https://www.desmos.com/calculator/5yu0ov3zka
         private double calculateVelocity(double distance, double time)
-            => distance / (Math.Pow(Math.Pow(time, 1.35) / 150, 2) * 0.55 + 25);
+            => distance / (Math.Pow((Math.Pow(time, 1.4) - 77) / 100, 2) * 0.1 + 25);
 
         private double calculateStrain(TauAngledDifficultyHitObject current, TauAngledDifficultyHitObject last)
         {
