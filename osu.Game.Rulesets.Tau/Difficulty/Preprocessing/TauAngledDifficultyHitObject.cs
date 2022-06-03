@@ -24,30 +24,37 @@ public class TauAngledDifficultyHitObject : TauDifficultyHitObject
 
     private readonly TauCachedProperties properties;
 
+    public new AngledTauHitObject BaseObject => (AngledTauHitObject)base.BaseObject;
+
+    public TauAngledDifficultyHitObject LastAngled;
+
     public double AngleRange => properties.AngleRange.Value;
 
-    public readonly double Distance;
+    public double Distance;
 
-    public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties)
+    public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties,
+                                        TauAngledDifficultyHitObject lastAngled)
         : base(hitObject, lastObject, clockRate)
     {
         this.properties = properties;
+        LastAngled = lastAngled;
 
-        if (hitObject is AngledTauHitObject firstAngled && lastObject is AngledTauHitObject lastAngled)
+        if (hitObject is AngledTauHitObject firstAngled && lastAngled != null)
         {
             float offset = 0;
 
-            if (lastAngled is IHasOffsetAngle offsetAngle)
+            if (lastAngled.BaseObject is IHasOffsetAngle offsetAngle)
                 offset = offsetAngle.GetOffsetAngle();
 
-            Distance = Math.Abs(Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.Angle + offset).Normalize()));
+            Distance = Math.Abs(Math.Max(0, Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)) - AngleRange / 2));
+            StrainTime = Math.Max(StrainTime, StartTime - lastAngled.StartTime);
         }
 
         if (hitObject is Slider slider)
         {
             TravelDistance = slider.Path.CalculatedDistance;
             LazyTravelDistance = slider.Path.CalculateLazyDistance((float)(AngleRange / 2));
-            TravelTime = slider.Duration;
+            TravelTime = slider.Duration / clockRate;
         }
     }
 }

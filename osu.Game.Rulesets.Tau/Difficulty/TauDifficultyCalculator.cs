@@ -80,19 +80,28 @@ public class TauDifficultyCalculator : DifficultyCalculator
         properties.SetRange(beatmap.Difficulty.CircleSize);
 
         TauHitObject lastObject = null;
+        TauAngledDifficultyHitObject lastAngled = null;
+        var objects = new List<DifficultyHitObject>();
 
         foreach (var hitObject in beatmap.HitObjects.Cast<TauHitObject>())
         {
             if (lastObject != null)
             {
                 if (hitObject is AngledTauHitObject)
-                    yield return new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties);
+                {
+                    var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties, lastAngled);
+                    objects.Add(obj);
+
+                    lastAngled = obj;
+                }
                 else
-                    yield return new TauDifficultyHitObject(hitObject, lastObject, clockRate);
+                    objects.Add(new TauDifficultyHitObject(hitObject, lastObject, clockRate));
             }
 
             lastObject = hitObject;
         }
+
+        return objects;
     }
 
     protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate)

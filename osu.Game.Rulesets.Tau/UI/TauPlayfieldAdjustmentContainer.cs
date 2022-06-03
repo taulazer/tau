@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Size = new Vector2(.6f);
+            Size = new Vector2(0.6f);
             FillMode = FillMode.Fit;
             FillAspectRatio = 1;
 
