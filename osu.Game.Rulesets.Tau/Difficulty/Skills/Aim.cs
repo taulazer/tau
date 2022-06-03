@@ -13,8 +13,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private readonly Type[] allowedHitObjects;
 
         protected override int HistoryLength => 10;
-        protected override double SkillMultiplier => 27;
-        private const double slider_multiplier = 1.5;
+        protected override double SkillMultiplier => 19;
+        private const double slider_multiplier = 1.2;
         protected override double StrainDecayBase => 0.2;
 
         public Aim(Mod[] mods, Type[] allowedHitObjects)
@@ -39,32 +39,24 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (!(last.TravelDistance >= current.AngleRange))
                 return velocity;
 
-            double travelVelocity = last.LazyTravelDistance / last.TravelTime;
+            double travelVelocity = calculateVelocity(last.LazyTravelDistance, last.TravelTime);
             double movementVelocity = calculateVelocity(current.Distance, current.StrainTime);
 
             velocity = Math.Max(velocity, movementVelocity + travelVelocity);
-            velocity += (last.LazyTravelDistance / last.TravelTime) * slider_multiplier;
+            velocity += calculateVelocity(last.LazyTravelDistance, last.TravelTime) * slider_multiplier;
 
             return velocity;
         }
 
         protected override double StrainValueOf(DifficultyHitObject current)
         {
-            if (Previous.Count <= 1 || current is not TauAngledDifficultyHitObject)
+            if (Previous.Count <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
                 return 0;
-
-            // Get the last available angled hit object in the history.
-            var prevAngled = Previous.Where(p => p is TauAngledDifficultyHitObject);
-            if (!prevAngled.Any())
-                return 0;
-
-            var tauCurrObj = (TauAngledDifficultyHitObject)current;
-            var tauLastObj = (TauAngledDifficultyHitObject)prevAngled.First();
 
             if (tauCurrObj.Distance == 0 || !(tauCurrObj.Distance >= tauCurrObj.AngleRange))
                 return 0;
 
-            return calculateStrain(tauCurrObj, tauLastObj);
+            return calculateStrain(tauCurrObj, tauCurrObj.LastAngled);
         }
 
         #region PP Calculation

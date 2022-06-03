@@ -23,6 +23,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         public new AngledTauHitObject BaseObject => (AngledTauHitObject)base.BaseObject;
 
+        public TauAngledDifficultyHitObject LastAngled;
+
         public double AngleRange => properties.AngleRange.Value;
 
         public double Distance;
@@ -31,6 +33,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
             : base(hitObject, lastObject, clockRate)
         {
             this.properties = properties;
+            LastAngled = lastAngled;
 
             if (hitObject is AngledTauHitObject firstAngled && lastAngled != null)
             {
