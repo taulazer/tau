@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 
             // Slider calculation
 
-            if (!(last.TravelDistance >= current.AngleRange))
+            if (last.TravelDistance < current.AngleRange)
                 return velocity;
 
             double travelVelocity = calculateVelocity(last.LazyTravelDistance, last.TravelTime);
@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
             if (Previous.Count <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
                 return 0;
 
-            if (tauCurrObj.Distance == 0 || !(tauCurrObj.Distance >= tauCurrObj.AngleRange))
+            if (tauCurrObj.Distance < tauCurrObj.AngleRange)
                 return 0;
 
             return calculateStrain(tauCurrObj, tauCurrObj.LastAngled);
