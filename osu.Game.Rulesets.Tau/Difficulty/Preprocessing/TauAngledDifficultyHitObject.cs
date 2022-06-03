@@ -24,37 +24,37 @@ public class TauAngledDifficultyHitObject : TauDifficultyHitObject
 
     private readonly TauCachedProperties properties;
 
-        public new AngledTauHitObject BaseObject => (AngledTauHitObject)base.BaseObject;
+    public new AngledTauHitObject BaseObject => (AngledTauHitObject)base.BaseObject;
 
-        public TauAngledDifficultyHitObject LastAngled;
+    public TauAngledDifficultyHitObject LastAngled;
 
-        public double AngleRange => properties.AngleRange.Value;
+    public double AngleRange => properties.AngleRange.Value;
 
-        public double Distance;
+    public double Distance;
 
-        public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties, TauAngledDifficultyHitObject lastAngled)
-            : base(hitObject, lastObject, clockRate)
+    public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties,
+                                        TauAngledDifficultyHitObject lastAngled)
+        : base(hitObject, lastObject, clockRate)
+    {
+        this.properties = properties;
+        LastAngled = lastAngled;
+
+        if (hitObject is AngledTauHitObject firstAngled && lastAngled != null)
         {
-            this.properties = properties;
-            LastAngled = lastAngled;
+            float offset = 0;
 
-            if (hitObject is AngledTauHitObject firstAngled && lastAngled != null)
-            {
-                float offset = 0;
+            if (lastAngled.BaseObject is IHasOffsetAngle offsetAngle)
+                offset = offsetAngle.GetOffsetAngle();
 
-                if (lastAngled.BaseObject is IHasOffsetAngle offsetAngle)
-                    offset = offsetAngle.GetOffsetAngle();
+            Distance = Math.Abs(Math.Max(0, Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)) - AngleRange / 2));
+            StrainTime = Math.Max(StrainTime, StartTime - lastAngled.StartTime);
+        }
 
-                Distance = Math.Abs(Math.Max(0, Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)) - AngleRange / 2));
-                StrainTime = Math.Max(StrainTime, StartTime - lastAngled.StartTime);
-            }
-
-            if (hitObject is Slider slider)
-            {
-                TravelDistance = slider.Path.CalculatedDistance;
-                LazyTravelDistance = slider.Path.CalculateLazyDistance((float)(AngleRange / 2));
-                TravelTime = slider.Duration / clockRate;
-            }
+        if (hitObject is Slider slider)
+        {
+            TravelDistance = slider.Path.CalculatedDistance;
+            LazyTravelDistance = slider.Path.CalculateLazyDistance((float)(AngleRange / 2));
+            TravelTime = slider.Duration / clockRate;
         }
     }
 }

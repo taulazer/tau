@@ -74,34 +74,35 @@ public class TauDifficultyCalculator : DifficultyCalculator
             SliderFactor = aim > 0 ? aimNoSliders / aim : 1
         };
     }
-        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
+
+    protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
+    {
+        properties.SetRange(beatmap.Difficulty.CircleSize);
+
+        TauHitObject lastObject = null;
+        TauAngledDifficultyHitObject lastAngled = null;
+        var objects = new List<DifficultyHitObject>();
+
+        foreach (var hitObject in beatmap.HitObjects.Cast<TauHitObject>())
         {
-            properties.SetRange(beatmap.Difficulty.CircleSize);
-
-            TauHitObject lastObject = null;
-            TauAngledDifficultyHitObject lastAngled = null;
-            var objects = new List<DifficultyHitObject>();
-
-            foreach (var hitObject in beatmap.HitObjects.Cast<TauHitObject>())
+            if (lastObject != null)
             {
-                if (lastObject != null)
+                if (hitObject is AngledTauHitObject)
                 {
-                    if (hitObject is AngledTauHitObject)
-                    {
-                        var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties, lastAngled);
-                        objects.Add(obj);
+                    var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties, lastAngled);
+                    objects.Add(obj);
 
-                        lastAngled = obj;
-                    }
-                    else
-                        objects.Add(new TauDifficultyHitObject(hitObject, lastObject, clockRate));
+                    lastAngled = obj;
                 }
-
-                lastObject = hitObject;
+                else
+                    objects.Add(new TauDifficultyHitObject(hitObject, lastObject, clockRate));
             }
 
-            return objects;
+            lastObject = hitObject;
         }
+
+        return objects;
+    }
 
     protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate)
     {

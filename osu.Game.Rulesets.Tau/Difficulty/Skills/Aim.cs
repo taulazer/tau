@@ -8,54 +8,56 @@ using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Difficulty.Skills;
 
-        private readonly Type[] allowedHitObjects;
+public class Aim : StrainDecaySkill
+{
+    private readonly Type[] allowedHitObjects;
 
-        protected override int HistoryLength => 10;
-        protected override double SkillMultiplier => 19;
-        private const double slider_multiplier = 1.2;
-        protected override double StrainDecayBase => 0.2;
+    protected override int HistoryLength => 10;
+    protected override double SkillMultiplier => 19;
+    private const double slider_multiplier = 1.2;
+    protected override double StrainDecayBase => 0.2;
 
-        public Aim(Mod[] mods, Type[] allowedHitObjects)
-            : base(mods)
-        {
-            this.allowedHitObjects = allowedHitObjects;
-        }
+    public Aim(Mod[] mods, Type[] allowedHitObjects)
+        : base(mods)
+    {
+        this.allowedHitObjects = allowedHitObjects;
+    }
 
-        // https://www.desmos.com/calculator/5yu0ov3zka
-        private double calculateVelocity(double distance, double time)
-            => distance / (Math.Pow((Math.Pow(time, 1.4) - 77) / 100, 2) * 0.1 + 25);
+    // https://www.desmos.com/calculator/5yu0ov3zka
+    private double calculateVelocity(double distance, double time)
+        => distance / (Math.Pow((Math.Pow(time, 1.4) - 77) / 100, 2) * 0.1 + 25);
 
-        private double calculateStrain(TauAngledDifficultyHitObject current, TauAngledDifficultyHitObject last)
-        {
-            double velocity = calculateVelocity(current.Distance, current.StrainTime);
+    private double calculateStrain(TauAngledDifficultyHitObject current, TauAngledDifficultyHitObject last)
+    {
+        double velocity = calculateVelocity(current.Distance, current.StrainTime);
 
-            if (!allowedHitObjects.Any(t => t == typeof(Slider) && last.BaseObject is Slider))
-                return velocity;
-
-            // Slider calculation
-
-            if (last.TravelDistance < current.AngleRange)
-                return velocity;
-
-            double travelVelocity = calculateVelocity(last.LazyTravelDistance, last.TravelTime);
-            double movementVelocity = calculateVelocity(current.Distance, current.StrainTime);
-
-            velocity = Math.Max(velocity, movementVelocity + travelVelocity);
-            velocity += calculateVelocity(last.LazyTravelDistance, last.TravelTime) * slider_multiplier;
-
+        if (!allowedHitObjects.Any(t => t == typeof(Slider) && last.BaseObject is Slider))
             return velocity;
-        }
 
-        protected override double StrainValueOf(DifficultyHitObject current)
-        {
-            if (Previous.Count <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
-                return 0;
+        // Slider calculation
 
-            if (tauCurrObj.Distance < tauCurrObj.AngleRange)
-                return 0;
+        if (last.TravelDistance < current.AngleRange)
+            return velocity;
 
-            return calculateStrain(tauCurrObj, tauCurrObj.LastAngled);
-        }
+        double travelVelocity = calculateVelocity(last.LazyTravelDistance, last.TravelTime);
+        double movementVelocity = calculateVelocity(current.Distance, current.StrainTime);
+
+        velocity = Math.Max(velocity, movementVelocity + travelVelocity);
+        velocity += calculateVelocity(last.LazyTravelDistance, last.TravelTime) * slider_multiplier;
+
+        return velocity;
+    }
+
+    protected override double StrainValueOf(DifficultyHitObject current)
+    {
+        if (Previous.Count <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
+            return 0;
+
+        if (tauCurrObj.Distance < tauCurrObj.AngleRange)
+            return 0;
+
+        return calculateStrain(tauCurrObj, tauCurrObj.LastAngled);
+    }
 
     #region PP Calculation
 
