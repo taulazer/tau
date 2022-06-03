@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Tau.Game", "osu.Game.Rulesets.Tau.Game\osu.Game.Rulesets.Tau.Game.csproj", "{33D1FE6D-7087-4E64-AE77-354E9DDDB997}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,12 +31,6 @@ Global
 		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
-		{33D1FE6D-7087-4E64-AE77-354E9DDDB997}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33D1FE6D-7087-4E64-AE77-354E9DDDB997}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33D1FE6D-7087-4E64-AE77-354E9DDDB997}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33D1FE6D-7087-4E64-AE77-354E9DDDB997}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33D1FE6D-7087-4E64-AE77-354E9DDDB997}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
-		{33D1FE6D-7087-4E64-AE77-354E9DDDB997}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

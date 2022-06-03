@@ -174,7 +174,7 @@ namespace osu.Game.Rulesets.Tau
                 //       Please try to avoid this at all costs.
                 //
                 //       ~ Nora
-                store.AddStore(new RawCachingGlyphStore(
+                store.AddStore(new GlyphStore(
                     new ResourceStore<byte[]>(ruleset.CreateResourceStore()),
                     "Fonts/tauFont",
                     host.CreateTextureLoaderStore(ruleset.CreateResourceStore())));

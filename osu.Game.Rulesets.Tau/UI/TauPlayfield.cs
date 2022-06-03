@@ -111,7 +111,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private ValidationResult checkPaddlePosition(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(Cursor?.DrawablePaddle?.Rotation ?? 0, angle);
+            var angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
 
             return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
         }
