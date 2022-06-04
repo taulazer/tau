@@ -13,7 +13,7 @@ public class Aim : StrainDecaySkill
     private readonly Type[] allowedHitObjects;
 
     protected override int HistoryLength => 10;
-    protected override double SkillMultiplier => 19;
+    protected override double SkillMultiplier => 11;
     private const double slider_multiplier = 1.2;
     protected override double StrainDecayBase => 0.2;
 

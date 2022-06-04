@@ -26,7 +26,7 @@ public class Speed : TauStrainSkill
     private double currentRhythm;
 
     protected override int ReducedSectionCount => 5;
-    protected override double DifficultyMultiplier => 1.04;
+    protected override double DifficultyMultiplier => 1.25;
     protected override int HistoryLength => 32;
 
     public Speed(Mod[] mods, double hitWindowGreat)
