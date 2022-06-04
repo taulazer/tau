@@ -46,7 +46,7 @@ public class TauAngledDifficultyHitObject : TauDifficultyHitObject
             if (lastAngled.BaseObject is IHasOffsetAngle offsetAngle)
                 offset = offsetAngle.GetOffsetAngle();
 
-            Distance = Math.Abs(Math.Max(0, Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)) - AngleRange / 2));
+            Distance = Math.Abs(Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)) - AngleRange / 2);
             StrainTime = Math.Max(StrainTime, StartTime - lastAngled.StartTime);
         }
 
