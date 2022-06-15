@@ -118,5 +118,31 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 new Complexity(mods)
             };
         }
+
+        protected override Mod[] DifficultyAdjustmentMods => new Mod[]
+        {
+            // Diff. Reduction
+            new TauModEasy(),
+            new TauModHalfTime(),
+            new TauModDaycore(),
+
+            // Diff. Increase
+            new TauModHardRock(),
+            new TauModDoubleTime(),
+            new TauModNightcore(),
+
+            // Automation
+            new TauModRelax(),
+
+            // Conversion
+            new TauModDifficultyAdjust(),
+            new TauModLite(),
+
+            // Fun
+            new ModWindUp(),
+            new ModWindDown(),
+            new ModAdaptiveSpeed(),
+            new TauModImpossibleSliders()
+        };
     }
 }
