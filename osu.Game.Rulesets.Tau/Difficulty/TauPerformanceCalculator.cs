@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Difficulty.Skills;
+using osu.Game.Rulesets.Tau.Difficulty.Evaluators;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Scoring;
 
@@ -28,10 +28,10 @@ public class TauPerformanceCalculator : PerformanceCalculator
         // Mod multipliers here, let's just set to default osu! value.
         double multiplier = 1.12;
 
-        double aimValue = Aim.ComputePerformance(context);
-        double speedValue = Speed.ComputePerformance(context);
+        double aimValue = AimEvaluator.EvaluatePerformance(context);
+        double speedValue = SpeedEvaluator.EvaluatePerformance(context);
         double accuracyValue = computeAccuracy(context);
-        double complexityValue = Complexity.CalculatePerformance(context);
+        double complexityValue = ComplexityEvaluator.EvaluatePerformance(context);
 
         if (score.Mods.Any(m => m is TauModNoFail))
             multiplier *= Math.Max(0.90, 1.0 - 0.02 * effectiveMissCount);
