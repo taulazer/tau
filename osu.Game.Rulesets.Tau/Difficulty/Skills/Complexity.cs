@@ -3,19 +3,20 @@ using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Difficulty.Evaluators;
 
-namespace osu.Game.Rulesets.Tau.Difficulty.Skills;
-
-public class Complexity : StrainDecaySkill
+namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 {
-    protected override double SkillMultiplier => 50;
-
-    protected override double StrainDecayBase => 0.4;
-
-    public Complexity(Mod[] mods)
-        : base(mods)
+    public class Complexity : StrainDecaySkill
     {
-    }
+        protected override double SkillMultiplier => 50;
 
-    protected override double StrainValueOf(DifficultyHitObject current)
-        => ComplexityEvaluator.EvaluateDifficulty(current);
+        protected override double StrainDecayBase => 0.4;
+
+        public Complexity(Mod[] mods)
+            : base(mods)
+        {
+        }
+
+        protected override double StrainValueOf(DifficultyHitObject current)
+            => ComplexityEvaluator.EvaluateDifficulty(current);
+    }
 }

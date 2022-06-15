@@ -5,29 +5,30 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Difficulty.Evaluators;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
 
-namespace osu.Game.Rulesets.Tau.Difficulty.Skills;
-
-public class Aim : StrainDecaySkill
+namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 {
-    private readonly Type[] allowedHitObjects;
-
-    protected override double SkillMultiplier => 11;
-    protected override double StrainDecayBase => 0.2;
-
-    public Aim(Mod[] mods, Type[] allowedHitObjects)
-        : base(mods)
+    public class Aim : StrainDecaySkill
     {
-        this.allowedHitObjects = allowedHitObjects;
-    }
+        private readonly Type[] allowedHitObjects;
 
-    protected override double StrainValueOf(DifficultyHitObject current)
-    {
-        if (current.Index <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
-            return 0;
+        protected override double SkillMultiplier => 11;
+        protected override double StrainDecayBase => 0.2;
 
-        if (tauCurrObj.Distance < tauCurrObj.AngleRange)
-            return 0;
+        public Aim(Mod[] mods, Type[] allowedHitObjects)
+            : base(mods)
+        {
+            this.allowedHitObjects = allowedHitObjects;
+        }
 
-        return AimEvaluator.EvaluateDifficulty(tauCurrObj, tauCurrObj.LastAngled, allowedHitObjects);
+        protected override double StrainValueOf(DifficultyHitObject current)
+        {
+            if (current.Index <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
+                return 0;
+
+            if (tauCurrObj.Distance < tauCurrObj.AngleRange)
+                return 0;
+
+            return AimEvaluator.EvaluateDifficulty(tauCurrObj, tauCurrObj.LastAngled, allowedHitObjects);
+        }
     }
 }
