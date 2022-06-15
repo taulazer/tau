@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
@@ -16,8 +17,8 @@ public class TauDifficultyHitObject : DifficultyHitObject
     /// </summary>
     public double StrainTime;
 
-    public TauDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate)
-        : base(hitObject, lastObject, clockRate)
+    public TauDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, List<DifficultyHitObject> objects, int index)
+        : base(hitObject, lastObject, clockRate, objects, index)
     {
         // Capped to 25ms to prevent difficulty calculation breaking from simultaneous objects.
         StrainTime = Math.Max(DeltaTime, min_delta_time);

@@ -27,7 +27,6 @@ public class Speed : TauStrainSkill
 
     protected override int ReducedSectionCount => 5;
     protected override double DifficultyMultiplier => 1.25;
-    protected override int HistoryLength => 32;
 
     public Speed(Mod[] mods, double hitWindowGreat)
         : base(mods)
@@ -50,19 +49,21 @@ public class Speed : TauStrainSkill
 
         int rhythmStart = 0;
 
-        while (rhythmStart < Previous.Count - 2 && current.StartTime - Previous[rhythmStart].StartTime < history_time_max)
+        int historicalNoteCount = Math.Min(current.Index, 32);
+
+        while (rhythmStart < historicalNoteCount - 2 && current.StartTime - current.Previous(rhythmStart).StartTime < history_time_max)
             rhythmStart++;
 
         for (int i = rhythmStart; i > 0; i--)
         {
-            var currObj = (TauDifficultyHitObject)Previous[i - 1];
-            var prevObj = (TauDifficultyHitObject)Previous[i];
-            var lastObj = (TauDifficultyHitObject)Previous[i + 1];
+            var currObj = (TauDifficultyHitObject)current.Previous(i - 1);
+            var prevObj = (TauDifficultyHitObject)current.Previous(i);
+            var lastObj = (TauDifficultyHitObject)current.Previous(i + 1);
 
             double currHistoricalDecay = (history_time_max - (current.StartTime - currObj.StartTime)) / history_time_max; // scales note 0 to 1 from history to now
 
             currHistoricalDecay =
-                Math.Min((double)(Previous.Count - i) / Previous.Count, currHistoricalDecay); // either we're limited by time or limited by object count.
+                Math.Min((double)(historicalNoteCount - i) / historicalNoteCount, currHistoricalDecay); // either we're limited by time or limited by object count.
 
             double currDelta = currObj.StrainTime;
             double prevDelta = prevObj.StrainTime;
@@ -84,10 +85,10 @@ public class Speed : TauStrainSkill
                 }
                 else
                 {
-                    if (Previous[i - 1].BaseObject is Slider) // bpm change is into slider, this is easy acc window
+                    if (current.Previous(i - 1).BaseObject is Slider) // bpm change is into slider, this is easy acc window
                         effectiveRatio *= 0.125;
 
-                    if (Previous[i].BaseObject is Slider) // bpm change was from a slider, this is easier typically than circle -> circle
+                    if (current.Previous(i).BaseObject is Slider) // bpm change was from a slider, this is easier typically than circle -> circle
                         effectiveRatio *= 0.25;
 
                     if (previousIslandSize == islandSize) // repeated island size (ex: triplet -> triplet)
@@ -127,7 +128,7 @@ public class Speed : TauStrainSkill
     {
         // derive strainTime for calculation
         var tauCurrObj = (TauDifficultyHitObject)current;
-        var tauPrevObj = Previous.Count > 0 ? (TauDifficultyHitObject)Previous[0] : null;
+        var tauPrevObj = current.Index > 0 ? (TauDifficultyHitObject)current.Previous(0) : null;
 
         double strainTime = tauCurrObj.StrainTime;
         double greatWindowFull = greatWindow * 2;
@@ -149,7 +150,7 @@ public class Speed : TauStrainSkill
 
         double distance = single_spacing_threshold;
 
-        if (current is TauAngledDifficultyHitObject currAngled && (Previous.Count > 0 && Previous[0] is TauAngledDifficultyHitObject lastAngled))
+        if (current is TauAngledDifficultyHitObject currAngled && (current.Index > 0 && current.Previous(0) is TauAngledDifficultyHitObject lastAngled))
         {
             double travelDistance = Math.Abs((double)currAngled?.Distance);
             distance = Math.Min(single_spacing_threshold,
@@ -171,7 +172,7 @@ public class Speed : TauStrainSkill
         return currentStrain * currentRhythm;
     }
 
-    protected override double CalculateInitialStrain(double time) => (currentStrain * currentRhythm) * strainDecay(time - Previous[0].StartTime);
+    protected override double CalculateInitialStrain(double time, DifficultyHitObject current) => (currentStrain * currentRhythm) * strainDecay(time - current.Previous(0).StartTime);
 
     #region PP Calculation
 

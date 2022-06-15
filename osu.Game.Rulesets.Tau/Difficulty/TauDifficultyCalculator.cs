@@ -89,13 +89,13 @@ public class TauDifficultyCalculator : DifficultyCalculator
             {
                 if (hitObject is AngledTauHitObject)
                 {
-                    var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, properties, lastAngled);
+                    var obj = new TauAngledDifficultyHitObject(hitObject, lastObject, clockRate, objects, objects.Count, properties, lastAngled);
                     objects.Add(obj);
 
                     lastAngled = obj;
                 }
                 else
-                    objects.Add(new TauDifficultyHitObject(hitObject, lastObject, clockRate));
+                    objects.Add(new TauDifficultyHitObject(hitObject, lastObject, clockRate, objects, objects.Count));
             }
 
             lastObject = hitObject;

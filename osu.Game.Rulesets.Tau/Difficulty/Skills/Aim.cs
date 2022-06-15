@@ -12,7 +12,6 @@ public class Aim : StrainDecaySkill
 {
     private readonly Type[] allowedHitObjects;
 
-    protected override int HistoryLength => 10;
     protected override double SkillMultiplier => 11;
     private const double slider_multiplier = 1.2;
     protected override double StrainDecayBase => 0.2;
@@ -50,7 +49,7 @@ public class Aim : StrainDecaySkill
 
     protected override double StrainValueOf(DifficultyHitObject current)
     {
-        if (Previous.Count <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
+        if (current.Index <= 1 || current is not TauAngledDifficultyHitObject tauCurrObj || tauCurrObj.LastAngled == null)
             return 0;
 
         if (tauCurrObj.Distance < tauCurrObj.AngleRange)

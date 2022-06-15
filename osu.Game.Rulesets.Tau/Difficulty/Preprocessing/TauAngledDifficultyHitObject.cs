@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
@@ -32,9 +34,9 @@ public class TauAngledDifficultyHitObject : TauDifficultyHitObject
 
     public double Distance;
 
-    public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, TauCachedProperties properties,
+    public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, List<DifficultyHitObject> objects, int index, TauCachedProperties properties,
                                         TauAngledDifficultyHitObject lastAngled)
-        : base(hitObject, lastObject, clockRate)
+        : base(hitObject, lastObject, clockRate, objects, index)
     {
         this.properties = properties;
         LastAngled = lastAngled;
