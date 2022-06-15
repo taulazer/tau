@@ -44,7 +44,12 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
                 double currDelta = currObj.StrainTime;
                 double prevDelta = prevObj.StrainTime;
                 double lastDelta = lastObj.StrainTime;
-                double currRatio = 1.0 + 6.0 * Math.Min(0.5, Math.Pow(Math.Sin(Math.PI / (Math.Min(prevDelta, currDelta) / Math.Max(prevDelta, currDelta))), 2)); // fancy function to calculate rhythmbonuses.
+                double currRatio =
+                    1.0 +
+                    6.0 *
+                    Math.Min(0.5,
+                        Math.Pow(Math.Sin(Math.PI / (Math.Min(prevDelta, currDelta) / Math.Max(prevDelta, currDelta))),
+                            2)); // fancy function to calculate rhythmbonuses.
 
                 double windowPenalty = Math.Min(1, Math.Max(0, Math.Abs(prevDelta - currDelta) - greatWindow * 0.6) / (greatWindow * 0.6));
 
@@ -76,7 +81,12 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
                         if (lastDelta > prevDelta + 10 && prevDelta > currDelta + 10) // previous increase happened a note ago, 1/1->1/2-1/4, dont want to buff this.
                             effectiveRatio *= 0.125;
 
-                        rhythmComplexitySum += Math.Sqrt(effectiveRatio * startRatio) * currHistoricalDecay * Math.Sqrt(4 + islandSize) / 2 * Math.Sqrt(4 + previousIslandSize) / 2;
+                        rhythmComplexitySum += Math.Sqrt(effectiveRatio * startRatio) *
+                                               currHistoricalDecay *
+                                               Math.Sqrt(4 + islandSize) /
+                                               2 *
+                                               Math.Sqrt(4 + previousIslandSize) /
+                                               2;
 
                         startRatio = effectiveRatio;
 
@@ -97,7 +107,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
                 }
             }
 
-            return Math.Sqrt(4 + rhythmComplexitySum * rhythm_multiplier) / 2; //produces multiplier that can be applied to strain. range [1, infinity) (not really though)
+            //produces multiplier that can be applied to strain. range [1, infinity) (not really though)
+            return Math.Sqrt(4 + rhythmComplexitySum * rhythm_multiplier) / 2;
         }
     }
 }

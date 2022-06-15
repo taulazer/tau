@@ -44,7 +44,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
             double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0;
 
             // Length bonus is added on for beatmaps with more than 2,000 hitobjects.
-            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, context.TotalHits / 2000.0) + (context.TotalHits > 2000 ? Math.Log10(context.TotalHits / 2000.0) * 0.5 : 0.0);
+            double lengthBonus =
+                0.95 + 0.4 * Math.Min(1.0, context.TotalHits / 2000.0) + (context.TotalHits > 2000 ? Math.Log10(context.TotalHits / 2000.0) * 0.5 : 0.0);
             aimValue *= lengthBonus;
 
             aimValue *= computeArFactor(context) * lengthBonus;

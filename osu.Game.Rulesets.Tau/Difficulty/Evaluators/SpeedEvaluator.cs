@@ -85,6 +85,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
 
         private static double getComboScalingFactor(TauPerformanceContext context) => context.DifficultyAttributes.MaxCombo <= 0
                                                                                           ? 1.0
-                                                                                          : Math.Min(Math.Pow(context.ScoreMaxCombo, 0.8) / Math.Pow(context.DifficultyAttributes.MaxCombo, 0.8), 1.0);
+                                                                                          : Math.Min(
+                                                                                              Math.Pow(context.ScoreMaxCombo, 0.8) /
+                                                                                              Math.Pow(context.DifficultyAttributes.MaxCombo, 0.8), 1.0);
     }
 }

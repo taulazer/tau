@@ -34,7 +34,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
 
         public double Distance;
 
-        public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, List<DifficultyHitObject> objects, int index, TauCachedProperties properties,
+        public TauAngledDifficultyHitObject(HitObject hitObject, HitObject lastObject, double clockRate, List<DifficultyHitObject> objects, int index,
+                                            TauCachedProperties properties,
                                             TauAngledDifficultyHitObject lastAngled)
             : base(hitObject, lastObject, clockRate, objects, index)
         {
