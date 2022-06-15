@@ -12,17 +12,17 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
         /// <summary>
         /// Normalised distance between the start and end position of this <see cref="TauAngledDifficultyHitObject"/>.
         /// </summary>
-        public double TravelDistance { get; private set; }
+        public double TravelDistance { get; }
 
         /// <summary>
         /// Normalised distance between the start and end position of this <see cref="TauAngledDifficultyHitObject"/> in the shortest span possible to account for slider cheesing.
         /// </summary>
-        public double LazyTravelDistance { get; private set; }
+        public double LazyTravelDistance { get; }
 
         /// <summary>
         /// The time taken to travel through <see cref="TravelDistance"/>, with a minimum value of 25ms for a non-zero distance.
         /// </summary>
-        public double TravelTime { get; private set; }
+        public double TravelTime { get; }
 
         private readonly TauCachedProperties properties;
 
