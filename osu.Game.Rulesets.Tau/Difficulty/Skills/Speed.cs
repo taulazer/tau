@@ -7,8 +7,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 {
     public class Speed : TauStrainSkill
     {
-        private double skillMultiplier => 510;
-        private double strainDecayBase => 0.3;
+        private const double skill_multiplier = 510;
+        private const double strain_decay_base = 0.3;
 
         private readonly double greatWindow;
 
@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         protected override double StrainValueAt(DifficultyHitObject current)
         {
             currentStrain *= strainDecay(current.DeltaTime);
-            currentStrain += SpeedEvaluator.EvaluateDifficulty(current, greatWindow) * skillMultiplier;
+            currentStrain += SpeedEvaluator.EvaluateDifficulty(current, greatWindow) * skill_multiplier;
 
             currentRhythm = RhythmEvaluator.EvaluateDifficulty(current, greatWindow);
 
@@ -37,6 +37,6 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         protected override double CalculateInitialStrain(double time, DifficultyHitObject current)
             => (currentStrain * currentRhythm) * strainDecay(time - current.Previous(0).StartTime);
 
-        private double strainDecay(double ms) => Math.Pow(strainDecayBase, ms / 1000);
+        private double strainDecay(double ms) => Math.Pow(strain_decay_base, ms / 1000);
     }
 }
