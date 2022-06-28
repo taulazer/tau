@@ -18,9 +18,6 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
 
             // Slider calculation
 
-            if (last.TravelDistance < current.AngleRange)
-                return velocity;
-
             double travelVelocity = calculateVelocity(last.LazyTravelDistance, last.TravelTime);
             double movementVelocity = calculateVelocity(current.Distance, current.StrainTime);
 
