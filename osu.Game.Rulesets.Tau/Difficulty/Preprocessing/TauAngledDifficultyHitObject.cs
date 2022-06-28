@@ -49,7 +49,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
                 if (lastAngled.BaseObject is IHasOffsetAngle offsetAngle)
                     offset = offsetAngle.GetOffsetAngle();
 
-                Distance = Math.Abs(Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)) - AngleRange / 2);
+                Distance = Math.Abs(Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)));
                 StrainTime = Math.Max(StrainTime, StartTime - lastAngled.StartTime);
             }
 
