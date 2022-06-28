@@ -38,15 +38,15 @@ namespace osu.Game.Rulesets.Tau
         public override string ShortName => SHORT_NAME;
         public override string PlayingVerb => "Slicing beats";
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new TauDrawableRuleset(this, beatmap, mods);
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new TauBeatmapConverter(this, beatmap);
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new TauDifficultyCalculator(RulesetInfo, beatmap);
         public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
-        public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
-        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
-        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
-        public override PerformanceCalculator CreatePerformanceCalculator() => new TauPerformanceCalculator();
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new TauBeatmapConverter(this, beatmap);
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
+        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new TauDrawableRuleset(this, beatmap, mods);
+        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new TauDifficultyCalculator(RulesetInfo, beatmap);
+        public override PerformanceCalculator CreatePerformanceCalculator() => new TauPerformanceCalculator();
+        public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
 
         public override Drawable CreateIcon() => new TauIcon(this);
 
