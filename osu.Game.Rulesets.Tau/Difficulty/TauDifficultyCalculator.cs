@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
         private readonly TauCachedProperties properties = new();
         private double hitWindowGreat;
 
-        private const double difficulty_multiplier = 0.0825;
+        private const double difficulty_multiplier = 0.0820;
 
         public TauDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
             : base(ruleset, beatmap)
