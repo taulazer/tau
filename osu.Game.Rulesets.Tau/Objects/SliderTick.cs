@@ -4,7 +4,7 @@ using osu.Game.Rulesets.Tau.Judgements;
 
 namespace osu.Game.Rulesets.Tau.Objects
 {
-    public class SliderTick : Beat, IHasOffsetAngle
+    public class SliderTick : AngledTauHitObject, IHasOffsetAngle
     {
         public Slider ParentSlider { get; set; }
 
