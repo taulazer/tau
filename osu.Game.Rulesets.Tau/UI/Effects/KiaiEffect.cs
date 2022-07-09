@@ -6,9 +6,11 @@ using osu.Framework.Utils;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
@@ -47,32 +49,13 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             emitter.ApplyAnimations();
         }
 
-        /// <summary>
-        /// Creates 2 particles for the emitter.
-        /// Note that this is mainly used in high frequencies and should primarily be made with a higher initialSize.
-        /// </summary>
-        /// <param name="angle">The angle to position the particles at.</param>
-        public void UpdateSliderPosition(float angle)
-        {
-            var emitter = Get(e => e.Apply(new Emitter.EmitterSettings
-            {
-                Amount = 2,
-                Angle = angle,
-                Inversed = properties?.InverseModEnabled?.Value ?? false,
-                Colour = TauPlayfield.AccentColour.Value
-            }));
-
-            AddInternal(emitter);
-            emitter.ApplyAnimations();
-        }
-
         private Emitter getEmitterForAngle(float angle, JudgementResult result)
             => Get(e => e.Apply(new Emitter.EmitterSettings
             {
                 Amount = 10,
                 Angle = angle,
                 Inversed = properties?.InverseModEnabled?.Value ?? false,
-                Colour = colour.ForHitResult(result.Type)
+                Colour = hitResultColorOrDefault(result.Type, TauPlayfield.AccentColour.Value)
             }));
 
         private Emitter getEmitterForHardBeat(JudgementResult result)
@@ -81,8 +64,14 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 Amount = 64,
                 IsCircular = true,
                 Inversed = properties?.InverseModEnabled?.Value ?? false,
-                Colour = colour.ForHitResult(result.Type)
+                Colour = hitResultColorOrDefault(result.Type, TauPlayfield.AccentColour.Value)
             }));
+
+        private Color4 hitResultColorOrDefault(HitResult type, Color4 fallback)
+        {
+            var col = colour.ForHitResult(type);
+            return col == Color4.White ? fallback : col;
+        }
     }
 
     /// <summary>

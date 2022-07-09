@@ -54,27 +54,6 @@ namespace osu.Game.Rulesets.Tau.Tests
             AddStep("Add hard beat result",
                 () => KiaiContainer.OnNewResult(
                     new DrawableHardBeat(new HardBeat()), new JudgementResult(new HardBeat(), new TauJudgement()) { Type = HitResult.Great }));
-
-            var rotation = 0f;
-
-            AddStep("Update slider angle", () =>
-            {
-                Scheduler.AddDelayed(() =>
-                {
-                    KiaiContainer.UpdateSliderPosition(rotation++);
-                }, 10, true);
-            });
-
-            AddUntilStep("Wait until finished", () =>
-            {
-                if (!(rotation >= 45))
-                    return false;
-
-                Scheduler.CancelDelayedTasks();
-                rotation = 0;
-
-                return true;
-            });
         }
     }
 }
