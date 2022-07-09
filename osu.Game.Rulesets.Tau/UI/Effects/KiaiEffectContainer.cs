@@ -66,11 +66,5 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             classicEffect.OnNewResult(judgedObject, result);
             turbulenceEffect.OnNewResult(judgedObject, result);
         }
-
-        public void UpdateSliderPosition(float angle)
-        {
-            classicEffect.UpdateSliderPosition(angle);
-            turbulenceEffect.UpdateSliderPosition(angle);
-        }
     }
 }
