@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
             if (HitObject.StartTime <= Time.Current)
-                ApplyResult(r => r.Type = DrawableSlider.Tracking.Value ? HitResult.LargeTickHit : HitResult.LargeTickMiss);
+                ApplyResult(r => r.Type = DrawableSlider.Tracking.Value ? HitResult.SmallTickHit : HitResult.SmallTickMiss);
         }
     }
 }

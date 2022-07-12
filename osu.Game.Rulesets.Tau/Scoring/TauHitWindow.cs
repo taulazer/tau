@@ -10,8 +10,8 @@ namespace osu.Game.Rulesets.Tau.Scoring
                 HitResult.Great
                     or HitResult.Ok
                     or HitResult.Miss
-                    or HitResult.LargeTickHit
-                    or HitResult.LargeTickMiss => true,
+                    or HitResult.SmallTickHit
+                    or HitResult.SmallTickMiss => true,
                 _ => false
             };
 
