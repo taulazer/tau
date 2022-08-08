@@ -45,6 +45,11 @@ namespace osu.Game.Rulesets.Tau.UI
                     LabelText = "Show Visualizer",
                     Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
                 },
+                new SettingsCheckbox
+                {
+                    LabelText = "Hit Lighting",
+                    Current = config.GetBindable<bool>(TauRulesetSettings.HitLighting)
+                },
                 kiaiType = new SettingsEnumDropdown<KiaiType>()
                 {
                     LabelText = "Kiai Type",
