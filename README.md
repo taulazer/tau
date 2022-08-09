@@ -5,6 +5,8 @@
 [![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE)
 ![GitHub all releases](https://img.shields.io/github/downloads/naoei/tau/total?style=flat-square)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/naoei/tau/latest/total?style=flat-square)
+[![Continuous Integration](https://github.com/taulazer/tau/actions/workflows/ci.yml/badge.svg)](https://github.com/taulazer/tau/actions/workflows/ci.yml)
+[![Crowdin](https://badges.crowdin.net/tau/localized.svg)](https://crowdin.com/project/tau)
 [![community server](https://discordapp.com/api/guilds/689728872282849313/widget.png?style=shield)](https://discord.gg/7Y8GXAa)
 
 *An [osu!](https://github.com/ppy/osu) ruleset. Sweeping beats with your scythe.*
