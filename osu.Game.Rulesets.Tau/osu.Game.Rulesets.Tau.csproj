@@ -12,6 +12,12 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**" />
+    <EmbeddedResource Update="Localisation\Translations\KiaiType.*.resx">
+      <DependentUpon>KiaiType.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Localisation\Translations\Settings.*.resx">
+      <DependentUpon>Settings.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\Shaders\sh_DepthMask.fs" />
@@ -34,8 +40,5 @@
     <Compile Update="Objects\Drawables\DrawableSlider.Graphics.SliderPathDrawNode.cs">
       <DependentUpon>DrawableSlider.Graphics.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\osu.Game.Rulesets.Tau.Localisation\osu.Game.Rulesets.Tau.Localisation.csproj" />
   </ItemGroup>
 </Project>
