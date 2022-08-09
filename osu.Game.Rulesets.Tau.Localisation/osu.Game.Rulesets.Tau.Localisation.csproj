@@ -7,6 +7,15 @@
     </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Translations\KiaiType.*.resx">
+      <DependentUpon>KiaiType.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Translations\Settings.*.resx">
+      <DependentUpon>Settings.resx</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Resolves references to LocalisableString. -->
     <PackageReference Include="ppy.osu.Framework" Version="2021.611.0">
       <PrivateAssets>all</PrivateAssets>
