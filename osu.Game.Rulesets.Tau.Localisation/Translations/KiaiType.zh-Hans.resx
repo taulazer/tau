@@ -47,7 +47,7 @@
     </xsd:element>
   </xsd:schema>
   <data name="turbulence" xml:space="preserve">
-        <value>b</value>
+        <value>Turbulence</value>
     </data>
   <data name="classic" xml:space="preserve">
         <value>Classic</value>

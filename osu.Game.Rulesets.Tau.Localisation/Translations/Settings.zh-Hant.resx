@@ -46,13 +46,22 @@
       </xsd:complexType>
     </xsd:element>
   </xsd:schema>
-  <data name="turbulence" xml:space="preserve">
-        <value>b</value>
+  <data name="show_effects" xml:space="preserve">
+        <value>Show Effects</value>
     </data>
-  <data name="classic" xml:space="preserve">
-        <value>Classic</value>
+  <data name="show_slider_effects" xml:space="preserve">
+        <value>Show Slider Effects</value>
     </data>
-  <data name="none" xml:space="preserve">
-        <value>None</value>
+  <data name="show_visualizer" xml:space="preserve">
+        <value>Show Visualizer</value>
+    </data>
+  <data name="kiai_type" xml:space="preserve">
+        <value>Kiai Type</value>
+    </data>
+  <data name="playfield_dim" xml:space="preserve">
+        <value>Playfield Dim</value>
+    </data>
+  <data name="notes_size" xml:space="preserve">
+        <value>Notes Size</value>
     </data>
 </root>
