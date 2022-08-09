@@ -193,3 +193,6 @@ insert_final_newline = true
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
+
+# The number of words to use in the source string to generate the target member name. Defaults to all words in the string.
+dotnet_diagnostic.OLOC001.words_in_name = 5

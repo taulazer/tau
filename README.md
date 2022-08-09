@@ -59,6 +59,8 @@ All contributions are appreciated, as to improve the mode on its playability and
 
 For new ideas and features, we would prefer for you to write an issue before trying to add it to show the maintainers.
 
+If you wish to help with localisation efforts, head over to [crowdin](https://crowdin.com/project/tau).
+
 ## License
 tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/Altenhh/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
 

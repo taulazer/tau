@@ -12,6 +12,12 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**" />
+    <EmbeddedResource Update="Localisation\Translations\KiaiType.*.resx">
+      <DependentUpon>KiaiType.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Localisation\Translations\Settings.*.resx">
+      <DependentUpon>Settings.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\Shaders\sh_DepthMask.fs" />
