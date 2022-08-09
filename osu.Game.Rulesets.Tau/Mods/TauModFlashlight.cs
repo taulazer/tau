@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Batches;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps.Timing;
@@ -233,17 +232,12 @@ namespace osu.Game.Rulesets.Tau.Mods
                 private float rotation;
                 private float flashlightDim;
 
-                private readonly VertexBatch<PositionAndColourVertex> quadBatch = new QuadBatch<PositionAndColourVertex>(1, 1);
-                private readonly Action<TexturedVertex2D> addAction;
+                private IVertexBatch<PositionAndColourVertex> quadBatch;
+                private Action<TexturedVertex2D> addAction;
 
                 public FlashlightDrawNode(Flashlight source)
                     : base(source)
                 {
-                    addAction = v => quadBatch.Add(new PositionAndColourVertex
-                    {
-                        Position = v.Position,
-                        Colour = v.Colour
-                    });
                 }
 
                 public override void ApplyState()
@@ -258,9 +252,19 @@ namespace osu.Game.Rulesets.Tau.Mods
                     flashlightDim = Source.FlashlightDim;
                 }
 
-                public override void Draw(Action<TexturedVertex2D> vertexAction)
+                public override void Draw(IRenderer renderer)
                 {
-                    base.Draw(vertexAction);
+                    base.Draw(renderer);
+
+                    if (quadBatch == null)
+                    {
+                        quadBatch ??= renderer.CreateQuadBatch<PositionAndColourVertex>(1, 1);
+                        addAction = v => quadBatch.Add(new PositionAndColourVertex
+                        {
+                            Position = v.Position,
+                            Colour = v.Colour
+                        });
+                    }
 
                     shader.Bind();
 
@@ -269,7 +273,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                     shader.GetUniform<float>("rotation").UpdateValue(ref rotation);
                     shader.GetUniform<float>("flashlightDim").UpdateValue(ref flashlightDim);
 
-                    DrawQuad(Texture.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
+                    renderer.DrawQuad(renderer.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
 
                     shader.Unbind();
                 }

@@ -4,12 +4,11 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
-using osu.Framework.Graphics.Textures;
 using osu.Game.Graphics.OpenGL.Vertices;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -17,7 +16,6 @@ using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osuTK;
-using osuTK.Graphics.ES30;
 using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace osu.Game.Rulesets.Tau.Mods
@@ -72,7 +70,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             RelativeSizeAxes = Axes.Both;
 
-            InternalChild = new BufferedContainer(new[] { RenderbufferInternalFormat.DepthComponent16 })
+            InternalChild = new BufferedContainer(new[] { RenderBufferFormat.D16 })
             {
                 RelativeSizeAxes = Axes.Both,
                 Size = new Vector2(1.5f),
@@ -160,17 +158,12 @@ namespace osu.Game.Rulesets.Tau.Mods
                 private Vector2 aperturePosition;
                 private Vector2 apertureSize;
 
-                private readonly VertexBatch<PositionAndColourVertex> quadBatch = new QuadBatch<PositionAndColourVertex>(1, 1);
-                private readonly Action<TexturedVertex2D> addAction;
+                private IVertexBatch<PositionAndColourVertex> quadBatch;
+                private Action<TexturedVertex2D> addAction;
 
                 public PlayfieldMaskDrawNode(PlayfieldMaskDrawable source)
                     : base(source)
                 {
-                    addAction = v => quadBatch.Add(new PositionAndColourVertex
-                    {
-                        Position = v.Position,
-                        Colour = v.Colour
-                    });
                 }
 
                 public override void ApplyState()
@@ -183,16 +176,26 @@ namespace osu.Game.Rulesets.Tau.Mods
                     apertureSize = Source.ApertureSize * DrawInfo.Matrix.ExtractScale().Xy;
                 }
 
-                public override void Draw(Action<TexturedVertex2D> vertexAction)
+                public override void Draw(IRenderer renderer)
                 {
-                    base.Draw(vertexAction);
+                    base.Draw(renderer);
+
+                    if (quadBatch == null)
+                    {
+                        quadBatch ??= renderer.CreateQuadBatch<PositionAndColourVertex>(1, 1);
+                        addAction = v => quadBatch.Add(new PositionAndColourVertex
+                        {
+                            Position = v.Position,
+                            Colour = v.Colour
+                        });
+                    }
 
                     shader.Bind();
 
                     shader.GetUniform<Vector2>("aperturePos").UpdateValue(ref aperturePosition);
                     shader.GetUniform<Vector2>("apertureSize").UpdateValue(ref apertureSize);
 
-                    DrawQuad(Texture.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
+                    renderer.DrawQuad(renderer.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
 
                     shader.Unbind();
                 }
