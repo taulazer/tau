@@ -64,4 +64,7 @@
   <data name="notes_size" xml:space="preserve">
         <value>Notes Size</value>
     </data>
+  <data name="hit_lighting" xml:space="preserve">
+        <value>Hit Lighting</value>
+    </data>
 </root>

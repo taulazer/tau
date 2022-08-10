@@ -12,11 +12,21 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**" />
+    <EmbeddedResource Update="Localisation\Translations\Beatmap.*.resx">
+      <DependentUpon>Beatmap.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Localisation\Translations\Inputs.*.resx">
+      <DependentUpon>Inputs.resx</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Update="Localisation\Translations\KiaiType.*.resx">
       <DependentUpon>KiaiType.resx</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="Localisation\Translations\Settings.*.resx">
       <DependentUpon>Settings.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Localisation\Translations\Inputs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Inputs.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
