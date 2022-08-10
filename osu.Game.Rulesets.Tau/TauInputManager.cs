@@ -3,6 +3,8 @@ using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Input.StateChanges.Events;
+using osu.Framework.Localisation;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Tau
@@ -66,9 +68,16 @@ namespace osu.Game.Rulesets.Tau
 
     public enum TauAction
     {
+        [LocalisableDescription(typeof(InputStrings), nameof(InputStrings.LeftButton))]
         LeftButton,
+
+        [LocalisableDescription(typeof(InputStrings), nameof(InputStrings.RightButton))]
         RightButton,
+
+        [LocalisableDescription(typeof(InputStrings), nameof(InputStrings.HardButton1))]
         HardButton1,
+
+        [LocalisableDescription(typeof(InputStrings), nameof(InputStrings.HardButton2))]
         HardButton2,
     }
 }

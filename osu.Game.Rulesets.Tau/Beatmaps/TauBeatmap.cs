@@ -2,6 +2,7 @@
 using System.Linq;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osuTK;
 
@@ -19,7 +20,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 new BeatmapStatistic
                 {
-                    Name = "Beat count",
+                    Name = BeatmapStrings.BeatCount,
                     Content = beats.ToString(),
                     CreateIcon = () => new SpriteIcon
                     {
@@ -29,13 +30,13 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 },
                 new BeatmapStatistic
                 {
-                    Name = "Slider count",
+                    Name = BeatmapStrings.SliderCount,
                     Content = sliders.ToString(),
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders)
                 },
                 new BeatmapStatistic
                 {
-                    Name = "Hard Beat count",
+                    Name = BeatmapStrings.HardBeatCount,
                     Content = hardBeats.ToString(),
                     CreateIcon = () => new SpriteIcon
                     {
