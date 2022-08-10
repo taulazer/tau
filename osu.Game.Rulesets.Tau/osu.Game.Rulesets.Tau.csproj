@@ -12,6 +12,12 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\**" />
+    <EmbeddedResource Update="Localisation\Translations\Beatmap.*.resx">
+      <DependentUpon>Beatmap.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Localisation\Translations\Inputs.*.resx">
+      <DependentUpon>Inputs.resx</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Update="Localisation\Translations\KiaiType.*.resx">
       <DependentUpon>KiaiType.resx</DependentUpon>
     </EmbeddedResource>
