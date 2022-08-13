@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override string Name => "Dual";
         public override string Acronym => "DL";
-        public override string Description => "Play with multiple paddles.";
+        public override string Description => "When one isn't enough";
         public override double ScoreMultiplier => 1;
         public override ModType Type => ModType.Fun;
 
