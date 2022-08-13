@@ -113,12 +113,13 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             float angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
 
-            foreach (var i in Cursor.AdditionalPaddles)
-            {
-                float diff = Extensions.GetDeltaAngle(i.Rotation, angle);
-                if (Math.Abs(diff) < Math.Abs(angleDiff))
-                    angleDiff = diff;
-            }
+            if (Cursor.AdditionalPaddles != null)
+                foreach (var i in Cursor.AdditionalPaddles)
+                {
+                    float diff = Extensions.GetDeltaAngle(i.Rotation, angle);
+                    if (Math.Abs(diff) < Math.Abs(angleDiff))
+                        angleDiff = diff;
+                }
 
             return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
         }
