@@ -48,21 +48,25 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         }
 
         private float? lastLockedAngle;
-        float nextAngle ( float target ) {
-            if ( lastLockedAngle is null || LockedDirection is null ) {
+
+        private float nextAngle(float target)
+        {
+            if (lastLockedAngle is null || LockedDirection is null)
+            {
                 lastLockedAngle = target;
                 return lastLockedAngle.Value;
             }
 
-            var diff = Extensions.GetDeltaAngle( target, lastLockedAngle.Value );
-            if ( (diff > 0) == (LockedDirection == RotationDirection.Clockwise) ) {
+            float diff = Extensions.GetDeltaAngle(target, lastLockedAngle.Value);
+
+            if ((diff > 0) == (LockedDirection == RotationDirection.Clockwise))
+            {
                 lastLockedAngle = target;
                 return target;
             }
-            else {
-                lastLockedAngle = lastLockedAngle.Value - diff;
-                return lastLockedAngle.Value;
-            }
+
+            lastLockedAngle = lastLockedAngle.Value - diff;
+            return lastLockedAngle.Value;
         }
 
         private TauHitObject convertToNonSlider(HitObject original)
@@ -109,18 +113,20 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         private TauHitObject convertToSlider(HitObject original, IHasCombo comboData, IHasPathWithRepeats data, IBeatmap beatmap)
         {
             float? startLockedAngle = lastLockedAngle;
-            TauHitObject convertToNonSlider(HitObject original) {
+
+            TauHitObject convertToNonSlider()
+            {
                 lastLockedAngle = startLockedAngle;
                 return this.convertToNonSlider(original);
             }
 
             if (!CanConvertToSliders)
-                return convertToNonSlider(original);
+                return convertToNonSlider();
 
             var difficultyInfo = beatmap.Difficulty;
 
             if (data.Duration < IBeatmapDifficultyInfo.DifficultyRange(difficultyInfo.ApproachRate, 1800, 1200, 450) / SliderDivisor)
-                return convertToNonSlider(original);
+                return convertToNonSlider();
 
             var nodes = new List<SliderNode>();
 
@@ -140,7 +146,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 // We don't want sliders that switch angles too fast. We would default to a normal note in this case
                 if (!CanConvertImpossibleSliders)
                     if (lastAngle.HasValue && MathF.Abs(Extensions.GetDeltaAngle(lastAngle.Value, angle)) / MathF.Abs(lastTime.Value - t) > 0.6)
-                        return convertToNonSlider(original);
+                        return convertToNonSlider();
 
                 lastAngle = angle;
                 lastTime = t;
@@ -152,7 +158,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             if (!CanConvertImpossibleSliders)
                 if (lastAngle.HasValue && MathF.Abs(Extensions.GetDeltaAngle(lastAngle.Value, finalAngle)) / Math.Abs(lastTime.Value - data.Duration) > 0.6)
-                    return convertToNonSlider(original);
+                    return convertToNonSlider();
 
             nodes.Add(new SliderNode((float)data.Duration, finalAngle));
 
@@ -191,10 +197,11 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 return convertToNonSlider(original);
 
             var nodes = new List<SliderNode>();
-            var direction = LockedDirection switch {
+            var direction = LockedDirection switch
+            {
                 RotationDirection.Clockwise => 1,
                 RotationDirection.Counterclockwise => -1,
-                _ => Math.Sign( getHitObjectAngle( beatmap.HitObjects.GetPrevious( original ) ) )
+                _ => Math.Sign(getHitObjectAngle(beatmap.HitObjects.GetPrevious(original)))
             };
 
             if (direction == 0)

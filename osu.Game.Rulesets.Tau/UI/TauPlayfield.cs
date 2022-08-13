@@ -18,7 +18,8 @@ using osu.Game.Rulesets.UI;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Tau.UI {
+namespace osu.Game.Rulesets.Tau.UI
+{
     [Cached]
     public partial class TauPlayfield : Playfield
     {
@@ -26,8 +27,8 @@ namespace osu.Game.Rulesets.Tau.UI {
         private readonly Container judgementAboveHitObjectLayer;
         private readonly EffectsContainer effectsContainer;
 
-        public static readonly Vector2 BaseSize = new(768);
-        public static readonly Bindable<Color4> AccentColour = new(Color4Extensions.FromHex(@"FF0040"));
+        public static readonly Vector2 BASE_SIZE = new(768);
+        public static readonly Bindable<Color4> ACCENT_COLOUR = new(Color4Extensions.FromHex(@"FF0040"));
 
         private readonly Dictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new();
 
@@ -43,12 +44,13 @@ namespace osu.Game.Rulesets.Tau.UI {
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
         public PlayfieldPiece PlayfieldPiece;
+
         public TauPlayfield()
         {
             RelativeSizeAxes = Axes.None;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Size = BaseSize;
+            Size = BASE_SIZE;
 
             AddRangeInternal(new Drawable[]
             {
@@ -109,10 +111,12 @@ namespace osu.Game.Rulesets.Tau.UI {
 
         private ValidationResult checkPaddlePosition(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
-            foreach ( var i in Cursor.AdditionalPaddles ) {
-                var diff = Extensions.GetDeltaAngle( i.Rotation, angle );
-                if ( Math.Abs( diff ) < Math.Abs( angleDiff ) )
+            float angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
+
+            foreach (var i in Cursor.AdditionalPaddles)
+            {
+                float diff = Extensions.GetDeltaAngle(i.Rotation, angle);
+                if (Math.Abs(diff) < Math.Abs(angleDiff))
                     angleDiff = diff;
             }
 

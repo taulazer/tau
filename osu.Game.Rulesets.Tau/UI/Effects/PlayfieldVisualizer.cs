@@ -72,11 +72,14 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         }
 
         private bool applyFade;
-        public bool ApplyFade {
+
+        public bool ApplyFade
+        {
             get => applyFade;
-            set {
+            set
+            {
                 applyFade = value;
-                Invalidate( Invalidation.DrawNode );
+                Invalidate(Invalidation.DrawNode);
             }
         }
 
@@ -84,7 +87,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         private void load(IRenderer renderer, ShaderManager shaders, TauRulesetConfigManager config)
         {
             texture = renderer.WhitePixel;
-            shader = shaders.Load( "VisualizerPositionAndColour", "VisualizerFade" );
+            shader = shaders.Load("VisualizerPositionAndColour", "VisualizerFade");
 
             config?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualizer);
             showVisualizer.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); }, true);
@@ -197,7 +200,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 colour = Source.AccentColour;
                 data = Source.amplitudes;
                 center = Source.ScreenSpaceDrawQuad.Centre;
-                radius = (Source.ToScreenSpace(Vector2.Zero) - Source.ToScreenSpace(new Vector2(TauPlayfield.BaseSize.X / 2, 0))).Length;
+                radius = (Source.ToScreenSpace(Vector2.Zero) - Source.ToScreenSpace(new Vector2(TauPlayfield.BASE_SIZE.X / 2, 0))).Length;
                 fadeRange = Source.ApplyFade ? radius * 0.2f : 0;
             }
 
@@ -208,9 +211,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 vertexBatch ??= renderer.CreateQuadBatch<TexturedVertex2D>(100, 10);
 
                 shader.Bind();
-                shader.GetUniform<Vector2>( "centerPos" ).UpdateValue( ref center );
-                shader.GetUniform<float>( "range" ).UpdateValue( ref radius );
-                shader.GetUniform<float>( "fadeRange" ).UpdateValue( ref fadeRange );
+                shader.GetUniform<Vector2>("centerPos").UpdateValue(ref center);
+                shader.GetUniform<float>("range").UpdateValue(ref radius);
+                shader.GetUniform<float>("fadeRange").UpdateValue(ref fadeRange);
 
                 Vector2 inflation = DrawInfo.MatrixInverse.ExtractScale().Xy;
 
@@ -260,9 +263,5 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 shader.Unbind();
             }
         }
-    }
-
-    internal interface IRenderer
-    {
     }
 }

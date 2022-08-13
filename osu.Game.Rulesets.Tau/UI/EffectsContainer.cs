@@ -41,8 +41,8 @@ namespace osu.Game.Rulesets.Tau.UI
         [BackgroundDependencyLoader(true)]
         private void load(TauRulesetConfigManager config, IReadOnlyList<Mod> mods)
         {
-            visualizer.AccentColour = TauPlayfield.AccentColour.Value.Opacity(0.25f);
-            visualizer.ApplyFade = mods.Any( x => x is TauModTraceable );
+            visualizer.AccentColour = TauPlayfield.ACCENT_COLOUR.Value.Opacity(0.25f);
+            visualizer.ApplyFade = mods.Any(x => x is TauModTraceable);
 
             config?.BindWith(TauRulesetSettings.ShowEffects, showEffects);
             config?.BindWith(TauRulesetSettings.ShowSliderEffects, showSliderEffects);

@@ -55,7 +55,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 Amount = 10,
                 Angle = angle,
                 Inversed = properties?.InverseModEnabled?.Value ?? false,
-                Colour = hitResultColorOrDefault(result.Type, TauPlayfield.AccentColour.Value)
+                Colour = hitResultColorOrDefault(result.Type, TauPlayfield.ACCENT_COLOUR.Value)
             }));
 
         private Emitter getEmitterForHardBeat(JudgementResult result)
@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 Amount = 64,
                 IsCircular = true,
                 Inversed = properties?.InverseModEnabled?.Value ?? false,
-                Colour = hitResultColorOrDefault(result.Type, TauPlayfield.AccentColour.Value)
+                Colour = hitResultColorOrDefault(result.Type, TauPlayfield.ACCENT_COLOUR.Value)
             }));
 
         private Color4 hitResultColorOrDefault(HitResult type, Color4 fallback)

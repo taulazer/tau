@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Tau.Tests
             {
                 KiaiContainer.Vortices.Add(new Vortex
                 {
-                    Position = new Vector2(0, -((TauPlayfield.BaseSize.X / 2) + 105)),
+                    Position = new Vector2(0, -((TauPlayfield.BASE_SIZE.X / 2) + 105)),
                     Velocity = new Vector2(10),
                     Scale = 0.01f,
                     Speed = 5f,

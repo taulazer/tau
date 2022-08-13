@@ -6,7 +6,8 @@ using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Tau.Configuration;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Tau.UI {
+namespace osu.Game.Rulesets.Tau.UI
+{
     public class PlayfieldPiece : CompositeDrawable
     {
         private readonly Box background;
@@ -21,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.UI {
                 RelativeSizeAxes = Axes.Both,
                 Masking = true,
                 BorderThickness = 3,
-                BorderColour = TauPlayfield.AccentColour.Value,
+                BorderColour = TauPlayfield.ACCENT_COLOUR.Value,
                 Child = background = new Box
                 {
                     RelativeSizeAxes = Axes.Both,

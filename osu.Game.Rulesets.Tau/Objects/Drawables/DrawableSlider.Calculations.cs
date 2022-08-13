@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             bool capAdded = false;
             var polarPath = HitObject.Path;
 
-            float radius = TauPlayfield.BaseSize.X / 2;
+            float radius = TauPlayfield.BASE_SIZE.X / 2;
 
             float distanceAt(double t) => inversed
                                               ? (float)(2 * radius - (time - t) / HitObject.TimePreempt * radius)

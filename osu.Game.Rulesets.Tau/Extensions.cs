@@ -87,5 +87,16 @@ namespace osu.Game.Rulesets.Tau
                    : self.Count > 0
                        ? self[^1]
                        : @default;
+
+        /// <summary>
+        /// Eases a value towards a limit as it approaches infinity
+        /// </summary>
+        /// <param name="value">The parameter in range of [0, ∞)</param>
+        /// <param name="limit">The returned value as <paramref name="value"/> approaches ∞</param>
+        /// <param name="exponent">How fast the return value approaches the limit</param>
+        public static float LimitEase(this float value, float limit, float exponent = 1.0116194403f /* roughly equal to 2^(1/60) */)
+        {
+            return limit * (1 - 1 / MathF.Pow(exponent, Math.Abs(value)));
+        }
     }
 }

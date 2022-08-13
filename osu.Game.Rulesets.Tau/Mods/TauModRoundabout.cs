@@ -7,8 +7,10 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Beatmaps;
 using System;
 
-namespace osu.Game.Rulesets.Tau.Mods {
-    public class TauModRoundabout : Mod, IApplicableToBeatmapConverter {
+namespace osu.Game.Rulesets.Tau.Mods
+{
+    public class TauModRoundabout : Mod, IApplicableToBeatmapConverter
+    {
         public override string Name => "Roundabout";
         public override string Acronym => "RB";
         public override string Description => "You can only rotate the paddle in one direction.";
@@ -18,18 +20,22 @@ namespace osu.Game.Rulesets.Tau.Mods {
         public override IconUsage? Icon => FontAwesome.Solid.Redo;
         public override bool HasImplementation => true;
 
-        [SettingSource( "Direction" )]
-        public Bindable<RotationDirection> Direction { get; } = new( RotationDirection.Clockwise );
+        [SettingSource("Direction")]
+        public Bindable<RotationDirection> Direction { get; } = new();
+
         public override string SettingDescription => $"{Direction.Value}";
-        public override void ResetSettingsToDefaults () {
+
+        public override void ResetSettingsToDefaults()
+        {
             Direction.SetDefault();
             base.ResetSettingsToDefaults();
         }
 
-        public void ApplyToBeatmapConverter ( IBeatmapConverter beatmapConverter ) {
+        public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
+        {
             ((TauBeatmapConverter)beatmapConverter).LockedDirection = Direction.Value;
         }
 
-        public override Type[] IncompatibleMods => new Type[] { typeof(TauModAutoplay) };
+        public override Type[] IncompatibleMods => new[] { typeof(TauModAutoplay) };
     }
 }
