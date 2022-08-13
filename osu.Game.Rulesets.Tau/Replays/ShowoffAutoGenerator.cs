@@ -31,10 +31,10 @@ public class ShowoffAutoGenerator : AutoGenerator
         props.SetRange(beatmap.Difficulty.CircleSize);
         paddleHalfSize = (float)(props.AngleRange.Value / 2) * 0.65f; // it doesnt look good if we catch with the literal edge
 
-        if (mods.OfType<TauModDual>().FirstOrDefault() is { } dual)
+        if (mods.GetMod(out TauModDual dual))
             paddleCount = dual.PaddleCount.Value;
 
-        if (mods.OfType<TauModRoundabout>().FirstOrDefault() is { } round)
+        if (mods.GetMod(out TauModRoundabout round))
             rotationDirection = round.Direction.Value;
     }
 

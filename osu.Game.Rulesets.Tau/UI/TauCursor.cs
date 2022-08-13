@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             rotationLock = mods.OfType<TauModRoundabout>().FirstOrDefault()?.Direction.Value;
 
-            if (mods.OfType<TauModDual>().FirstOrDefault() is { } dual)
+            if (mods.GetMod(out TauModDual dual))
             {
                 for (int i = 1; i < dual.PaddleCount.Value; i++)
                 {
