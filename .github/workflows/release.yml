@@ -47,6 +47,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./osu.Game.Rulesets.Tau/bin/Release/netstandard2.1/osu.Game.Rulesets.Tau.dll
+        asset_path: ./osu.Game.Rulesets.Tau/bin/Release/net6.0/osu.Game.Rulesets.Tau.dll
         asset_name: osu.Game.Rulesets.Tau.dll
         asset_content_type: application/vnd.microsoft.portable-executable

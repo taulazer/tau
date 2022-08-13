@@ -5,6 +5,6 @@ namespace osu.Game.Rulesets.Tau.Judgements
 {
     public class TauTickJudgement : Judgement
     {
-        public override HitResult MaxResult => HitResult.LargeTickHit;
+        public override HitResult MaxResult => HitResult.SmallTickHit;
     }
 }

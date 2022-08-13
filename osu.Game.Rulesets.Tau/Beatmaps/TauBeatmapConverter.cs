@@ -10,6 +10,7 @@ using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Tau.Objects;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Beatmaps
 {
@@ -22,9 +23,12 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         public bool CanConvertToHardBeats { get; set; } = true;
         public bool CanConvertToSliders { get; set; } = true;
-        public bool CanConvertImpossibleSliders { get; set; } = false;
+        public bool CanConvertImpossibleSliders { get; set; }
         public int SliderDivisor { get; set; } = 4;
         public RotationDirection? LockedDirection;
+
+        public static readonly Vector2 STANDARD_PLAYFIELD_SIZE = new(512, 384);
+        public static readonly Vector2 STANDARD_PLAYFIELD_CENTER = STANDARD_PLAYFIELD_SIZE / 2;
 
         public TauBeatmapConverter(Ruleset ruleset, IBeatmap beatmap)
             : base(beatmap, ruleset)
@@ -65,37 +69,38 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         {
             bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
             var comboData = original as IHasCombo;
+            var sample = original is IHasPathWithRepeats c ? c.NodeSamples[0] : null;
 
             if (isHard && CanConvertToHardBeats)
-                return convertToHardBeat(original, comboData);
+                return convertToHardBeat(original, comboData, sample);
 
-            return convertToBeat(original, comboData);
+            return convertToBeat(original, comboData, sample);
         }
 
         private float getHitObjectAngle(HitObject original)
             => original switch
             {
                 IHasPosition pos => pos.Position.GetHitObjectAngle(),
-                IHasXPosition xPos => xPos.X.Remap(0, 512, 0, 360),
-                IHasYPosition yPos => yPos.Y.Remap(0, 384, 0, 360),
+                IHasXPosition xPos => xPos.X.Remap(0, STANDARD_PLAYFIELD_SIZE.X, 0, 360),
+                IHasYPosition yPos => yPos.Y.Remap(0, STANDARD_PLAYFIELD_SIZE.Y, 0, 360),
                 IHasAngle ang => ang.Angle,
                 _ => 0
             };
 
-        private TauHitObject convertToBeat(HitObject original, IHasCombo comboData)
+        private TauHitObject convertToBeat(HitObject original, IHasCombo comboData, IList<HitSampleInfo> samples = null)
             => new Beat
             {
-                Samples = original.Samples,
+                Samples = samples ?? original.Samples,
                 StartTime = original.StartTime,
                 Angle = nextAngle(getHitObjectAngle(original)),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
             };
 
-        private TauHitObject convertToHardBeat(HitObject original, IHasCombo comboData)
+        private TauHitObject convertToHardBeat(HitObject original, IHasCombo comboData, IList<HitSampleInfo> samples = null)
             => new HardBeat
             {
-                Samples = original.Samples,
+                Samples = samples ?? original.Samples,
                 StartTime = original.StartTime,
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
@@ -127,7 +132,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 float angle = nextAngle((((IHasPosition)original).Position + data.CurvePositionAt(t / data.Duration)).GetHitObjectAngle());
 
-                if (t == 0) 
+                if (t == 0)
                     firstAngle = angle;
 
                 angle = Extensions.GetDeltaAngle(angle, firstAngle);
@@ -151,23 +156,28 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
             nodes.Add(new SliderNode((float)data.Duration, finalAngle));
 
-            return new Slider
+            var slider = new Slider
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
                 NodeSamples = data.NodeSamples,
                 RepeatCount = data.RepeatCount,
                 Angle = firstAngle,
-                Path = new PolarSliderPath(nodes.ToArray()),
+                Path = new PolarSliderPath(nodes),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
+            };
 
+            if (beatmap.ControlPointInfo is LegacyControlPointInfo legacyControlPointInfo)
+            {
                 // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
                 // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
-                TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
-                                             ? 4f / ((LegacyControlPointInfo)beatmap.ControlPointInfo).DifficultyPointAt(original.StartTime).SliderVelocity
-                                             : 4
-            };
+                slider.TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
+                                                    ? 2f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
+                                                    : 2;
+            }
+
+            return slider;
         }
 
         private TauHitObject convertToSliderSpinner(HitObject original, IHasCombo comboData, IHasDuration duration, IBeatmap beatmap)
@@ -185,7 +195,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 RotationDirection.Clockwise => 1,
                 RotationDirection.Counterclockwise => -1,
                 _ => Math.Sign( getHitObjectAngle( beatmap.HitObjects.GetPrevious( original ) ) )
-            }; 
+            };
 
             if (direction == 0)
                 direction = 1; // Direction should always default to Clockwise.
@@ -209,18 +219,41 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 }
             }
 
+            // For some reason, while this does solve the wrong duration for "spinners", this also somehow "slows down" the path of the slider.
+            // Will need to do some investigation as to why this is the case.
+            nodes.Add(new SliderNode((float)duration.Duration, 0));
             lastLockedAngle = currentAngle - 90 * direction;
-            return new Slider
+
+            var slider = new Slider
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,
                 Path = new PolarSliderPath(nodes.ToArray()),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
-                TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
-                                             ? 4f / ((LegacyControlPointInfo)beatmap.ControlPointInfo).DifficultyPointAt(original.StartTime).SliderVelocity
-                                             : 4
             };
+
+            if (beatmap.ControlPointInfo is LegacyControlPointInfo legacyControlPointInfo)
+            {
+                // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
+                // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
+                slider.TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
+                                                    ? 2f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
+                                                    : 2;
+            }
+
+            return slider;
         }
+    }
+
+    public static class TauBeatmapConverterExtensions
+    {
+        /// <summary>
+        /// Gets the theta angle from the playfield's center.
+        /// Note that this only works for legacy sizing (512x384)
+        /// </summary>
+        /// <param name="target">The target <see cref="HitObject"/> position.</param>
+        public static float GetHitObjectAngle(this Vector2 target)
+            => TauBeatmapConverter.STANDARD_PLAYFIELD_CENTER.GetDegreesFromPosition(target);
     }
 }

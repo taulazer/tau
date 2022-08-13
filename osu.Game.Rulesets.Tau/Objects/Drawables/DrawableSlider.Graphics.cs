@@ -6,6 +6,7 @@ using osu.Framework.Extensions.EnumExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osuTK;
@@ -18,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     {
         public const float FADE_RANGE = 120;
 
-        private static Texture generateSmoothPathTexture(float radius, Func<float, Color4> colourAt)
+        private static Texture generateSmoothPathTexture(IRenderer renderer, float radius, Func<float, Color4> colourAt)
         {
             const float aa_portion = 0.02f;
             int textureWidth = (int)radius * 2;
@@ -33,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 raw[i, 0] = new Rgba32(colour.R, colour.G, colour.B, colour.A * Math.Min(progress / aa_portion, 1));
             }
 
-            var texture = new Texture(textureWidth, 1, true);
+            var texture = renderer.CreateTexture(textureWidth, 1, true);
             texture.SetData(new TextureUpload(raw));
             return texture;
         }
@@ -42,7 +43,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             public IEnumerable<DrawableSliderRepeat> Ticks = Array.Empty<DrawableSliderRepeat>();
             private IShader depthMaskShader { get; set; }
-            private IShader textureShader { get; set; }
             private IShader hitFadeTextureShader { get; set; }
 
             private readonly List<Vector3> vertices = new();
@@ -216,9 +216,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             }
 
             [BackgroundDependencyLoader]
-            private void load(ShaderManager shaders)
+            private void load(IRenderer renderer, ShaderManager shaders)
             {
-                textureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+                texture = renderer.WhitePixel;
+
                 depthMaskShader = shaders.Load("DepthMask", "DepthMask");
                 hitFadeTextureShader = shaders.Load("SliderPositionAndColour", "Slider");
             }
@@ -228,7 +229,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 var localPos = ToLocalSpace(screenSpacePos);
                 float pathRadiusSquared = PathRadius * PathRadius;
 
-                foreach (var (t, alpha) in segments)
+                foreach (var (t, _) in segments)
                 {
                     if (t.DistanceSquaredToPoint(localPos) <= pathRadiusSquared)
                         return true;
@@ -289,7 +290,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             public Texture Texture
             {
-                get => texture ?? Texture.WhitePixel;
+                get => texture;
                 set
                 {
                     if (texture == value)

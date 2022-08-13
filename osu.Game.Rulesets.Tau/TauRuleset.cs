@@ -38,14 +38,15 @@ namespace osu.Game.Rulesets.Tau
         public override string ShortName => SHORT_NAME;
         public override string PlayingVerb => "Slicing beats";
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new TauDrawableRuleset(this, beatmap, mods);
-        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new TauBeatmapConverter(this, beatmap);
-        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new TauDifficultyCalculator(RulesetInfo, beatmap);
         public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new TauRulesetConfigManager(settings, RulesetInfo);
-        public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
-        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
-        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
+        public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new TauBeatmapConverter(this, beatmap);
         public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
+        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new TauDrawableRuleset(this, beatmap, mods);
+        public override ScoreProcessor CreateScoreProcessor() => new TauScoreProcessor(this);
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new TauReplayFrame();
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new TauDifficultyCalculator(RulesetInfo, beatmap);
+        public override PerformanceCalculator CreatePerformanceCalculator() => new TauPerformanceCalculator();
+        public override RulesetSettingsSubsection CreateSettings() => new TauSettingsSubsection(this);
 
         public override Drawable CreateIcon() => new TauIcon(this);
 
@@ -99,15 +100,15 @@ namespace osu.Game.Rulesets.Tau
                 HitResult.Ok,
                 HitResult.Miss,
 
-                HitResult.LargeTickHit,
-                HitResult.LargeTickMiss
+                HitResult.SmallTickHit,
+                HitResult.SmallTickMiss
             };
         }
 
         public override string GetDisplayNameForHitResult(HitResult result)
             => result switch
             {
-                HitResult.LargeTickHit => "Ticks",
+                HitResult.SmallTickHit => "Ticks",
                 _ => base.GetDisplayNameForHitResult(result)
             };
 
@@ -177,7 +178,7 @@ namespace osu.Game.Rulesets.Tau
                 //       Please try to avoid this at all costs.
                 //
                 //       ~ Nora
-                store.AddStore(new GlyphStore(
+                store.AddTextureSource(new GlyphStore(
                     new ResourceStore<byte[]>(ruleset.CreateResourceStore()),
                     "Fonts/tauFont",
                     host.CreateTextureLoaderStore(ruleset.CreateResourceStore())));

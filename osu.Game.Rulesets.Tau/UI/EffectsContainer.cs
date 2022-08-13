@@ -85,7 +85,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 return;
 
             currentTrackingTime = 0;
-            sliderEffects.UpdateSliderPosition(angle);
             visualizer.UpdateAmplitudes(angle, 0.15f);
         }
     }

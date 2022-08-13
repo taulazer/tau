@@ -2,10 +2,10 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Colour;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Utils;
@@ -55,14 +55,12 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         private readonly float[] amplitudes = new float[bars_per_visualiser];
 
         private IShader shader;
-        private readonly Texture texture;
+        private Texture texture;
 
         private readonly Bindable<bool> showVisualizer = new(true);
 
         public PlayfieldVisualizer()
         {
-            texture = Texture.WhitePixel;
-
             Blending = BlendingParameters.Additive;
             RelativeSizeAxes = Axes.Both;
             FillMode = FillMode.Fit;
@@ -83,8 +81,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(ShaderManager shaders, TauRulesetConfigManager config)
+        private void load(IRenderer renderer, ShaderManager shaders, TauRulesetConfigManager config)
         {
+            texture = renderer.WhitePixel;
             shader = shaders.Load( "VisualizerPositionAndColour", "VisualizerFade" );
 
             config?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualizer);
@@ -127,7 +126,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         /// <param name="multiplier">The multiplier for the amplitude.</param>
         public void UpdateAmplitudes(float angle, float multiplier)
         {
-            var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser - 1), 0, bars_per_visualiser - 1);
+            var barIndex = Math.Clamp((int)angle.Remap(0, 360, 0, bars_per_visualiser), 0, bars_per_visualiser - 1);
             amplitudes[barIndex] += multiplier;
 
             for (int i = 1; i <= bar_spread; i++)
@@ -181,7 +180,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             private Color4 colour;
             private float[] data;
 
-            private readonly QuadBatch<TexturedVertex2D> vertexBatch = new(100, 10);
+            private IVertexBatch<TexturedVertex2D> vertexBatch;
 
             public PlayfieldVisualizerDrawNode(PlayfieldVisualizer source)
                 : base(source)
@@ -202,9 +201,11 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 fadeRange = Source.ApplyFade ? radius * 0.2f : 0;
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
+            public override void Draw(IRenderer renderer)
             {
-                base.Draw(vertexAction);
+                base.Draw(renderer);
+
+                vertexBatch ??= renderer.CreateQuadBatch<TexturedVertex2D>(100, 10);
 
                 shader.Bind();
                 shader.GetUniform<Vector2>( "centerPos" ).UpdateValue( ref center );
@@ -245,8 +246,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                                 Vector2Extensions.Transform(barPosition + bottomOffset + amplitudeOffset, DrawInfo.Matrix)
                             );
 
-                            DrawQuad(
-                                texture,
+                            renderer.DrawQuad(texture,
                                 rectangle,
                                 colourInfo,
                                 null,
@@ -260,5 +260,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 shader.Unbind();
             }
         }
+    }
+
+    internal interface IRenderer
+    {
     }
 }

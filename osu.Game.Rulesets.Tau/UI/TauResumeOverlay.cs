@@ -4,6 +4,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
@@ -109,16 +110,20 @@ namespace osu.Game.Rulesets.Tau.UI
             {
                 RelativeSizeAxes = Axes.Both;
                 Colour = Color4Extensions.FromHex(@"FF0040");
-                Texture = generateTexture(0.25f);
             }
 
-            private Texture generateTexture(float opacity)
+            [BackgroundDependencyLoader]
+            private void load(IRenderer renderer)
+            {
+                Texture = generateTexture(renderer, 0.25f);
+            }
+
+            private Texture generateTexture(IRenderer renderer, float opacity)
             {
                 const int width = 128;
 
                 var image = new Image<Rgba32>(width, 1);
-
-                var gradientTextureHorizontal = new Texture(1, width, true);
+                var gradientTextureHorizontal = renderer.CreateTexture(1, width, true);
 
                 image.ProcessPixelRows(rows =>
                 {

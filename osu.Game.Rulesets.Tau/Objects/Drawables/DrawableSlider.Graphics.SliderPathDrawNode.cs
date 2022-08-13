@@ -3,11 +3,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Colour;
-using osu.Framework.Graphics.OpenGL;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Tau.Allocation;
@@ -66,14 +65,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 private float radius;
                 private IShader shader;
                 private IShader maskShader;
-                private IShader textureShader;
 
                 // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
                 // per primitive (triangles in this case). Otherwise overflowing the batch will result in wrong
                 // grouping of vertices into primitives.
-                private readonly LinearBatch<SliderTexturedVertex2D> halfCircleBatch = new(max_resolution * 100 * 3, 10, PrimitiveType.Triangles);
-
-                private readonly QuadBatch<SliderTexturedVertex2D> quadBatch = new(200, 10);
+                private IVertexBatch<SliderTexturedVertex2D> halfCircleBatch;
+                private IVertexBatch<SliderTexturedVertex2D> quadBatch;
 
                 public SliderPathDrawNode(SliderPath source)
                     : base(source)
@@ -111,7 +108,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     radius = Source.PathRadius;
                     shader = Source.hitFadeTextureShader;
                     maskShader = Source.depthMaskShader;
-                    textureShader = Source.textureShader;
 
                     var center = Source.PositionInBoundingBox(Vector2.Zero);
                     var edge = Source.PositionInBoundingBox(new Vector2(Source.PathDistance, 0));
@@ -256,7 +252,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         Colour = colourAt(lineLeft.EndPoint),
                         Result = endResult
                     });
-                    ;
+
                     quadBatch.Add(new SliderTexturedVertex2D
                     {
                         Position = new Vector2(screenLineLeft.StartPoint.X, screenLineLeft.StartPoint.Y),
@@ -328,25 +324,28 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     }
                 }
 
-                public override void Draw(Action<TexturedVertex2D> vertexAction)
+                public override void Draw(IRenderer renderer)
                 {
-                    base.Draw(vertexAction);
+                    base.Draw(renderer);
+
+                    halfCircleBatch ??= renderer.CreateLinearBatch<SliderTexturedVertex2D>(max_resolution * 100 * 3, 10, PrimitiveTopology.Triangles);
+                    quadBatch ??= renderer.CreateQuadBatch<SliderTexturedVertex2D>(200, 10);
 
                     if (texture?.Available != true || segments.Length == 0)
                         return;
 
                     bool value = true;
-                    GLWrapper.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthFunction.Always));
+                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthFunction.Always));
                     maskShader.Bind();
                     maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
 
                     foreach (var i in innerTicks)
                     {
-                        DrawQuad(Texture.WhitePixel, i, Color4.Transparent);
+                        renderer.DrawQuad(renderer.WhitePixel, i, Color4.Transparent);
                     }
 
                     maskShader.Unbind();
-                    GLWrapper.PopDepthInfo();
+                    renderer.PopDepthInfo();
 
                     shader.Bind();
                     shader.GetUniform<Vector2>("centerPos").UpdateValue(ref centerPos);
@@ -354,32 +353,32 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     shader.GetUniform<float>("fadeRange").UpdateValue(ref fadeRange);
                     shader.GetUniform<Vector4>("hitColor").UpdateValue(ref hitColour);
                     shader.GetUniform<bool>("reverse").UpdateValue(ref reverse);
-                    texture.TextureGL.Bind();
+                    texture.Bind();
 
                     updateVertexBuffer();
 
                     shader.Unbind();
 
-                    GLWrapper.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthFunction.Always));
+                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthFunction.Always));
                     maskShader.Bind();
                     value = false;
                     maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
 
                     foreach (var i in innerTicks)
                     {
-                        DrawQuad(Texture.WhitePixel, i, Color4.Transparent);
+                        renderer.DrawQuad(renderer.WhitePixel, i, Color4.Transparent);
                     }
 
                     maskShader.Unbind();
-                    GLWrapper.PopDepthInfo();
+                    renderer.PopDepthInfo();
                 }
 
                 protected override void Dispose(bool isDisposing)
                 {
                     base.Dispose(isDisposing);
 
-                    halfCircleBatch.Dispose();
-                    quadBatch.Dispose();
+                    halfCircleBatch?.Dispose();
+                    quadBatch?.Dispose();
                     segments.Dispose();
                     ticks.Dispose();
                     innerTicks.Dispose();

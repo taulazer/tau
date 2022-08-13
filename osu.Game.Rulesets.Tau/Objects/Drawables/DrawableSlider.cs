@@ -7,6 +7,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
 using osu.Framework.Utils;
@@ -129,12 +130,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             => Interpolation.ValueAt(beatSize, 2f, 7f, 10f, 25f);
 
         [BackgroundDependencyLoader]
-        private void load(GameHost host)
+        private void load(IRenderer renderer, GameHost host)
         {
             NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
-            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(path.PathRadius, t => Color4.White);
+            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.White);
         }
 
         [Resolved]

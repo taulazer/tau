@@ -5,6 +5,8 @@
 [![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE)
 ![GitHub all releases](https://img.shields.io/github/downloads/naoei/tau/total?style=flat-square)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/naoei/tau/latest/total?style=flat-square)
+[![Continuous Integration](https://github.com/taulazer/tau/actions/workflows/ci.yml/badge.svg)](https://github.com/taulazer/tau/actions/workflows/ci.yml)
+[![Crowdin](https://badges.crowdin.net/tau/localized.svg)](https://crowdin.com/project/tau)
 [![community server](https://discordapp.com/api/guilds/689728872282849313/widget.png?style=shield)](https://discord.gg/7Y8GXAa)
 
 *An [osu!](https://github.com/ppy/osu) ruleset. Sweeping beats with your scythe.*
@@ -58,6 +60,8 @@ Once the project has finished building, dotnet should tell you where the binary 
 All contributions are appreciated, as to improve the mode on its playability and functionality. As this gamemode isn't perfect, we would enjoy all additions to the code through bugfixing and ideas. Contributions should be done over an issue or a pull request, to give maintainers a chance to review changes to the codebase.
 
 For new ideas and features, we would prefer for you to write an issue before trying to add it to show the maintainers.
+
+If you wish to help with localisation efforts, head over to [crowdin](https://crowdin.com/project/tau).
 
 ## License
 tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/Altenhh/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
