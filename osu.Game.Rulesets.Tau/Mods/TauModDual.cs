@@ -15,6 +15,12 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override bool HasImplementation => true;
 
         [SettingSource("Paddle count")]
-        public BindableNumber<int> PaddleCount { get; } = new(2) { MinValue = 2, MaxValue = 4 };
+        public BindableNumber<int> PaddleCount { get; } = new()
+        {
+            Value = 2,
+            Default = 2,
+            MinValue = 2,
+            MaxValue = 4
+        };
     }
 }
