@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Tau.Replays
     {
         #region Constants
 
-        protected readonly float Offset = TauPlayfield.BaseSize.Y / 2f;
+        protected readonly float Offset = TauPlayfield.BASE_SIZE.Y / 2f;
         protected const float CURSOR_DISTANCE = 250;
 
         #endregion

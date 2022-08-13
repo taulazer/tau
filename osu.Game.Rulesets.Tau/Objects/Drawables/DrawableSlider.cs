@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private readonly BindableFloat size = new(16f);
 
-        public float PathDistance = TauPlayfield.BaseSize.X / 2;
+        public float PathDistance = TauPlayfield.BASE_SIZE.X / 2;
 
         private readonly SliderPath path;
         private readonly Container<DrawableSliderHead> headContainer;
@@ -50,7 +50,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableSlider(Slider obj)
             : base(obj)
         {
-            Size = TauPlayfield.BaseSize;
+            Size = TauPlayfield.BASE_SIZE;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 

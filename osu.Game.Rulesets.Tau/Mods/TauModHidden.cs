@@ -80,7 +80,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                 {
                     new Container
                     {
-                        Size = TauPlayfield.BaseSize,
+                        Size = TauPlayfield.BASE_SIZE,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Child = content
@@ -113,7 +113,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         /// </summary>
         public float Coverage
         {
-            set => cover.ApertureSize = new Vector2(0, TauPlayfield.BaseSize.Y / 2 * value);
+            set => cover.ApertureSize = new Vector2(0, TauPlayfield.BASE_SIZE.Y / 2 * value);
         }
 
         public MaskingMode Mode { get; }

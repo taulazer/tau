@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override ModType Type => ModType.Fun;
         public override IconUsage? Icon => TauIcons.ModInverse;
         public override string Description => @"Beats will appear outside of the playfield.";
-        public override double ScoreMultiplier => 1.09;
+        public override double ScoreMultiplier => 1;
         public override Type[] IncompatibleMods => new[] { typeof(TauModHidden) };
 
         private const float preempt_scale = 2;

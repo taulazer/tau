@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Tau
                 },
                 ModType.Automation => new Mod[]
                 {
-                    new MultiMod(new TauModAutoplay(), new TauModCinema()),
+                    new MultiMod(new TauModAutoplay(), new TauModShowoffAutoplay(), new TauModCinema()),
                     new TauModRelax(),
                     new TauModAutopilot()
                 },
@@ -83,7 +83,11 @@ namespace osu.Game.Rulesets.Tau
                     new MultiMod(new ModWindUp(), new ModWindDown()),
                     new ModAdaptiveSpeed(),
                     new TauModInverse(),
-                    new TauModImpossibleSliders()
+                    new TauModImpossibleSliders(),
+                    new TauModRoundabout(),
+                    new TauModNoScope(),
+                    new TauModTraceable(),
+                    new TauModDual()
                 },
                 _ => Enumerable.Empty<Mod>()
             };

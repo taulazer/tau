@@ -4,10 +4,14 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI.Effects;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
@@ -35,9 +39,12 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
+        private void load(TauRulesetConfigManager config, IReadOnlyList<Mod> mods)
         {
-            visualizer.AccentColour = TauPlayfield.AccentColour.Value.Opacity(0.25f);
+            visualizer.AccentColour = TauPlayfield.ACCENT_COLOUR.Value.Opacity(0.25f);
+
+            if (mods != null)
+                visualizer.ApplyFade = mods.Any(x => x is TauModTraceable);
 
             config?.BindWith(TauRulesetSettings.ShowEffects, showEffects);
             config?.BindWith(TauRulesetSettings.ShowSliderEffects, showSliderEffects);

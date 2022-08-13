@@ -7,12 +7,10 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
@@ -23,14 +21,14 @@ using osuTK.Graphics;
 namespace osu.Game.Rulesets.Tau.UI
 {
     [Cached]
-    public class TauPlayfield : Playfield
+    public partial class TauPlayfield : Playfield
     {
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container judgementAboveHitObjectLayer;
         private readonly EffectsContainer effectsContainer;
 
-        public static readonly Vector2 BaseSize = new(768);
-        public static readonly Bindable<Color4> AccentColour = new(Color4Extensions.FromHex(@"FF0040"));
+        public static readonly Vector2 BASE_SIZE = new(768);
+        public static readonly Bindable<Color4> ACCENT_COLOUR = new(Color4Extensions.FromHex(@"FF0040"));
 
         private readonly Dictionary<HitResult, DrawablePool<DrawableTauJudgement>> poolDictionary = new();
 
@@ -45,16 +43,18 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos) => true;
 
+        public PlayfieldPiece PlayfieldPiece;
+
         public TauPlayfield()
         {
             RelativeSizeAxes = Axes.None;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
-            Size = BaseSize;
+            Size = BASE_SIZE;
 
             AddRangeInternal(new Drawable[]
             {
-                new PlayfieldPiece(),
+                PlayfieldPiece = new PlayfieldPiece(),
                 judgementLayer = new JudgementContainer<DrawableTauJudgement> { RelativeSizeAxes = Axes.Both },
                 new Container
                 {
@@ -111,7 +111,15 @@ namespace osu.Game.Rulesets.Tau.UI
 
         private ValidationResult checkPaddlePosition(float angle)
         {
-            var angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
+            float angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
+
+            if (Cursor.AdditionalPaddles != null)
+                foreach (var i in Cursor.AdditionalPaddles)
+                {
+                    float diff = Extensions.GetDeltaAngle(i.Rotation, angle);
+                    if (Math.Abs(diff) < Math.Abs(angleDiff))
+                        angleDiff = diff;
+                }
 
             return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
         }
@@ -153,45 +161,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 onLoaded?.Invoke(judgement);
 
                 return judgement;
-            }
-        }
-
-        private class PlayfieldPiece : CompositeDrawable
-        {
-            private readonly Box background;
-            private readonly Bindable<float> playfieldDimLevel = new(0.7f);
-
-            public PlayfieldPiece()
-            {
-                RelativeSizeAxes = Axes.Both;
-
-                AddInternal(new CircularContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Masking = true,
-                    BorderThickness = 3,
-                    BorderColour = AccentColour.Value,
-                    Child = background = new Box
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = Color4.Black,
-                        Alpha = playfieldDimLevel.Default,
-                        AlwaysPresent = true
-                    }
-                });
-            }
-
-            [Resolved(canBeNull: true)]
-            private TauRulesetConfigManager config { get; set; }
-
-            protected override void LoadComplete()
-            {
-                config?.BindWith(TauRulesetSettings.PlayfieldDim, playfieldDimLevel);
-
-                playfieldDimLevel.BindValueChanged(v =>
-                {
-                    background.FadeTo(v.NewValue, 100);
-                }, true);
             }
         }
     }

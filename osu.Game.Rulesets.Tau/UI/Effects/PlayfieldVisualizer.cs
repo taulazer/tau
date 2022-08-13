@@ -71,11 +71,23 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             Alpha = 0;
         }
 
+        private bool applyFade;
+
+        public bool ApplyFade
+        {
+            get => applyFade;
+            set
+            {
+                applyFade = value;
+                Invalidate(Invalidation.DrawNode);
+            }
+        }
+
         [BackgroundDependencyLoader(true)]
         private void load(IRenderer renderer, ShaderManager shaders, TauRulesetConfigManager config)
         {
             texture = renderer.WhitePixel;
-            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
+            shader = shaders.Load("VisualizerPositionAndColour", "VisualizerFade");
 
             config?.BindWith(TauRulesetSettings.ShowVisualizer, showVisualizer);
             showVisualizer.BindValueChanged(v => { this.FadeTo(v.NewValue ? 1 : 0, 250, Easing.OutQuint); }, true);
@@ -164,6 +176,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
 
             // Assuming the logo is a circle, we don't need a second dimension.
             private float size;
+            private Vector2 center;
+            private float radius;
+            private float fadeRange;
 
             private Color4 colour;
             private float[] data;
@@ -184,6 +199,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 size = Source.DrawSize.X;
                 colour = Source.AccentColour;
                 data = Source.amplitudes;
+                center = Source.ScreenSpaceDrawQuad.Centre;
+                radius = (Source.ToScreenSpace(Vector2.Zero) - Source.ToScreenSpace(new Vector2(TauPlayfield.BASE_SIZE.X / 2, 0))).Length;
+                fadeRange = Source.ApplyFade ? radius * 0.2f : 0;
             }
 
             public override void Draw(IRenderer renderer)
@@ -193,6 +211,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 vertexBatch ??= renderer.CreateQuadBatch<TexturedVertex2D>(100, 10);
 
                 shader.Bind();
+                shader.GetUniform<Vector2>("centerPos").UpdateValue(ref center);
+                shader.GetUniform<float>("range").UpdateValue(ref radius);
+                shader.GetUniform<float>("fadeRange").UpdateValue(ref fadeRange);
 
                 Vector2 inflation = DrawInfo.MatrixInverse.ExtractScale().Xy;
 

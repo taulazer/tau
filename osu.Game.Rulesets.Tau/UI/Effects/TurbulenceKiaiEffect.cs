@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             // TODO: This is broken as shit.
             Vortices.Add(new Vortex
             {
-                Position = new Vector2(0, -((TauPlayfield.BaseSize.X / 2) + 105)),
+                Position = new Vector2(0, -((TauPlayfield.BASE_SIZE.X / 2) + 105)),
                 Velocity = new Vector2(20, -20),
                 Scale = 0.01f,
                 Speed = 10f,
