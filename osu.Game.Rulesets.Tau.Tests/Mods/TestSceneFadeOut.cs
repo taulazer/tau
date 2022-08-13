@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
         [Test]
         public void TestFadeOutMod()
         {
-            CreateTest(null);
+            CreateTest();
 
             PlayfieldMaskingContainer pmc = null;
 
