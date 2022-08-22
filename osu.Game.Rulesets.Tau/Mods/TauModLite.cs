@@ -1,9 +1,11 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Beatmaps;
+using osu.Game.Rulesets.Tau.Localisation;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
@@ -13,17 +15,17 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override string Acronym => "LT";
         public override double ScoreMultiplier => 1.0;
         public override IconUsage? Icon => FontAwesome.Solid.History;
-        public override string Description => "Removes certain aspects of the game.";
+        public override LocalisableString Description => ModStrings.LiteDescription;
         public override ModType Type => ModType.Conversion;
 
-        [SettingSource("Sliders conversion", "Completely disables sliders altogether.")]
+        [SettingSource(typeof(ModStrings), nameof(ModStrings.LiteToggleSlidersName), nameof(ModStrings.LiteToggleSlidersDescription))]
         public Bindable<bool> ToggleSliders { get; } = new Bindable<bool>(false);
 
-        [SettingSource("Hard beats conversion", "Completely disables hard beats altogether.")]
+        [SettingSource(typeof(ModStrings), nameof(ModStrings.LiteToggleHardBeatsName), nameof(ModStrings.LiteToggleHardBeatsDescription))]
         public Bindable<bool> ToggleHardBeats { get; } = new Bindable<bool>(false);
 
         // maybe replace this with `BeatDivisorControl`?
-        [SettingSource("Slider division level", "The minimum slider length divisor.")]
+        [SettingSource(typeof(ModStrings), nameof(ModStrings.LiteSliderDivisionLevelName), nameof(ModStrings.LiteSliderDivisionLevelDescription))]
         public BindableInt SlidersDivisionLevel { get; } = new BindableInt
         {
             Value = 2,

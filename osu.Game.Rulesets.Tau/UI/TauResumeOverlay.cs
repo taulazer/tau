@@ -10,6 +10,8 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Screens.Play;
 using osuTK;
 using osuTK.Graphics;
@@ -29,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private Container container;
         private TauCursor cursor;
 
-        protected override string Message => "Move the cursor to the highlighted area.";
+        protected override LocalisableString Message => UiStrings.ResumeMessage;
 
         [BackgroundDependencyLoader]
         private void load()
