@@ -4,7 +4,6 @@ using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
-using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -73,9 +72,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             this.FadeIn(HitObject.TimeFadeIn);
 
             if (properties != null && properties.InverseModEnabled.Value)
-                this.ResizeTo(2);
+                piece.ResizeTo(2);
 
-            piece.ResizeTo(Vector2.One, HitObject.TimePreempt);
+            piece.ResizeTo(1, HitObject.TimePreempt);
         }
 
         [Resolved]
