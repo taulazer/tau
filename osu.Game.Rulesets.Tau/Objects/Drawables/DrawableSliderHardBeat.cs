@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public DrawableSliderHardBeat(SliderHardBeat hitObject)
             : base(hitObject)
         {
-            Scale = new Vector2(1.05f);
+            Scale = new Vector2(1.025f);
         }
 
         protected override float GetSliderOffset() => DrawableSlider.HitObject.Angle;
