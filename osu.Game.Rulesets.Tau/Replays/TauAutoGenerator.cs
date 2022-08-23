@@ -128,7 +128,7 @@ namespace osu.Game.Rulesets.Tau.Replays
         private void addHitObjectClickFrames(TauHitObject h, Vector2 startPosition)
         {
             var action = buttonIndex1 % 2 == 0 ? TauAction.LeftButton : TauAction.RightButton;
-            if (h is HardBeat)
+            if (h is HardBeat or StrictHardBeat)
                 action = buttonIndex2 % 2 == 0 ? TauAction.HardButton1 : TauAction.HardButton2;
 
             var startFrame = new TauReplayFrame(h.StartTime, startPosition, action);
@@ -150,7 +150,7 @@ namespace osu.Game.Rulesets.Tau.Replays
                 {
                     if (previousActions.Contains(action))
                     {
-                        if (h is HardBeat)
+                        if (h is HardBeat or StrictHardBeat)
                             action = action == TauAction.HardButton1 ? TauAction.HardButton2 : TauAction.HardButton1;
                         else
                             action = action == TauAction.LeftButton ? TauAction.RightButton : TauAction.LeftButton;
@@ -181,6 +181,9 @@ namespace osu.Game.Rulesets.Tau.Replays
 
             if (h is Slider s)
             {
+                if (s.IsHard)
+                    action = buttonIndex2 % 2 == 0 ? TauAction.HardButton1 : TauAction.HardButton2;
+
                 foreach (var node in s.Path.Nodes)
                 {
                     var pos = getGameplayPositionFromAngle(s.GetAbsoluteAngle(node));
