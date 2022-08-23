@@ -1,4 +1,5 @@
-﻿using osu.Game.Beatmaps;
+﻿using System;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Beatmaps;
 
@@ -8,9 +9,10 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override string Name => "Strict";
         public override string Description => "You must aim the hard beats";
-        public override double ScoreMultiplier => 1.05;
+        public override double ScoreMultiplier => 1.2;
         public override string Acronym => "ST";
         public override ModType Type => ModType.DifficultyIncrease;
+        public override Type[] IncompatibleMods => new[] { typeof(TauModLenience), typeof(TauModLite) };
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
         {

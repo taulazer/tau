@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
@@ -15,9 +16,10 @@ namespace osu.Game.Rulesets.Tau.Mods
     {
         public override string Name => "Lenience";
         public override string Description => "Hard beats are more forgiving";
-        public override double ScoreMultiplier => 0.5;
+        public override double ScoreMultiplier => 0.6;
         public override string Acronym => "LN";
         public override ModType Type => ModType.DifficultyReduction;
+        public override Type[] IncompatibleMods => new[] { typeof(TauModStrict), typeof(TauModLite) };
 
         public void ApplyToBeatmap(IBeatmap beatmap)
         {

@@ -1,4 +1,5 @@
-﻿using osu.Framework.Bindables;
+﻿using System;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -15,6 +16,8 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override IconUsage? Icon => FontAwesome.Solid.History;
         public override string Description => "Removes certain aspects of the game.";
         public override ModType Type => ModType.Conversion;
+
+        public override Type[] IncompatibleMods => new[] { typeof(TauModStrict), typeof(TauModLenience) };
 
         [SettingSource("Sliders conversion", "Completely disables sliders altogether.")]
         public Bindable<bool> ToggleSliders { get; } = new Bindable<bool>(false);
