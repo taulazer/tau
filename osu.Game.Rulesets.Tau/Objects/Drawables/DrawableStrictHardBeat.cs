@@ -47,13 +47,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             piece.AngleRange.Value = HitObject.Range;
         }
 
-        protected override bool CheckForValidation()
+        public override bool IsWithinPaddle()
         {
             if (CheckValidation == null)
                 return false;
 
-            var firstResult = CheckValidation((HitObject.Angle + (float)(HitObject.Range / 2) + (float)HitObject.Range).Normalize());
-            var secondResult = CheckValidation((HitObject.Angle + (float)(HitObject.Range / 2)).Normalize());
+            var firstResult = CheckValidation((HitObject.Angle + GetCurrentOffset() + (float)HitObject.Range).Normalize());
+            var secondResult = CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize());
 
             return firstResult.IsValid && secondResult.IsValid;
         }

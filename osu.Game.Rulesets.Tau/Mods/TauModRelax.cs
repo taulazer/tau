@@ -63,6 +63,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         {
             bool requiresHold = false;
             bool requiresHit = false;
+            bool requiresHard = false;
             double time = playfield.Clock.CurrentTime;
 
             foreach (var h in hitObjects)
@@ -87,6 +88,10 @@ namespace osu.Game.Rulesets.Tau.Mods
 
                         requiresHold |= slider.IsWithinPaddle();
                         break;
+
+                    case DrawableStrictHardBeat strict:
+                        handleAngled(strict, true);
+                        break;
                 }
             }
 
@@ -96,19 +101,31 @@ namespace osu.Game.Rulesets.Tau.Mods
                 changeNormalState(true, time);
             }
 
+            if (requiresHard)
+            {
+                changeHardBeatState(false, time);
+                changeHardBeatState(true, time);
+            }
+
+            if (hardBeat.isDown && time - lastStateChangeTime > AutoGenerator.KEY_UP_DELAY)
+                changeHardBeatState(false, time);
+
             if (requiresHold)
                 changeNormalState(true, time);
             else if (normal.isDown && time - lastStateChangeTime > AutoGenerator.KEY_UP_DELAY)
                 changeNormalState(false, time);
 
-            void handleAngled<T>(DrawableAngledTauHitObject<T> obj)
+            void handleAngled<T>(DrawableAngledTauHitObject<T> obj, bool isHard = false)
                 where T : AngledTauHitObject
             {
                 if (!obj.IsWithinPaddle())
                     return;
 
                 Debug.Assert(obj.HitObject.HitWindows != null);
-                requiresHit |= obj.HitObject.HitWindows.CanBeHit(time - obj.HitObject.StartTime);
+                if (isHard)
+                    requiresHard |= obj.HitObject.HitWindows.CanBeHit(time - obj.HitObject.StartTime);
+                else
+                    requiresHit |= obj.HitObject.HitWindows.CanBeHit(time - obj.HitObject.StartTime);
             }
         }
 
