@@ -16,11 +16,13 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
     {
         private int depthIndex;
 
+        private TauPlayfieldAdjustmentContainer container;
+
         [Test]
         public void TestSingleSlider()
         {
-            TauPlayfieldAdjustmentContainer container;
-            Add(container = new TauPlayfieldAdjustmentContainer());
+            AddStep("clear screen", Clear);
+            AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
 
             AddStep("Miss Single", () => container.Add(testSingle()));
             AddStep("Hit Single", () => container.Add(testSingle(true)));
@@ -30,8 +32,8 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
         [Test]
         public void TestSliderPerformance()
         {
-            TauPlayfieldAdjustmentContainer container;
-            Add(container = new TauPlayfieldAdjustmentContainer());
+            AddStep("clear screen", Clear);
+            AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
 
             AddStep("Miss Single", () => container.AddRange(testMultiple(100)));
             AddStep("Hit Single", () => container.AddRange(testMultiple(100, true)));
