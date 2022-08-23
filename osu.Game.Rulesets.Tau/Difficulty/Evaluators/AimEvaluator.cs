@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
         {
             double velocity = calculateVelocity(current.Distance, current.StrainTime);
 
-            if (!allowedHitObjects.Any(t => t == typeof(Slider) && last.BaseObject is Slider))
+            if (allowedHitObjects.Any(t => t == typeof(Slider) && last.BaseObject is not Slider))
                 return velocity;
 
             // Slider calculation

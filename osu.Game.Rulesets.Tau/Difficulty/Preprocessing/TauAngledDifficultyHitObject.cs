@@ -47,10 +47,14 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Preprocessing
                 float offset = 0;
 
                 if (lastAngled.BaseObject is IHasOffsetAngle offsetAngle)
-                    offset = offsetAngle.GetOffsetAngle();
+                    offset += offsetAngle.GetOffsetAngle();
 
                 Distance = Math.Abs(Extensions.GetDeltaAngle(firstAngled.Angle, (lastAngled.BaseObject.Angle + offset)));
                 StrainTime = Math.Max(StrainTime, StartTime - lastAngled.StartTime);
+
+                // Have to aim the entirety of the strict hard beat, so let's increase the distance manually
+                if (lastAngled.BaseObject is StrictHardBeat strict)
+                    Distance += (float)(strict.Range / 2);
             }
 
             if (hitObject is Slider slider)
