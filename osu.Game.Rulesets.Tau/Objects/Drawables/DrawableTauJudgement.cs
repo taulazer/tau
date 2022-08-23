@@ -48,6 +48,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 DrawableAngledTauHitObject<Slider> { HitObject: IHasOffsetAngle ang } => ang.GetAbsoluteAngle(),
                 // TODO: This should NOT be here.
                 DrawableAngledTauHitObject<Beat> { HitObject: IHasOffsetAngle ang } => ang.GetAbsoluteAngle(),
+                DrawableSliderHardBeat s => s.GetAbsoluteAngle(),
                 DrawableBeat b => b.HitObject.Angle,
                 _ => 0f
             };

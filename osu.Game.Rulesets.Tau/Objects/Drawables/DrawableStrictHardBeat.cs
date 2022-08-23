@@ -52,11 +52,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (CheckValidation == null)
                 return false;
 
-            var firstResult = CheckValidation((HitObject.Angle + GetCurrentOffset() + (float)HitObject.Range).Normalize());
-            var secondResult = CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize());
+            var firstResult = CheckValidation((HitObject.Angle + GetSliderOffset() + GetCurrentOffset()).Normalize());
+            var secondResult = CheckValidation((HitObject.Angle + GetSliderOffset() - GetCurrentOffset()).Normalize());
 
             return firstResult.IsValid && secondResult.IsValid;
         }
+
+        protected virtual float GetSliderOffset() => 0;
 
         protected override float GetCurrentOffset()
             => (float)(HitObject.Range / 2);

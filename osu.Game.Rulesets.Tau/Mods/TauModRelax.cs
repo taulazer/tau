@@ -83,8 +83,18 @@ namespace osu.Game.Rulesets.Tau.Mods
                         break;
 
                     case DrawableSlider slider:
-                        if (!slider.SliderHead.IsHit)
-                            handleAngled(slider.SliderHead);
+                        switch (slider.SliderHead)
+                        {
+                            case DrawableSliderHead head:
+                                if (!head.IsHit)
+                                    handleAngled(head);
+                                break;
+
+                            case DrawableSliderHardBeat head:
+                                if (!head.IsHit)
+                                    handleAngled(head, true);
+                                break;
+                        }
 
                         requiresHold |= slider.IsWithinPaddle();
                         break;

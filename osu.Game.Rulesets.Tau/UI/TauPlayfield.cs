@@ -8,7 +8,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
 using osu.Game.Rulesets.Judgements;
-using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
@@ -77,7 +76,7 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         [BackgroundDependencyLoader]
-        private void load(IReadOnlyList<Mod> mods)
+        private void load()
         {
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
@@ -85,6 +84,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             RegisterPool<Slider, DrawableSlider>(5);
             RegisterPool<SliderHeadBeat, DrawableSliderHead>(5);
+            RegisterPool<SliderHardBeat, DrawableSliderHardBeat>(5);
             RegisterPool<SliderRepeat, DrawableSliderRepeat>(5);
             RegisterPool<SliderTick, DrawableSliderTick>(10);
         }

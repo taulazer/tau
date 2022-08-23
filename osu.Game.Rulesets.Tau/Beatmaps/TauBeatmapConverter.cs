@@ -184,6 +184,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 Path = new PolarSliderPath(nodes),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
+                IsHard = HardBeatsAreStrict && original.IsHardBeat()
             };
 
             if (beatmap.ControlPointInfo is LegacyControlPointInfo legacyControlPointInfo)

@@ -26,14 +26,22 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public partial class DrawableSlider : DrawableAngledTauHitObject<Slider>
     {
-        public DrawableSliderHead SliderHead => headContainer.Child;
+        public Drawable SliderHead => headContainer.Child;
 
         private readonly BindableFloat size = new(16f);
 
         public float PathDistance = TauPlayfield.BASE_SIZE.X / 2;
 
+        protected override TauAction[] Actions => HitObject.IsHard
+            ? new[]
+            {
+                TauAction.HardButton1,
+                TauAction.HardButton2
+            }
+            : base.Actions;
+
         private readonly SliderPath path;
-        private readonly Container<DrawableSliderHead> headContainer;
+        private readonly Container headContainer;
         private readonly Container<DrawableSliderTick> tickContainer;
         private readonly Container<DrawableSliderRepeat> repeatContainer;
         private readonly CircularContainer maskingContainer;
@@ -77,7 +85,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         },
                     }
                 },
-                headContainer = new Container<DrawableSliderHead> { RelativeSizeAxes = Axes.Both },
+                headContainer = new Container { RelativeSizeAxes = Axes.Both },
                 tickContainer = new Container<DrawableSliderTick> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
@@ -98,6 +106,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     headContainer.Child = head;
                     break;
 
+                case DrawableSliderHardBeat head:
+                    headContainer.Child = head;
+                    break;
+
                 case DrawableSliderRepeat repeat:
                     repeatContainer.Add(repeat);
                     break;
@@ -113,6 +125,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 SliderRepeat repeat => new DrawableSliderRepeat(repeat),
                 SliderHeadBeat head => new DrawableSliderHead(head),
+                SliderHardBeat head => new DrawableSliderHardBeat(head),
                 SliderTick tick => new DrawableSliderTick(tick),
                 _ => base.CreateNestedHitObject(hitObject)
             };
