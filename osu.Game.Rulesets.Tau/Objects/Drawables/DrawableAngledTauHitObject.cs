@@ -50,7 +50,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override bool CheckForValidation() => IsWithinPaddle();
 
-        public bool IsWithinPaddle() => CheckValidation != null && CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).IsValid;
+        public virtual bool IsWithinPaddle() => CheckValidation != null && CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).IsValid;
 
         protected override void ApplyCustomResult(JudgementResult result)
         {

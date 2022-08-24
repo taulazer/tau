@@ -80,9 +80,11 @@ namespace osu.Game.Rulesets.Tau.UI
         {
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
+            RegisterPool<StrictHardBeat, DrawableStrictHardBeat>(5);
 
             RegisterPool<Slider, DrawableSlider>(5);
             RegisterPool<SliderHeadBeat, DrawableSliderHead>(5);
+            RegisterPool<SliderHardBeat, DrawableSliderHardBeat>(5);
             RegisterPool<SliderRepeat, DrawableSliderRepeat>(5);
             RegisterPool<SliderTick, DrawableSliderTick>(10);
         }
@@ -105,6 +107,10 @@ namespace osu.Game.Rulesets.Tau.UI
 
                 case DrawableBeat beat:
                     beat.CheckValidation = checkPaddlePosition;
+                    break;
+
+                case DrawableStrictHardBeat st:
+                    st.CheckValidation = checkPaddlePosition;
                     break;
             }
         }

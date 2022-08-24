@@ -75,7 +75,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected virtual void ApplyCustomResult(JudgementResult result) { }
 
-        public bool OnPressed(KeyBindingPressEvent<TauAction> e)
+        public virtual bool OnPressed(KeyBindingPressEvent<TauAction> e)
         {
             if (Judged)
                 return false;
@@ -83,7 +83,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             return Actions.Contains(e.Action) && UpdateResult(true);
         }
 
-        public void OnReleased(KeyBindingReleaseEvent<TauAction> e)
+        public virtual void OnReleased(KeyBindingReleaseEvent<TauAction> e)
         {
         }
 

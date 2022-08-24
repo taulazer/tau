@@ -1,4 +1,5 @@
-﻿using osu.Framework.Bindables;
+﻿using System;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
@@ -17,6 +18,8 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override IconUsage? Icon => FontAwesome.Solid.History;
         public override LocalisableString Description => ModStrings.LiteDescription;
         public override ModType Type => ModType.Conversion;
+
+        public override Type[] IncompatibleMods => new[] { typeof(TauModStrict), typeof(TauModLenience) };
 
         [SettingSource(typeof(ModStrings), nameof(ModStrings.LiteToggleSlidersName), nameof(ModStrings.LiteToggleSlidersDescription))]
         public Bindable<bool> ToggleSliders { get; } = new Bindable<bool>(false);

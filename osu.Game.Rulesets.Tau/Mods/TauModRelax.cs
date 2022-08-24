@@ -57,8 +57,12 @@ namespace osu.Game.Rulesets.Tau.Mods
             if (hasReplay)
                 return;
 
-            checkNormal(playfield, playfield.HitObjectContainer.AliveObjects.OfType<DrawableHitObject<TauHitObject>>().Where(o => o is not DrawableHardBeat));
-            checkHardBeat(playfield, playfield.HitObjectContainer.AliveObjects.OfType<DrawableHardBeat>());
+            checkNormal(playfield,
+                playfield.HitObjectContainer.AliveObjects.OfType<DrawableHitObject<TauHitObject>>()
+                         .Where(o => o is not DrawableHardBeat && o is not DrawableStrictHardBeat));
+            checkHardBeat(playfield,
+                playfield.HitObjectContainer.AliveObjects.OfType<DrawableHitObject<TauHitObject>>()
+                         .Where(o => o is DrawableHardBeat or DrawableStrictHardBeat or DrawableSlider));
         }
 
         private void checkNormal(Playfield playfield, IEnumerable<DrawableHitObject<TauHitObject>> hitObjects)
@@ -84,10 +88,13 @@ namespace osu.Game.Rulesets.Tau.Mods
                         break;
 
                     case DrawableSlider slider:
-                        if (!slider.SliderHead.IsHit)
-                            handleAngled(slider.SliderHead);
+                        if (slider.SliderHead is DrawableSliderHead head)
+                        {
+                            if (!head.IsHit)
+                                handleAngled(head);
+                            requiresHold = slider.IsWithinPaddle();
+                        }
 
-                        requiresHold |= slider.IsWithinPaddle();
                         break;
                 }
             }
@@ -114,22 +121,41 @@ namespace osu.Game.Rulesets.Tau.Mods
             }
         }
 
-        private void checkHardBeat(Playfield playfield, IEnumerable<DrawableHardBeat> hitObjects)
+        private void checkHardBeat(Playfield playfield, IEnumerable<DrawableHitObject<TauHitObject>> hitObjects)
         {
             bool requiresHit = false;
+            bool requiresHold = false;
             double time = playfield.Clock.CurrentTime;
 
-            foreach (var hb in hitObjects)
+            foreach (var h in hitObjects)
             {
                 // we are not yet close enough to the object.
-                if (time < hb.HitObject.StartTime - relax_leniency)
+                if (time < h.HitObject.StartTime - relax_leniency)
                     break;
 
-                if (hb.IsHit)
+                if (h.IsHit || (h.HitObject is IHasDuration hasEnd && time > hasEnd.EndTime))
                     continue;
 
-                Debug.Assert(hb.HitObject.HitWindows != null);
-                requiresHit |= hb.HitObject.HitWindows.CanBeHit(time - hb.HitObject.StartTime);
+                switch (h)
+                {
+                    case DrawableHardBeat hb:
+                        handleObject(hb);
+                        break;
+
+                    case DrawableStrictHardBeat strict:
+                        handleAngled(strict);
+                        break;
+
+                    case DrawableSlider slider:
+                        if (slider.SliderHead is DrawableSliderHardBeat shb)
+                        {
+                            if (!shb.IsHit)
+                                handleAngled(shb);
+                            requiresHold = slider.IsWithinPaddle();
+                        }
+
+                        break;
+                }
             }
 
             if (requiresHit)
@@ -138,8 +164,27 @@ namespace osu.Game.Rulesets.Tau.Mods
                 changeHardBeatState(true, time);
             }
 
-            if (hardBeat.isDown && time - lastStateChangeTime > AutoGenerator.KEY_UP_DELAY)
+            if (requiresHold)
+                changeHardBeatState(true, time);
+            else if (hardBeat.isDown && time - lastStateChangeTime > AutoGenerator.KEY_UP_DELAY)
                 changeHardBeatState(false, time);
+
+            void handleAngled<T>(DrawableAngledTauHitObject<T> obj)
+                where T : AngledTauHitObject
+            {
+                if (!obj.IsWithinPaddle())
+                    return;
+
+                Debug.Assert(obj.HitObject.HitWindows != null);
+                requiresHit |= obj.HitObject.HitWindows.CanBeHit(time - obj.HitObject.StartTime);
+            }
+
+            void handleObject<T>(DrawableTauHitObject<T> obj)
+                where T : TauHitObject
+            {
+                Debug.Assert(obj.HitObject.HitWindows != null);
+                requiresHit |= obj.HitObject.HitWindows.CanBeHit(time - obj.HitObject.StartTime);
+            }
         }
 
         private void changeState(bool down, double time, ref (bool isDown, bool wasLeft) hitObject, TauAction left, TauAction right)
