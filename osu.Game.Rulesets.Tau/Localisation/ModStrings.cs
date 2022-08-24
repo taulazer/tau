@@ -156,6 +156,26 @@ namespace osu.Game.Rulesets.Tau.Localisation
 
         #endregion
 
+        #region Lenience
+
+        /// <summary>
+        /// "Hard beats are more forgiving"
+        /// </summary>
+        public static LocalisableString LenienceDescription
+            => new TranslatableString(getKey(@"lenience_description"), @"Hard beats are more forgiving");
+
+        #endregion
+
+        #region Strict
+
+        /// <summary>
+        /// "Aim the hard beats!"
+        /// </summary>
+        public static LocalisableString StrictDescription
+            => new TranslatableString(getKey(@"strict_description"), @"Aim the hard beats!");
+
+        #endregion
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

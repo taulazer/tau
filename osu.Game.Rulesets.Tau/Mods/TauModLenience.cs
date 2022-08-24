@@ -2,10 +2,12 @@
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Beatmaps;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.UI;
@@ -15,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Mods
     public class TauModLenience : Mod, IApplicableAfterBeatmapConversion, IApplicableToDrawableRuleset<TauHitObject>
     {
         public override string Name => "Lenience";
-        public override string Description => "Hard beats are more forgiving";
+        public override LocalisableString Description => ModStrings.LenienceDescription;
         public override double ScoreMultiplier => 0.6;
         public override string Acronym => "LN";
         public override ModType Type => ModType.DifficultyReduction;
