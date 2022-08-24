@@ -112,8 +112,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             hitWindowGreat = hitWindows.WindowFor(HitResult.Great) / clockRate;
             return new Skill[]
             {
-                new Aim(mods, new[] { typeof(Beat), typeof(SliderRepeat), typeof(Slider) }),
-                new Aim(mods, new[] { typeof(Beat) }),
+                new Aim(mods, new[] { typeof(Beat), typeof(StrictHardBeat), typeof(SliderRepeat), typeof(Slider) }),
+                new Aim(mods, new[] { typeof(Beat), typeof(StrictHardBeat) }),
                 new Speed(mods, hitWindowGreat),
                 new Complexity(mods)
             };
@@ -130,6 +130,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             new TauModHardRock(),
             new TauModDoubleTime(),
             new TauModNightcore(),
+            new TauModStrict(),
 
             // Automation
             new TauModRelax(),

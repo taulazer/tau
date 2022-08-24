@@ -22,6 +22,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         protected override Beatmap<TauHitObject> CreateBeatmap() => new TauBeatmap();
 
         public bool CanConvertToHardBeats { get; set; } = true;
+        public bool HardBeatsAreStrict { get; set; } = false;
         public bool CanConvertToSliders { get; set; } = true;
         public bool CanConvertImpossibleSliders { get; set; }
         public int SliderDivisor { get; set; } = 4;
@@ -71,12 +72,13 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
 
         private TauHitObject convertToNonSlider(HitObject original)
         {
-            bool isHard = (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
             var comboData = original as IHasCombo;
             var sample = original is IHasPathWithRepeats c ? c.NodeSamples[0] : null;
 
-            if (isHard && CanConvertToHardBeats)
+            if (original.IsHardBeat() && CanConvertToHardBeats && !HardBeatsAreStrict)
                 return convertToHardBeat(original, comboData, sample);
+            if (original.IsHardBeat() && CanConvertToHardBeats)
+                return convertToStrictHardBeat(original, comboData, sample);
 
             return convertToBeat(original, comboData, sample);
         }
@@ -106,6 +108,16 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 Samples = samples ?? original.Samples,
                 StartTime = original.StartTime,
+                NewCombo = comboData?.NewCombo ?? false,
+                ComboOffset = comboData?.ComboOffset ?? 0,
+            };
+
+        private TauHitObject convertToStrictHardBeat(HitObject original, IHasCombo comboData, IList<HitSampleInfo> samples = null)
+            => new StrictHardBeat
+            {
+                Samples = samples ?? original.Samples,
+                StartTime = original.StartTime,
+                Angle = nextAngle(getHitObjectAngle(original)),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
             };
@@ -172,6 +184,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                 Path = new PolarSliderPath(nodes),
                 NewCombo = comboData?.NewCombo ?? false,
                 ComboOffset = comboData?.ComboOffset ?? 0,
+                IsHard = HardBeatsAreStrict && original.IsHardBeat()
             };
 
             if (beatmap.ControlPointInfo is LegacyControlPointInfo legacyControlPointInfo)
@@ -262,5 +275,12 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
         /// <param name="target">The target <see cref="HitObject"/> position.</param>
         public static float GetHitObjectAngle(this Vector2 target)
             => TauBeatmapConverter.STANDARD_PLAYFIELD_CENTER.GetDegreesFromPosition(target);
+
+        /// <summary>
+        /// Determines whether the hit object should be considered as an emphasis.
+        /// </summary>
+        /// <param name="original">The original hit object.</param>
+        public static bool IsHardBeat(this HitObject original)
+            => (original is IHasPathWithRepeats tmp ? tmp.NodeSamples[0] : original.Samples).Any(s => s.Name == HitSampleInfo.HIT_FINISH);
     }
 }

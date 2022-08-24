@@ -21,6 +21,8 @@ namespace osu.Game.Rulesets.Tau.Objects
 
         public double EndTime => StartTime + Duration;
 
+        public bool IsHard { get; set; }
+
         public override IList<HitSampleInfo> AuxiliarySamples => CreateSlidingSamples().Concat(TailSamples).ToArray();
 
         public IList<HitSampleInfo> CreateSlidingSamples()
@@ -39,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.Objects
         }
 
         [JsonIgnore]
-        public SliderHeadBeat HeadBeat { get; protected set; }
+        public AngledTauHitObject HeadBeat { get; protected set; }
 
         [JsonIgnore]
         public PolarSliderPath Path { get; set; }
@@ -93,12 +95,20 @@ namespace osu.Game.Rulesets.Tau.Objects
                 switch (e.Type)
                 {
                     case SliderEventType.Head:
-                        AddNested(HeadBeat = new SliderHeadBeat
-                        {
-                            ParentSlider = this,
-                            StartTime = StartTime,
-                            Angle = Path.Nodes[0].Angle
-                        });
+                        if (IsHard)
+                            AddNested(HeadBeat = new SliderHardBeat
+                            {
+                                ParentSlider = this,
+                                StartTime = StartTime,
+                                Angle = Path.Nodes[0].Angle
+                            });
+                        else
+                            AddNested(HeadBeat = new SliderHeadBeat
+                            {
+                                ParentSlider = this,
+                                StartTime = StartTime,
+                                Angle = Path.Nodes[0].Angle
+                            });
                         break;
 
                     case SliderEventType.Repeat:
