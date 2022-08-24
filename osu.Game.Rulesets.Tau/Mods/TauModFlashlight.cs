@@ -15,6 +15,7 @@ using osu.Game.Graphics.OpenGL.Vertices;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
@@ -30,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public override float DefaultFlashlightSize => 0;
 
-        [SettingSource("Flashlight size", "Multiplier applied to the default flashlight size.")]
+        [SettingSource(typeof(ModStrings), nameof(ModStrings.FlashlightSizeName), nameof(ModStrings.FlashlightSizeDescription))]
         public override BindableFloat SizeMultiplier { get; } = new BindableFloat
         {
             MinValue = 0.5f,
@@ -40,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             Precision = 0.1f
         };
 
-        [SettingSource("Change size based on combo", "Decrease the flashlight size as combo increases.")]
+        [SettingSource(typeof(ModStrings), nameof(ModStrings.FlashlightComboName), nameof(ModStrings.FlashlightComboDescription))]
         public override BindableBool ComboBasedSize { get; } = new BindableBool
         {
             Default = true,

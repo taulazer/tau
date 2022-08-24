@@ -6,6 +6,88 @@ namespace osu.Game.Rulesets.Tau.Localisation
     {
         private const string prefix = @"osu.Game.Rulesets.Tau.Localisation.Translations.Mods";
 
+        #region Difficulty Adjust
+
+        /// <summary>
+        /// "Paddle Size"
+        /// </summary>
+        public static LocalisableString DifficultyAdjustPaddleSizeName
+            => new TranslatableString(getKey(@"difficulty_adjust_paddle_size_name"), @"Paddle Size");
+
+        /// <summary>
+        /// "Override a beatmap's set PS."
+        /// </summary>
+        public static LocalisableString DifficultyAdjustPaddleSizeDescription
+            => new TranslatableString(getKey(@"difficulty_adjust_paddle_size_description"), @"Override a beatmap's set PS.");
+
+        /// <summary>
+        /// "Approach Rate"
+        /// </summary>
+        public static LocalisableString DifficultyAdjustApproachRateName
+            => new TranslatableString(getKey(@"difficulty_adjust_approach_rate_name"), @"Approach Rate");
+
+        /// <summary>
+        /// "Override a beatmap's set AR."
+        /// </summary>
+        public static LocalisableString DifficultyAdjustApproachRateDescription
+            => new TranslatableString(getKey(@"difficulty_adjust_approach_rate_description"), @"Override a beatmap's set AR.");
+
+        #endregion
+
+        #region Dual
+
+        /// <summary>
+        /// "When one isn't enough"
+        /// </summary>
+        public static LocalisableString DualDescription
+            => new TranslatableString(getKey(@"dual_description"), @"When one isn't enough");
+
+        /// <summary>
+        /// "Paddle count"
+        /// </summary>
+        public static LocalisableString DualPaddleCountName
+            => new TranslatableString(getKey(@"dual_paddle_count_name"), @"Paddle count");
+
+        #endregion
+
+        #region Easy
+
+        /// <summary>
+        /// "Larger paddle, more forgiving HP drain, less accuracy required, and three lives!"
+        /// </summary>
+        public static LocalisableString EasyDescription
+            => new TranslatableString(getKey(@"easy_description"), @"Larger paddle, more forgiving HP drain, less accuracy required, and three lives!");
+
+        #endregion
+
+        #region Flashlight
+
+        /// <summary>
+        /// "Flashlight size"
+        /// </summary>
+        public static LocalisableString FlashlightSizeName
+            => new TranslatableString(getKey(@"flashlight_size_name"), @"Flashlight size");
+
+        /// <summary>
+        /// "Multiplier applied to the default flashlight size."
+        /// </summary>
+        public static LocalisableString FlashlightSizeDescription
+            => new TranslatableString(getKey(@"flashlight_size_description"), @"Multiplier applied to the default flashlight size.");
+
+        /// <summary>
+        /// "Change size based on combo"
+        /// </summary>
+        public static LocalisableString FlashlightComboName
+            => new TranslatableString(getKey(@"flashlight_combo_name"), @"Change size based on combo");
+
+        /// <summary>
+        /// "Change size based on combo"
+        /// </summary>
+        public static LocalisableString FlashlightComboDescription
+            => new TranslatableString(getKey(@"flashlight_combo_description"), @"Decrease the flashlight size as combo increases.");
+
+        #endregion
+
         #region Autopilot
 
         /// <summary>

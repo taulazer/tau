@@ -46,6 +46,43 @@
             </xsd:complexType>
         </xsd:element>
     </xsd:schema>
+    <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
+        <value>Paddle Size</value>
+    </data>
+    <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
+        <value>Override a beatmap's set PS.</value>
+    </data>
+    <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
+        <value>Approach Rate</value>
+    </data>
+    <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
+        <value>Override a beatmap's set AR.</value>
+    </data>
+
+    <data name="dual_description" xml:space="preserve">
+        <value>When one isn't enough</value>
+    </data>
+    <data name="dual_paddle_count_name" xml:space="preserve">
+        <value>Paddle count</value>
+    </data>
+
+    <data name="easy_description" xml:space="preserve">
+        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+    </data>
+
+    <data name="flashlight_size_name" xml:space="preserve">
+        <value>Flashlight size</value>
+    </data>
+    <data name="flashlight_size_description" xml:space="preserve">
+        <value>Multiplier applied to the default flashlight size.</value>
+    </data>
+    <data name="flashlight_combo_name" xml:space="preserve">
+        <value>Change size based on combo</value>
+    </data>
+    <data name="flashlight_combo_description" xml:space="preserve">
+        <value>Decrease the flashlight size as combo increases.</value>
+    </data>
+    
     <data name="autopilot_description" xml:space="preserve">
         <value>Automatic paddle movement - just follow the rhythm.</value>
     </data>
