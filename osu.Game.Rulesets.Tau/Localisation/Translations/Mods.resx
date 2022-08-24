@@ -127,6 +127,9 @@
     <data name="no_scope_description" xml:space="preserve">
         <value>Where's the paddle?</value>
     </data>
+    <data name="no_scope_threshold_name" xml:space="preserve">
+        <value>Hidden at combo</value>
+    </data>
     <data name="no_scope_threshold_description" xml:space="preserve">
         <value>The combo count at which the paddle becomes completely hidden</value>
     </data>
