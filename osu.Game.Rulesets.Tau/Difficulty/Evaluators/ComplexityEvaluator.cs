@@ -134,7 +134,15 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
             => Math.Min(1.0, 0.032 * notesSince);
 
         private static HitType getHitType(TauDifficultyHitObject hitObject)
-            => hitObject.BaseObject is AngledTauHitObject ? HitType.Angled : HitType.HardBeat;
+        {
+            if (hitObject.BaseObject is StrictHardBeat)
+                return HitType.HardBeat;
+
+            if (hitObject.BaseObject.NestedHitObjects.Count > 0 && hitObject.BaseObject.NestedHitObjects[0] is SliderHardBeat)
+                return HitType.HardBeat;
+
+            return hitObject.BaseObject is AngledTauHitObject ? HitType.Angled : HitType.HardBeat;
+        }
 
         private enum HitType
         {

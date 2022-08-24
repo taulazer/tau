@@ -8,7 +8,7 @@
         {
         }
 
-        public DrawableSliderHead(Beat hitObject)
+        public DrawableSliderHead(SliderHeadBeat hitObject)
             : base(hitObject)
         {
         }

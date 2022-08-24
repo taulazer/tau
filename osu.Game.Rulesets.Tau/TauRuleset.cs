@@ -57,7 +57,8 @@ namespace osu.Game.Rulesets.Tau
                 {
                     new TauModEasy(),
                     new TauModNoFail(),
-                    new MultiMod(new TauModHalfTime(), new TauModDaycore())
+                    new MultiMod(new TauModHalfTime(), new TauModDaycore()),
+                    new TauModLenience()
                 },
                 ModType.DifficultyIncrease => new Mod[]
                 {
@@ -66,6 +67,7 @@ namespace osu.Game.Rulesets.Tau
                     new MultiMod(new TauModDoubleTime(), new TauModNightcore()),
                     new MultiMod(new TauModFadeOut(), new TauModFadeIn()),
                     new TauModFlashlight(),
+                    new TauModStrict()
                 },
                 ModType.Automation => new Mod[]
                 {
