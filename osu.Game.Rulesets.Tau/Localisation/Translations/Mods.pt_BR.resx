@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
+        <value>Paddle Size</value>
+    </data>
+  <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
+        <value>Override a beatmap's set PS.</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
+        <value>Approach Rate</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
+        <value>Override a beatmap's set AR.</value>
+    </data>
+  <data name="dual_description" xml:space="preserve">
+        <value>When one isn't enough</value>
+    </data>
+  <data name="dual_paddle_count_name" xml:space="preserve">
+        <value>Paddle count</value>
+    </data>
+  <data name="easy_description" xml:space="preserve">
+        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+    </data>
+  <data name="flashlight_size_name" xml:space="preserve">
+        <value>Flashlight size</value>
+    </data>
+  <data name="flashlight_size_description" xml:space="preserve">
+        <value>Multiplier applied to the default flashlight size.</value>
+    </data>
+  <data name="flashlight_combo_name" xml:space="preserve">
+        <value>Change size based on combo</value>
+    </data>
+  <data name="flashlight_combo_description" xml:space="preserve">
+        <value>Decrease the flashlight size as combo increases.</value>
+    </data>
+  <data name="autopilot_description" xml:space="preserve">
+        <value>Automatic paddle movement - just follow the rhythm.</value>
+    </data>
+  <data name="fadeout_description" xml:space="preserve">
+        <value>Beats fade out before you hit them!</value>
+    </data>
+  <data name="fadein_description" xml:space="preserve">
+        <value>Beats appear out of nowhere!</value>
+    </data>
+  <data name="inverse_description" xml:space="preserve">
+        <value>Beats will appear outside of the playfield.</value>
+    </data>
+  <data name="impossible_sliders_description" xml:space="preserve">
+        <value>Entirely removes the check for very sharp angles</value>
+    </data>
+  <data name="lite_description" xml:space="preserve">
+        <value>Removes certain aspects of the ruleset.</value>
+    </data>
+  <data name="lite_toggle_sliders_name" xml:space="preserve">
+        <value>Sliders conversion</value>
+    </data>
+  <data name="lite_toggle_sliders_description" xml:space="preserve">
+        <value>Completely disables sliders altogether.</value>
+    </data>
+  <data name="lite_toggle_hard_beats_name" xml:space="preserve">
+        <value>Hard beats conversion</value>
+    </data>
+  <data name="lite_toggle_hard_beats_description" xml:space="preserve">
+        <value>Completely disables hard beats altogether.</value>
+    </data>
+  <data name="lite_slider_division_level_name" xml:space="preserve">
+        <value>Slider division level</value>
+    </data>
+  <data name="lite_slider_division_level_description" xml:space="preserve">
+        <value>The minimum slider length divisor.</value>
+    </data>
+  <data name="no_scope_description" xml:space="preserve">
+        <value>Where's the paddle?</value>
+    </data>
+  <data name="no_scope_threshold_name" xml:space="preserve">
+        <value>Hidden at combo</value>
+    </data>
+  <data name="no_scope_threshold_description" xml:space="preserve">
+        <value>The combo count at which the paddle becomes completely hidden</value>
+    </data>
+  <data name="relax_description" xml:space="preserve">
+        <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
+    </data>
+  <data name="roundabout_description" xml:space="preserve">
+        <value>You can only rotate the paddle in one direction.</value>
+    </data>
+  <data name="roundabout_direction_name" xml:space="preserve">
+        <value>Direction</value>
+    </data>
+  <data name="traceable_description" xml:space="preserve">
+        <value>Brim with no yankie</value>
+    </data>
+  <data name="lenience_description" xml:space="preserve">
+        <value>Hard beats are more forgiving</value>
+    </data>
+  <data name="strict_description" xml:space="preserve">
+        <value>Aim the hard beats!</value>
+    </data>
+</root>

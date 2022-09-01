@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
+        <value>Taille de la pagaie</value>
+    </data>
+  <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
+        <value>Remplace l'PS d'un beatmap.</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
+        <value>Vitesse d'approche</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
+        <value>Remplace l'AR d'un beatmap.</value>
+    </data>
+  <data name="dual_description" xml:space="preserve">
+        <value>Quand un seul n'est pas suffisant</value>
+    </data>
+  <data name="dual_paddle_count_name" xml:space="preserve">
+        <value>Nombre de pagaies</value>
+    </data>
+  <data name="easy_description" xml:space="preserve">
+        <value>Une pagaie plus grande, un drain de HP plus indulgent, moins de précision requise, et trois vies !</value>
+    </data>
+  <data name="flashlight_size_name" xml:space="preserve">
+        <value>Taille de la torche</value>
+    </data>
+  <data name="flashlight_size_description" xml:space="preserve">
+        <value>Multiplicateur appliqué à la taille par défaut de la torche.</value>
+    </data>
+  <data name="flashlight_combo_name" xml:space="preserve">
+        <value>Changement de taille en fonction du combo</value>
+    </data>
+  <data name="flashlight_combo_description" xml:space="preserve">
+        <value>Diminuez la taille de la torche au moment où le combo augmente.</value>
+    </data>
+  <data name="autopilot_description" xml:space="preserve">
+        <value>Mouvement automatique des pagaies - il suffit de suivre le rythme.</value>
+    </data>
+  <data name="fadeout_description" xml:space="preserve">
+        <value>Les beats disparaissent avant que vous ne les frappiez !</value>
+    </data>
+  <data name="fadein_description" xml:space="preserve">
+        <value>Les rythmes apparaissent de nulle part !</value>
+    </data>
+  <data name="inverse_description" xml:space="preserve">
+        <value>Les beats apparaissent en dehors du terrain de jeu.</value>
+    </data>
+  <data name="impossible_sliders_description" xml:space="preserve">
+        <value>Supprime entièrement le contrôle des angles très aigus</value>
+    </data>
+  <data name="lite_description" xml:space="preserve">
+        <value>Supprime certains aspects du règlement.</value>
+    </data>
+  <data name="lite_toggle_sliders_name" xml:space="preserve">
+        <value>Conversion des curseurs</value>
+    </data>
+  <data name="lite_toggle_sliders_description" xml:space="preserve">
+        <value>Désactive complètement les curseurs.</value>
+    </data>
+  <data name="lite_toggle_hard_beats_name" xml:space="preserve">
+        <value>Conversion des beats durs</value>
+    </data>
+  <data name="lite_toggle_hard_beats_description" xml:space="preserve">
+        <value>Désactive complètement les beats durs.</value>
+    </data>
+  <data name="lite_slider_division_level_name" xml:space="preserve">
+        <value>Niveau de division du curseur</value>
+    </data>
+  <data name="lite_slider_division_level_description" xml:space="preserve">
+        <value>Le diviseur de la longueur minimale du curseur.</value>
+    </data>
+  <data name="no_scope_description" xml:space="preserve">
+        <value>Où est la pagaie ?</value>
+    </data>
+  <data name="no_scope_threshold_name" xml:space="preserve">
+        <value>Caché au combo</value>
+    </data>
+  <data name="no_scope_threshold_description" xml:space="preserve">
+        <value>Le nombre de combo auquel la pagaie devient complètement cachée</value>
+    </data>
+  <data name="relax_description" xml:space="preserve">
+        <value>Vous n'avez pas besoin de cliquer. Donnez à vos doigts qui cliquent et tapent une pause dans le feu de l'action.</value>
+    </data>
+  <data name="roundabout_description" xml:space="preserve">
+        <value>Vous ne pouvez faire tourner la pagaie que dans un sens.</value>
+    </data>
+  <data name="roundabout_direction_name" xml:space="preserve">
+        <value>Direction</value>
+    </data>
+  <data name="traceable_description" xml:space="preserve">
+        <value>Le bord sans yankie</value>
+    </data>
+  <data name="lenience_description" xml:space="preserve">
+        <value>Les beats durs sont plus indulgents</value>
+    </data>
+  <data name="strict_description" xml:space="preserve">
+        <value>Visez les beats dur !</value>
+    </data>
+</root>

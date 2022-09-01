@@ -47,24 +47,24 @@
     </xsd:element>
   </xsd:schema>
   <data name="show_effects" xml:space="preserve">
-        <value>Show Effects</value>
+        <value>Pokaż Efekty</value>
     </data>
   <data name="show_slider_effects" xml:space="preserve">
-        <value>Show Slider Effects</value>
+        <value>Pokaż Efekty Sliderów</value>
     </data>
   <data name="show_visualizer" xml:space="preserve">
-        <value>Show Visualizer</value>
+        <value>Pokaż Wizualizator</value>
     </data>
   <data name="kiai_type" xml:space="preserve">
-        <value>Kiai Type</value>
+        <value>Styl Kiai</value>
     </data>
   <data name="playfield_dim" xml:space="preserve">
-        <value>Playfield Dim</value>
+        <value>Przyciemnienie Pola Gry</value>
     </data>
   <data name="notes_size" xml:space="preserve">
-        <value>Notes Size</value>
+        <value>Wielkość Nut</value>
     </data>
   <data name="hit_lighting" xml:space="preserve">
-        <value>Hit Lighting</value>
+        <value>Podświetlanie Trafień</value>
     </data>
 </root>

@@ -47,12 +47,12 @@
     </xsd:element>
   </xsd:schema>
   <data name="beat_count" xml:space="preserve">
-        <value>Beat count</value>
+        <value>비트 개수</value>
     </data>
   <data name="slider_count" xml:space="preserve">
-        <value>Slider count</value>
+        <value>슬라이더 개수</value>
     </data>
   <data name="hard_beat_count" xml:space="preserve">
-        <value>Hard Beat count</value>
+        <value>하드 비트 개수</value>
     </data>
 </root>

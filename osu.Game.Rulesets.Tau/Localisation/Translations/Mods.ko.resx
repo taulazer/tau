@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
+        <value>패들 크기</value>
+    </data>
+  <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
+        <value>비트맵의 설정된 패들 크기를 덮어씁니다.</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
+        <value>접근 속도</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
+        <value>비트맵의 설정된 접근 속도를 덮어씁니다.</value>
+    </data>
+  <data name="dual_description" xml:space="preserve">
+        <value>하나보단 둘이 낫죠.</value>
+    </data>
+  <data name="dual_paddle_count_name" xml:space="preserve">
+        <value>패들 개수</value>
+    </data>
+  <data name="easy_description" xml:space="preserve">
+        <value>패들이 커지고 HP 하락 속도가 느려지며, 판정이 넉넉해지고 목숨 세 개가 주어집니다!</value>
+    </data>
+  <data name="flashlight_size_name" xml:space="preserve">
+        <value>시야 범위</value>
+    </data>
+  <data name="flashlight_size_description" xml:space="preserve">
+        <value>기본 시야 범위에 배수를 적용합니다.</value>
+    </data>
+  <data name="flashlight_combo_name" xml:space="preserve">
+        <value>콤보 개수에 따라 크기 조절</value>
+    </data>
+  <data name="flashlight_combo_description" xml:space="preserve">
+        <value>콤보가 길어질수록 시야 범위가 줄어듭니다.</value>
+    </data>
+  <data name="autopilot_description" xml:space="preserve">
+        <value>패들이 자동으로 움직입니다. 리듬만 따라가세요.</value>
+    </data>
+  <data name="fadeout_description" xml:space="preserve">
+        <value>비트들이 치기 직전에 모습을 감춥니다!</value>
+    </data>
+  <data name="fadein_description" xml:space="preserve">
+        <value>비트들이 갑자기 튀어나옵니다!</value>
+    </data>
+  <data name="inverse_description" xml:space="preserve">
+        <value>비트들이 게임 영역 바깥에서 나타납니다.</value>
+    </data>
+  <data name="impossible_sliders_description" xml:space="preserve">
+        <value>슬라이더가 너무 날카롭진 않은지 검사하지 않습니다.</value>
+    </data>
+  <data name="lite_description" xml:space="preserve">
+        <value>규칙에서 몇몇 요소가 제외됩니다.</value>
+    </data>
+  <data name="lite_toggle_sliders_name" xml:space="preserve">
+        <value>슬라이더 변환</value>
+    </data>
+  <data name="lite_toggle_sliders_description" xml:space="preserve">
+        <value>슬라이더가 모두 사라집니다.</value>
+    </data>
+  <data name="lite_toggle_hard_beats_name" xml:space="preserve">
+        <value>하드 비트 변환</value>
+    </data>
+  <data name="lite_toggle_hard_beats_description" xml:space="preserve">
+        <value>하드 비트가 모두 사라집니다.</value>
+    </data>
+  <data name="lite_slider_division_level_name" xml:space="preserve">
+        <value>슬라이더 나누기 배율</value>
+    </data>
+  <data name="lite_slider_division_level_description" xml:space="preserve">
+        <value>슬라이더의 최소 길이</value>
+    </data>
+  <data name="no_scope_description" xml:space="preserve">
+        <value>패들이 없어졌네요?</value>
+    </data>
+  <data name="no_scope_threshold_name" xml:space="preserve">
+        <value>패들이 사라지는 콤보 개수</value>
+    </data>
+  <data name="no_scope_threshold_description" xml:space="preserve">
+        <value>패들이 완전히 보이지 않게 되는 콤보 개수</value>
+    </data>
+  <data name="relax_description" xml:space="preserve">
+        <value>클릭할 필요가 없습니다. 손가락에게 워라밸을 선사하세요.</value>
+    </data>
+  <data name="roundabout_description" xml:space="preserve">
+        <value>패들을 한 방향으로만 돌릴 수 있습니다.</value>
+    </data>
+  <data name="roundabout_direction_name" xml:space="preserve">
+        <value>회전 방향</value>
+    </data>
+  <data name="traceable_description" xml:space="preserve">
+        <value>아아 아무것도 볼 수가 없어</value>
+    </data>
+  <data name="lenience_description" xml:space="preserve">
+        <value>하드 비트의 판정이 넉넉해집니다.</value>
+    </data>
+  <data name="strict_description" xml:space="preserve">
+        <value>하드 비트를 맞추세요!</value>
+    </data>
+</root>

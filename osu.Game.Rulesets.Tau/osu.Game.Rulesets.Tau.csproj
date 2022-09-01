@@ -30,6 +30,9 @@
     <EmbeddedResource Update="Localisation\Translations\Mods.*.resx">
       <DependentUpon>Mods.resx</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Update="Localisation\Translations\UI.ar.resx">
+      <DependentUpon>UI.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\Shaders\sh_DepthMask.fs" />
