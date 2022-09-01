@@ -47,12 +47,12 @@
     </xsd:element>
   </xsd:schema>
   <data name="turbulence" xml:space="preserve">
-        <value>Turbulence</value>
+        <value>입자 흩날림</value>
     </data>
   <data name="classic" xml:space="preserve">
-        <value>Classic</value>
+        <value>클래식</value>
     </data>
   <data name="none" xml:space="preserve">
-        <value>None</value>
+        <value>없음</value>
     </data>
 </root>

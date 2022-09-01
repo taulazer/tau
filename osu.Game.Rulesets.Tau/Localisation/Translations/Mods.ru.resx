@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
+        <value>Размер платформы</value>
+    </data>
+  <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
+        <value>Изменить PS карты.</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
+        <value>Скорость появления нот</value>
+    </data>
+  <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
+        <value>Изменить AR карты.</value>
+    </data>
+  <data name="dual_description" xml:space="preserve">
+        <value>Когда одной недостаточно</value>
+    </data>
+  <data name="dual_paddle_count_name" xml:space="preserve">
+        <value>Количество платформ</value>
+    </data>
+  <data name="easy_description" xml:space="preserve">
+        <value>Легче поймать, сложнее проиграть. Всего 3 жизни!</value>
+    </data>
+  <data name="flashlight_size_name" xml:space="preserve">
+        <value>Размер фонарика</value>
+    </data>
+  <data name="flashlight_size_description" xml:space="preserve">
+        <value>Множитель к стандартному размеру фонарика.</value>
+    </data>
+  <data name="flashlight_combo_name" xml:space="preserve">
+        <value>Изменять размер в зависимости от комбо</value>
+    </data>
+  <data name="flashlight_combo_description" xml:space="preserve">
+        <value>Уменьшение размера фонарика по мере увеличения комбо.</value>
+    </data>
+  <data name="autopilot_description" xml:space="preserve">
+        <value>Автоматическое движение платформы - просто следуйте ритму.</value>
+    </data>
+  <data name="fadeout_description" xml:space="preserve">
+        <value>Биты исчезают перед нажатием!</value>
+    </data>
+  <data name="fadein_description" xml:space="preserve">
+        <value>Биты появляются из ниоткуда!</value>
+    </data>
+  <data name="inverse_description" xml:space="preserve">
+        <value>Биты будут появляться за пределами игрового поля.</value>
+    </data>
+  <data name="impossible_sliders_description" xml:space="preserve">
+        <value>Полностью отключает проверку очень острых углов слайдеров</value>
+    </data>
+  <data name="lite_description" xml:space="preserve">
+        <value>Убирает определённые части игры.</value>
+    </data>
+  <data name="lite_toggle_sliders_name" xml:space="preserve">
+        <value>Включить слайдеры</value>
+    </data>
+  <data name="lite_toggle_sliders_description" xml:space="preserve">
+        <value>Полностью отключает слайдеры.</value>
+    </data>
+  <data name="lite_toggle_hard_beats_name" xml:space="preserve">
+        <value>Включить громкие биты</value>
+    </data>
+  <data name="lite_toggle_hard_beats_description" xml:space="preserve">
+        <value>Полностью отключает громкие биты.</value>
+    </data>
+  <data name="lite_slider_division_level_name" xml:space="preserve">
+        <value>Уровень делителя слайдеров</value>
+    </data>
+  <data name="lite_slider_division_level_description" xml:space="preserve">
+        <value>Минимальный делитель длины слайдера.</value>
+    </data>
+  <data name="no_scope_description" xml:space="preserve">
+        <value>Где платформа?</value>
+    </data>
+  <data name="no_scope_threshold_name" xml:space="preserve">
+        <value>Скрывать платформу при комбо</value>
+    </data>
+  <data name="no_scope_threshold_description" xml:space="preserve">
+        <value>Количество комбо, при котором платформа становится полностью невидимой</value>
+    </data>
+  <data name="relax_description" xml:space="preserve">
+        <value>Вам не нужно кликать. Дайте своим пальцам отдохнуть от напряжения.</value>
+    </data>
+  <data name="roundabout_description" xml:space="preserve">
+        <value>Разрешено вращать платформу только в одном направлении.</value>
+    </data>
+  <data name="roundabout_direction_name" xml:space="preserve">
+        <value>Направление</value>
+    </data>
+  <data name="traceable_description" xml:space="preserve">
+        <value>Без конца и края</value>
+    </data>
+  <data name="lenience_description" xml:space="preserve">
+        <value>Громкие биты проще поймать</value>
+    </data>
+  <data name="strict_description" xml:space="preserve">
+        <value>Поймайте громкие биты!</value>
+    </data>
+</root>
