@@ -15,6 +15,7 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Screens.Ranking.Expanded.Accuracy;
@@ -66,12 +67,12 @@ namespace osu.Game.Rulesets.Tau.Statistics
                     {
                         new DistributionCheckbox
                         {
-                            LabelText = "Sliders",
+                            LabelText = UiStrings.Sliders,
                             Current = { BindTarget = showSliders }
                         },
                         new DistributionCheckbox(OverlayColourScheme.Green)
                         {
-                            LabelText = "Beats",
+                            LabelText = UiStrings.Beats,
                             Current = { BindTarget = showBeats },
                         }
                     }

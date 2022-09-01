@@ -23,7 +23,6 @@ namespace osu.Game.Rulesets.Tau.Mods
     public abstract class TauModHidden : ModHidden, IApplicableToDrawableRuleset<TauHitObject>
     {
         public override string Name => Mode.GetDescription();
-        public override string Description => @"Play with no beats and fading sliders.";
         public override double ScoreMultiplier => 1.06;
         public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(TauModInverse) }).ToArray();
 

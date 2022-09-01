@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using osu.Framework.Localisation;
 using osu.Game.Input.Handlers;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Replays;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.UI;
@@ -16,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModRelax : ModRelax, IUpdatableByPlayfield, IApplicableToDrawableRuleset<TauHitObject>, IApplicableToPlayer
     {
-        public override string Description => @"You don't need to click. Give your clicking/tapping fingers a break from the heat of things.";
+        public override LocalisableString Description => ModStrings.RelaxDescription;
         public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(TauModAutopilot) }).ToArray();
 
         /// <summary>

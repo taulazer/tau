@@ -2,12 +2,14 @@
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Tau.Localisation;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModDifficultyAdjust : ModDifficultyAdjust
     {
-        [SettingSource("Paddle Size", "Override a beatmap's set PS.", FIRST_SETTING_ORDER - 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
+        [SettingSource(typeof(ModStrings), nameof(ModStrings.DifficultyAdjustPaddleSizeName), nameof(ModStrings.DifficultyAdjustPaddleSizeDescription),
+            FIRST_SETTING_ORDER - 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
         public DifficultyBindable PaddleSize { get; } = new DifficultyBindable
         {
             Precision = 0.1f,
@@ -17,7 +19,9 @@ namespace osu.Game.Rulesets.Tau.Mods
             ReadCurrentFromDifficulty = diff => diff.CircleSize,
         };
 
-        [SettingSource("Approach Rate", "Override a beatmap's set AR.", LAST_SETTING_ORDER + 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
+        // [SettingSource("Approach Rate", "Override a beatmap's set AR.", LAST_SETTING_ORDER + 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
+        [SettingSource(typeof(ModStrings), nameof(ModStrings.DifficultyAdjustApproachRateName), nameof(ModStrings.DifficultyAdjustApproachRateDescription),
+            FIRST_SETTING_ORDER + 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
         public DifficultyBindable ApproachRate { get; } = new DifficultyBindable
         {
             Precision = 0.1f,

@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
+using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
@@ -18,6 +19,7 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Beatmaps;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Difficulty;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.Tau.Scoring;
@@ -107,10 +109,10 @@ namespace osu.Game.Rulesets.Tau
             };
         }
 
-        public override string GetDisplayNameForHitResult(HitResult result)
+        public override LocalisableString GetDisplayNameForHitResult(HitResult result)
             => result switch
             {
-                HitResult.SmallTickHit => "Ticks",
+                HitResult.SmallTickHit => UiStrings.Ticks,
                 _ => base.GetDisplayNameForHitResult(result)
             };
 
@@ -120,7 +122,7 @@ namespace osu.Game.Rulesets.Tau
             {
                 Columns = new[]
                 {
-                    new StatisticItem("Timing Distribution", () => new HitEventTimingDistributionGraph(score.HitEvents)
+                    new StatisticItem(UiStrings.TimingDistribution, () => new HitEventTimingDistributionGraph(score.HitEvents)
                     {
                         RelativeSizeAxes = Axes.X,
                         Height = 250
@@ -131,7 +133,7 @@ namespace osu.Game.Rulesets.Tau
             {
                 Columns = new[]
                 {
-                    new StatisticItem("Paddle Distribution", () => new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
+                    new StatisticItem(UiStrings.PaddleDistribution, () => new PaddleDistributionGraph(score.HitEvents, playableBeatmap)
                     {
                         RelativeSizeAxes = Axes.X,
                         Height = 250

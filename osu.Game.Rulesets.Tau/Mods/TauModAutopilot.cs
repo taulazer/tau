@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.StateChanges;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Replays;
 using osu.Game.Rulesets.UI;
@@ -17,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override string Acronym => "AP";
         public override IconUsage? Icon => OsuIcon.ModAutopilot;
         public override ModType Type => ModType.Automation;
-        public override string Description => @"Automatic paddle movement - just follow the rhythm.";
+        public override LocalisableString Description => ModStrings.AutopilotDescription;
         public override double ScoreMultiplier => 1;
         public override Type[] IncompatibleMods => new[] { typeof(ModRelax), typeof(ModFailCondition), typeof(ModNoFail), typeof(ModAutoplay) };
 

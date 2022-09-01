@@ -24,9 +24,11 @@
     <EmbeddedResource Update="Localisation\Translations\Settings.*.resx">
       <DependentUpon>Settings.resx</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Localisation\Translations\Inputs.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Inputs.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Localisation\Translations\UI.*.resx">
+      <DependentUpon>UI.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Localisation\Translations\Mods.*.resx">
+      <DependentUpon>Mods.resx</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
