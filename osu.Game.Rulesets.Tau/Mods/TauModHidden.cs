@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             var hitObjectContainer = playfield.HitObjectContainer;
             var hocParent = (Container)playfield.HitObjectContainer.Parent;
 
-            hocParent.Remove(hitObjectContainer);
+            hocParent.Remove(hitObjectContainer, false);
             hocParent.Add(new PlayfieldMaskingContainer(hitObjectContainer, Mode) { Coverage = InitialCoverage });
         }
 

@@ -36,6 +36,8 @@ namespace osu.Game.Rulesets.Tau
     {
         public const string SHORT_NAME = "tau";
 
+        public override string RulesetAPIVersionSupported => CURRENT_RULESET_API_VERSION;
+
         public override string Description => SHORT_NAME;
         public override string ShortName => SHORT_NAME;
         public override string PlayingVerb => "Slicing beats";
