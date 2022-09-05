@@ -63,6 +63,14 @@ For new ideas and features, we would prefer for you to write an issue before try
 
 If you wish to help with localisation efforts, head over to [crowdin](https://crowdin.com/project/tau).
 
+### Special thanks
+
+Thanks to each and every contributor to [this project](https://github.com/taulazer/tau/graphs/contributors).
+
+Thanks to all of those who have helped with localization efforts. Members includes (as of 2022, September 5th): [Akira](https://crowdin.com/profile/princessakira), [KalTa](https://crowdin.com/profile/kalta289), [Loreos](https://crowdin.com/profile/loreos), [MioStream_](https://crowdin.com/profile/miostream_), [Morco011](https://crowdin.com/profile/morcooooooo), [Nooraldeen Samir](https://crowdin.com/profile/noordlee), and [Peri](https://crowdin.com/profile/perigee).
+
+Thanks to all of the amazing people within our discord community.
+
 ## License
 tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/Altenhh/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
 
