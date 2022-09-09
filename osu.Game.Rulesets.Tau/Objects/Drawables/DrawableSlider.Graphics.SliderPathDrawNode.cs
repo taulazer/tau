@@ -335,7 +335,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         return;
 
                     bool value = true;
-                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthStencilFunction.Always));
+                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: BufferTestFunction.Always));
                     maskShader.Bind();
                     maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
 
@@ -359,7 +359,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                     shader.Unbind();
 
-                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: DepthStencilFunction.Always));
+                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: BufferTestFunction.Always));
                     maskShader.Bind();
                     value = false;
                     maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
