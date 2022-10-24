@@ -1,4 +1,5 @@
-﻿using osu.Framework.Bindables;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Utils;
@@ -16,7 +17,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
         {
             Colour = Color4.White;
             RelativeSizeAxes = Axes.Both;
-            Size = Vector2.Zero;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
             FillAspectRatio = 1;
@@ -28,6 +28,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
                 Current.Value = val.NewValue / 360;
                 Rotation = -(float)(val.NewValue / 2);
             }, true);
+        }
+
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            // Size is set to zero here as to avoid standard fallback to original sprite's size (1,1),
+            // see: https://github.com/ppy/osu-framework/blob/603e15fb2e68826e55878dfc09e1d7414b7cdf90/osu.Framework/Graphics/Sprites/Sprite.cs#L181-L182
+            Size = Vector2.Zero;
         }
 
         private float toNormalized(float value)
