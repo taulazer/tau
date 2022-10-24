@@ -47,99 +47,99 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Paddle Size</value>
+        <value>حجم المضرب</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Override a beatmap's set PS.</value>
+        <value>تجاوز رَقَم المحدد الخاص بالأغنية.</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
-        <value>Approach Rate</value>
+        <value>معدل الاقتراب</value>
     </data>
   <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
-        <value>Override a beatmap's set AR.</value>
+        <value>تجاوز الAR الخاص بالأغنية.</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>When one isn't enough</value>
+        <value>عندما تكون واحدة غير كافية</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Paddle count</value>
+        <value>عدد المضارب</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+        <value>مضرب اكبر, دما متساهلا اكثر, يتطلب دَقَّة اقل, وثلاثة أرواح!</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Flashlight size</value>
+        <value>حجم المصباح</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
-        <value>Multiplier applied to the default flashlight size.</value>
+        <value>يتم تطبيق المضاعف على حجم المصباح.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Change size based on combo</value>
+        <value>يغير الحجم على أساس الكومبو</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
-        <value>Decrease the flashlight size as combo increases.</value>
+        <value>تخفيض حجم المصباح مع زيادة الكومبو.</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
-        <value>Automatic paddle movement - just follow the rhythm.</value>
+        <value>حركة المضرب الاعتيادية - اتبع الإيقاع فحسب.</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
-        <value>Beats fade out before you hit them!</value>
+        <value>المربعات تختفي قبل أن تضربهم!</value>
     </data>
   <data name="fadein_description" xml:space="preserve">
-        <value>Beats appear out of nowhere!</value>
+        <value>المربعات تظهر من لا مكان!</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
-        <value>Beats will appear outside of the playfield.</value>
+        <value>المربعات تظهر من خارج الملعب.</value>
     </data>
   <data name="impossible_sliders_description" xml:space="preserve">
-        <value>Entirely removes the check for very sharp angles</value>
+        <value>يزيل تماما الاختيار لزوايا الحادة للغاية</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Removes certain aspects of the ruleset.</value>
+        <value>يحذق بعض الأمور من اللعبة.</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Sliders conversion</value>
+        <value>تحول المنزلقات</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
-        <value>Completely disables sliders altogether.</value>
+        <value>يعطل وجود المنزلقات بشكل كلي.</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Hard beats conversion</value>
+        <value>تحول الدوائر</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
-        <value>Completely disables hard beats altogether.</value>
+        <value>يعطل وجود الدوائر بشكل كلي.</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
-        <value>Slider division level</value>
+        <value>مستوى تقسيم المنزلقات</value>
     </data>
   <data name="lite_slider_division_level_description" xml:space="preserve">
-        <value>The minimum slider length divisor.</value>
+        <value>أقل طول ممكن للمنزلقات.</value>
     </data>
   <data name="no_scope_description" xml:space="preserve">
-        <value>Where's the paddle?</value>
+        <value>أين المضرب؟</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
-        <value>Hidden at combo</value>
+        <value>يختفي مع الكومبو</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
-        <value>The combo count at which the paddle becomes completely hidden</value>
+        <value>الكومبو الذي عندما تصله يختفي المضرب</value>
     </data>
   <data name="relax_description" xml:space="preserve">
-        <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
+        <value>لا تحتاج للنقر. امنح أصابعك استراحة.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>You can only rotate the paddle in one direction.</value>
+        <value>يمكنك أن تحرك المضرب لجهة واحدة فقط.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
-        <value>Direction</value>
+        <value>الاتجاه</value>
     </data>
   <data name="traceable_description" xml:space="preserve">
-        <value>Brim with no yankie</value>
+        <value>بريم من دون يانكي</value>
     </data>
   <data name="lenience_description" xml:space="preserve">
-        <value>Hard beats are more forgiving</value>
+        <value>الدوائر تصبح مسامحة اكثر</value>
     </data>
   <data name="strict_description" xml:space="preserve">
-        <value>Aim the hard beats!</value>
+        <value>اهدف لضرب الدوائر!</value>
     </data>
 </root>

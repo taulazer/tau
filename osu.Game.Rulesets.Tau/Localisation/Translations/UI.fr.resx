@@ -47,16 +47,16 @@
     </xsd:element>
   </xsd:schema>
   <data name="ticks" xml:space="preserve">
-        <value>Tiques</value>
+        <value>Tics</value>
     </data>
   <data name="timing_distribution" xml:space="preserve">
-        <value>Distribution du temps</value>
+        <value>Distribution du tempo</value>
     </data>
   <data name="paddle_distribution" xml:space="preserve">
-        <value>Distribution des pagaies</value>
+        <value>Distribution du Balancier</value>
     </data>
   <data name="distribution_sliders" xml:space="preserve">
-        <value>Curseurs</value>
+        <value>Sliders</value>
     </data>
   <data name="distribution_beats" xml:space="preserve">
         <value>Beats</value>

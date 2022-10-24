@@ -47,88 +47,88 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Taille de la pagaie</value>
+        <value>Taille du Balancier</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Remplace l'PS d'un beatmap.</value>
+        <value>Remplace le PS d'une beatmap.</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
         <value>Vitesse d'approche</value>
     </data>
   <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
-        <value>Remplace l'AR d'un beatmap.</value>
+        <value>Remplace l'AR d'une beatmap.</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>Quand un seul n'est pas suffisant</value>
+        <value>Quand un seul ne suffit pas</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Nombre de pagaies</value>
+        <value>Nombre de balanciers</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Une pagaie plus grande, un drain de HP plus indulgent, moins de précision requise, et trois vies !</value>
+        <value>Un balancier plus large, un drain de HP plus indulgent, moins de précision requise, et trois vies !</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Taille de la torche</value>
+        <value>Taille de la lampe torche</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
-        <value>Multiplicateur appliqué à la taille par défaut de la torche.</value>
+        <value>Multiplicateur appliqué à la taille par défaut de la lampe torche.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Changement de taille en fonction du combo</value>
+        <value>Changer la taille en fonction du combo</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
-        <value>Diminuez la taille de la torche au moment où le combo augmente.</value>
+        <value>Diminue la taille de la lampe torche lorsque le combo augmente.</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
-        <value>Mouvement automatique des pagaies - il suffit de suivre le rythme.</value>
+        <value>Mouvement automatique du balancier - il suffit de suivre le rythme.</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
-        <value>Les beats disparaissent avant que vous ne les frappiez !</value>
+        <value>Les notes disparaissent avant que vous ne les touchiez!</value>
     </data>
   <data name="fadein_description" xml:space="preserve">
-        <value>Les rythmes apparaissent de nulle part !</value>
+        <value>Les notes apparaissent de nulle part!</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
-        <value>Les beats apparaissent en dehors du terrain de jeu.</value>
+        <value>Les notes apparaissent en dehors de la zone de jeu.</value>
     </data>
   <data name="impossible_sliders_description" xml:space="preserve">
-        <value>Supprime entièrement le contrôle des angles très aigus</value>
+        <value>Supprime entièrement le contrôle des angles très pointus</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Supprime certains aspects du règlement.</value>
+        <value>Supprime certains aspects du mode de jeu.</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Conversion des curseurs</value>
+        <value>Conversion des sliders</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
-        <value>Désactive complètement les curseurs.</value>
+        <value>Désactive complètement les sliders.</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Conversion des beats durs</value>
+        <value>Conversion des hard beats</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
-        <value>Désactive complètement les beats durs.</value>
+        <value>Désactive complètement les hard beats.</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
-        <value>Niveau de division du curseur</value>
+        <value>Niveau de division des sliders</value>
     </data>
   <data name="lite_slider_division_level_description" xml:space="preserve">
-        <value>Le diviseur de la longueur minimale du curseur.</value>
+        <value>Le diviseur minimum de la longueur des slider.</value>
     </data>
   <data name="no_scope_description" xml:space="preserve">
-        <value>Où est la pagaie ?</value>
+        <value>Où est le balancier ?</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
         <value>Caché au combo</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
-        <value>Le nombre de combo auquel la pagaie devient complètement cachée</value>
+        <value>Le combo à partir duquel le balancier devient complètement invisible</value>
     </data>
   <data name="relax_description" xml:space="preserve">
-        <value>Vous n'avez pas besoin de cliquer. Donnez à vos doigts qui cliquent et tapent une pause dans le feu de l'action.</value>
+        <value>Vous n'avez pas besoin de cliquer. Donnez à vos doigts une pause loin du feu de l'action.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>Vous ne pouvez faire tourner la pagaie que dans un sens.</value>
+        <value>Vous ne pouvez faire tourner le balancier que dans un sens.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
         <value>Direction</value>
@@ -137,9 +137,9 @@
         <value>Le bord sans yankie</value>
     </data>
   <data name="lenience_description" xml:space="preserve">
-        <value>Les beats durs sont plus indulgents</value>
+        <value>Les hard beats sont plus indulgents</value>
     </data>
   <data name="strict_description" xml:space="preserve">
-        <value>Visez les beats dur !</value>
+        <value>Visez les hard beats !</value>
     </data>
 </root>
