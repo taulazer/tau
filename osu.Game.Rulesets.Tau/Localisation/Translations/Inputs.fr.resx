@@ -53,9 +53,9 @@
         <value>Bouton droit</value>
     </data>
   <data name="hard_button_1" xml:space="preserve">
-        <value>Bouton dur 1</value>
+        <value>Bouton Hard Beat 1</value>
     </data>
   <data name="hard_button_2" xml:space="preserve">
-        <value>Bouton dur 2</value>
+        <value>Bouton Hard Beat 2</value>
     </data>
 </root>

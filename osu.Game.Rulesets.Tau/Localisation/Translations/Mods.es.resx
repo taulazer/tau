@@ -47,99 +47,99 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Paddle Size</value>
+        <value>Tamaño de la paleta</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Override a beatmap's set PS.</value>
+        <value>Anular el PS establecido de un mapa.</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
-        <value>Approach Rate</value>
+        <value>Tasa de aproximación</value>
     </data>
   <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
-        <value>Override a beatmap's set AR.</value>
+        <value>Anular el AR establecido de un mapa.</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>When one isn't enough</value>
+        <value>Cuando uno no es suficiente</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Paddle count</value>
+        <value>Conteo de paletas</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+        <value>Paleta más grande, drenaje de HP más indulgente, se requiere menos precisión y ¡tres vidas!</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Flashlight size</value>
+        <value>Tamaño de la linterna</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
-        <value>Multiplier applied to the default flashlight size.</value>
+        <value>Multiplicador aplicado al tamaño predeterminado de la linterna.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Change size based on combo</value>
+        <value>Cambiar tamaño según el combo</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
-        <value>Decrease the flashlight size as combo increases.</value>
+        <value>Disminuye el tamaño de la linterna a medida que aumenta el combo.</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
-        <value>Automatic paddle movement - just follow the rhythm.</value>
+        <value>Movimiento automático de la paleta; solo sigue el ritmo.</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
-        <value>Beats fade out before you hit them!</value>
+        <value>¡Los ritmos se desvanecen antes de que los golpees!</value>
     </data>
   <data name="fadein_description" xml:space="preserve">
-        <value>Beats appear out of nowhere!</value>
+        <value>¡Los ritmos aparecen de la nada!</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
-        <value>Beats will appear outside of the playfield.</value>
+        <value>Los beats apareceran fuera de la zona de juego.</value>
     </data>
   <data name="impossible_sliders_description" xml:space="preserve">
-        <value>Entirely removes the check for very sharp angles</value>
+        <value>Elimina por completo el control de ángulos muy agudos</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Removes certain aspects of the ruleset.</value>
+        <value>Elimina ciertos aspectos del ruleset.</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Sliders conversion</value>
+        <value>Conversión de sliders</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
-        <value>Completely disables sliders altogether.</value>
+        <value>Deshabilita los sliders por completo.</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Hard beats conversion</value>
+        <value>Conversion de ritmos duros</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
-        <value>Completely disables hard beats altogether.</value>
+        <value>Deshabilita los ritmos duros por completo.</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
-        <value>Slider division level</value>
+        <value>Nivel de división del slider</value>
     </data>
   <data name="lite_slider_division_level_description" xml:space="preserve">
-        <value>The minimum slider length divisor.</value>
+        <value>El divisor de longitud mínimo del slider.</value>
     </data>
   <data name="no_scope_description" xml:space="preserve">
-        <value>Where's the paddle?</value>
+        <value>¿Dónde está la paleta?</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
-        <value>Hidden at combo</value>
+        <value>Escondido al combo</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
-        <value>The combo count at which the paddle becomes completely hidden</value>
+        <value>El conteo de combo en el que la paleta se oculta por completo</value>
     </data>
   <data name="relax_description" xml:space="preserve">
-        <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
+        <value>No es necesario hacer clic. Dale a tus dedos que hacen clic o tocan un descanso del calor de las cosas.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>You can only rotate the paddle in one direction.</value>
+        <value>Solo puede girar la paleta en una dirección.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
-        <value>Direction</value>
+        <value>Dirección</value>
     </data>
   <data name="traceable_description" xml:space="preserve">
-        <value>Brim with no yankie</value>
+        <value>Sin bordes</value>
     </data>
   <data name="lenience_description" xml:space="preserve">
-        <value>Hard beats are more forgiving</value>
+        <value>Los ritmos duros son más indulgentes</value>
     </data>
   <data name="strict_description" xml:space="preserve">
-        <value>Aim the hard beats!</value>
+        <value>¡Apunta los ritmos duros!</value>
     </data>
 </root>
