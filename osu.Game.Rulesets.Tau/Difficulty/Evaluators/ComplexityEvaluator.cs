@@ -1,8 +1,8 @@
 ﻿using System;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
-using osu.Game.Rulesets.Difficulty.Utils;
 using osu.Game.Rulesets.Tau.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Tau.Objects;
+using osu.Game.Utils;
 
 namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
 {
@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Evaluators
         /// Queue with the lengths of the last <see cref="mono_history_max_length"/> most recent mono patterns,
         /// with the most recent value at the end of the queue.
         /// </summary>
-        private static readonly LimitedCapacityQueue<int> mono_history = new LimitedCapacityQueue<int>(mono_history_max_length);
+        private static readonly LimitedCapacityQueue<int> mono_history = new(mono_history_max_length);
 
         /// <summary>
         /// The <see cref="HitType"/> of the last object hit before the one being considered.
