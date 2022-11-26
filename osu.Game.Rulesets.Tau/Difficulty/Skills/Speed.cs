@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 {
     public class Speed : TauStrainSkill
     {
-        private const double skill_multiplier = 510;
+        private const double skill_multiplier = 520;
         private const double strain_decay_base = 0.3;
 
         private readonly double greatWindow;
@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private double currentRhythm;
 
         protected override int ReducedSectionCount => 5;
-        protected override double DifficultyMultiplier => 1.20;
+        protected override double DifficultyMultiplier => 1.4;
 
         public Speed(Mod[] mods, double hitWindowGreat)
             : base(mods)

@@ -44,6 +44,12 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 complexity = 0.0;
             }
 
+            if (mods.Any(m => m is TauModAutopilot))
+            {
+                aim = 0.0;
+                aimNoSliders = 0.0;
+            }
+
             double preempt = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
 
             double baseAim = Math.Pow(5 * Math.Max(1, aim / 0.0675) - 4, 3) / 100000;
