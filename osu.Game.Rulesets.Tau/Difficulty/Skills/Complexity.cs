@@ -7,9 +7,9 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
 {
     public class Complexity : StrainDecaySkill
     {
-        protected override double SkillMultiplier => 50;
+        protected override double SkillMultiplier => 55;
 
-        protected override double StrainDecayBase => 0.4;
+        protected override double StrainDecayBase => 0.35;
 
         public Complexity(Mod[] mods)
             : base(mods)
