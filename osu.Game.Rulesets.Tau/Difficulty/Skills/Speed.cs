@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
         private double currentRhythm;
 
         protected override int ReducedSectionCount => 5;
-        protected override double DifficultyMultiplier => 1.3;
+        protected override double DifficultyMultiplier => 1.37;
 
         public Speed(Mod[] mods, double hitWindowGreat)
             : base(mods)

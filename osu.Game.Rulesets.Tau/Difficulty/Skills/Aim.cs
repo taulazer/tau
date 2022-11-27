@@ -11,8 +11,8 @@ namespace osu.Game.Rulesets.Tau.Difficulty.Skills
     {
         private readonly Type[] allowedHitObjects;
 
-        protected override double SkillMultiplier => 7.5;
-        protected override double StrainDecayBase => 0.225;
+        protected override double SkillMultiplier => 7.4;
+        protected override double StrainDecayBase => 0.25;
 
         public Aim(Mod[] mods, Type[] allowedHitObjects)
             : base(mods)
