@@ -44,7 +44,7 @@ namespace osu.Game.Rulesets.Tau.Difficulty
                 complexity = 0.0;
             }
 
-            if (mods.Any(m => m is TauModAutopilot))
+            if (mods.Any(m => m.Name == "Autopilot"))
             {
                 aim = 0.0;
                 aimNoSliders = 0.0;
