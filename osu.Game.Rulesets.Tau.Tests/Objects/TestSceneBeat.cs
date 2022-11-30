@@ -11,7 +11,7 @@ using osu.Game.Rulesets.Tau.UI;
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneBeat : TauTestScene
+    public partial class TestSceneBeat : TauTestScene
     {
         private int depthIndex;
 
@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             return playfield;
         }
 
-        private class TestDrawableBeat : DrawableBeat
+        private partial class TestDrawableBeat : DrawableBeat
         {
             private readonly bool auto;
 

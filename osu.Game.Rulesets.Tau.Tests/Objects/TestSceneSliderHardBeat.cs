@@ -12,7 +12,7 @@ using osu.Game.Rulesets.Tau.UI;
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneSliderHardBeat : TauTestScene
+    public partial class TestSceneSliderHardBeat : TauTestScene
     {
         private int depthIndex;
 
@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
                 })
             };
 
-        private class TestDrawableSlider : DrawableSlider
+        private partial class TestDrawableSlider : DrawableSlider
         {
             private readonly bool auto;
 

@@ -11,7 +11,7 @@ using JetBrains.Annotations;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    public class TauCursor : GameplayCursorContainer
+    public partial class TauCursor : GameplayCursorContainer
     {
         public readonly Paddle DrawablePaddle;
 

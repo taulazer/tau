@@ -8,7 +8,7 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneResumeOverlay : OsuManualInputManagerTestScene
+    public partial class TestSceneResumeOverlay : OsuManualInputManagerTestScene
     {
         [Cached]
         private TauCachedProperties properties { get; set; } = new();
@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Tau.Tests
             AddAssert("dismissed", () => resumeFired && resume.State.Value == Visibility.Hidden);
         }
 
-        private class ManualTauInputManager : TauInputManager
+        private partial class ManualTauInputManager : TauInputManager
         {
             public ManualTauInputManager(RulesetInfo ruleset)
                 : base(ruleset)

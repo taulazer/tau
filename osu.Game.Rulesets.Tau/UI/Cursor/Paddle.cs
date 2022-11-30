@@ -6,7 +6,7 @@ using osu.Framework.Graphics.UserInterface;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
-    public class Paddle : Container
+    public partial class Paddle : Container
     {
         public const float PADDLE_RADIUS = 0.05f;
 

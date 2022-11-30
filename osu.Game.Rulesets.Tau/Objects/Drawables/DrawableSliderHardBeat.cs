@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableSliderHardBeat : DrawableStrictHardBeat
+    public partial class DrawableSliderHardBeat : DrawableStrictHardBeat
     {
         public DrawableSlider DrawableSlider => (DrawableSlider)ParentHitObject;
 

@@ -11,7 +11,7 @@ using osu.Game.Rulesets.Tau.UI;
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [TestFixture]
-    public class TestSceneHardBeat : TauTestScene
+    public partial class TestSceneHardBeat : TauTestScene
     {
         private int depthIndex;
 
@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             };
         }
 
-        private class TestDrawableHardBeat : DrawableHardBeat
+        private partial class TestDrawableHardBeat : DrawableHardBeat
         {
             private readonly bool auto;
 

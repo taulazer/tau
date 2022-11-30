@@ -4,7 +4,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneTurbulenceKiai : TestSceneKiaiEffects<TurbulenceKiaiEffect, TurbulenceEmitter>
+    public partial class TestSceneTurbulenceKiai : TestSceneKiaiEffects<TurbulenceKiaiEffect, TurbulenceEmitter>
     {
         protected override void AddExtraSetupSteps()
         {

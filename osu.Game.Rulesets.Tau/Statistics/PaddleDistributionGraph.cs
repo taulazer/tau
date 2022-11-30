@@ -24,7 +24,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Statistics
 {
-    public class PaddleDistributionGraph : CompositeDrawable
+    public partial class PaddleDistributionGraph : CompositeDrawable
     {
         private Container beatsBarContainer;
         private Container slidersBarContainer;

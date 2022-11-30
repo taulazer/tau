@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneClassicKiai : TestSceneKiaiEffects<ClassicKiaiEffect, ClassicEmitter>
+    public partial class TestSceneClassicKiai : TestSceneKiaiEffects<ClassicKiaiEffect, ClassicEmitter>
     {
     }
 }

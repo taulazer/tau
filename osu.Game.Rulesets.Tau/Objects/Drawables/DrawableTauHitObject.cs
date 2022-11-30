@@ -12,7 +12,7 @@ using osu.Game.Rulesets.Tau.Configuration;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>, ICanApplyResult
+    public partial class DrawableTauHitObject<T> : DrawableHitObject<TauHitObject>, IKeyBindingHandler<TauAction>, ICanApplyResult
         where T : TauHitObject
     {
         public new T HitObject => (T)base.HitObject;

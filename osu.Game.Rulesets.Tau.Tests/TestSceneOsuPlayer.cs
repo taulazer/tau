@@ -4,7 +4,7 @@ using osu.Game.Tests.Visual;
 namespace osu.Game.Rulesets.Tau.Tests
 {
     [TestFixture]
-    public class TestSceneOsuPlayer : PlayerTestScene
+    public partial class TestSceneOsuPlayer : PlayerTestScene
     {
         protected override Ruleset CreatePlayerRuleset() => new TauRuleset();
     }

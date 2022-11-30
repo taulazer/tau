@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Tau.Objects;
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
     [Ignore("Will not work under NUnit testing due to it constantly timing out.")]
-    public class TestSceneAutoplaySlider : TauModTestScene
+    public partial class TestSceneAutoplaySlider : TauModTestScene
     {
         [TestCase(1000, 4)]
         [TestCase(1000, 8)]

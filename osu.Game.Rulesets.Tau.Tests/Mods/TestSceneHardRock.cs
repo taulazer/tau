@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Tests.Mods
 {
-    public class TestSceneHardRock : TauModTestScene
+    public partial class TestSceneHardRock : TauModTestScene
     {
         [Test]
         public void TestHardRock()

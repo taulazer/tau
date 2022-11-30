@@ -5,7 +5,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class ClassicKiaiEffect : KiaiEffect<ClassicEmitter>
+    public partial class ClassicKiaiEffect : KiaiEffect<ClassicEmitter>
     {
         public ClassicKiaiEffect(int initialSize)
             : base(initialSize)
@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         }
     }
 
-    public class ClassicEmitter : Emitter
+    public partial class ClassicEmitter : Emitter
     {
         protected override Drawable CreateAngularParticle()
             => new Triangle

@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
     /// An abstracted Kiai effect that can be used to display different kinds of particles.
     /// </summary>
     /// <typeparam name="T">The effect emitter</typeparam>
-    public abstract class KiaiEffect<T> : DrawablePool<T>
+    public abstract partial class KiaiEffect<T> : DrawablePool<T>
         where T : Emitter, new()
     {
         protected KiaiEffect(int initialSize)
@@ -77,7 +77,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
     /// <summary>
     /// Creates, handles, and animates particles.
     /// </summary>
-    public abstract class Emitter : PoolableDrawable
+    public abstract partial class Emitter : PoolableDrawable
     {
         private readonly List<Drawable> particles = new();
         protected EmitterSettings Settings { get; private set; }
