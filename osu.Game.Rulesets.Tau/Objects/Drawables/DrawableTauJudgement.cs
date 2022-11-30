@@ -9,7 +9,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableTauJudgement : DrawableJudgement
+    public partial class DrawableTauJudgement : DrawableJudgement
     {
         protected SkinnableLighting Lighting { get; private set; }
 
@@ -82,7 +82,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override Drawable CreateDefaultJudgement(HitResult result) => new TauJudgementPiece(result);
 
-        private class TauJudgementPiece : DefaultJudgementPiece
+        private partial class TauJudgementPiece : DefaultJudgementPiece
         {
             public TauJudgementPiece(HitResult result)
                 : base(result)

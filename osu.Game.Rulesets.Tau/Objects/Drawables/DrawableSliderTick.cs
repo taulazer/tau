@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableSliderTick : DrawableAngledTauHitObject<SliderTick>
+    public partial class DrawableSliderTick : DrawableAngledTauHitObject<SliderTick>
     {
         public DrawableSlider DrawableSlider => (DrawableSlider)ParentHitObject;
 

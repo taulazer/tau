@@ -4,7 +4,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
-    public class AbsoluteCursor : Container
+    public partial class AbsoluteCursor : Container
     {
         public AbsoluteCursor()
         {

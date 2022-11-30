@@ -7,7 +7,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests.Conversion
 {
-    public class TestSceneBeatConversion : TauConversionTestScene
+    public partial class TestSceneBeatConversion : TauConversionTestScene
     {
         protected override IEnumerable<HitObject> CreateHitObjects()
         {

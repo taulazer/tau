@@ -12,7 +12,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestScenePaddleDistribution : TauTestScene
+    public partial class TestScenePaddleDistribution : TauTestScene
     {
         private float angleRange => (float)Properties.AngleRange.Value;
 

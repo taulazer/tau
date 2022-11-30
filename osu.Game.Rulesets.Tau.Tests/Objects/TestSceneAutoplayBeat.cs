@@ -8,7 +8,7 @@ using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Tests.Objects
 {
-    public class TestSceneAutoplayBeat : TauModTestScene
+    public partial class TestSceneAutoplayBeat : TauModTestScene
     {
         [TestCase(2000, 4)]
         [TestCase(2000, 8)]

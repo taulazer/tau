@@ -4,7 +4,7 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests.Mods
 {
-    public class TestSceneDoubleTime : TestSceneOsuPlayer
+    public partial class TestSceneDoubleTime : TestSceneOsuPlayer
     {
         protected override TestPlayer CreatePlayer(Ruleset ruleset)
         {

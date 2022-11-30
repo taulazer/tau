@@ -9,7 +9,7 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Tau
 {
-    public class TauInputManager : RulesetInputManager<TauAction>
+    public partial class TauInputManager : RulesetInputManager<TauAction>
     {
         public IEnumerable<TauAction> PressedActions => KeyBindingContainer.PressedActions;
 
@@ -52,7 +52,7 @@ namespace osu.Game.Rulesets.Tau
             return base.HandleMouseTouchStateChange(e);
         }
 
-        private class TauKeyBindingContainer : RulesetKeyBindingContainer
+        private partial class TauKeyBindingContainer : RulesetKeyBindingContainer
         {
             public bool AllowUserPresses = true;
 

@@ -5,7 +5,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
 {
-    public class SkinnableLighting : SkinnableSprite
+    public partial class SkinnableLighting : SkinnableSprite
     {
         private DrawableHitObject targetObject;
         private JudgementResult targetResult;

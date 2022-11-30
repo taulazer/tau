@@ -10,7 +10,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableBeat : DrawableAngledTauHitObject<Beat>
+    public partial class DrawableBeat : DrawableAngledTauHitObject<Beat>
     {
         public Drawable DrawableBox;
 

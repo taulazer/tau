@@ -14,7 +14,7 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModLenience : Mod, IApplicableAfterBeatmapConversion, IApplicableToDrawableRuleset<TauHitObject>
+    public partial class TauModLenience : Mod, IApplicableAfterBeatmapConversion, IApplicableToDrawableRuleset<TauHitObject>
     {
         public override string Name => "Lenience";
         public override LocalisableString Description => ModStrings.LenienceDescription;
@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             }
         }
 
-        private class DrawableLenientHardBeats : DrawableHardBeat
+        private partial class DrawableLenientHardBeats : DrawableHardBeat
         {
             protected override TauAction[] Actions { get; } =
             {

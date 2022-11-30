@@ -6,7 +6,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Scoring
 {
-    public class TauScoreProcessor : ScoreProcessor
+    public partial class TauScoreProcessor : ScoreProcessor
     {
         public TauScoreProcessor(Ruleset ruleset)
             : base(ruleset)

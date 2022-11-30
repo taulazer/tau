@@ -7,7 +7,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
 {
-    public class HardBeatPiece : CircularContainer
+    public partial class HardBeatPiece : CircularContainer
     {
         public BindableFloat NoteSize = new(16f);
 

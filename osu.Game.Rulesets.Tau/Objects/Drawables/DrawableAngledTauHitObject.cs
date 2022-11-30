@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
     /// <summary>
     /// Abstracted class to handle any angular hit objects. e.g. <see cref="DrawableBeat"/> or <see cref="DrawableSlider"/>.
     /// </summary>
-    public abstract class DrawableAngledTauHitObject<T> : DrawableTauHitObject<T>
+    public abstract partial class DrawableAngledTauHitObject<T> : DrawableTauHitObject<T>
         where T : AngledTauHitObject
     {
         /// <summary>

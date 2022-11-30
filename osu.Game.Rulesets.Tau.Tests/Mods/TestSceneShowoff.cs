@@ -8,7 +8,7 @@ using osu.Game.Rulesets.Tau.Objects;
 
 namespace osu.Game.Rulesets.Tau.Tests.Mods
 {
-    public class TestSceneShowoff : TauModTestScene
+    public partial class TestSceneShowoff : TauModTestScene
     {
         [Test]
         public void TestAutoplay()

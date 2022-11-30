@@ -146,7 +146,7 @@ namespace osu.Game.Rulesets.Tau.UI
             judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
         }
 
-        private class DrawableJudgementPool : DrawablePool<DrawableTauJudgement>
+        private partial class DrawableJudgementPool : DrawablePool<DrawableTauJudgement>
         {
             private readonly HitResult result;
             private readonly Action<DrawableTauJudgement> onLoaded;

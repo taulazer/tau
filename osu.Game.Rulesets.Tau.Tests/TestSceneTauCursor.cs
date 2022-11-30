@@ -4,7 +4,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneTauCursor : OsuManualInputManagerTestScene
+    public partial class TestSceneTauCursor : OsuManualInputManagerTestScene
     {
         public TestSceneTauCursor()
         {

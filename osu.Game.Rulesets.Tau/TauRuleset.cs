@@ -32,7 +32,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau
 {
-    public class TauRuleset : Ruleset
+    public partial class TauRuleset : Ruleset
     {
         public const string SHORT_NAME = "tau";
 
@@ -165,7 +165,7 @@ namespace osu.Game.Rulesets.Tau
             new KeyBinding(InputKey.LShift, TauAction.HardButton2),
         };
 
-        private class TauIcon : CompositeDrawable
+        private partial class TauIcon : CompositeDrawable
         {
             private readonly Ruleset ruleset;
 

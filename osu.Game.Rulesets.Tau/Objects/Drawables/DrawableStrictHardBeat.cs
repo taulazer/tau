@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableStrictHardBeat : DrawableAngledTauHitObject<StrictHardBeat>
+    public partial class DrawableStrictHardBeat : DrawableAngledTauHitObject<StrictHardBeat>
     {
         protected override TauAction[] Actions { get; } =
         {

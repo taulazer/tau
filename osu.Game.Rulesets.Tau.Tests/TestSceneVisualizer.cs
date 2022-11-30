@@ -9,7 +9,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneVisualizer : TestScene
+    public partial class TestSceneVisualizer : TestScene
     {
         public TestSceneVisualizer()
         {

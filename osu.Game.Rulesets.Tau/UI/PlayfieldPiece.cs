@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    public class PlayfieldPiece : CompositeDrawable
+    public partial class PlayfieldPiece : CompositeDrawable
     {
         private readonly Box background;
         private readonly Bindable<float> playfieldDimLevel = new(0.7f);
