@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Tau.Localisation;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    public class TauSettingsSubsection : RulesetSettingsSubsection
+    public partial class TauSettingsSubsection : RulesetSettingsSubsection
     {
         protected override LocalisableString Header => "tau";
 

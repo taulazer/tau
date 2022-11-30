@@ -7,7 +7,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    public class TauReplayRecorder : ReplayRecorder<TauAction>
+    public partial class TauReplayRecorder : ReplayRecorder<TauAction>
     {
         public TauReplayRecorder(Score score)
             : base(score)

@@ -5,7 +5,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    public class TauPlayfieldAdjustmentContainer : PlayfieldAdjustmentContainer
+    public partial class TauPlayfieldAdjustmentContainer : PlayfieldAdjustmentContainer
     {
         protected override Container<Drawable> Content => content;
         private readonly Container content;
@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Tau.UI
         /// <summary>
         /// A <see cref="Container"/> which scales its content relative to a target width.
         /// </summary>
-        private class ScalingContainer : Container
+        private partial class ScalingContainer : Container
         {
             protected override void Update()
             {

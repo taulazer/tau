@@ -20,7 +20,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    public class TauResumeOverlay : ResumeOverlay
+    public partial class TauResumeOverlay : ResumeOverlay
     {
         [Resolved]
         private TauCachedProperties properties { get; set; }
@@ -85,7 +85,7 @@ namespace osu.Game.Rulesets.Tau.UI
             GameplayCursor?.ActiveCursor?.Show();
         }
 
-        private class TauClickToResumeContainer : CircularProgress, IKeyBindingHandler<TauAction>
+        private partial class TauClickToResumeContainer : CircularProgress, IKeyBindingHandler<TauAction>
         {
             public override bool Contains(Vector2 screenSpacePos)
                 => checkForValidation(ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(screenSpacePos) - 90);

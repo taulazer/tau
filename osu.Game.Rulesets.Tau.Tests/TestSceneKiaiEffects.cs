@@ -12,7 +12,7 @@ using osu.Game.Rulesets.Tau.UI.Effects;
 namespace osu.Game.Rulesets.Tau.Tests
 {
     [ExcludeFromDynamicCompile]
-    public abstract class TestSceneKiaiEffects<T, TEmitter> : TauTestScene
+    public abstract partial class TestSceneKiaiEffects<T, TEmitter> : TauTestScene
         where T : KiaiEffect<TEmitter>, new()
         where TEmitter : Emitter, new()
     {

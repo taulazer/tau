@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         FadeIn,
     }
 
-    public class PlayfieldMaskingContainer : CompositeDrawable
+    public partial class PlayfieldMaskingContainer : CompositeDrawable
     {
         private readonly PlayfieldMaskDrawable cover;
 
@@ -117,7 +117,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public MaskingMode Mode { get; }
 
-        public class PlayfieldMaskDrawable : Drawable
+        public partial class PlayfieldMaskDrawable : Drawable
         {
             private IShader shader;
 

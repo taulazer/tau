@@ -9,7 +9,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests.Conversion
 {
-    public class TestSceneSliderConversion : TauConversionTestScene
+    public partial class TestSceneSliderConversion : TauConversionTestScene
     {
         protected override IEnumerable<HitObject> CreateHitObjects()
         {

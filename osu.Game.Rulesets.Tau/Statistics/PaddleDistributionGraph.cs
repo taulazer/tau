@@ -24,7 +24,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Statistics
 {
-    public class PaddleDistributionGraph : CompositeDrawable
+    public partial class PaddleDistributionGraph : CompositeDrawable
     {
         private Container beatsBarContainer;
         private Container slidersBarContainer;
@@ -241,7 +241,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
             return bins;
         }
 
-        private class Bar : CompositeDrawable
+        private partial class Bar : CompositeDrawable
         {
             public Bar()
             {
@@ -255,7 +255,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
             }
         }
 
-        private class DistributionCheckbox : SettingsCheckbox
+        private partial class DistributionCheckbox : SettingsCheckbox
         {
             [Cached]
             private OverlayColourProvider colourProvider;

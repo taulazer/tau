@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
-    public class DrawableSliderRepeat : DrawableAngledTauHitObject<SliderRepeat>
+    public partial class DrawableSliderRepeat : DrawableAngledTauHitObject<SliderRepeat>
     {
         public Drawable DrawableBox;
 

@@ -25,7 +25,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModFlashlight : TauModFlashlight<TauHitObject>
+    public partial class TauModFlashlight : TauModFlashlight<TauHitObject>
     {
         public override double ScoreMultiplier => 1.16;
 
@@ -50,7 +50,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         protected override Flashlight CreateFlashlight() => new TauFlashlight(this);
 
-        private class TauFlashlight : Flashlight, IRequireHighFrequencyMousePosition
+        private partial class TauFlashlight : Flashlight, IRequireHighFrequencyMousePosition
         {
             public TauFlashlight(TauModFlashlight modFlashlight)
                 : base(modFlashlight)
@@ -73,7 +73,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         }
     }
 
-    public abstract class TauModFlashlight<T> : ModFlashlight, IApplicableToDrawableRuleset<T>, IApplicableToScoreProcessor
+    public abstract partial class TauModFlashlight<T> : ModFlashlight, IApplicableToDrawableRuleset<T>, IApplicableToScoreProcessor
         where T : HitObject
     {
         public const double FLASHLIGHT_FADE_DURATION = 800;
@@ -110,7 +110,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         protected abstract Flashlight CreateFlashlight();
 
-        public abstract class Flashlight : Drawable
+        public abstract partial class Flashlight : Drawable
         {
             public readonly BindableInt Combo = new BindableInt();
 

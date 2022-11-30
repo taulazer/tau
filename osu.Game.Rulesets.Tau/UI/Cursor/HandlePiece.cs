@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
-    public class HandlePiece : CompositeDrawable
+    public partial class HandlePiece : CompositeDrawable
     {
         private readonly Box topLine;
         private readonly Box bottomLine;

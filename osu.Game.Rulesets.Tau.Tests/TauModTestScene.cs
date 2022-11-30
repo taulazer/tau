@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public abstract class TauModTestScene : ModTestScene
+    public abstract partial class TauModTestScene : ModTestScene
     {
         protected override Ruleset CreatePlayerRuleset() => new TauRuleset();
     }

@@ -10,7 +10,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class TurbulenceKiaiEffect : KiaiEffect<TurbulenceEmitter>
+    public partial class TurbulenceKiaiEffect : KiaiEffect<TurbulenceEmitter>
     {
         public List<Vortex> Vortices = new();
 
@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         }
     }
 
-    public class TurbulenceEmitter : Emitter
+    public partial class TurbulenceEmitter : Emitter
     {
         private TurbulenceKiaiEffect kiaiContainer => Parent as TurbulenceKiaiEffect;
         private List<Vortex> vortices => kiaiContainer.Vortices;
@@ -112,7 +112,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             return Interpolation.ValueAt(Math.Max(200, timingPoint.BPM), 0.05f, 0.3f, 60f, 300f);
         }
 
-        private class TriangleWithVelocity : Triangle
+        private partial class TriangleWithVelocity : Triangle
         {
             public Vector2 Velocity
             {

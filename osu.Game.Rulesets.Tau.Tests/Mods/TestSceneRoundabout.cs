@@ -9,7 +9,7 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests.Mods
 {
-    public class TestSceneRoundabout : OsuManualInputManagerTestScene
+    public partial class TestSceneRoundabout : OsuManualInputManagerTestScene
     {
         private TauModRoundabout roundabout = null!;
         private TauCursor cursor = null!;

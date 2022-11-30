@@ -19,7 +19,7 @@ using osu.Game.Skinning;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public class TestSceneDrawableJudgement : TauSkinnableTestScene
+    public partial class TestSceneDrawableJudgement : TauSkinnableTestScene
     {
         private readonly BindableBool hitLighting = new BindableBool();
 
@@ -113,7 +113,7 @@ namespace osu.Game.Rulesets.Tau.Tests
             });
         }
 
-        private class TestDrawableTauJudgement : DrawableTauJudgement
+        private partial class TestDrawableTauJudgement : DrawableTauJudgement
         {
             public new SkinnableSprite Lighting => base.Lighting;
             public new SkinnableDrawable JudgementBody => base.JudgementBody;

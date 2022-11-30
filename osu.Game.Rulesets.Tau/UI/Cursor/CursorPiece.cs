@@ -5,7 +5,7 @@ using osu.Framework.Graphics.UserInterface;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
-    public class CursorPiece : CompositeDrawable
+    public partial class CursorPiece : CompositeDrawable
     {
         public CursorPiece()
         {

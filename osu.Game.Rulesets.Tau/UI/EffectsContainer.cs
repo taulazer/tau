@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
-    public class EffectsContainer : CompositeDrawable
+    public partial class EffectsContainer : CompositeDrawable
     {
         private readonly PlayfieldVisualizer visualizer;
         private readonly KiaiEffectContainer kiaiEffects;

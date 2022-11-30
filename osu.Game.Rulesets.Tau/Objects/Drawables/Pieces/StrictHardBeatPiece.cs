@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
 {
-    public class StrictHardBeatPiece : CircularProgress
+    public partial class StrictHardBeatPiece : CircularProgress
     {
         public BindableFloat NoteSize = new(16f);
         public BindableDouble AngleRange = new(25 * 0.75);

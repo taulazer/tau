@@ -17,7 +17,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.UI.Effects
 {
-    public class PlayfieldVisualizer : Drawable
+    public partial class PlayfieldVisualizer : Drawable
     {
         /// <summary>
         /// The maximum length of each bar in the visualiser.
