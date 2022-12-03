@@ -38,10 +38,16 @@ namespace osu.Game.Rulesets.Tau.Difficulty
             double speed = Math.Sqrt(skills[2].DifficultyValue()) * difficulty_multiplier;
             double complexity = Math.Sqrt(skills[3].DifficultyValue()) * difficulty_multiplier;
 
-            if (mods.Any(m => m is TauModRelax))
+            if (mods.Any(m => m.Name == "Relax"))
             {
                 speed = 0.0;
                 complexity = 0.0;
+            }
+
+            if (mods.Any(m => m.Name == "Autopilot"))
+            {
+                aim = 0.0;
+                aimNoSliders = 0.0;
             }
 
             double preempt = IBeatmapDifficultyInfo.DifficultyRange(beatmap.Difficulty.ApproachRate, 1800, 1200, 450) / clockRate;
