@@ -1,10 +1,10 @@
-[![tau](https://alten.s-ul.eu/pRr7vj6C.png)](https://github.com/Altenhh/tau "tau")
+[![tau](https://alten.s-ul.eu/pRr7vj6C.png)](https://github.com/taulazer/tau "tau")
 <div align="center">
 
-[![release](https://img.shields.io/github/v/release/naoei/tau?style=flat-square)](https://github.com/Altenhh/tau/releases)
-[![GitHub license](https://img.shields.io/github/license/Altenhh/tau.svg?style=flat-square)](https://github.com/Altenhh/tau/LICENSE)
-![GitHub all releases](https://img.shields.io/github/downloads/naoei/tau/total?style=flat-square)
-![GitHub release (latest by date)](https://img.shields.io/github/downloads/naoei/tau/latest/total?style=flat-square)
+[![release](https://img.shields.io/github/v/release/taulazer/tau?style=flat-square)](https://github.com/taulazer/tau/releases)
+[![GitHub license](https://img.shields.io/github/license/taulazer/tau.svg?style=flat-square)](https://github.com/taulazer/tau/LICENSE)
+![GitHub all releases](https://img.shields.io/github/downloads/taulazer/tau/total?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/downloads/taulazer/tau/latest/total?style=flat-square)
 [![Continuous Integration](https://github.com/taulazer/tau/actions/workflows/ci.yml/badge.svg)](https://github.com/taulazer/tau/actions/workflows/ci.yml)
 [![Crowdin](https://badges.crowdin.net/tau/localized.svg)](https://crowdin.com/project/tau)
 [![community server](https://discordapp.com/api/guilds/689728872282849313/widget.png?style=shield)](https://discord.gg/7Y8GXAa)
@@ -18,9 +18,9 @@
 [Art](https://github.com/taulazer/tau/wiki/Mascot) done by [Izeunne](https://www.fiverr.com/izeunne)
 
 ## Running the Gamemode
-We have [prebuilt libraries](https://github.com/Altenhh/tau/releases) for users looking to play the mode without creating a development environment. All releases will work on all operating systems that *osu!* supports.
+We have [prebuilt libraries](https://github.com/taulazer/tau/releases) for users looking to play the mode without creating a development environment. All releases will work on all operating systems that *osu!* supports.
 
-| [Latest Releases](https://github.com/Altenhh/tau/releases)
+| [Latest Releases](https://github.com/taulazer/tau/releases)
 | ------------- |
 
 ### Instructions
@@ -43,7 +43,7 @@ When developing or debugging the tau codebase, a few prerequisites are required 
 ### Source Code
 You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the tau directory.
 ```sh
-git clone https://github.com/Altenhh/tau.git
+git clone https://github.com/taulazer/tau.git
 cd tau
 ```
 
@@ -72,6 +72,6 @@ Thanks to all of those who have helped with localization efforts. Members includ
 Thanks to all of the amazing people within our discord community.
 
 ## License
-tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/Altenhh/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
+tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/taulazer/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
 
 The licensing here does not directly apply to [osu!](https://github.com/ppy/osu), as it is bound to its own licensing. What is reflected in our licensing *may* not be allowed in the [osu!](https://github.com/ppy/osu) github repository.
