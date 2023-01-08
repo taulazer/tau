@@ -2,7 +2,7 @@
 <div align="center">
 
 [![release](https://img.shields.io/github/v/release/taulazer/tau?style=flat-square)](https://github.com/taulazer/tau/releases)
-[![GitHub license](https://img.shields.io/github/license/taulazer/tau.svg?style=flat-square)](https://github.com/taulazer/tau/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/taulazer/tau.svg?style=flat-square)](https://github.com/taulazer/tau/blob/master/LICENSE)
 ![GitHub all releases](https://img.shields.io/github/downloads/taulazer/tau/total?style=flat-square)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/taulazer/tau/latest/total?style=flat-square)
 [![Continuous Integration](https://github.com/taulazer/tau/actions/workflows/ci.yml/badge.svg)](https://github.com/taulazer/tau/actions/workflows/ci.yml)
