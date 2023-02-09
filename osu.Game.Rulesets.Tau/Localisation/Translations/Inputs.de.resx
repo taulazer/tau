@@ -47,15 +47,15 @@
     </xsd:element>
   </xsd:schema>
   <data name="left_button" xml:space="preserve">
-        <value>Left Button</value>
+        <value>Linke Taste</value>
     </data>
   <data name="right_button" xml:space="preserve">
-        <value>Right Button</value>
+        <value>Rechte Taste</value>
     </data>
   <data name="hard_button_1" xml:space="preserve">
-        <value>Hard Button 1</value>
+        <value>Hard Beat Taste</value>
     </data>
   <data name="hard_button_2" xml:space="preserve">
-        <value>Hard Button 2</value>
+        <value>Alternative Hard Beat Taste</value>
     </data>
 </root>

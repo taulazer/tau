@@ -47,7 +47,7 @@
     </xsd:element>
   </xsd:schema>
   <data name="show_effects" xml:space="preserve">
-        <value>Montrer les effets</value>
+        <value>Afficher les effets</value>
     </data>
   <data name="show_slider_effects" xml:space="preserve">
         <value>Afficher les effets des sliders</value>

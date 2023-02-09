@@ -50,18 +50,18 @@
         <value>Ticks</value>
     </data>
   <data name="timing_distribution" xml:space="preserve">
-        <value>Timing Distribution</value>
+        <value>Zeitverteilung</value>
     </data>
   <data name="paddle_distribution" xml:space="preserve">
-        <value>Paddle Distribution</value>
+        <value>Paddle-Verteilung</value>
     </data>
   <data name="distribution_sliders" xml:space="preserve">
-        <value>Sliders</value>
+        <value>Slider</value>
     </data>
   <data name="distribution_beats" xml:space="preserve">
         <value>Beats</value>
     </data>
   <data name="resume_overlay_message" xml:space="preserve">
-        <value>Move the cursor to the highlighted area.</value>
+        <value>Bewege den Cursor in den hervorgehobenen Bereich.</value>
     </data>
 </root>

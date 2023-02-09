@@ -47,12 +47,12 @@
     </xsd:element>
   </xsd:schema>
   <data name="turbulence" xml:space="preserve">
-        <value>Turbulence</value>
+        <value>Turbulenzen</value>
     </data>
   <data name="classic" xml:space="preserve">
-        <value>Classic</value>
+        <value>Klassisch</value>
     </data>
   <data name="none" xml:space="preserve">
-        <value>None</value>
+        <value>Keine Auswahl</value>
     </data>
 </root>

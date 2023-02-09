@@ -47,99 +47,99 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Paddle Size</value>
+        <value>Paddelgröße</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Override a beatmap's set PS.</value>
+        <value>Überschreiben des PS eines Map Sets.</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
-        <value>Approach Rate</value>
+        <value>Annäherungsrate</value>
     </data>
   <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
-        <value>Override a beatmap's set AR.</value>
+        <value>Überschreiben der AR eines Map Sets.</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>When one isn't enough</value>
+        <value>Wenn eins nicht genug ist</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Paddle count</value>
+        <value>Paddelanzahl</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+        <value>Größere Paddel, weniger Lebensleisten Entleerung, weniger Genauigkeit und drei Leben!</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Flashlight size</value>
+        <value>Taschenlampen Größe</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
-        <value>Multiplier applied to the default flashlight size.</value>
+        <value>Multiplikator der auf die Standardgröße der Taschenlampe angewendet wird.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Change size based on combo</value>
+        <value>Änderung der Größe basierend auf der Combo</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
-        <value>Decrease the flashlight size as combo increases.</value>
+        <value>Reduzierung der Größe mit sich erhöhender Combo.</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
-        <value>Automatic paddle movement - just follow the rhythm.</value>
+        <value>Automatische Paddelbewegung - einfach dem Rythmus folgen.</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
-        <value>Beats fade out before you hit them!</value>
+        <value>Schläge verschwinden langsam, bevor sie ankommen!</value>
     </data>
   <data name="fadein_description" xml:space="preserve">
-        <value>Beats appear out of nowhere!</value>
+        <value>Schläge erscheinen aus dem Nichts!</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
-        <value>Beats will appear outside of the playfield.</value>
+        <value>Schläge erscheinen außerhalb des Spielfeldes.</value>
     </data>
   <data name="impossible_sliders_description" xml:space="preserve">
-        <value>Entirely removes the check for very sharp angles</value>
+        <value>Komplette Entfernung der Überprüfung für scharfe Winkel</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Removes certain aspects of the ruleset.</value>
+        <value>Entfernt bestimme Aspekte im Spiel.</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Sliders conversion</value>
+        <value>Slider Konvertierung</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
-        <value>Completely disables sliders altogether.</value>
+        <value>Deaktiviert Slider komplett.</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Hard beats conversion</value>
+        <value>Hard Beat Konvertierung</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
-        <value>Completely disables hard beats altogether.</value>
+        <value>Entfernt Hard Beats komplett aus dem Spiel.</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
-        <value>Slider division level</value>
+        <value>Slider Teilungslevel</value>
     </data>
   <data name="lite_slider_division_level_description" xml:space="preserve">
-        <value>The minimum slider length divisor.</value>
+        <value>Minimale Slider Teilungslänge.</value>
     </data>
   <data name="no_scope_description" xml:space="preserve">
-        <value>Where's the paddle?</value>
+        <value>Wo ist das Paddle?</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
-        <value>Hidden at combo</value>
+        <value>Verstecken bei einer Combo</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
-        <value>The combo count at which the paddle becomes completely hidden</value>
+        <value>Die Anzahl an Combo, bei der das Paddle versteckt wird</value>
     </data>
   <data name="relax_description" xml:space="preserve">
-        <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
+        <value>Du musst nicht klicken. Lehne dich zurück und gib deinen Fingern eine Pause von RSI.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>You can only rotate the paddle in one direction.</value>
+        <value>Du kannst das Paddle nur in eine Richtung drehen.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
-        <value>Direction</value>
+        <value>Richtung</value>
     </data>
   <data name="traceable_description" xml:space="preserve">
-        <value>Brim with no yankie</value>
+        <value>Brim ohne Yankie</value>
     </data>
   <data name="lenience_description" xml:space="preserve">
-        <value>Hard beats are more forgiving</value>
+        <value>Hard Beats sind einfacher</value>
     </data>
   <data name="strict_description" xml:space="preserve">
-        <value>Aim the hard beats!</value>
+        <value>Ziele auf die Hard Beats!</value>
     </data>
 </root>

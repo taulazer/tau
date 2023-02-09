@@ -47,10 +47,10 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Paddle Size</value>
+        <value>Ütő Méret</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Override a beatmap's set PS.</value>
+        <value>A map által megadott ütő méret felülírása.</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
         <value>Approach Rate</value>
