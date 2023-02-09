@@ -109,6 +109,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case DrawableSliderHardBeat head:
                     headContainer.Child = head;
                     break;
+                
 
                 case DrawableSliderRepeat repeat:
                     repeatContainer.Add(repeat);
@@ -176,8 +177,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.OnFree();
             trackingCheckpoints.Clear();
-
-            slidingSample.Samples = null;
+            slidingSample?.ClearSamples();
         }
 
         protected override void LoadSamples()
