@@ -9,6 +9,7 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Replays;
+using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Tau.Mods
@@ -56,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             gameplayClock = drawableRuleset.FrameStableClock;
 
             // Grab the input manager to disable the user's cursor, and for future use
-            inputManager = (TauInputManager)drawableRuleset.KeyBindingInputManager;
+            inputManager = ((TauDrawableRuleset)drawableRuleset).KeyBindingInputManager;
             inputManager.AllowUserCursorMovement = false;
 
             // Generate the replay frames the cursor should follow

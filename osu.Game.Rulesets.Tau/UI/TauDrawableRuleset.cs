@@ -19,6 +19,8 @@ namespace osu.Game.Rulesets.Tau.UI
     [Cached]
     public partial class TauDrawableRuleset : DrawableRuleset<TauHitObject>
     {
+        public new TauInputManager KeyBindingInputManager => (TauInputManager)base.KeyBindingInputManager;
+
         public TauDrawableRuleset(TauRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             : base(ruleset, beatmap, mods)
         {

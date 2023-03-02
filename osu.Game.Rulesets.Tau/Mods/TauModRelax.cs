@@ -11,6 +11,7 @@ using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
+using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Play;
 
@@ -38,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {
-            tauInputManager = (TauInputManager)drawableRuleset.KeyBindingInputManager;
+            tauInputManager = ((TauDrawableRuleset)drawableRuleset).KeyBindingInputManager;
         }
 
         public void ApplyToPlayer(Player player)
