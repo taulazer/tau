@@ -103,7 +103,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             flashlight.Colour = Color4.Black;
 
             flashlight.Combo.BindTo(Combo);
-            drawableRuleset.KeyBindingInputManager.Add(flashlight);
+            drawableRuleset.Overlays.Add(flashlight);
 
             flashlight.Breaks = drawableRuleset.Beatmap.Breaks;
         }
