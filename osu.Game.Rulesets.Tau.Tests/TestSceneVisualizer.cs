@@ -1,15 +1,15 @@
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Testing;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.Tau.UI.Effects;
+using osu.Game.Tests.Visual;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    public partial class TestSceneVisualizer : TestScene
+    public partial class TestSceneVisualizer : OsuTestScene
     {
         public TestSceneVisualizer()
         {
@@ -28,5 +28,8 @@ namespace osu.Game.Rulesets.Tau.Tests
             AddStep("Hard beat hit", () => visualizer.OnNewResult(new DrawableHardBeat(new HardBeat())));
             AddStep("Slider hit", () => visualizer.UpdateAmplitudes(0f, 0.15f));
         }
+
+        protected override Ruleset CreateRuleset()
+            => new TauRuleset();
     }
 }

@@ -8,6 +8,7 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Shaders.Types;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Tau.Allocation;
 using osuTK;
@@ -23,7 +24,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             public class SliderPathDrawNode : DrawNode
             {
                 [StructLayout(LayoutKind.Sequential)]
-                public struct SliderTexturedVertex2D : IEquatable<SliderTexturedVertex2D>, IVertex
+                public record struct SliderTexturedVertex2D : IVertex
                 {
                     [VertexMember(2, VertexAttribPointerType.Float)]
                     public Vector2 Position;
@@ -42,14 +43,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                     [VertexMember(1, VertexAttribPointerType.Float)]
                     public float Result;
-
-                    public readonly bool Equals(SliderTexturedVertex2D other) =>
-                        Position.Equals(other.Position) &&
-                        TexturePosition.Equals(other.TexturePosition) &&
-                        Colour.Equals(other.Colour) &&
-                        TextureRect.Equals(other.TextureRect) &&
-                        BlendRange.Equals(other.BlendRange) &&
-                        Result.Equals(other.Result);
                 }
 
                 private const int max_resolution = 24;
@@ -65,6 +58,34 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 private float radius;
                 private IShader shader;
                 private IShader maskShader;
+
+                private IUniformBuffer<SliderUniform> shaderData;
+                private IUniformBuffer<MaskUniform> maskData;
+
+                [StructLayout(LayoutKind.Sequential, Pack = 1)]
+                private record struct SliderUniform
+                {
+                    public UniformVector2 CenterPos;
+
+                    private UniformPadding8 _p1;
+
+                    public UniformVector4 HitColor;
+                    public UniformFloat Range;
+                    public UniformFloat FadeRange;
+                    public UniformBool Reverse;
+
+                    private UniformPadding4 _p2;
+                    private UniformPadding12 _p3;
+                    private UniformPadding4 _p4;
+                }
+
+                [StructLayout(LayoutKind.Sequential, Pack = 1)]
+                private record struct MaskUniform
+                {
+                    public UniformBool WriteDepth;
+
+                    private UniformPadding12 _p1;
+                }
 
                 // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
                 // per primitive (triangles in this case). Otherwise overflowing the batch will result in wrong
@@ -328,16 +349,29 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     base.Draw(renderer);
 
+                    shaderData ??= renderer.CreateUniformBuffer<SliderUniform>();
+
+                    shaderData.Data = shaderData.Data with
+                    {
+                        CenterPos = centerPos,
+                        Range = range,
+                        FadeRange = fadeRange,
+                        HitColor = hitColour,
+                        Reverse = reverse
+                    };
+
+                    maskData ??= renderer.CreateUniformBuffer<MaskUniform>();
+
                     halfCircleBatch ??= renderer.CreateLinearBatch<SliderTexturedVertex2D>(max_resolution * 100 * 3, 10, PrimitiveTopology.Triangles);
                     quadBatch ??= renderer.CreateQuadBatch<SliderTexturedVertex2D>(200, 10);
 
                     if (texture?.Available != true || segments.Length == 0)
                         return;
 
-                    bool value = true;
                     renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: BufferTestFunction.Always));
+                    maskData.Data = maskData.Data with { WriteDepth = true };
                     maskShader.Bind();
-                    maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
+                    maskShader.BindUniformBlock("m_maskParameters", maskData);
 
                     foreach (var i in innerTicks)
                     {
@@ -348,21 +382,17 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     renderer.PopDepthInfo();
 
                     shader.Bind();
-                    shader.GetUniform<Vector2>("centerPos").UpdateValue(ref centerPos);
-                    shader.GetUniform<float>("range").UpdateValue(ref range);
-                    shader.GetUniform<float>("fadeRange").UpdateValue(ref fadeRange);
-                    shader.GetUniform<Vector4>("hitColor").UpdateValue(ref hitColour);
-                    shader.GetUniform<bool>("reverse").UpdateValue(ref reverse);
-                    texture.Bind();
+                    shader.BindUniformBlock("m_sliderParameters", shaderData);
+                    texture.Bind(1);
 
                     updateVertexBuffer();
 
                     shader.Unbind();
 
                     renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: BufferTestFunction.Always));
+                    maskData.Data = maskData.Data with { WriteDepth = false };
                     maskShader.Bind();
-                    value = false;
-                    maskShader.GetUniform<bool>("writeDepth").UpdateValue(ref value);
+                    maskShader.BindUniformBlock("m_maskParameters", maskData);
 
                     foreach (var i in innerTicks)
                     {
@@ -377,6 +407,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 {
                     base.Dispose(isDisposing);
 
+                    shaderData?.Dispose();
+                    maskData?.Dispose();
                     halfCircleBatch?.Dispose();
                     quadBatch?.Dispose();
                     segments.Dispose();

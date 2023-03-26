@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
@@ -9,6 +11,7 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Shaders.Types;
 using osu.Game.Graphics.OpenGL.Vertices;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -157,6 +160,9 @@ namespace osu.Game.Rulesets.Tau.Mods
                 private Vector2 aperturePosition;
                 private Vector2 apertureSize;
 
+                [CanBeNull]
+                private IUniformBuffer<MaskUniform> dataBuffer;
+
                 private IVertexBatch<PositionAndColourVertex> quadBatch;
                 private Action<TexturedVertex2D> addAction;
 
@@ -179,6 +185,14 @@ namespace osu.Game.Rulesets.Tau.Mods
                 {
                     base.Draw(renderer);
 
+                    dataBuffer ??= renderer.CreateUniformBuffer<MaskUniform>();
+
+                    dataBuffer.Data = dataBuffer.Data with
+                    {
+                        AperturePos = aperturePosition,
+                        ApertureSize = apertureSize
+                    };
+
                     if (quadBatch == null)
                     {
                         quadBatch ??= renderer.CreateQuadBatch<PositionAndColourVertex>(1, 1);
@@ -190,19 +204,24 @@ namespace osu.Game.Rulesets.Tau.Mods
                     }
 
                     shader.Bind();
-
-                    shader.GetUniform<Vector2>("aperturePos").UpdateValue(ref aperturePosition);
-                    shader.GetUniform<Vector2>("apertureSize").UpdateValue(ref apertureSize);
-
+                    shader.BindUniformBlock("m_maskParameters", dataBuffer);
                     renderer.DrawQuad(renderer.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
-
                     shader.Unbind();
                 }
 
                 protected override void Dispose(bool isDisposing)
                 {
                     base.Dispose(isDisposing);
+
                     quadBatch?.Dispose();
+                    dataBuffer?.Dispose();
+                }
+
+                [StructLayout(LayoutKind.Sequential, Pack = 1)]
+                private record struct MaskUniform
+                {
+                    public UniformVector2 AperturePos;
+                    public UniformVector2 ApertureSize;
                 }
             }
         }
