@@ -13,11 +13,15 @@
 //  DrawMaskShape();
 //  GLWrapper.PopDepthInfo();
 
-uniform bool writeDepth;
+layout(location = 0) out vec4 o_colour;
+
+layout(std140, set = 0, binding = 0) uniform m_maskParameters {
+    bool writeDepth;
+};
 
 void main(void) 
 {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+    o_colour = vec4(0.0, 0.0, 0.0, 0.0);
 
     if (writeDepth) {
         gl_FragDepth = 0.0;
