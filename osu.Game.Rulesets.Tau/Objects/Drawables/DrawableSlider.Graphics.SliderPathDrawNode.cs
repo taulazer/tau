@@ -383,7 +383,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                     shader.Bind();
                     shader.BindUniformBlock("m_sliderParameters", shaderData);
-                    texture.Bind(1);
+                    texture.Bind();
 
                     updateVertexBuffer();
 
