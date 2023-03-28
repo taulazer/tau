@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -7,6 +9,7 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Shaders.Types;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps.Timing;
@@ -233,6 +236,9 @@ namespace osu.Game.Rulesets.Tau.Mods
                 private float rotation;
                 private float flashlightDim;
 
+                [CanBeNull]
+                private IUniformBuffer<FlashlightUniform> bufferData;
+
                 private IVertexBatch<PositionAndColourVertex> quadBatch;
                 private Action<TexturedVertex2D> addAction;
 
@@ -257,6 +263,16 @@ namespace osu.Game.Rulesets.Tau.Mods
                 {
                     base.Draw(renderer);
 
+                    bufferData ??= renderer.CreateUniformBuffer<FlashlightUniform>();
+
+                    bufferData.Data = bufferData.Data with
+                    {
+                        CenterPos = centerPos,
+                        Range = range,
+                        Rotation = rotation,
+                        FlashlightDim = flashlightDim
+                    };
+
                     if (quadBatch == null)
                     {
                         quadBatch ??= renderer.CreateQuadBatch<PositionAndColourVertex>(1, 1);
@@ -268,21 +284,28 @@ namespace osu.Game.Rulesets.Tau.Mods
                     }
 
                     shader.Bind();
-
-                    shader.GetUniform<Vector2>("centerPos").UpdateValue(ref centerPos);
-                    shader.GetUniform<float>("range").UpdateValue(ref range);
-                    shader.GetUniform<float>("rotation").UpdateValue(ref rotation);
-                    shader.GetUniform<float>("flashlightDim").UpdateValue(ref flashlightDim);
-
+                    shader.BindUniformBlock("m_flashlightParameters", bufferData);
                     renderer.DrawQuad(renderer.WhitePixel, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction: addAction);
-
                     shader.Unbind();
                 }
 
                 protected override void Dispose(bool isDisposing)
                 {
                     base.Dispose(isDisposing);
+
                     quadBatch?.Dispose();
+                    bufferData?.Dispose();
+                }
+
+                [StructLayout(LayoutKind.Sequential, Pack = 1)]
+                private record struct FlashlightUniform
+                {
+                    public UniformVector2 CenterPos;
+                    public UniformFloat Range;
+                    public UniformFloat Rotation;
+                    public UniformFloat FlashlightDim;
+
+                    private UniformPadding12 _p1;
                 }
             }
         }

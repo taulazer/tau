@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -7,6 +9,7 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Shaders.Types;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -183,6 +186,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             private Color4 colour;
             private float[] data;
 
+            [CanBeNull]
+            private IUniformBuffer<VisualizerUniform> bufferData;
+
             private IVertexBatch<TexturedVertex2D> vertexBatch;
 
             public PlayfieldVisualizerDrawNode(PlayfieldVisualizer source)
@@ -208,12 +214,19 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             {
                 base.Draw(renderer);
 
+                bufferData ??= renderer.CreateUniformBuffer<VisualizerUniform>();
+
+                bufferData.Data = bufferData.Data with
+                {
+                    CenterPos = center,
+                    Range = radius,
+                    FadeRange = fadeRange
+                };
+
                 vertexBatch ??= renderer.CreateQuadBatch<TexturedVertex2D>(100, 10);
 
                 shader.Bind();
-                shader.GetUniform<Vector2>("centerPos").UpdateValue(ref center);
-                shader.GetUniform<float>("range").UpdateValue(ref radius);
-                shader.GetUniform<float>("fadeRange").UpdateValue(ref fadeRange);
+                shader.BindUniformBlock("m_visualizerParameters", bufferData);
 
                 Vector2 inflation = DrawInfo.MatrixInverse.ExtractScale().Xy;
 
@@ -261,6 +274,22 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 }
 
                 shader.Unbind();
+            }
+
+            protected override void Dispose(bool isDisposing)
+            {
+                base.Dispose(isDisposing);
+
+                vertexBatch?.Dispose();
+                bufferData?.Dispose();
+            }
+
+            [StructLayout(LayoutKind.Sequential, Pack = 1)]
+            private record struct VisualizerUniform
+            {
+                public UniformVector2 CenterPos;
+                public UniformFloat Range;
+                public UniformFloat FadeRange;
             }
         }
     }

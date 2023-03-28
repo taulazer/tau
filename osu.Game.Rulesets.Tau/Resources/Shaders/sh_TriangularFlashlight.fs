@@ -1,13 +1,17 @@
 ﻿#define PI 3.14159265359
 #define TAU 6.28318530718
 
-varying highp vec2 v_Position;
-varying lowp vec4 v_Colour;
+layout(location = 0) in highp vec2 v_Position;
+layout(location = 1) in highp vec4 v_Colour;
 
-uniform highp vec2 centerPos;
-uniform highp float range;
-uniform highp float rotation;
-uniform lowp float flashlightDim;
+layout(std140, set = 0, binding = 0) uniform m_flashlightParameters {
+    highp vec2 centerPos;
+    highp float range;
+    highp float rotation;
+    lowp float flashlightDim;
+};
+
+layout(location = 0) out vec4 o_colour;
 
 const mediump float smoothness = 24.0 / 180 * PI;
 
@@ -45,5 +49,5 @@ lowp vec4 getColourAt(lowp vec4 originalColour)
 
 void main(void)
 {
-    gl_FragColor = mix(getColourAt(v_Colour), vec4(0.0, 0.0, 0.0, 1.0), flashlightDim);
+    o_colour = mix(getColourAt(v_Colour), vec4(0.0, 0.0, 0.0, 1.0), flashlightDim);
 }

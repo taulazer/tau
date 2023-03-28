@@ -109,7 +109,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 case DrawableSliderHardBeat head:
                     headContainer.Child = head;
                     break;
-                
+
 
                 case DrawableSliderRepeat repeat:
                     repeatContainer.Add(repeat);
@@ -160,7 +160,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void OnApply()
         {
             base.OnApply();
-            path.FadeColour = colour.ForHitResult(HitResult.Perfect);
+            path.FadeColour = colour.ForHitResult(HitResult.Great);
 
             totalTimeHeld = 0;
 

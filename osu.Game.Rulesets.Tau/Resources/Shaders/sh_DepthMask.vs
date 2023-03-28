@@ -1,6 +1,4 @@
-﻿attribute vec2 m_Position;
-
-uniform mat4 g_ProjMatrix;
+﻿layout(location = 0) in highp vec2 m_Position;
 
 void main(void)
 {
