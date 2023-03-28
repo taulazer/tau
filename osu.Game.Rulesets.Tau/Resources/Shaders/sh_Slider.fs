@@ -35,6 +35,6 @@ void main(void)
     else 
     {
         float progress = abs(dist - range) / fadeRange;
-        o_colour = vec4(mix(vec3(1.0, 0.0, 0.0), hitColor.xyz, v_Result), mix(hitColor.w * colour.w, 0.0, progress));
+        o_colour = vec4(mix(vec3(1.0, 0.0, 0.0), vec3(hitColor.x, hitColor.y, hitColor.z), v_Result), mix(hitColor.w * colour.w, 0.0, progress));
     }
 }
