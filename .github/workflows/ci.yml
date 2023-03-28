@@ -49,26 +49,6 @@ jobs:
           path: "osu.Game.Rulesets.Tau/bin/Debug/net6.0"
           retention-days: 90
 
-      - name: Discord success
-        uses: naoei/discord-webhook-notify@master
-        if: ${{ success() }}
-        with:
-          severity: info
-          color: '#00FFAA'
-          description: "[${{ github.run_number }}] [${{ github.event.head_commit.message }}](${{ github.event.head_commit.url }})"
-          details: "Build was a success!"
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
-      - name: Discord failure
-        uses: naoei/discord-webhook-notify@master
-        if: ${{ failure() }}
-        with:
-          severity: error
-          color: '#FF0040'
-          description: "[${{ github.run_number }}] [${{ github.event.head_commit.message }}](${{ github.event.head_commit.url }})"
-          details: "Build was a failure."
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
   test:
     name: Test
     runs-on: ${{matrix.os.fullname}}
