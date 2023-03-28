@@ -304,6 +304,8 @@ namespace osu.Game.Rulesets.Tau.Mods
                     public UniformFloat Range;
                     public UniformFloat Rotation;
                     public UniformFloat FlashlightDim;
+
+                    private UniformPadding12 _p1;
                 }
             }
         }

@@ -2,7 +2,7 @@
 #define TAU 6.28318530718
 
 layout(location = 0) in highp vec2 v_Position;
-layout(location = 1) in highp vec2 v_Colour;
+layout(location = 1) in highp vec4 v_Colour;
 
 layout(std140, set = 0, binding = 0) uniform m_flashlightParameters {
     highp vec2 centerPos;
