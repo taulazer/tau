@@ -23,7 +23,7 @@ layout(location = 0) out vec4 o_colour;
 
 void main(void) 
 {
-    vec4 colour = toSRGB(v_Colour * wrappedSampler(wrap(v_TexCoord, v_TexRect), v_TexRect, m_texture, m_sampler, -0.9));
+    vec4 colour = v_Colour * wrappedSampler(wrap(v_TexCoord, v_TexRect), v_TexRect, m_texture, m_sampler, -0.9);
 
     vec2 diff = v_Position - centerPos;
     float dist = sqrt(diff.x * diff.x + diff.y * diff.y);
