@@ -28,7 +28,7 @@ void main(void)
     else 
     {
         vec2 wrappedCoord = wrap(v_TexCoord, v_TexRect);
-        vec4 colour = getRoundedColor(toSRGB(wrappedSampler(wrappedCoord, v_TexRect, m_texture, m_sampler, -0.9)), wrappedCoord);
+        vec4 colour = getRoundedColor(wrappedSampler(wrappedCoord, v_TexRect, m_texture, m_sampler, -0.9), wrappedCoord);
         float progress = (fadeRange == 0.0) ? 1.0 : (abs(dist - range) / fadeRange);
         o_colour = vec4(colour.xyz, min(mix(0.0, colour.w, progress), colour.w));
     }
