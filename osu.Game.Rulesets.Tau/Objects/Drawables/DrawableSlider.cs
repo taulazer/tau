@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
@@ -110,7 +109,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     headContainer.Child = head;
                     break;
 
-
                 case DrawableSliderRepeat repeat:
                     repeatContainer.Add(repeat);
                     break;
@@ -184,14 +182,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             // Note: base.LoadSamples() isn't called since the slider plays the tail's hitsounds for the time being.
 
-            if (HitObject.SampleControlPoint == null)
-            {
-                throw new InvalidOperationException($"{nameof(HitObject)}s must always have an attached {nameof(HitObject.SampleControlPoint)}." +
-                                                    $" This is an indication that {nameof(HitObject.ApplyDefaults)} has not been invoked on {this}.");
-            }
-
-            Samples.Samples = HitObject.TailSamples.Select(s => HitObject.SampleControlPoint.ApplyTo(s)).Cast<ISampleInfo>().ToArray();
-            slidingSample.Samples = HitObject.CreateSlidingSamples().Select(s => HitObject.SampleControlPoint.ApplyTo(s)).Cast<ISampleInfo>().ToArray();
+            Samples.Samples = HitObject.TailSamples.Cast<ISampleInfo>().ToArray();
+            slidingSample.Samples = HitObject.CreateSlidingSamples().Cast<ISampleInfo>().ToArray();
         }
 
         public override void StopAllSamples()
