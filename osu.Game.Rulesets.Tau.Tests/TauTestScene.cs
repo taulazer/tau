@@ -1,11 +1,9 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Testing;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
-    [ExcludeFromDynamicCompile]
     public abstract partial class TauTestScene : OsuTestScene
     {
         [Cached]
