@@ -4,9 +4,7 @@ using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Tau.Tests
-{
-    [ExcludeFromDynamicCompile]
-    public abstract partial class TauTestScene : OsuTestScene
+{    public abstract partial class TauTestScene : OsuTestScene
     {
         [Cached]
         private TauCachedProperties properties { get; set; } = new();
