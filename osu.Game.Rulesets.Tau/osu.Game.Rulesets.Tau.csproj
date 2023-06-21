@@ -39,7 +39,7 @@
     <None Remove="Resources\Shaders\sh_DepthMask.vs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game" Version="2023.605.0" />
+    <PackageReference Include="ppy.osu.Game" Version="2023.621.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Objects\Drawables\DrawableSlider.Calculations.cs">
