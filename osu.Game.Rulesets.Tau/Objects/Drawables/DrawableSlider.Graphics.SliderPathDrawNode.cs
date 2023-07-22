@@ -57,10 +57,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 private Vector2 drawSize;
                 private float radius;
                 private IShader shader;
-                private IShader maskShader;
 
                 private IUniformBuffer<SliderUniform> shaderData;
-                private IUniformBuffer<MaskUniform> maskData;
 
                 [StructLayout(LayoutKind.Sequential, Pack = 1)]
                 private record struct SliderUniform
@@ -77,14 +75,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     private UniformPadding4 _p2;
                     private UniformPadding12 _p3;
                     private UniformPadding4 _p4;
-                }
-
-                [StructLayout(LayoutKind.Sequential, Pack = 1)]
-                private record struct MaskUniform
-                {
-                    public UniformBool WriteDepth;
-
-                    private UniformPadding12 _p1;
                 }
 
                 // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
@@ -128,7 +118,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     drawSize = Source.DrawSize;
                     radius = Source.PathRadius;
                     shader = Source.hitFadeTextureShader;
-                    maskShader = Source.depthMaskShader;
 
                     var center = Source.PositionInBoundingBox(Vector2.Zero);
                     var edge = Source.PositionInBoundingBox(new Vector2(Source.PathDistance, 0));
@@ -360,7 +349,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         Reverse = reverse
                     };
 
-                    maskData ??= renderer.CreateUniformBuffer<MaskUniform>();
+                    //maskData ??= renderer.CreateUniformBuffer<MaskUniform>();
 
                     halfCircleBatch ??= renderer.CreateLinearBatch<SliderTexturedVertex2D>(max_resolution * 100 * 3, 10, PrimitiveTopology.Triangles);
                     quadBatch ??= renderer.CreateQuadBatch<SliderTexturedVertex2D>(200, 10);
@@ -368,39 +357,32 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     if (texture?.Available != true || segments.Length == 0)
                         return;
 
-                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: BufferTestFunction.Always));
-                    maskData.Data = maskData.Data with { WriteDepth = true };
-                    maskShader.Bind();
-                    maskShader.BindUniformBlock("m_maskParameters", maskData);
-
-                    foreach (var i in innerTicks)
-                    {
-                        renderer.DrawQuad(renderer.WhitePixel, i, Color4.Transparent);
-                    }
-
-                    maskShader.Unbind();
-                    renderer.PopDepthInfo();
-
                     shader.Bind();
                     shader.BindUniformBlock("m_sliderParameters", shaderData);
-                    texture.Bind();
 
-                    updateVertexBuffer();
-
-                    shader.Unbind();
-
-                    renderer.PushDepthInfo(new DepthInfo(depthTest: true, writeDepth: true, function: BufferTestFunction.Always));
-                    maskData.Data = maskData.Data with { WriteDepth = false };
-                    maskShader.Bind();
-                    maskShader.BindUniformBlock("m_maskParameters", maskData);
+                    renderer.PushStencilInfo(new StencilInfo(stencilTest: true, testValue: 255, testFunction: BufferTestFunction.Always, passed: StencilOperation.Replace));
 
                     foreach (var i in innerTicks)
                     {
                         renderer.DrawQuad(renderer.WhitePixel, i, Color4.Transparent);
                     }
 
-                    maskShader.Unbind();
-                    renderer.PopDepthInfo();
+                    renderer.PopStencilInfo();
+                    renderer.PushStencilInfo(new StencilInfo(stencilTest: true, testValue: 255, testFunction: BufferTestFunction.NotEqual, passed: StencilOperation.Keep));
+
+                    texture.Bind();
+                    updateVertexBuffer();
+
+                    // not needed right now, but it clears the stencil mask
+                    renderer.PushStencilInfo(new StencilInfo(stencilTest: true, testValue: 0, testFunction: BufferTestFunction.Always, passed: StencilOperation.Replace));
+                    foreach (var i in innerTicks)
+                    {
+                        renderer.DrawQuad(renderer.WhitePixel, i, Color4.Transparent);
+                    }
+                    renderer.PopStencilInfo();
+
+                    renderer.PopStencilInfo();
+                    shader.Unbind();
                 }
 
                 protected override void Dispose(bool isDisposing)
@@ -408,7 +390,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     base.Dispose(isDisposing);
 
                     shaderData?.Dispose();
-                    maskData?.Dispose();
                     halfCircleBatch?.Dispose();
                     quadBatch?.Dispose();
                     segments.Dispose();
