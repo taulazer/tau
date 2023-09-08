@@ -2,7 +2,7 @@
 #include "sh_Masking.h"
 #include "sh_TextureWrapping.h"
 
-layout(location = 5) in highp vec2 v_Position;
+layout(location = 7) in highp vec2 v_Position;
 layout(location = 2) in mediump vec2 v_TexCoord;
 
 layout(std140, set = 1, binding = 0) uniform m_visualizerParameters {
