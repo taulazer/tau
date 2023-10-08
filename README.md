@@ -11,6 +11,8 @@
 
 *An [osu!](https://github.com/ppy/osu) ruleset. Sweeping beats with your scythe.*
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V6NE9ZK)
+
 </div>
 
 [Original](https://deadlysprinklez.itch.io/tau) idea belonging to *pizzapip* and *[DeadlySprinklez](https://github.com/DeadlySprinklez)*.

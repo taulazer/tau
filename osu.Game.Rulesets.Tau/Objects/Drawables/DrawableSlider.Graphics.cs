@@ -42,7 +42,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public partial class SliderPath : Drawable
         {
             public IEnumerable<DrawableSliderRepeat> Ticks = Array.Empty<DrawableSliderRepeat>();
-            private IShader depthMaskShader { get; set; }
             private IShader hitFadeTextureShader { get; set; }
 
             private readonly List<Vector3> vertices = new();
@@ -220,7 +219,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 texture = renderer.WhitePixel;
 
-                depthMaskShader = shaders.Load("DepthMask", "DepthMask");
                 hitFadeTextureShader = shaders.Load("SliderPositionAndColour", "Slider");
             }
 
