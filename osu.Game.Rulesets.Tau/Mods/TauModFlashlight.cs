@@ -259,7 +259,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                     flashlightDim = Source.FlashlightDim;
                 }
 
-                public override void Draw(IRenderer renderer)
+                protected override void Draw(IRenderer renderer)
                 {
                     base.Draw(renderer);
 

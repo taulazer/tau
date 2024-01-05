@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Tau
     {
         private static IconUsage get(int icon) => new((char)icon, "tauFont");
 
-        public static IconUsage Tau => get(8280);
+        public static IconUsage Tau => get(8284);
 
         public static IconUsage ModFadeOut => get(8281);
 
