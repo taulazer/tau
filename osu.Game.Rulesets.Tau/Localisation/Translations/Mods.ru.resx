@@ -95,16 +95,16 @@
         <value>Полностью отключает проверку очень острых углов слайдеров</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Убирает определённые части игры.</value>
+        <value>Позволяет отключить определённые функции.</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Включить слайдеры</value>
+        <value>Отключить слайдеры</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
         <value>Полностью отключает слайдеры.</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Включить громкие биты</value>
+        <value>Отключить громкие биты</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
         <value>Полностью отключает громкие биты.</value>
@@ -119,10 +119,10 @@
         <value>Где платформа?</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
-        <value>Скрывать платформу при комбо</value>
+        <value>Hidden at combo</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
-        <value>Количество комбо, при котором платформа становится полностью невидимой</value>
+        <value>Количество комбо, при котором платформа становится невидимой</value>
     </data>
   <data name="relax_description" xml:space="preserve">
         <value>Вам не нужно кликать. Дайте своим пальцам отдохнуть от напряжения.</value>

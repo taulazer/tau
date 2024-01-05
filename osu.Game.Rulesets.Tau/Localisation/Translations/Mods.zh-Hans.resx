@@ -47,25 +47,25 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Paddle Size</value>
+        <value>划桨大小</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Override a beatmap's set PS.</value>
+        <value>覆盖 PS 节拍图集</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
-        <value>Approach Rate</value>
+        <value>缩圈速度</value>
     </data>
   <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
-        <value>Override a beatmap's set AR.</value>
+        <value>覆盖节拍图集AR</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>When one isn't enough</value>
+        <value>当一个划桨不够时</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Paddle count</value>
+        <value>划桨计数</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+        <value>更大的划桨，更少的HP流失，准度要求降低，三条生命！</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
         <value>Flashlight size</value>
@@ -74,13 +74,13 @@
         <value>Multiplier applied to the default flashlight size.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Change size based on combo</value>
+        <value>根据连击改变大小</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
         <value>Decrease the flashlight size as combo increases.</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
-        <value>Automatic paddle movement - just follow the rhythm.</value>
+        <value>自动划桨移动-只需要跟随节奏就好。</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
         <value>Beats fade out before you hit them!</value>
@@ -89,34 +89,34 @@
         <value>Beats appear out of nowhere!</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
-        <value>Beats will appear outside of the playfield.</value>
+        <value>节拍会从外向里聚集！</value>
     </data>
   <data name="impossible_sliders_description" xml:space="preserve">
-        <value>Entirely removes the check for very sharp angles</value>
+        <value>完全取消对非常锐角的检查</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Removes certain aspects of the ruleset.</value>
+        <value>删除规则集的某些方面。</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Sliders conversion</value>
+        <value>滑动条转换</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
-        <value>Completely disables sliders altogether.</value>
+        <value>完全禁用滑动条。</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Hard beats conversion</value>
+        <value>硬拍转换</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
-        <value>Completely disables hard beats altogether.</value>
+        <value>完全禁用硬核节奏。</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
         <value>Slider division level</value>
     </data>
   <data name="lite_slider_division_level_description" xml:space="preserve">
-        <value>The minimum slider length divisor.</value>
+        <value>最小滑动条长度分隔符。</value>
     </data>
   <data name="no_scope_description" xml:space="preserve">
-        <value>Where's the paddle?</value>
+        <value>划桨在哪里呢？</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
         <value>Hidden at combo</value>
@@ -128,16 +128,16 @@
         <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>You can only rotate the paddle in one direction.</value>
+        <value>你只能向一个方向旋转划桨</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
-        <value>Direction</value>
+        <value>方向</value>
     </data>
   <data name="traceable_description" xml:space="preserve">
-        <value>Brim with no yankie</value>
+        <value>没有美国佬</value>
     </data>
   <data name="lenience_description" xml:space="preserve">
-        <value>Hard beats are more forgiving</value>
+        <value>硬拍子判定更加宽松</value>
     </data>
   <data name="strict_description" xml:space="preserve">
         <value>Aim the hard beats!</value>
