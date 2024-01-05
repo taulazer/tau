@@ -37,13 +37,13 @@ namespace osu.Game.Rulesets.Tau.Tests
             {
                 for (int j = 0; j < i; j++)
                 {
-                    events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Beat(), new Beat(),
                         new Vector2(i - (angleRange / 2), 0)));
-                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Slider(), new Slider(),
                         new Vector2(i - (angleRange / 2), 0)));
-                    events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Beat(), new Beat(),
                         new Vector2((angleRange / 2) - i, 0)));
-                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Slider(), new Slider(),
                         new Vector2((angleRange / 2) - i, 0)));
                 }
             }
@@ -63,13 +63,13 @@ namespace osu.Game.Rulesets.Tau.Tests
             {
                 for (float j = angleRange / 2; j > i; j--)
                 {
-                    events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Beat(), new Beat(),
                         new Vector2(i - (angleRange / 2), 0)));
-                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Slider(), new Slider(),
                         new Vector2(i - (angleRange / 2), 0)));
-                    events.Add(new HitEvent(i, HitResult.Great, new Beat(), new Beat(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Beat(), new Beat(),
                         new Vector2((angleRange / 2) - i, 0)));
-                    events.Add(new HitEvent(i, HitResult.Great, new Slider(), new Slider(),
+                    events.Add(new HitEvent(i, 1f, HitResult.Great, new Slider(), new Slider(),
                         new Vector2((angleRange / 2) - i, 0)));
                 }
             }
@@ -112,10 +112,10 @@ namespace osu.Game.Rulesets.Tau.Tests
 
             for (int i = 0; i < 100; i++)
             {
-                hitEvents.Add(new HitEvent(i - 25, HitResult.Perfect, new Beat(), new Beat(),
+                hitEvents.Add(new HitEvent(i - 25, 1f, HitResult.Perfect, new Beat(), new Beat(),
                     new Vector2(RNG.NextSingle(-(angleRange / 2), angleRange / 2), 0)));
 
-                hitEvents.Add(new HitEvent(i - 25, HitResult.Perfect, new Slider(), new Slider(),
+                hitEvents.Add(new HitEvent(i - 25, 1f, HitResult.Perfect, new Slider(), new Slider(),
                     new Vector2(RNG.NextSingle(-(angleRange / 2), angleRange / 2), 0)));
             }
 

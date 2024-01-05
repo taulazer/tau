@@ -210,7 +210,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                 fadeRange = Source.ApplyFade ? radius * 0.2f : 0;
             }
 
-            public override void Draw(IRenderer renderer)
+            protected override void Draw(IRenderer renderer)
             {
                 base.Draw(renderer);
 

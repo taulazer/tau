@@ -181,7 +181,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                     apertureSize = Source.ApertureSize * DrawInfo.Matrix.ExtractScale().Xy;
                 }
 
-                public override void Draw(IRenderer renderer)
+                protected override void Draw(IRenderer renderer)
                 {
                     base.Draw(renderer);
 
