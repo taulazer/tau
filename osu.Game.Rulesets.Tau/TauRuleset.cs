@@ -186,7 +186,7 @@ namespace osu.Game.Rulesets.Tau
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Icon = TauIcons.Tau,
-                        Scale = new Vector2(0.475f)
+                        Scale = new Vector2(0.9f)
                     },
                 });
             }

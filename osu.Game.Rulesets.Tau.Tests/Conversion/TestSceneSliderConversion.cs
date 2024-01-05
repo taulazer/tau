@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
             {
                 Duration = 1000,
                 Position = new Vector2(0),
-                Path = new SliderPath(PathType.Linear, new[] { new Vector2(0, 10), new Vector2(255, 10) }),
+                Path = new SliderPath(PathType.LINEAR, new[] { new Vector2(0, 10), new Vector2(255, 10) }),
                 NodeSamples = { new List<HitSampleInfo>() }
             };
         }
