@@ -47,21 +47,21 @@
     </xsd:element>
   </xsd:schema>
   <data name="ticks" xml:space="preserve">
-        <value>Ticks</value>
+        <value>Tick</value>
     </data>
   <data name="timing_distribution" xml:space="preserve">
-        <value>Timing Distribution</value>
+        <value>Distribuzione nel tempo</value>
     </data>
   <data name="paddle_distribution" xml:space="preserve">
-        <value>Paddle Distribution</value>
+        <value>Distribuzione nella piattaforma</value>
     </data>
   <data name="distribution_sliders" xml:space="preserve">
-        <value>Sliders</value>
+        <value>Slider</value>
     </data>
   <data name="distribution_beats" xml:space="preserve">
-        <value>Beats</value>
+        <value>Colpi</value>
     </data>
   <data name="resume_overlay_message" xml:space="preserve">
-        <value>Move the cursor to the highlighted area.</value>
+        <value>Punta il cursore nell'area evidenziata.</value>
     </data>
 </root>

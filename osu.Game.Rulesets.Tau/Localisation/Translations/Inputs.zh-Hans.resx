@@ -47,15 +47,15 @@
     </xsd:element>
   </xsd:schema>
   <data name="left_button" xml:space="preserve">
-        <value>Left Button</value>
+        <value>左键</value>
     </data>
   <data name="right_button" xml:space="preserve">
-        <value>Right Button</value>
+        <value>右键</value>
     </data>
   <data name="hard_button_1" xml:space="preserve">
-        <value>Hard Button 1</value>
+        <value>硬拍子打击按钮1</value>
     </data>
   <data name="hard_button_2" xml:space="preserve">
-        <value>Hard Button 2</value>
+        <value>硬拍子打击按钮2</value>
     </data>
 </root>

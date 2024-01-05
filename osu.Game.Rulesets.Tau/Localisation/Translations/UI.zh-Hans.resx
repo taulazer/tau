@@ -50,18 +50,18 @@
         <value>Ticks</value>
     </data>
   <data name="timing_distribution" xml:space="preserve">
-        <value>Timing Distribution</value>
+        <value>时序分布</value>
     </data>
   <data name="paddle_distribution" xml:space="preserve">
         <value>Paddle Distribution</value>
     </data>
   <data name="distribution_sliders" xml:space="preserve">
-        <value>Sliders</value>
+        <value>划动条</value>
     </data>
   <data name="distribution_beats" xml:space="preserve">
-        <value>Beats</value>
+        <value>节拍</value>
     </data>
   <data name="resume_overlay_message" xml:space="preserve">
-        <value>Move the cursor to the highlighted area.</value>
+        <value>将光标移动到高亮显示的区域</value>
     </data>
 </root>
