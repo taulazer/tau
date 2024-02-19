@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             void addVertex(double t, double angle)
             {
                 var p = Extensions.FromPolarCoordinates(distanceAt(t), (float)angle);
-                int index = (int)(t / trackingCheckpointInterval);
+                int index = (int)(t / tracking_checkpoint_interval);
 
                 path.AddVertex(new Vector3(p.X, p.Y, trackingCheckpoints.ValueAtOrLastOr(index, true) ? 1 : 0));
             }

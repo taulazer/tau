@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (!userTriggered)
             {
                 if (!HitObject.HitWindows.CanBeHit(timeOffset))
-                    ApplyResult(r => r.Type = HitResult.Miss);
+                    ApplyResult(HitResult.Miss);
 
                 return;
             }
@@ -61,11 +61,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (result == HitResult.None)
                 return;
 
-            ApplyResult(r =>
-            {
-                r.Type = result;
-                ApplyCustomResult(r);
-            });
+            ApplyResult(result);
         }
 
         /// <summary>
@@ -73,7 +69,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// </summary>
         protected virtual bool CheckForValidation() => true;
 
-        protected virtual void ApplyCustomResult(JudgementResult result) { }
+        protected new void ApplyResult(HitResult result)
+        {
+            ApplyCustomResult(Result);
+
+            base.ApplyResult(result);
+        }
+
+        public virtual void ApplyCustomResult(JudgementResult result) { }
 
         public virtual bool OnPressed(KeyBindingPressEvent<TauAction> e)
         {
@@ -87,8 +90,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
         }
 
-        public void ForcefullyApplyResult(Action<JudgementResult> application)
-            => ApplyResult(application);
+        public void ForcefullyApplyResult(HitResult result)
+            => ApplyResult(result);
     }
 
     public struct ValidationResult

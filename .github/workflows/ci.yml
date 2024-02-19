@@ -16,10 +16,10 @@ jobs:
         with:
           dotnet-version: "3.1.x"
 
-      - name: Install .NET 6.0.x
+      - name: Install .NET 8.0.x
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: "6.0.x"
+          dotnet-version: "8.0.x"
 
       - name: Restore Tools
         run: dotnet tool restore
@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v3.0.0
         with:
           name: osu.Game.Rulesets.Tau.dll
-          path: "osu.Game.Rulesets.Tau/bin/Debug/net6.0"
+          path: "osu.Game.Rulesets.Tau/bin/Debug/net8.0"
           retention-days: 90
 
   test:
@@ -67,10 +67,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install .NET 6.0.x
+      - name: Install .NET 8.0.x
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: "6.0.x"
+          dotnet-version: "8.0.x"
 
       # FIXME: libavformat is not included in Ubuntu. Let's fix that.
       # https://github.com/ppy/osu-framework/issues/4349

@@ -52,12 +52,12 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public virtual bool IsWithinPaddle() => CheckValidation != null && CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).IsValid;
 
-        protected override void ApplyCustomResult(JudgementResult result)
+        public override void ApplyCustomResult(JudgementResult result)
         {
             if (CheckValidation == null)
                 return;
 
-            var delta = CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).DeltaFromPaddleCenter;
+            float delta = CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).DeltaFromPaddleCenter;
             var beatResult = (TauJudgementResult)result;
 
             if (result.IsHit)

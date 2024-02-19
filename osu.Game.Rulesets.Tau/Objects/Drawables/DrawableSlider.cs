@@ -201,7 +201,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         }
 
         public BindableBool Tracking = new();
-        private const double trackingCheckpointInterval = 5;
+        private const double tracking_checkpoint_interval = 5;
         private readonly List<bool> trackingCheckpoints = new();
 
         protected override void Update()
@@ -225,7 +225,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 totalTimeHeld += Time.Elapsed;
             }
 
-            var trackingCheckpointIndex = (int)((Time.Current - HitObject.StartTime) / trackingCheckpointInterval);
+            int trackingCheckpointIndex = (int)((Time.Current - HitObject.StartTime) / tracking_checkpoint_interval);
 
             if (trackingCheckpointIndex >= 0)
             {
@@ -262,14 +262,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             foreach (var nested in NestedHitObjects.Where(n => !n.AllJudged))
             {
                 if (nested is ICanApplyResult res)
-                    res.ForcefullyApplyResult(r => r.Type = result);
+                    res.ForcefullyApplyResult(result);
             }
 
-            ApplyResult(r =>
-            {
-                r.Type = result;
-                ApplyCustomResult(r);
-            });
+            ApplyResult(result);
         }
 
         protected override JudgementResult CreateResult(Judgement judgement)
