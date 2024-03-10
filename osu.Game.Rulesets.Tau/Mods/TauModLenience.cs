@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                 if (!userTriggered)
                 {
                     if (!HitObject.HitWindows.CanBeHit(timeOffset))
-                        ApplyResult(r => r.Type = HitResult.Miss);
+                        ApplyResult(HitResult.Miss);
 
                     return;
                 }
@@ -98,11 +98,7 @@ namespace osu.Game.Rulesets.Tau.Mods
                         result = HitResult.Ok;
                 }
 
-                ApplyResult(r =>
-                {
-                    r.Type = result;
-                    ApplyCustomResult(r);
-                });
+                ApplyResult(result);
             }
 
             public override bool OnPressed(KeyBindingPressEvent<TauAction> e)

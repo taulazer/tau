@@ -71,10 +71,10 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             {
                 if (auto && !userTriggered && timeOffset > 0)
                     // Force success.
-                    ApplyResult(r => r.Type = HitResult.Great);
+                    ApplyResult(HitResult.Great);
                 else if (timeOffset > 0)
                     // We'll have to manually apply the result anyways because we have no way of checking if the paddle is in the correct spot.
-                    ApplyResult(r => r.Type = HitResult.Miss);
+                    ApplyResult(HitResult.Miss);
             }
         }
     }
