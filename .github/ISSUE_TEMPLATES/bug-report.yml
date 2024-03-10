@@ -1,0 +1,48 @@
+name: Bug report
+description: Report an issue about the ruleset's performance, functionality, or visuals.
+body:
+  - type: dropdown
+    attributes:
+      label: Branch
+      options:
+        - master
+        - experimental
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Version
+      description: Which version of the ruleset are you using?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: |
+        **Describe the bug**
+        A clear and concise description of what the bug is.
+
+        **To Reproduce**
+        Steps to reproduce the behavior:
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+
+        **Expected behavior**
+        A clear and concise description of what you expected to happen.
+
+        **Screenshots**
+        If applicable, add screenshots to help explain your problem.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Logs
+      description: Drag and drop the log files into this box.
+    validations:
+      required: true
