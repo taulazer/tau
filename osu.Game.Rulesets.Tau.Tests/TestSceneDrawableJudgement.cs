@@ -29,6 +29,17 @@ namespace osu.Game.Rulesets.Tau.Tests
         {
             pools = new List<DrawablePool<TestDrawableTauJudgement>>();
 
+            for (int i = 0; i < 4; ++i)
+            {
+                var pool = new DrawablePool<TestDrawableTauJudgement>(1);
+                pools.Add(pool);
+
+                Add(new Container
+                {
+                    Child = pool
+                });
+            }
+
             foreach (var result in Enum.GetValues(typeof(HitResult)).OfType<HitResult>().Skip(1))
             {
                 showResult(result);
@@ -73,16 +84,10 @@ namespace osu.Game.Rulesets.Tau.Tests
 
                 SetContents(_ =>
                 {
-                    DrawablePool<TestDrawableTauJudgement> pool;
+                    var pool = pools[poolIndex];
 
-                    if (poolIndex >= pools.Count)
-                        pools.Add(pool = new DrawablePool<TestDrawableTauJudgement>(1));
-                    else
-                    {
-                        pool = pools[poolIndex];
+                    ((Container)pool.Parent).Clear(false);
 
-                        ((Container)pool.Parent).Clear(false);
-                    }
 
                     var container = new Container
                     {
@@ -106,7 +111,7 @@ namespace osu.Game.Rulesets.Tau.Tests
                         }
                     };
 
-                    poolIndex++;
+                    poolIndex = (poolIndex + 1) % 4;
 
                     return container;
                 });

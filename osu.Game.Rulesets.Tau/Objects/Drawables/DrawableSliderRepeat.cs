@@ -94,7 +94,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
             if (HitObject.StartTime <= Time.Current)
-                ApplyResult(r => r.Type = DrawableSlider.Tracking.Value ? HitResult.Great : HitResult.Miss);
+                ApplyResult(DrawableSlider.Tracking.Value ? HitResult.Great : HitResult.Miss);
         }
 
         protected override void OnApply()
@@ -117,8 +117,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
-            var velocity = -0.5f / (float)HitObject.TimePreempt;
-            var timeFadeHit = DrawableSlider.FADE_RANGE / Math.Abs(velocity);
+            float velocity = -0.5f / (float)HitObject.TimePreempt;
+            float timeFadeHit = DrawableSlider.FADE_RANGE / Math.Abs(velocity);
 
             if (Properties?.InverseModEnabled.Value == true)
                 velocity *= -1;
