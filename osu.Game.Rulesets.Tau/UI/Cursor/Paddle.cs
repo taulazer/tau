@@ -27,7 +27,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Current = new BindableDouble(),
+                    Progress = 0,
                     InnerRadius = PADDLE_RADIUS
                 },
                 new HandlePiece()
@@ -44,7 +44,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
             angleRange.BindValueChanged(r =>
             {
-                paddle.Current.Value = r.NewValue / 360;
+                paddle.Progress = r.NewValue / 360;
                 paddle.Rotation = (float)(-r.NewValue / 2);
             }, true);
         }

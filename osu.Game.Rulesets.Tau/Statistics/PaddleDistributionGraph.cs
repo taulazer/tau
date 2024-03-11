@@ -179,7 +179,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
                             RelativePositionAxes = Axes.Both,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Current = new BindableDouble(paddedAngleRange / 360),
+                            Progress = paddedAngleRange / 360,
                             InnerRadius = 0.05f,
                             Rotation = (float)(-paddedAngleRange / 2),
                             Y = 0.0035f

@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
 
             AngleRange.BindValueChanged(val =>
             {
-                Current.Value = val.NewValue / 360;
+                Progress = val.NewValue / 360;
                 Rotation = -(float)(val.NewValue / 2);
             }, true);
         }
