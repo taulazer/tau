@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.Tau.UI
                         RelativeSizeAxes = Axes.Both,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Current = new BindableDouble((angleRange / 360) * 0.25f),
+                        Progress = (angleRange / 360) * 0.25f,
                         ResumeRequested = Resume
                     }
                 }

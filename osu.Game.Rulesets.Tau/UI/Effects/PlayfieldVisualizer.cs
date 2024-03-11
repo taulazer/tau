@@ -242,13 +242,13 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                             if (data[i] < amplitude_dead_zone)
                                 continue;
 
-                            float rotation = MathUtils.DegreesToRadians((i / (float)bars_per_visualiser * 360) + (j * 360 / (float)visualizer_rounds));
+                            float rotation = float.DegreesToRadians((i / (float)bars_per_visualiser * 360) + (j * 360 / (float)visualizer_rounds));
                             float rotationCos = MathF.Cos(rotation);
                             float rotationSin = MathF.Sin(rotation);
                             // taking the cos and sin to the 0..1 range
                             var barPosition = new Vector2((rotationCos / 2) + 0.5f, (rotationSin / 2) + 0.5f) * size;
 
-                            var barSize = new Vector2(size * MathF.Sqrt(2 * (1 - MathF.Cos(MathUtils.DegreesToRadians(360f / bars_per_visualiser)))) / 2f,
+                            var barSize = new Vector2(size * MathF.Sqrt(2 * (1 - MathF.Cos(float.DegreesToRadians(360f / bars_per_visualiser)))) / 2f,
                                 bar_length * data[i]);
                             // The distance between the position and the sides of the bar.
                             var bottomOffset = new Vector2(-rotationSin * barSize.X / 2, rotationCos * barSize.X / 2);
