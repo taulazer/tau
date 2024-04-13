@@ -3,6 +3,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Play;
 using osu.Game.Tests.Visual;
 
@@ -16,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Tests
         public TestSceneResumeOverlay()
         {
             ManualTauInputManager tauInputManager;
-            CursorContainer cursor;
+            GameplayCursorContainer cursor;
             ResumeOverlay resume;
 
             bool resumeFired = false;
@@ -25,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Tests
             {
                 Children = new Drawable[]
                 {
-                    cursor = new CursorContainer(),
+                    cursor = new GameplayCursorContainer(),
                     resume = new TauResumeOverlay()
                     {
                         GameplayCursor = cursor
