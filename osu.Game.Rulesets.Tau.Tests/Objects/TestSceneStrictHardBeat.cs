@@ -1,9 +1,13 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.UI;
@@ -15,16 +19,41 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
     {
         private int depthIndex;
 
-        public TestSceneStrictHardBeat()
-        {
-            TauPlayfieldAdjustmentContainer container;
-            Add(container = new TauPlayfieldAdjustmentContainer());
+        private TauPlayfieldAdjustmentContainer container;
+        private BindableBool highlightHardNotes = new BindableBool();
 
-            AddStep("Miss Single", () => container.Child = testSingle());
-            AddStep("Hit Single", () => container.Child = testSingle(true));
+        [BackgroundDependencyLoader]
+        private void load() {
+            var config = (TauRulesetConfigManager)RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
+            config.BindWith(TauRulesetSettings.HighlightHardBeats, highlightHardNotes);
+        }
+
+        [Test]
+        public void TestStrictHardBeat()
+        {
+            AddStep("clear screen", Clear);
+            AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
+            AddStep("highlighting disabled", () => highlightHardNotes.Value = false);
+
+            AddStep("Miss Single", () => container.Add(testSingle()));
+            AddStep("Hit Single", () => container.Add(testSingle(true)));
             AddStep("Miss Stream", () => Add(testStream()));
             AddStep("Hit Stream", () => Add(testStream(true)));
-            AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableTauHitObject<StrictHardBeat> { AllJudged: false }));
+            AddUntilStep("Wait for object despawn", () => !container.Any(h => h is DrawableTauHitObject<StrictHardBeat> { AllJudged: false }));
+        }
+
+        [Test]
+        public void TestHighlightedStrictHardBeat()
+        {
+            AddStep("clear screen", Clear);
+            AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
+            AddStep("highlighting enabled", () => highlightHardNotes.Value = true);
+
+            AddStep("Miss Single", () => container.Add(testSingle()));
+            AddStep("Hit Single", () => container.Add(testSingle(true)));
+            AddStep("Miss Stream", () => Add(testStream()));
+            AddStep("Hit Stream", () => Add(testStream(true)));
+            AddUntilStep("Wait for object despawn", () => !container.Any(h => h is DrawableTauHitObject<StrictHardBeat> { AllJudged: false }));
         }
 
         private Drawable testSingle(bool auto = false, double timeOffset = 0, float angle = 0)
