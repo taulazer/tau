@@ -16,6 +16,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
@@ -28,6 +29,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public Drawable SliderHead => headContainer.Child;
 
         private readonly BindableFloat size = new(16f);
+        public BindableBool HighlightHardBeats = new(false);
 
         public float PathDistance = TauPlayfield.BASE_SIZE.X / 2;
 
@@ -141,13 +143,18 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private float convertNoteSizeToSliderSize(float beatSize)
             => Interpolation.ValueAt(beatSize, 2f, 7f, 10f, 25f);
 
+        private Color4 convertHighlightSettingToColor(bool highlightHardBeats)
+            => highlightHardBeats && HitObject.IsHard ? Color4.Orange : Color4.White;
+
         [BackgroundDependencyLoader]
-        private void load(IRenderer renderer, GameHost host)
+        private void load(IRenderer renderer, GameHost host, TauRulesetConfigManager config)
         {
+            config?.BindWith(TauRulesetSettings.HighlightHardBeats, HighlightHardBeats);
+
             NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
-            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.White);
+            path.Texture = generateSmoothPathTexture(renderer, path.PathRadius, _ =>  convertHighlightSettingToColor(HighlightHardBeats.Value));
         }
 
         [Resolved]

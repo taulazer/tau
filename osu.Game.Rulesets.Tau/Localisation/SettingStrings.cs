@@ -27,6 +27,11 @@ namespace osu.Game.Rulesets.Tau.Localisation
         public static LocalisableString HitLighting => new TranslatableString(getKey(@"hit_lighting"), @"Hit Lighting");
 
         /// <summary>
+        /// "Highlight Hard Beats"
+        /// </summary>
+        public static LocalisableString HighlightHardBeats = new TranslatableString(getKey(@"highlight_hard_beats"), @"Highlight Hard Beats");
+
+        /// <summary>
         /// "Kiai Type"
         /// </summary>
         public static LocalisableString KiaiType => new TranslatableString(getKey(@"kiai_type"), @"Kiai Type");

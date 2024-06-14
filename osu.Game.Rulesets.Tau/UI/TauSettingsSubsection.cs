@@ -51,6 +51,11 @@ namespace osu.Game.Rulesets.Tau.UI
                     LabelText = SettingStrings.HitLighting,
                     Current = config.GetBindable<bool>(TauRulesetSettings.HitLighting)
                 },
+                new SettingsCheckbox
+                {
+                    LabelText = SettingStrings.HighlightHardBeats,
+                    Current = config.GetBindable<bool>(TauRulesetSettings.HighlightHardBeats)
+                },
                 kiaiType = new SettingsEnumDropdown<KiaiType>()
                 {
                     LabelText = SettingStrings.KiaiType,
