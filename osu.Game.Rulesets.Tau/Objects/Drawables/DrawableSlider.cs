@@ -8,6 +8,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
 using osu.Framework.Utils;
 using osu.Game.Audio;
@@ -50,6 +51,9 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private readonly PausableSkinnableSound slidingSample;
 
         private bool inversed;
+
+        private Texture pathTexture;
+        private Texture pathTextureHighlighted;
 
         public DrawableSlider()
             : this(null)
@@ -149,12 +153,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         [BackgroundDependencyLoader]
         private void load(IRenderer renderer, GameHost host, TauRulesetConfigManager config)
         {
-            config?.BindWith(TauRulesetSettings.HighlightHardBeats, HighlightHardBeats);
+            config.BindWith(TauRulesetSettings.HighlightHardBeats, HighlightHardBeats);
 
             NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
+            // HighlightHardBeats.BindValueChanged(value => updatePathTexture(value.NewValue, renderer));
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
-            path.Texture = generateSmoothPathTexture(renderer, path.PathRadius, _ =>  convertHighlightSettingToColor(HighlightHardBeats.Value));
+            pathTexture = generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.White);
+            pathTextureHighlighted = generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.Orange);
         }
 
         [Resolved]
@@ -166,6 +172,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.OnApply();
             path.FadeColour = colour.ForHitResult(HitResult.Great);
+            HighlightHardBeats.BindValueChanged(value => path.Texture = value.NewValue && HitObject.IsHard ? pathTextureHighlighted : pathTexture, true);
 
             totalTimeHeld = 0;
 
@@ -183,6 +190,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.OnFree();
             trackingCheckpoints.Clear();
             slidingSample?.ClearSamples();
+            HighlightHardBeats.UnbindEvents();
         }
 
         protected override void LoadSamples()
