@@ -21,12 +21,12 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
         private int depthIndex;
 
         private TauPlayfieldAdjustmentContainer container;
-        private BindableBool highlightHardNotes = new BindableBool();
+        private BindableBool increaseVisualDistinction = new BindableBool();
 
         [BackgroundDependencyLoader]
         private void load() {
             var config = (TauRulesetConfigManager)RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
-            config.BindWith(TauRulesetSettings.HighlightHardBeats, highlightHardNotes);
+            config.BindWith(TauRulesetSettings.IncreaseVisualDistinction, increaseVisualDistinction);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
         {
             AddStep("clear screen", Clear);
             AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
-            AddStep("highlighting disabled", () => highlightHardNotes.Value = false);
+            AddStep("visual distinction disabled", () => increaseVisualDistinction.Value = false);
 
             AddStep("Miss Single", () => container.Add(testSingle()));
             AddStep("Hit Single", () => container.Add(testSingle(true)));
@@ -42,14 +42,14 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
         }
 
         [Test]
-        public void TestHighlightedSingleSlider()
+        public void TestVisuallyDistinctSingleSlider()
         {
             AddStep("clear screen", Clear);
             AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
-            AddStep("highlighting enabled", () => highlightHardNotes.Value = true);
+            AddStep("visual distinction enabled", () => increaseVisualDistinction.Value = true);
 
-            AddStep("Miss single highlighted", () => container.Add(testSingle()));
-            AddStep("Hit single highlighted", () => container.Add(testSingle(true)));
+            AddStep("Miss single", () => container.Add(testSingle()));
+            AddStep("Hit single", () => container.Add(testSingle(true)));
             AddUntilStep("Wait for object despawn", () => !container.Any(h => h is DrawableSlider { AllJudged: false }));
         }
 

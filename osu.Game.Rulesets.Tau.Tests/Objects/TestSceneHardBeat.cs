@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
         private int depthIndex;
 
         private TauPlayfieldAdjustmentContainer container;
-        private BindableBool highlightHardNotes = new BindableBool();
+        private BindableBool increaseVisualDistinction = new BindableBool();
 
         [Test]
         public void TestHardBeat()
@@ -28,28 +28,28 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             AddStep("clear screen", Clear);
             AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
 
-            AddStep("Highlighting disabled", () => highlightHardNotes.Value = false);
+            AddStep("Visual distinction disabled", () => increaseVisualDistinction.Value = false);
             AddStep("Miss single", () => container.Child = testSingle());
             AddStep("Hit single", () => container.Child = testSingle(true));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableHardBeat { AllJudged: false }));
         }
 
         [Test]
-        public void TestHighlightedHardBeat()
+        public void TestVisuallyDistinctHardBeat()
         {
             AddStep("clear screen", Clear);
             AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
 
-            AddStep("Highlighting enabled", () => highlightHardNotes.Value = true);
-            AddStep("Miss single highlighted", () => container.Child = testSingle());
-            AddStep("Hit single highlighted", () => container.Child = testSingle(true));
+            AddStep("Visual distinction enabled", () => increaseVisualDistinction.Value = true);
+            AddStep("Miss single", () => container.Child = testSingle());
+            AddStep("Hit single", () => container.Child = testSingle(true));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableHardBeat { AllJudged: false }));
         }
 
         [BackgroundDependencyLoader]
         private void load() {
             var config = (TauRulesetConfigManager)RulesetConfigs.GetConfigFor(Ruleset.Value.CreateInstance()).AsNonNull();
-            config.BindWith(TauRulesetSettings.HighlightHardBeats, highlightHardNotes);
+            config.BindWith(TauRulesetSettings.IncreaseVisualDistinction, increaseVisualDistinction);
         }
 
         private Drawable testSingle(bool auto = false)

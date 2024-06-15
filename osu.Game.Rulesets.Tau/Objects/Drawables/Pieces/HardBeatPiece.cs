@@ -12,13 +12,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
     public partial class HardBeatPiece : CircularContainer
     {
         public BindableFloat NoteSize = new(16f);
-        public BindableBool HighlightHardBeats = new(false);
+        public BindableBool IncreaseVisualDistinction = new(false);
 
         public HardBeatPiece()
         {
             Masking = true;
             BorderThickness = 5;
-            BorderColour = HighlightHardBeats.Value ? Color4.Orange : Color4.White;
+            BorderColour = IncreaseVisualDistinction.Value ? Color4.Orange : Color4.White;
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
@@ -33,13 +33,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
             };
 
             NoteSize.BindValueChanged(value => BorderThickness = convertNoteSizeToThickness(value.NewValue));
-            HighlightHardBeats.BindValueChanged(value => BorderColour = value.NewValue ? Color4.Orange : Color4.White);
+            IncreaseVisualDistinction.BindValueChanged(value => BorderColour = value.NewValue ? Color4.Orange : Color4.White);
         }
 
         [BackgroundDependencyLoader]
         private void load(TauRulesetConfigManager config)
         {
-            config?.BindWith(TauRulesetSettings.HighlightHardBeats, HighlightHardBeats);
+            config?.BindWith(TauRulesetSettings.IncreaseVisualDistinction, IncreaseVisualDistinction);
         }
 
         private float convertNoteSizeToThickness(float noteSize)

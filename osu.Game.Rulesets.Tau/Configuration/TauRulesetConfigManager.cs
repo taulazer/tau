@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Configuration
             SetDefault(TauRulesetSettings.ShowVisualizer, true);
             SetDefault(TauRulesetSettings.ShowSliderEffects, true);
             SetDefault(TauRulesetSettings.HitLighting, false);
-            SetDefault(TauRulesetSettings.HighlightHardBeats, false);
+            SetDefault(TauRulesetSettings.IncreaseVisualDistinction, false);
             SetDefault(TauRulesetSettings.KiaiType, KiaiType.Turbulence);
             SetDefault(TauRulesetSettings.PlayfieldDim, 0.7f, 0, 1, 0.01f);
             SetDefault(TauRulesetSettings.NotesSize, 16f, 10, 25, 1f);
@@ -31,7 +31,7 @@ namespace osu.Game.Rulesets.Tau.Configuration
         ShowVisualizer,
         ShowSliderEffects, // There's no real reason to have a toggle for showing Kiai effects, as that's already handled under KiaiType
         HitLighting,
-        HighlightHardBeats,
+        IncreaseVisualDistinction,
         KiaiType,
         PlayfieldDim,
         NotesSize,

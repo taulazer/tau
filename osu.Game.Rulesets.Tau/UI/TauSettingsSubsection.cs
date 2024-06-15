@@ -53,8 +53,8 @@ namespace osu.Game.Rulesets.Tau.UI
                 },
                 new SettingsCheckbox
                 {
-                    LabelText = SettingStrings.HighlightHardBeats,
-                    Current = config.GetBindable<bool>(TauRulesetSettings.HighlightHardBeats)
+                    LabelText = SettingStrings.IncreaseVisualDistinction,
+                    Current = config.GetBindable<bool>(TauRulesetSettings.IncreaseVisualDistinction)
                 },
                 kiaiType = new SettingsEnumDropdown<KiaiType>()
                 {

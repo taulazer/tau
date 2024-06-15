@@ -13,11 +13,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
     {
         public BindableFloat NoteSize = new(16f);
         public BindableDouble AngleRange = new(25 * 0.75);
-        public BindableBool HighlightHardBeats = new(false);
+        public BindableBool IncreaseVisualDistinction = new(false);
 
         public StrictHardBeatPiece()
         {
-            Colour = HighlightHardBeats.Value ? Color4.Orange : Color4.White;
+            Colour = IncreaseVisualDistinction.Value ? Color4.Orange : Color4.White;
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
                 Progress = val.NewValue / 360;
                 Rotation = -(float)(val.NewValue / 2);
             }, true);
-            HighlightHardBeats.BindValueChanged(value => Colour = value.NewValue ? Color4.Orange : Color4.White);
+            IncreaseVisualDistinction.BindValueChanged(value => Colour = value.NewValue ? Color4.Orange : Color4.White);
         }
 
         [BackgroundDependencyLoader]
@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
             // see: https://github.com/ppy/osu-framework/blob/603e15fb2e68826e55878dfc09e1d7414b7cdf90/osu.Framework/Graphics/Sprites/Sprite.cs#L181-L182
             Size = Vector2.Zero;
 
-            config?.BindWith(TauRulesetSettings.HighlightHardBeats, HighlightHardBeats);
+            config?.BindWith(TauRulesetSettings.IncreaseVisualDistinction, IncreaseVisualDistinction);
         }
 
         private float toNormalized(float value)
