@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Bindables;
+using osu.Framework.Graphics.Textures;
 using osu.Game.Beatmaps;
 using System;
 
@@ -11,6 +12,8 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         public readonly BindableDouble AngleRange = new(25);
         public readonly BindableBool InverseModEnabled = new();
+        public Texture SliderTexture;
+        public Texture VisuallyDistinctSliderTexture;
 
         /// <summary>
         /// Sets the range for the paddle.
@@ -21,6 +24,10 @@ namespace osu.Game.Rulesets.Tau.UI
             AngleRange.Value = IBeatmapDifficultyInfo.DifficultyRange(cs, 75, 25, 10);
         }
 
-        public void Dispose() {}
+        public void Dispose() {
+            SliderTexture?.Dispose();
+            VisuallyDistinctSliderTexture?.Dispose();
+            SliderTexture = VisuallyDistinctSliderTexture = null;
+        }
     }
 }

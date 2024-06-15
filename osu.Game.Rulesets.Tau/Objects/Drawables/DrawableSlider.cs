@@ -52,9 +52,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         private bool inversed;
 
-        private Texture pathTexture;
-        private Texture pathTextureHighlighted;
-
         public DrawableSlider()
             : this(null)
         {
@@ -156,11 +153,20 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             config.BindWith(TauRulesetSettings.IncreaseVisualDistinction, IncreaseVisualDistinction);
 
             NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
-            // IncreaseVisualDistinction.BindValueChanged(value => updatePathTexture(value.NewValue, renderer));
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
-            pathTexture = generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.White);
-            pathTextureHighlighted = generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.Orange);
+            path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.White);
+
+            IncreaseVisualDistinction.BindValueChanged(value => {
+                if (value.NewValue)
+                {
+                    properties.VisuallyDistinctSliderTexture ??= generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.Orange);
+                }
+
+                path.Texture = (value.NewValue && HitObject.IsHard)
+                    ? properties.VisuallyDistinctSliderTexture
+                    : properties.SliderTexture;
+            });
         }
 
         [Resolved]
@@ -172,7 +178,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.OnApply();
             path.FadeColour = colour.ForHitResult(HitResult.Great);
-            IncreaseVisualDistinction.BindValueChanged(value => path.Texture = (value.NewValue && HitObject.IsHard) ? pathTextureHighlighted : pathTexture, true);
 
             totalTimeHeld = 0;
 
@@ -183,6 +188,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 path.Reverse = inversed;
                 // PathDistance = path.PathDistance = TauPlayfield.BaseSize.X;
             }
+
+            IncreaseVisualDistinction.TriggerChange();
         }
 
         protected override void OnFree()
@@ -190,7 +197,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.OnFree();
             trackingCheckpoints.Clear();
             slidingSample?.ClearSamples();
-            IncreaseVisualDistinction.UnbindEvents();
         }
 
         protected override void LoadSamples()
