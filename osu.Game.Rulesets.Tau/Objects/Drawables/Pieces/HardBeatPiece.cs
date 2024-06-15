@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
         {
             Masking = true;
             BorderThickness = 5;
-            BorderColour = IncreaseVisualDistinction.Value ? Color4.Orange : Color4.White;
+            BorderColour = Color4.White;
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
         [BackgroundDependencyLoader]
         private void load(TauRulesetConfigManager config)
         {
-            config?.BindWith(TauRulesetSettings.IncreaseVisualDistinction, IncreaseVisualDistinction);
+            config.BindWith(TauRulesetSettings.IncreaseVisualDistinction, IncreaseVisualDistinction);
         }
 
         private float convertNoteSizeToThickness(float noteSize)

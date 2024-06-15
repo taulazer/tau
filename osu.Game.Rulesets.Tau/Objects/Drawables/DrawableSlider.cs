@@ -172,7 +172,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.OnApply();
             path.FadeColour = colour.ForHitResult(HitResult.Great);
-            IncreaseVisualDistinction.BindValueChanged(value => path.Texture = value.NewValue && HitObject.IsHard ? pathTextureHighlighted : pathTexture, true);
+            IncreaseVisualDistinction.BindValueChanged(value => path.Texture = (value.NewValue && HitObject.IsHard) ? pathTextureHighlighted : pathTexture, true);
 
             totalTimeHeld = 0;
 

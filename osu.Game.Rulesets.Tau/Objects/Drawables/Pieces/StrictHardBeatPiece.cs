@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables.Pieces
 
         public StrictHardBeatPiece()
         {
-            Colour = IncreaseVisualDistinction.Value ? Color4.Orange : Color4.White;
+            Colour = Color4.White;
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
