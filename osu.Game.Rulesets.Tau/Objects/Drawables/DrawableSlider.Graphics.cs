@@ -127,7 +127,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 get
                 {
-                    if (AutoSizeAxes.HasFlagFast(Axes.X))
+                    if (AutoSizeAxes.HasFlag(Axes.X))
                         return base.Width = vertexBounds.Width;
 
                     return base.Width;
@@ -145,7 +145,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             {
                 get
                 {
-                    if (AutoSizeAxes.HasFlagFast(Axes.Y))
+                    if (AutoSizeAxes.HasFlag(Axes.Y))
                         return base.Height = vertexBounds.Height;
 
                     return base.Height;
