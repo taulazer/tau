@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Cursor;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Play;
