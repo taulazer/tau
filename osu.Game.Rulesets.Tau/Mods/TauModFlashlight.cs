@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
@@ -105,7 +105,7 @@ namespace osu.Game.Rulesets.Tau.Mods
             flashlight.Combo.BindTo(Combo);
             drawableRuleset.Overlays.Add(flashlight);
 
-            flashlight.Breaks = drawableRuleset.Beatmap.Breaks;
+            flashlight.Breaks = drawableRuleset.Beatmap.Breaks.ToImmutableList();
         }
 
         protected abstract Flashlight CreateFlashlight();
@@ -120,7 +120,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             public override bool RemoveCompletedTransforms => false;
 
-            public List<BreakPeriod> Breaks;
+            public ImmutableList<BreakPeriod> Breaks;
 
             private readonly BindableDouble defaultFlashlightSize = new(32);
             private readonly float sizeMultiplier;
