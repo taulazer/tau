@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Judgements;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
@@ -11,13 +12,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public partial class DrawableTauJudgement : DrawableJudgement
     {
+        internal Colour4 AccentColour { get; private set; }
+
         protected SkinnableLighting Lighting { get; private set; }
 
         [Resolved]
         private TauRulesetConfigManager config { get; set; }
 
-        [Resolved(canBeNull: true)]
-        private TauCachedProperties properties { get; set; }
+        private float distance = 0.6f;
+        private float angle;
 
         public DrawableTauJudgement()
         {
@@ -36,14 +39,23 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             });
         }
 
-        protected override void PrepareForUse()
+        [BackgroundDependencyLoader(true)]
+        private void load(TauCachedProperties properties)
         {
-            base.PrepareForUse();
+            if (properties != null && properties.InverseModEnabled.Value)
+                distance = 0.4f;
+        }
 
-            Lighting.ResetAnimation();
-            Lighting.SetColourFrom(JudgedObject, Result);
+        public override void Apply(JudgementResult result, DrawableHitObject judgedObject)
+        {
+            base.Apply(result, judgedObject);
 
-            var angle = JudgedObject switch
+            if (judgedObject is not { } hitObj)
+                return;
+
+            AccentColour = hitObj.AccentColour.Value;
+
+            angle = hitObj switch
             {
                 DrawableAngledTauHitObject<Slider> { HitObject: IHasOffsetAngle ang } => ang.GetAbsoluteAngle(),
                 // TODO: This should NOT be here.
@@ -53,11 +65,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 DrawableBeat b => b.HitObject.Angle,
                 _ => 0f
             };
+        }
 
-            var distance = 0.6f;
+        protected override void PrepareForUse()
+        {
+            base.PrepareForUse();
 
-            if (properties != null && properties.InverseModEnabled.Value)
-                distance = 0.4f;
+            Lighting.ResetAnimation();
+            Lighting.SetColourFrom(this, Result);
 
             Position = Extensions.FromPolarCoordinates(distance, angle);
             Rotation = angle;
@@ -65,7 +80,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override void ApplyHitAnimations()
         {
-            var hitLightingEnabled = config.Get<bool>(TauRulesetSettings.HitLighting);
+            bool hitLightingEnabled = config.Get<bool>(TauRulesetSettings.HitLighting);
 
             Lighting.Alpha = 0;
 

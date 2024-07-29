@@ -88,7 +88,6 @@ namespace osu.Game.Rulesets.Tau.Tests
 
                     ((Container)pool.Parent).Clear(false);
 
-
                     var container = new Container
                     {
                         RelativeSizeAxes = Axes.Both,
