@@ -51,6 +51,11 @@ namespace osu.Game.Rulesets.Tau.UI
                     LabelText = SettingStrings.HitLighting,
                     Current = config.GetBindable<bool>(TauRulesetSettings.HitLighting)
                 },
+                new SettingsCheckbox
+                {
+                    LabelText = SettingStrings.IncreaseVisualDistinction,
+                    Current = config.GetBindable<bool>(TauRulesetSettings.IncreaseVisualDistinction)
+                },
                 kiaiType = new SettingsEnumDropdown<KiaiType>()
                 {
                     LabelText = SettingStrings.KiaiType,
