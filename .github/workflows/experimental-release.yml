@@ -5,12 +5,12 @@ on:
 
 jobs:
   build:
-    name: Build and Create Release
+    name: Build and Create Experimental Release
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Fetch all tags
       run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
