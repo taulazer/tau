@@ -120,6 +120,12 @@ namespace osu.Game.Rulesets.Tau
 
         public override StatisticItem[] CreateStatisticsForScore(ScoreInfo score, IBeatmap playableBeatmap) => new[]
         {
+            new StatisticItem(UiStrings.PerformanceBreakdown, () => new PerformanceBreakdownChart(score, playableBeatmap)
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+            }),
+
             new StatisticItem(UiStrings.TimingDistribution, () => new HitEventTimingDistributionGraph(score.HitEvents)
             {
                 RelativeSizeAxes = Axes.X,

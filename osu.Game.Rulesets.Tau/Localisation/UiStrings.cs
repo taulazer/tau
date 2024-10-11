@@ -36,6 +36,11 @@ namespace osu.Game.Rulesets.Tau.Localisation
         /// </summary>
         public static LocalisableString ResumeMessage => new TranslatableString(getKey(@"resume_overlay_message"), @"Move the cursor to the highlighted area.");
 
+        /// <summary>
+        ///  "Performance Breakdown"
+        /// </summary>
+        public static LocalisableString PerformanceBreakdown => new TranslatableString(getKey(@"performance_breakdown"), @"Performance Breakdown");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }
