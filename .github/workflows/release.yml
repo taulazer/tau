@@ -10,15 +10,20 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+
     - name: Fetch all tags
       run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
     - name: Get current tag
       run: echo "CURRENT_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+
     - name: Install dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build osu.Game.Rulesets.Tau --configuration Release -p:version=${{env.CURRENT_TAG}} --no-restore
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@latest
@@ -49,6 +54,7 @@ jobs:
           ---
 
           Have a feature to suggest? Or encountered a bug? Or just want to chat with people interested in tau? [Join the discord server](https://discord.gg/GZ9R9vjFNW)!
+
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@master

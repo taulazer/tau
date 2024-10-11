@@ -3,13 +3,13 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2024.1.4",
+      "version": "2023.3.3",
       "commands": [
         "jb"
       ]
     },
     "nvika": {
-      "version": "3.0.1",
+      "version": "3.0.0",
       "commands": [
         "nvika"
       ]
