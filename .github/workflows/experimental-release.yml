@@ -1,0 +1,76 @@
+name: Tagged Experimental Release
+on:
+  push:
+    tags: ['*/experimental']
+
+jobs:
+  build:
+    name: Build and Create Experimental Release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Fetch all tags
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Get current tag
+      run: echo "CURRENT_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build osu.Game.Rulesets.Tau --configuration Release -p:version=${{env.CURRENT_TAG}} --no-restore
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: true
+        prerelease: true
+        body: |
+          > [!IMPORTANT]
+          > This build is experimental and may not reflect any final changes towards production release.
+          > If you encounter any issues, please report them on our [issue tracker](https://github.com/taulazer/tau/issues/new?assignees=&labels=&projects=&template=bug-report.yml)
+
+          <details>
+          <summary>Installation</summary>
+          To install this ruleset just simply put this .DLL file onto your `osu/Rulesets` directory under `%appdata%`/.
+          osu!lazer will do the rest for you.
+          </details>
+
+          <details>
+          <summary>Localisation</summary>
+          Localisations for this ruleset are available. If you want to help with translation efforts, please visit our [crowdin](https://crowdin.com/project/tau) page.
+
+          ### Installing translations
+          Download the `Localisations.zip` included in this release and extract it to the same place as you would place the tau DLL (`%appdata%/osu/Rulesets`).
+          The file structure should look something like the following:
+
+          - rulesets/
+            - ar/
+            - fr/
+            - .../
+            - osu.Game.Rulesets.Tau.dll
+          </details>
+
+          ---
+
+          Have a feature to suggest? Or encountered a bug? Or just want to chat with people interested in tau? [Join the discord server](https://discord.gg/GZ9R9vjFNW)!
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./osu.Game.Rulesets.Tau/bin/Release/net8.0/osu.Game.Rulesets.Tau.dll
+        asset_name: osu.Game.Rulesets.Tau.dll
+        asset_content_type: application/vnd.microsoft.portable-executable
