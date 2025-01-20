@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
             CreateModTest(new ModTestData
             {
                 Autoplay = true,
-                Beatmap = new Beatmap
+                CreateBeatmap = () => new Beatmap
                 {
                     HitObjects = new List<HitObject>
                     {

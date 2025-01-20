@@ -31,8 +31,18 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
 
         private class PositionalHitObject : HitObject, IHasPosition
         {
-            public float X => Position.X;
-            public float Y => Position.Y;
+            public float X
+            {
+                get => Position.X;
+                set => Position = new Vector2(value, Position.Y);
+            }
+
+            public float Y
+            {
+                get => Position.Y;
+                set => Position = new Vector2(Position.X, value);
+            }
+
             public Vector2 Position { get; set; }
         }
 

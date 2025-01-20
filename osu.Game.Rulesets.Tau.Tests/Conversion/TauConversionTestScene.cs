@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
             CreateModTest(new ModTestData
             {
                 Autoplay = true,
-                Beatmap = new Beatmap
+                CreateBeatmap = () => new Beatmap
                 {
                     HitObjects = hitObjects.ToList()
                 },

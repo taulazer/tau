@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             CreateModTest(new ModTestData
             {
                 Autoplay = true,
-                Beatmap = new Beatmap
+                CreateBeatmap = () => new Beatmap
                 {
                     HitObjects = hitObjects
                 },
@@ -85,7 +85,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             CreateModTest(new ModTestData
             {
                 Autoplay = true,
-                Beatmap = new Beatmap
+                CreateBeatmap = () => new Beatmap
                 {
                     HitObjects = hitObjects
                 },

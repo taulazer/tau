@@ -49,8 +49,18 @@ namespace osu.Game.Rulesets.Tau.Tests.Conversion
 
             public IList<IList<HitSampleInfo>> NodeSamples { get; } = new List<IList<HitSampleInfo>>();
 
-            public float X => Position.X;
-            public float Y => Position.Y;
+            public float X
+            {
+                get => Position.X;
+                set => Position = new Vector2(value, Position.Y);
+            }
+
+            public float Y
+            {
+                get => Position.Y;
+                set => Position = new Vector2(Position.X, value);
+            }
+
             public Vector2 Position { get; set; }
         }
     }

@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             {
                 Autoplay = false,
                 Mod = new TauModAutoplay(),
-                Beatmap = new Beatmap
+                CreateBeatmap = () => new Beatmap
                 {
                     HitObjects = hitObjects
                 },

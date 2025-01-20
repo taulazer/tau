@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Tau.Statistics
 
         public PaddleDistributionGraph(IReadOnlyList<HitEvent> hitEvents, IBeatmap beatmap)
         {
-            beatHitEvents = hitEvents.Where(e => e.HitObject.HitWindows is not HitWindows.EmptyHitWindows && e.HitObject is Beat && e.Result.IsHit()).ToList();
+            beatHitEvents = hitEvents.Where(e => e.HitObject.HitWindows != HitWindows.Empty && e.HitObject is Beat && e.Result.IsHit()).ToList();
             sliderHitEvents = hitEvents.Where(e => e.HitObject is Slider && e.Result.IsHit()).ToList(); // Note that this will only count the end of the sliders.
             properties.SetRange(beatmap.Difficulty.CircleSize);
         }
