@@ -49,7 +49,13 @@ namespace osu.Game.Rulesets.Tau.Allocation
             Length = length;
         }
 
-        public Span<T>.Enumerator GetEnumerator() => rented.AsSpan(0, Length).GetEnumerator();
+		public IEnumerator<T> GetEnumerator()
+		{
+			foreach (var x in rented)
+			{
+				yield return x;
+			}
+		}
 
         public ref T this[int i] => ref rented[i];
         public ref T this[Index i] => ref rented[i];
