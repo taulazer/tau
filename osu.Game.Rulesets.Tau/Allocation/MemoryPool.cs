@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace osu.Game.Rulesets.Tau.Allocation
 {
@@ -47,15 +48,14 @@ namespace osu.Game.Rulesets.Tau.Allocation
             this.backing = backing;
             this.rented = rented;
             Length = length;
+            Debug.Assert(length < rented.Length, $"Requested length ({length}) is less than rented array's length ({rented.Length})");
         }
 
-		public IEnumerator<T> GetEnumerator()
-		{
-			foreach (var x in rented)
-			{
-				yield return x;
-			}
-		}
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < Length; ++i)
+                yield return rented[i];
+        }
 
         public ref T this[int i] => ref rented[i];
         public ref T this[Index i] => ref rented[i];
