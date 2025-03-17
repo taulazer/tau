@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Tau.Allocation
             this.backing = backing;
             this.rented = rented;
             Length = length;
-            Debug.Assert(length < rented.Length, $"Requested length ({length}) is less than rented array's length ({rented.Length})");
+            Debug.Assert(length <= rented.Length, $"Requested length ({length}) must be <= rented array's length ({rented.Length})");
         }
 
         public IEnumerator<T> GetEnumerator()
