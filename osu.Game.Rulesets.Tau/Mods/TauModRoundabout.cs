@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         {
             get
             {
-                yield return (ModStrings.RoundaboutDirectionName, Direction.Value.ToString());
+                yield return (ModStrings.RoundaboutDirectionName, $"{Direction.Value:N1}");
             }
         }
 

@@ -37,13 +37,13 @@ namespace osu.Game.Rulesets.Tau.Mods
             get
             {
                 if (!PaddleSize.IsDefault)
-                    yield return (ModStrings.DifficultyAdjustPaddleSizeName, PaddleSize.Value.ToString());
+                    yield return (ModStrings.DifficultyAdjustPaddleSizeName, $"{PaddleSize.Value:N1}");
 
                 foreach (var setting in base.SettingDescription)
                     yield return setting;
 
                 if (!ApproachRate.IsDefault)
-                    yield return (ModStrings.DifficultyAdjustApproachRateName, ApproachRate.Value.ToString());
+                    yield return (ModStrings.DifficultyAdjustApproachRateName, $"{ApproachRate.Value:N1}");
             }
         }
 
