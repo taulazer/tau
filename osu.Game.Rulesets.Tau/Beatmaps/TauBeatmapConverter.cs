@@ -191,7 +191,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
                 // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
-                slider.TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
+                slider.TickDistanceMultiplier = getBeatmapVersion(beatmap) < 8
                                                     ? 2f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
                                                     : 2;
             }
@@ -257,12 +257,28 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             {
                 // prior to v8, speed multipliers don't adjust for how many ticks are generated over the same distance.
                 // this results in more (or less) ticks being generated in <v8 maps for the same time duration.
-                slider.TickDistanceMultiplier = beatmap.BeatmapInfo.BeatmapVersion < 8
+                slider.TickDistanceMultiplier = getBeatmapVersion(beatmap) < 8
                                                     ? 2f / legacyControlPointInfo.DifficultyPointAt(original.StartTime).SliderVelocity
                                                     : 2;
             }
 
             return slider;
+        }
+
+        // fixes https://github.com/taulazer/tau/issues/522
+        // caused by https://github.com/ppy/osu/pull/32429
+        // this is a sign we should probably start upgrading API versions
+        private static int getBeatmapVersion(IBeatmap beatmap)
+        {
+            var beatmapInfoVersionProperty = beatmap.BeatmapInfo.GetType().GetProperty("BeatmapVersion");
+            if (beatmapInfoVersionProperty != null)
+                return (int)beatmapInfoVersionProperty.GetValue(beatmap.BeatmapInfo);
+
+            var beatmapVersionProperty = beatmap.GetType().GetProperty("BeatmapVersion");
+            if (beatmapVersionProperty != null)
+                return (int)beatmapVersionProperty.GetValue(beatmap);
+
+            throw new Exception("BeatmapVersion property not found on either Beatmap or BeatmapInfo types");
         }
     }
 
