@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Mods;
@@ -31,19 +32,18 @@ namespace osu.Game.Rulesets.Tau.Mods
             ReadCurrentFromDifficulty = diff => diff.ApproachRate,
         };
 
-        public override string SettingDescription
+        public override IEnumerable<(LocalisableString setting, LocalisableString value)> SettingDescription
         {
             get
             {
-                string paddleSize = PaddleSize.IsDefault ? string.Empty : $"PS {PaddleSize.Value:N1}";
-                string approachRate = ApproachRate.IsDefault ? string.Empty : $"AR {ApproachRate.Value:N1}";
+                if (!PaddleSize.IsDefault)
+                    yield return (ModStrings.DifficultyAdjustPaddleSizeName, PaddleSize.Value.ToString());
 
-                return string.Join(", ", new[]
-                {
-                    paddleSize,
-                    base.SettingDescription,
-                    approachRate
-                }.Where(s => !string.IsNullOrEmpty(s)));
+                foreach (var setting in base.SettingDescription)
+                    yield return setting;
+
+                if (!ApproachRate.IsDefault)
+                    yield return (ModStrings.DifficultyAdjustApproachRateName, ApproachRate.Value.ToString());
             }
         }
 
