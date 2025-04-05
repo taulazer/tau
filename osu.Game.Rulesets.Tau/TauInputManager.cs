@@ -37,7 +37,6 @@ namespace osu.Game.Rulesets.Tau
 		[BackgroundDependencyLoader]
         private void load()
         {
-			// same way as OsuInputTouchMapper is added to OsuInputManager
             Add(new TauTouchInputMapper(this) { RelativeSizeAxes = Axes.Both });
         }
 

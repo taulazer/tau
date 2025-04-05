@@ -11,7 +11,7 @@ using osuTK;
 namespace osu.Game.Rulesets.Tau.UI;
 
 // basically copies OsuTouchInputMapper, but the first finger is always the "pointer"
-internal partial class TauTouchInputMapper(TauInputManager inputManager) : Drawable
+public partial class TauTouchInputMapper(TauInputManager inputManager) : Drawable
 {
 	private readonly List<TrackedTouch> trackedTouches = [];
 	private TrackedTouch? positionTrackingTouch;
@@ -103,10 +103,16 @@ internal partial class TauTouchInputMapper(TauInputManager inputManager) : Drawa
 		}
 	}
 
-	private class TrackedTouch(TouchSource source, TauAction? action)
+	private class TrackedTouch
 	{
-		public readonly TouchSource Source = source;
-		public TauAction? Action = action;
+		public TouchSource Source { get; set; }
+		public TauAction? Action { get; set; }
+
+		public TrackedTouch(TouchSource source, TauAction? action)
+		{
+			Source = source;
+			Action = action;
+		}
 
 		/// <summary>
 		/// The total distance on screen travelled by this touch (in local pixels).

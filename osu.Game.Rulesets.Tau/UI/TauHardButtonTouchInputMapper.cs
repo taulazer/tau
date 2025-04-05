@@ -12,19 +12,24 @@ using osuTK;
 namespace osu.Game.Rulesets.Tau.UI;
 
 // basically copies CatchTouchInputMapper, without the right side buttons
-internal partial class TauHardButtonTouchInputMapper(TauInputManager inputManager) : VisibilityContainer
+public partial class TauHardButtonTouchInputMapper : VisibilityContainer
 {
 	public override bool PropagatePositionalInputSubTree => true;
 	public override bool PropagateNonPositionalInputSubTree => true;
 
 	private readonly Dictionary<object, TauAction> trackedActionSources = [];
 
-	private readonly KeyBindingContainer<TauAction> keyBindingContainer = inputManager.KeyBindingContainer;
+	private readonly KeyBindingContainer<TauAction> keyBindingContainer;
 
 	private Container mainContent = null!;
 
 	private InputArea hardButton1 = null!;
 	private InputArea hardButton2 = null!;
+
+	public TauHardButtonTouchInputMapper(TauInputManager inputManager)
+	{
+		keyBindingContainer = inputManager.KeyBindingContainer;
+	}
 
 	[BackgroundDependencyLoader]
 	private void load(OsuColour colours)
@@ -35,43 +40,37 @@ internal partial class TauHardButtonTouchInputMapper(TauInputManager inputManage
 
 		RelativeSizeAxes = Axes.Both;
 
-		Children =
-		[
-			mainContent = new Container
+		// not sure how to make this a GridContainer, leaving as is since it works
+		Child = mainContent = new Container
+		{
+			RelativeSizeAxes = Axes.Both,
+			Alpha = 0,
+			Child = new Container
 			{
 				RelativeSizeAxes = Axes.Both,
-				Alpha = 0,
+				Width = width,
 				Children =
 				[
-					new Container
+					hardButton1 = new InputArea(TauAction.HardButton1, trackedActionSources)
 					{
 						RelativeSizeAxes = Axes.Both,
-						Width = width,
-						Children =
-						[
-							hardButton1 = new InputArea(TauAction.HardButton1, trackedActionSources)
-							{
-								RelativeSizeAxes = Axes.Both,
-								Height = normal_area_height_ratio,
-								Colour = colours.Gray9,
-								Anchor = Anchor.BottomRight,
-								Origin = Anchor.BottomRight,
-							},
-							hardButton2 = new InputArea(TauAction.HardButton2, trackedActionSources)
-							{
-								RelativeSizeAxes = Axes.Both,
-								Height = 1 - normal_area_height_ratio,
-							},
-						]
+						Height = normal_area_height_ratio,
+						Colour = colours.Gray9,
+						Anchor = Anchor.BottomRight,
+						Origin = Anchor.BottomRight,
 					},
-				],
+					hardButton2 = new InputArea(TauAction.HardButton2, trackedActionSources)
+					{
+						RelativeSizeAxes = Axes.Both,
+						Height = 1 - normal_area_height_ratio,
+					},
+				]
 			},
-		];
+		};
 	}
 
 	protected override bool OnKeyDown(KeyDownEvent e)
 	{
-		// Hide whenever the keyboard is used.
 		Hide();
 		return false;
 	}
@@ -138,17 +137,13 @@ internal partial class TauHardButtonTouchInputMapper(TauInputManager inputManage
 	}
 
 	protected override void PopIn() => mainContent.FadeIn(300, Easing.OutQuint);
-
 	protected override void PopOut() => mainContent.FadeOut(300, Easing.OutQuint);
 
 	private partial class InputArea : CompositeDrawable, IKeyBindingHandler<TauAction>
 	{
 		private readonly TauAction handledAction;
-
 		private readonly Box highlightOverlay;
-
 		private readonly IEnumerable<KeyValuePair<object, TauAction>> trackedActions;
-
 		private bool isHighlighted;
 
 		public InputArea(TauAction handledAction, IEnumerable<KeyValuePair<object, TauAction>> trackedActions)
@@ -156,29 +151,26 @@ internal partial class TauHardButtonTouchInputMapper(TauInputManager inputManage
 			this.handledAction = handledAction;
 			this.trackedActions = trackedActions;
 
-			InternalChildren =
-			[
-				new Container
-				{
-					RelativeSizeAxes = Axes.Both,
-					Masking = true,
-					CornerRadius = 10,
-					Children =
-					[
-						new Box
-						{
-							RelativeSizeAxes = Axes.Both,
-							Alpha = 0.15f,
-						},
-						highlightOverlay = new Box
-						{
-							RelativeSizeAxes = Axes.Both,
-							Alpha = 0,
-							Blending = BlendingParameters.Additive,
-						}
-					]
-				}
-			];
+			InternalChild = new Container
+			{
+				RelativeSizeAxes = Axes.Both,
+				Masking = true,
+				CornerRadius = 10,
+				Children =
+				[
+					new Box
+					{
+						RelativeSizeAxes = Axes.Both,
+						Alpha = 0.15f,
+					},
+					highlightOverlay = new Box
+					{
+						RelativeSizeAxes = Axes.Both,
+						Alpha = 0,
+						Blending = BlendingParameters.Additive,
+					}
+				]
+			};
 		}
 
 		public bool OnPressed(KeyBindingPressEvent<TauAction> _)

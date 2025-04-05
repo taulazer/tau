@@ -60,7 +60,6 @@ namespace osu.Game.Rulesets.Tau.UI
         private void load()
         {
             properties.SetRange(Beatmap.Difficulty.CircleSize);
-			// same way that CatchInputTouchMapper is added to DrawableCatchRuleset
             KeyBindingInputManager.Add(new TauHardButtonTouchInputMapper(KeyBindingInputManager) { RelativeSizeAxes = Axes.Both });
         }
 
