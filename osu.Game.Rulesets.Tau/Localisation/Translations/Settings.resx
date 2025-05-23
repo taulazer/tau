@@ -67,4 +67,7 @@
     <data name="hit_lighting" xml:space="preserve">
         <value>Hit Lighting</value>
     </data>
+    <data name="visual_distinction" xml:space="preserve">
+        <value>Increase Visual Distinction</value>
+    </data>
 </root>
