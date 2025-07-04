@@ -3,7 +3,7 @@
 preserve_hierarchy: true
 files:
   - source: /osu.Game.Rulesets.Tau/Localisation/Translations/**/*.resx
-    translation: /osu.Game.Rulesets.Tau/Localisation/Translations/**/%file_name%.%locale%.%file_extension%
+    translation: /osu.Game.Rulesets.Tau/Localisation/Translations/**/%file_name%.%osx_locale%.resx
     ignore:
       - /osu.Game.Rulesets.Tau/Localisation/Translations/**/%file_name%.*.%file_extension%
     update_option: update_as_unapproved
