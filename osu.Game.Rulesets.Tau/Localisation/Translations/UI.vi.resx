@@ -50,18 +50,18 @@
         <value>Ticks</value>
     </data>
   <data name="timing_distribution" xml:space="preserve">
-        <value>Timing Distribution</value>
+        <value>Phân bố thời gian</value>
     </data>
   <data name="paddle_distribution" xml:space="preserve">
         <value>Paddle Distribution</value>
     </data>
   <data name="distribution_sliders" xml:space="preserve">
-        <value>Sliders</value>
+        <value>Thanh trượt</value>
     </data>
   <data name="distribution_beats" xml:space="preserve">
-        <value>Beats</value>
+        <value>Nhịp</value>
     </data>
   <data name="resume_overlay_message" xml:space="preserve">
-        <value>Move the cursor to the highlighted area.</value>
+        <value>Đưa con trỏ đến vùng được đánh dấu.</value>
     </data>
 </root>

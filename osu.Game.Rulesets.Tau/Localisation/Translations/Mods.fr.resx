@@ -47,7 +47,7 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Taille du Balancier</value>
+        <value>Taille de la pagaie</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
         <value>Remplace le PS d'une beatmap.</value>
@@ -59,22 +59,22 @@
         <value>Remplace l'AR d'une beatmap.</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>Quand un seul ne suffit pas</value>
+        <value>Quand un seul n'est pas suffisant</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Nombre de balanciers</value>
+        <value>Nombre de pagaies</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Un balancier plus large, un drain de HP plus indulgent, moins de précision requise, et trois vies !</value>
+        <value>Une pagaie plus grande, un drain de HP plus indulgent, moins de précision requise, et trois vies !</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Taille de la lampe torche</value>
+        <value>Taille de la torche</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
-        <value>Multiplicateur appliqué à la taille par défaut de la lampe torche.</value>
+        <value>Multiplicateur appliqué à la taille par défaut de la torche.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Changer la taille en fonction du combo</value>
+        <value>Changement de taille en fonction du combo</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
         <value>Diminue la taille de la lampe torche lorsque le combo augmente.</value>
@@ -128,7 +128,7 @@
         <value>Vous n'avez pas besoin de cliquer. Donnez à vos doigts une pause loin du feu de l'action.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>Vous ne pouvez faire tourner le balancier que dans un sens.</value>
+        <value>Vous ne pouvez faire tourner la pagaie que dans un sens.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
         <value>Direction</value>

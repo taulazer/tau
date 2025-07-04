@@ -56,10 +56,10 @@
         <value>Paddle Distribution</value>
     </data>
   <data name="distribution_sliders" xml:space="preserve">
-        <value>Sliders</value>
+        <value>Slidery</value>
     </data>
   <data name="distribution_beats" xml:space="preserve">
-        <value>Beats</value>
+        <value>Beaty</value>
     </data>
   <data name="resume_overlay_message" xml:space="preserve">
         <value>Move the cursor to the highlighted area.</value>

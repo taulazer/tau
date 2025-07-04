@@ -68,25 +68,25 @@
         <value>更大的划桨，更少的HP流失，准度要求降低，三条生命！</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Flashlight size</value>
+        <value>音乐达到高潮阶段时的特效闪光尺寸</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
-        <value>Multiplier applied to the default flashlight size.</value>
+        <value>应用于默认高潮特效闪光大小的乘数。</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
         <value>根据连击改变大小</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
-        <value>Decrease the flashlight size as combo increases.</value>
+        <value>随着连击增加/减小高潮特效闪光的大小</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
         <value>自动划桨移动-只需要跟随节奏就好。</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
-        <value>Beats fade out before you hit them!</value>
+        <value>在你击中它们之前拍子会逐渐隐藏！</value>
     </data>
   <data name="fadein_description" xml:space="preserve">
-        <value>Beats appear out of nowhere!</value>
+        <value>拍子会出现在什么地方呢！</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
         <value>节拍会从外向里聚集！</value>
@@ -110,7 +110,7 @@
         <value>完全禁用硬核节奏。</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
-        <value>Slider division level</value>
+        <value>滑动条分级级别</value>
     </data>
   <data name="lite_slider_division_level_description" xml:space="preserve">
         <value>最小滑动条长度分隔符。</value>
@@ -119,13 +119,13 @@
         <value>划桨在哪里呢？</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
-        <value>Hidden at combo</value>
+        <value>连击时逐渐隐藏“划桨”</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
-        <value>The combo count at which the paddle becomes completely hidden</value>
+        <value>指定划桨完全隐藏所需要的连击量</value>
     </data>
   <data name="relax_description" xml:space="preserve">
-        <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
+        <value>你不需要点击，让您的点击/敲击手指远离物体的热量。</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
         <value>你只能向一个方向旋转划桨</value>
@@ -140,6 +140,6 @@
         <value>硬拍子判定更加宽松</value>
     </data>
   <data name="strict_description" xml:space="preserve">
-        <value>Aim the hard beats!</value>
+        <value>目标是硬拍子！</value>
     </data>
 </root>
