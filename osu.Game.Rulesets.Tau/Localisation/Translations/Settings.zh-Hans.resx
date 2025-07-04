@@ -62,7 +62,7 @@
         <value>操作场景变暗</value>
     </data>
   <data name="notes_size" xml:space="preserve">
-        <value>Notes的大小</value>
+        <value>音符大小</value>
     </data>
   <data name="hit_lighting" xml:space="preserve">
         <value>击打闪光</value>
