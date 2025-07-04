@@ -131,7 +131,7 @@
         <value>You can only rotate the paddle in one direction.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
-        <value>Direction</value>
+        <value>Hướng</value>
     </data>
   <data name="traceable_description" xml:space="preserve">
         <value>Brim with no yankie</value>

@@ -53,7 +53,7 @@
         <value>显示滑动条的效果</value>
     </data>
   <data name="show_visualizer" xml:space="preserve">
-        <value>Show Visualizer</value>
+        <value>显示可视化工具</value>
     </data>
   <data name="kiai_type" xml:space="preserve">
         <value>kaki 类型</value>

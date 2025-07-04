@@ -47,10 +47,10 @@
     </xsd:element>
   </xsd:schema>
   <data name="show_effects" xml:space="preserve">
-        <value>Show Effects</value>
+        <value>Hiện hiệu ứng</value>
     </data>
   <data name="show_slider_effects" xml:space="preserve">
-        <value>Show Slider Effects</value>
+        <value>Hiện hiệu ứng thanh trượt</value>
     </data>
   <data name="show_visualizer" xml:space="preserve">
         <value>Show Visualizer</value>
@@ -62,9 +62,9 @@
         <value>Playfield Dim</value>
     </data>
   <data name="notes_size" xml:space="preserve">
-        <value>Notes Size</value>
+        <value>Kích cỡ notes</value>
     </data>
   <data name="hit_lighting" xml:space="preserve">
-        <value>Hit Lighting</value>
+        <value>Phát sáng khi nhấn</value>
     </data>
 </root>
