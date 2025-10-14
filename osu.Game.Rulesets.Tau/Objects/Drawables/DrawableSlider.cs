@@ -8,6 +8,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
 using osu.Framework.Utils;
 using osu.Game.Audio;
@@ -16,6 +17,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Judgements;
 using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Skinning;
@@ -28,6 +30,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public Drawable SliderHead => headContainer.Child;
 
         private readonly BindableFloat size = new(16f);
+        public BindableBool IncreaseVisualDistinction = new(false);
 
         public float PathDistance = TauPlayfield.BASE_SIZE.X / 2;
 
@@ -141,13 +144,29 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private float convertNoteSizeToSliderSize(float beatSize)
             => Interpolation.ValueAt(beatSize, 2f, 7f, 10f, 25f);
 
+        private Color4 convertVisualDistinctionSettingToColor(bool increaseVisualDistinction)
+            => increaseVisualDistinction && HitObject.IsHard ? Color4.Orange : Color4.White;
+
         [BackgroundDependencyLoader]
-        private void load(IRenderer renderer, GameHost host)
+        private void load(IRenderer renderer, GameHost host, TauRulesetConfigManager config)
         {
+            config.BindWith(TauRulesetSettings.IncreaseVisualDistinction, IncreaseVisualDistinction);
+
             NoteSize.BindValueChanged(value => path.PathRadius = convertNoteSizeToSliderSize(value.NewValue), true);
 
             host.DrawThread.Scheduler.AddDelayed(() => drawCache.Invalidate(), 0, true);
             path.Texture = properties.SliderTexture ??= generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.White);
+
+            IncreaseVisualDistinction.BindValueChanged(value => {
+                if (value.NewValue)
+                {
+                    properties.VisuallyDistinctSliderTexture ??= generateSmoothPathTexture(renderer, path.PathRadius, _ => Color4.Orange);
+                }
+
+                path.Texture = (value.NewValue && HitObject.IsHard)
+                    ? properties.VisuallyDistinctSliderTexture
+                    : properties.SliderTexture;
+            });
         }
 
         [Resolved]
@@ -169,6 +188,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 path.Reverse = inversed;
                 // PathDistance = path.PathDistance = TauPlayfield.BaseSize.X;
             }
+
+            IncreaseVisualDistinction.TriggerChange();
         }
 
         protected override void OnFree()
