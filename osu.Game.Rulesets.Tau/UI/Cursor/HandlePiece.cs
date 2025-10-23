@@ -61,7 +61,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            circle.Y = -Math.Clamp(Vector2.Distance(AnchorPosition, e.MousePosition) / DrawHeight, 0.015f, 0.45f);
+            circle.Y = Vector2.Distance(ToLocalSpace(e.ScreenSpaceMousePosition), AnchorPosition) / DrawHeight;
+            circle.Y = -Math.Clamp(circle.Y, 0.015f, 0.45f);
             bottomLine.Height = -circle.Y - 0.015f;
             topLine.Height = 0.5f + circle.Y - 0.015f;
 
