@@ -34,9 +34,16 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public BindableBool ShouldShowPositionalEffects = new(true);
 
-        protected override GameplayCursorContainer CreateCursor() => new TauCursor();
+        // don't like this.
+        protected override GameplayCursorContainer CreateCursor()
+        {
+            if (Mods.Any(m => m is TauModRoundabout))
+                return new TauModRoundabout.RoundaboutTauCursor();
 
-        public new TauCursor Cursor => base.Cursor as TauCursor;
+            return new TauCursor();
+        }
+
+        public new TauCursor Cursor => (TauCursor)base.Cursor;
 
         [Resolved]
         private TauCachedProperties tauCachedProperties { get; set; }
