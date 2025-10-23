@@ -45,11 +45,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override bool CheckForValidation() => IsWithinPaddle();
 
-        public bool IsWithinPaddle() => ValidateAngle((HitObject.Angle + GetCurrentOffset()).Normalize()).IsValid;
+        public bool IsWithinPaddle() => ValidateAngle(GetCurrentAngle()).IsValid;
 
         public override void ApplyCustomResult(JudgementResult result)
         {
-            float delta = ValidateAngle((HitObject.Angle + GetCurrentOffset()).Normalize()).Delta;
+            float delta = ValidateAngle(GetCurrentAngle()).Delta;
             var beatResult = (TauJudgementResult)result;
 
             if (result.IsHit)
@@ -60,5 +60,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// The offset to apply when checking if the <see cref="DrawableAngledTauHitObject{T}"/> is in the paddle.
         /// </summary>
         protected virtual float GetCurrentOffset() => 0f;
+
+        /// <summary>
+        /// The current angle the <see cref="DrawableAngledTauHitObject{T}"/> is at in relation to the playfield.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual float GetCurrentAngle() => (HitObject.Angle + GetCurrentOffset()).Normalize();
     }
 }

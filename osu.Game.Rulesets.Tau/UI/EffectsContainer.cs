@@ -30,12 +30,12 @@ namespace osu.Game.Rulesets.Tau.UI
             Origin = Anchor.Centre;
             RelativeSizeAxes = Axes.Both;
 
-            InternalChildren = new Drawable[]
-            {
+            InternalChildren =
+            [
                 visualizer = new PlayfieldVisualizer(),
                 kiaiEffects = new KiaiEffectContainer(),
-                sliderEffects = new KiaiEffectContainer(40),
-            };
+                sliderEffects = new KiaiEffectContainer(40)
+            ];
         }
 
         [BackgroundDependencyLoader(true)]

@@ -102,39 +102,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 Cursor.SetAngleRange(beatmap.Difficulty.CircleSize);
         }
 
-        // protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
-        // {
-        //     base.OnNewDrawableHitObject(drawableHitObject);
-        //
-        //     switch (drawableHitObject)
-        //     {
-        //         case DrawableSlider s:
-        //             s.CheckValidation = ang =>
-        //             {
-        //                 if (ShouldShowPositionalEffects.Value)
-        //                     EffectsContainer.TrackSlider(ang, s);
-        //
-        //                 return Cursor.ValidateAngle(ang);
-        //             };
-        //             break;
-        //     }
-        // }
-
-        // private ValidationResult checkPaddlePosition(float angle)
-        // {
-        //     float angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
-        //
-        //     if (Cursor.AdditionalPaddles != null)
-        //         foreach (var i in Cursor.AdditionalPaddles)
-        //         {
-        //             float diff = Extensions.GetDeltaAngle(i.Rotation, angle);
-        //             if (Math.Abs(diff) < Math.Abs(angleDiff))
-        //                 angleDiff = diff;
-        //         }
-        //
-        //     return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
-        // }
-
         private void onJudgmentLoaded(DrawableTauJudgement judgement)
         {
             judgementAboveHitObjectLayer.Add(judgement.ProxiedAboveHitObjectsContent);
