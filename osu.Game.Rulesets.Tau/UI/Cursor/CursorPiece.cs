@@ -6,29 +6,32 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
     public partial class CursorPiece : CompositeDrawable
     {
+        private const float progress_amount = 1f / 3f;
+
         public CursorPiece()
         {
             RelativeSizeAxes = Axes.Both;
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
 
-            AddRangeInternal(new Drawable[]
-            {
-                createProgress(-150),
-                createProgress(30)
-            });
+            InternalChildren =
+            [
+                createProgress().With(static c => c.Rotation = -150),
+                createProgress().With(static c => c.Rotation = 30)
+            ];
         }
 
-        private CircularProgress createProgress(float rotation)
-            => new()
+        private static CircularProgress createProgress()
+        {
+            return new CircularProgress()
             {
                 RelativeSizeAxes = Axes.Both,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Progress = 0.33,
+                Progress = progress_amount,
                 InnerRadius = 0.1f,
-                Rotation = rotation
             };
+        }
 
         protected override void UpdateAfterChildren()
         {

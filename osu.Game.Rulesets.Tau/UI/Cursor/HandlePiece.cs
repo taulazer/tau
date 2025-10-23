@@ -20,8 +20,8 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            InternalChildren = new Drawable[]
-            {
+            InternalChildren =
+            [
                 bottomLine = new Box
                 {
                     EdgeSmoothness = new Vector2(1f),
@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                         Alpha = 0,
                     }
                 }
-            };
+            ];
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
