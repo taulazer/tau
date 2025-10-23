@@ -3,6 +3,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.UI.Cursor
 {
@@ -30,7 +31,10 @@ namespace osu.Game.Rulesets.Tau.UI.Cursor
                     Progress = 0,
                     InnerRadius = PADDLE_RADIUS
                 },
-                new HandlePiece()
+                new HandlePiece
+                {
+                    Scale = new Vector2(0.99f)
+                }
             };
         }
 
