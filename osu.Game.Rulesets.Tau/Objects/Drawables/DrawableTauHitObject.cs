@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Input.Bindings;
@@ -31,7 +32,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.RightButton
         };
 
-        protected TauPlayfield? Playfield { get; private set; } = null;
+        [CanBeNull]
+        protected TauPlayfield Playfield { get; private set; } = null;
 
         protected readonly BindableFloat NoteSize = new(16f);
 

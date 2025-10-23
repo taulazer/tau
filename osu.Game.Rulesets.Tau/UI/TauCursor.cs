@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -38,7 +39,7 @@ namespace osu.Game.Rulesets.Tau.UI
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(IReadOnlyList<Mod>? mods)
+        private void load([CanBeNull] IReadOnlyList<Mod> mods)
         {
             if (mods is null)
                 return;
