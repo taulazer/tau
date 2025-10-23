@@ -16,16 +16,20 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
     {
         private int depthIndex;
 
-        private TauPlayfieldAdjustmentContainer container;
+        private TauPlayfield playfield;
 
         [Test]
         public void TestSingleSlider()
         {
             AddStep("clear screen", Clear);
-            AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
+            AddStep("add container", () => Add(new TauPlayfieldAdjustmentContainer
+            {
+                RelativeSizeAxes = Axes.Both,
+                Child = playfield = new TauPlayfield()
+            }));
 
-            AddStep("Miss Single", () => container.Add(testSingle()));
-            AddStep("Hit Single", () => container.Add(testSingle(true)));
+            AddStep("Miss Single", () => playfield.Add(testSingle()));
+            AddStep("Hit Single", () => playfield.Add(testSingle(true)));
             AddUntilStep("Wait for object despawn", () => !Children.Any(h => h is DrawableSlider { AllJudged: false }));
         }
 
@@ -33,16 +37,28 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
         public void TestSliderPerformance()
         {
             AddStep("clear screen", Clear);
-            AddStep("add container", () => Add(container = new TauPlayfieldAdjustmentContainer()));
+            AddStep("add container", () => Add(new TauPlayfieldAdjustmentContainer
+            {
+                RelativeSizeAxes = Axes.Both,
+                Child = playfield = new TauPlayfield()
+            }));
 
-            AddStep("Miss Single", () => container.AddRange(testMultiple(100)));
-            AddStep("Hit Single", () => container.AddRange(testMultiple(100, true)));
+            AddStep("Miss Multiple", () =>
+            {
+                foreach (var slider in testMultiple(100))
+                    playfield.Add(slider);
+            });
+            AddStep("Hit Multiple", () =>
+            {
+                foreach (var slider in testMultiple(100, true))
+                    playfield.Add(slider);
+            });
         }
 
-        private IEnumerable<Drawable> testMultiple(int count, bool auto = false)
+        private IEnumerable<TestDrawableSlider> testMultiple(int count, bool auto = false)
             => Enumerable.Range(0, count).Select(x => testSingle(auto, 1000 + x * 100));
 
-        private Drawable testSingle(bool auto = false, double timeOffset = 1000)
+        private TestDrawableSlider testSingle(bool auto = false, double timeOffset = 1000)
         {
             var slider = createSlider(timeOffset);
 
@@ -61,12 +77,11 @@ namespace osu.Game.Rulesets.Tau.Tests.Objects
             {
                 StartTime = Time.Current + timeOffset,
                 IsHard = true,
-                Path = new PolarSliderPath(new SliderNode[]
-                {
-                    new(0, 0),
-                    new(500, 90),
-                    new(1000, 180),
-                })
+                Path = new PolarSliderPath([
+                    new SliderNode(0, 0),
+                    new SliderNode(500, 90),
+                    new SliderNode(1000, 180)
+                ])
             };
 
         private partial class TestDrawableSlider : DrawableSlider

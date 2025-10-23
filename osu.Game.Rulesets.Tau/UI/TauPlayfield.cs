@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Tau.UI
         // don't like this.
         protected override GameplayCursorContainer CreateCursor()
         {
-            if (Mods.Any(m => m is TauModRoundabout))
+            if (Mods != null && Mods.Any(m => m is TauModRoundabout))
                 return new TauModRoundabout.RoundaboutTauCursor();
 
             return new TauCursor();

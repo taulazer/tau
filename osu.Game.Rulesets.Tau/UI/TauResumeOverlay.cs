@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override LocalisableString Message => UiStrings.ResumeMessage;
 
-        [BackgroundDependencyLoader]
+        [BackgroundDependencyLoader(true)]
         private void load([CanBeNull] IBeatmap beatmap)
         {
             Add(container = new Container
