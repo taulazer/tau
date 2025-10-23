@@ -4,6 +4,7 @@ using osu.Game.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
+using osu.Game.Rulesets.Tau.UI.Cursor;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -46,15 +47,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             piece.AngleRange.Value = HitObject.Range;
         }
 
-        public override bool IsWithinPaddle()
+        protected override Paddle.AngleValidationResult ValidateAngle(float angle)
         {
-            if (CheckValidation == null)
-                return false;
+            var firstResult = base.ValidateAngle((HitObject.Angle + GetSliderOffset() + GetCurrentOffset()).Normalize());
+            var secondResult = base.ValidateAngle((HitObject.Angle + GetSliderOffset() - GetCurrentOffset()).Normalize());
 
-            var firstResult = CheckValidation((HitObject.Angle + GetSliderOffset() + GetCurrentOffset()).Normalize());
-            var secondResult = CheckValidation((HitObject.Angle + GetSliderOffset() - GetCurrentOffset()).Normalize());
-
-            return firstResult.IsValid && secondResult.IsValid;
+            return new Paddle.AngleValidationResult(
+                firstResult.IsValid && secondResult.IsValid,
+                firstResult.Delta + secondResult.Delta / 2f
+            );
         }
 
         protected virtual float GetSliderOffset() => 0;

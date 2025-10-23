@@ -1,9 +1,8 @@
 ﻿using System;
-using JetBrains.Annotations;
-using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Tau.Judgements;
+using osu.Game.Rulesets.Tau.UI.Cursor;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -14,24 +13,20 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         where T : AngledTauHitObject
     {
         /// <summary>
-        /// Check to see whether or not this Hit object is in the paddle's range.
-        /// Also returns the amount of difference from the center of the paddle this Hit object was validated at.
+        /// Proxy method to the playfield's cursor to validate the angle.
         /// </summary>
-        [CanBeNull]
-        public Func<float, ValidationResult> CheckValidation;
+        /// <param name="angle">The absolute angle to validate (normalized).</param>
+        /// <returns>The validation result, including the delta from the paddle's center.</returns>
+        protected virtual Paddle.AngleValidationResult ValidateAngle(float angle)
+            => Playfield?.Cursor.ValidateAngle(angle) ?? throw new NullReferenceException($"{nameof(Playfield)} is null.");
+
+        private readonly BindableFloat angleBindable = new();
 
         protected DrawableAngledTauHitObject(T obj)
             : base(obj)
         {
-        }
-
-        [BackgroundDependencyLoader]
-        private void load()
-        {
             angleBindable.BindValueChanged(r => Rotation = r.NewValue);
         }
-
-        private readonly BindableFloat angleBindable = new();
 
         protected override void OnApply()
         {
@@ -50,14 +45,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         protected override bool CheckForValidation() => IsWithinPaddle();
 
-        public virtual bool IsWithinPaddle() => CheckValidation != null && CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).IsValid;
+        public bool IsWithinPaddle() => ValidateAngle((HitObject.Angle + GetCurrentOffset()).Normalize()).IsValid;
 
         public override void ApplyCustomResult(JudgementResult result)
         {
-            if (CheckValidation == null)
-                return;
-
-            float delta = CheckValidation((HitObject.Angle + GetCurrentOffset()).Normalize()).DeltaFromPaddleCenter;
+            float delta = ValidateAngle((HitObject.Angle + GetCurrentOffset()).Normalize()).Delta;
             var beatResult = (TauJudgementResult)result;
 
             if (result.IsHit)

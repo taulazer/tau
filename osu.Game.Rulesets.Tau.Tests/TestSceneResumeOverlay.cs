@@ -5,6 +5,7 @@ using osu.Game.Rulesets.Tau.UI;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Play;
 using osu.Game.Tests.Visual;
+using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Tests
 {
@@ -23,14 +24,17 @@ namespace osu.Game.Rulesets.Tau.Tests
 
             Child = tauInputManager = new ManualTauInputManager(new TauRuleset().RulesetInfo)
             {
-                Children = new Drawable[]
-                {
+                Scale = new Vector2(0.6f),
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Children =
+                [
                     cursor = new GameplayCursorContainer(),
-                    resume = new TauResumeOverlay()
+                    resume = new TauResumeOverlay
                     {
                         GameplayCursor = cursor
                     }
-                }
+                ]
             };
 
             resume.ResumeAction = () => resumeFired = true;

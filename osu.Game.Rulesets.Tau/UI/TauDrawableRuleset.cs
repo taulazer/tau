@@ -28,7 +28,6 @@ namespace osu.Game.Rulesets.Tau.UI
 
         [Cached]
         private TauCachedProperties properties { get; set; } = new();
-
         internal TauCachedProperties CachedProperties => properties;
 
         public override DrawableHitObject<TauHitObject> CreateDrawableRepresentation(TauHitObject h) => null;
@@ -40,6 +39,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override Playfield CreatePlayfield() => new TauPlayfield();
         public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new TauPlayfieldAdjustmentContainer();
+
+        public new TauPlayfield Playfield => (TauPlayfield)base.Playfield;
 
         public override void RequestResume(Action continueResume)
         {

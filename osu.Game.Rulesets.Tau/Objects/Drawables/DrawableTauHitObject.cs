@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
+using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
@@ -30,12 +31,15 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             TauAction.RightButton
         };
 
+        protected TauPlayfield? Playfield { get; private set; } = null;
+
         protected readonly BindableFloat NoteSize = new(16f);
 
         [BackgroundDependencyLoader(true)]
-        private void load(TauRulesetConfigManager config)
+        private void load(TauRulesetConfigManager config, TauPlayfield playfield)
         {
             config?.BindWith(TauRulesetSettings.NotesSize, NoteSize);
+            Playfield = playfield;
         }
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;
@@ -91,17 +95,5 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public void ForcefullyApplyResult(HitResult result)
             => ApplyResult(result);
-    }
-
-    public struct ValidationResult
-    {
-        public bool IsValid;
-        public float DeltaFromPaddleCenter;
-
-        public ValidationResult(bool isValid, float delta)
-        {
-            IsValid = isValid;
-            DeltaFromPaddleCenter = delta;
-        }
     }
 }
