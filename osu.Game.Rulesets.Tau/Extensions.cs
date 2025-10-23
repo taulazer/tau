@@ -46,6 +46,19 @@ namespace osu.Game.Rulesets.Tau
         }
 
         /// <summary>
+        /// Gets the 𝜃 angle from two points.
+        /// </summary>
+        /// <param name="from">Point 𝐴.</param>
+        /// <param name="to">Point 𝐵.</param>
+        public static float GetAngleFromPosition(Vector2 from, Vector2 to)
+        {
+            Vector2 direction = to - from;
+            var angle = MathHelper.RadiansToDegrees(MathF.Atan2(direction.Y, direction.X));
+
+            return Normalize(angle);
+        }
+
+        /// <summary>
         /// Normalizes the angle into a 0° -> 360° range.
         /// </summary>
         /// <param name="angle">The angle to normalize.</param>
