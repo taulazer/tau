@@ -1,35 +1,63 @@
-﻿using osu.Framework.Allocation;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.UI.Cursor;
 using osu.Game.Rulesets.UI;
-using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
 
 namespace osu.Game.Rulesets.Tau.UI
 {
     public partial class TauCursor : GameplayCursorContainer
     {
-        public readonly Paddle DrawablePaddle;
-
-        [CanBeNull]
-        public IReadOnlyList<Paddle> AdditionalPaddles;
-
-        public float AngleDistanceFromLastUpdate { get; private set; }
-
         protected override Drawable CreateCursor() => new AbsoluteCursor();
+
+        private readonly BindableDouble angleRange = new BindableDouble(TauDefaults.PADDLE_ANGLE);
+        public IBindable<double> AngleRange => angleRange;
+
+        private readonly List<Paddle> paddles;
+        public IReadOnlyList<Paddle> Paddles => paddles;
+
+        protected IReadOnlyList<Mod> Mods = [];
 
         public TauCursor()
         {
-            FillAspectRatio = 1;
-            FillMode = FillMode.Fit;
+            FillAspectRatio = 1f / 1f;
+            FillMode = FillMode.Fill;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            Add(DrawablePaddle = new Paddle());
+            // Rotate 90° as the getAngleFromPosition method expects a 0° -> 360° clockwise range starting from the 3 o'clock position.
+            Rotation = 90;
+
+            paddles = [new Paddle(angleRange)];
+            Add(paddles[0]);
+        }
+
+        [BackgroundDependencyLoader(true)]
+        private void load([CanBeNull] IReadOnlyList<Mod> mods)
+        {
+            if (mods is null)
+                return;
+
+            Mods = mods;
+
+            if (mods.GetMod(out TauModDual dual))
+            {
+                for (int i = 1; i < dual.PaddleCount.Value; i++)
+                {
+                    var paddle = new Paddle(angleRange);
+                    paddles.Add(paddle);
+                    Add(paddle);
+                }
+
+                for (int i = 0; i < paddles.Count; i++)
+                    paddles[i].Rotation = 360f / paddles.Count * i;
+            }
         }
 
         protected override void LoadComplete()
@@ -40,79 +68,38 @@ namespace osu.Game.Rulesets.Tau.UI
                 Show();
         }
 
-        [BackgroundDependencyLoader(permitNulls: true)]
-        private void load(IReadOnlyList<Mod> mods)
-        {
-            if (mods is null)
-                return;
-
-            rotationLock = mods.OfType<TauModRoundabout>().FirstOrDefault()?.Direction.Value;
-
-            if (mods.GetMod(out TauModDual dual))
-            {
-                var additionalPaddles = new List<Paddle>();
-
-                for (int i = 1; i < dual.PaddleCount.Value; i++)
-                {
-                    var paddle = new Paddle();
-                    Add(paddle);
-                    additionalPaddles.Add(paddle);
-                }
-
-                AdditionalPaddles = additionalPaddles;
-            }
-        }
-
-        private float lastLockedRotation;
-        private RotationDirection? rotationLock;
-
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            float prev = lastLockedRotation;
-            float nextAngle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
-            AngleDistanceFromLastUpdate = Extensions.GetDeltaAngle(DrawablePaddle.Rotation, nextAngle);
-            float diff = Extensions.GetDeltaAngle(nextAngle, prev);
-
-            switch (rotationLock)
-            {
-                case RotationDirection.Clockwise:
-                    lastLockedRotation = diff > 0 ? nextAngle : prev;
-                    DrawablePaddle.Rotation = diff < 0 ? (lastLockedRotation - diff.LimitEase(40)) : lastLockedRotation;
-                    break;
-
-                case RotationDirection.Counterclockwise:
-                    lastLockedRotation = diff < 0 ? nextAngle : prev;
-                    DrawablePaddle.Rotation = diff > 0 ? (lastLockedRotation + diff.LimitEase(40)) : lastLockedRotation;
-                    break;
-
-                default:
-                    DrawablePaddle.Rotation = lastLockedRotation = nextAngle;
-                    break;
-            }
-
-            DrawablePaddle.Rotation = DrawablePaddle.Rotation.Normalize();
+            Rotation = Extensions.GetAngleFromPosition(ScreenSpaceDrawQuad.Centre, e.ScreenSpaceMousePosition) + 90;
             ActiveCursor.Position = ToLocalSpace(e.ScreenSpaceMousePosition);
-
-            for (int i = 0; i < AdditionalPaddles?.Count; i++)
-            {
-                AdditionalPaddles[i].Rotation = DrawablePaddle.Rotation + (360 / (AdditionalPaddles.Count + 1)) * (i + 1);
-            }
 
             return false;
         }
 
+        public Paddle.AngleValidationResult ValidateAngle(float angle)
+        {
+            Paddle.AngleValidationResult result = default;
+
+            foreach (var paddle in paddles)
+            {
+                result = paddle.ValidateAngle(Rotation, angle);
+
+                if (result.IsValid)
+                    return result;
+            }
+
+            return result;
+        }
+
+        public void SetAngleRange(float circleSize)
+        {
+            angleRange.Value = IBeatmapDifficultyInfo.DifficultyRange(circleSize, 75, 25, 15);
+        }
+
         public override void Show()
         {
+            base.Show();
             this.FadeIn(250);
-            DrawablePaddle.Show();
-
-            if (AdditionalPaddles == null)
-                return;
-
-            foreach (var i in AdditionalPaddles)
-            {
-                i.Show();
-            }
         }
     }
 }

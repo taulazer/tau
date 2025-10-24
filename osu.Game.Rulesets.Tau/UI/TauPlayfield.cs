@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Tau.Mods;
 using osu.Game.Rulesets.Tau.Objects;
 using osu.Game.Rulesets.Tau.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Scoring;
@@ -25,7 +28,8 @@ namespace osu.Game.Rulesets.Tau.UI
     {
         private readonly JudgementContainer<DrawableTauJudgement> judgementLayer;
         private readonly Container judgementAboveHitObjectLayer;
-        private readonly EffectsContainer effectsContainer;
+
+        internal readonly EffectsContainer EffectsContainer;
 
         public static readonly Vector2 BASE_SIZE = new(768);
         public static readonly Bindable<Color4> ACCENT_COLOUR = new(Color4Extensions.FromHex(@"FF0040"));
@@ -34,9 +38,16 @@ namespace osu.Game.Rulesets.Tau.UI
 
         public BindableBool ShouldShowPositionalEffects = new(true);
 
-        protected override GameplayCursorContainer CreateCursor() => new TauCursor();
+        // don't like this.
+        protected override GameplayCursorContainer CreateCursor()
+        {
+            if (Mods != null && Mods.Any(m => m is TauModRoundabout))
+                return new TauModRoundabout.RoundaboutTauCursor();
 
-        public new TauCursor Cursor => base.Cursor as TauCursor;
+            return new TauCursor();
+        }
+
+        public new TauCursor Cursor => (TauCursor)base.Cursor;
 
         [Resolved]
         private TauCachedProperties tauCachedProperties { get; set; }
@@ -52,8 +63,7 @@ namespace osu.Game.Rulesets.Tau.UI
             Origin = Anchor.Centre;
             Size = BASE_SIZE;
 
-            AddRangeInternal(new Drawable[]
-            {
+            AddRangeInternal([
                 PlayfieldPiece = new PlayfieldPiece(),
                 judgementLayer = new JudgementContainer<DrawableTauJudgement> { RelativeSizeAxes = Axes.Both },
                 new Container
@@ -61,9 +71,9 @@ namespace osu.Game.Rulesets.Tau.UI
                     RelativeSizeAxes = Axes.Both,
                     Child = HitObjectContainer
                 },
-                effectsContainer = new EffectsContainer(),
-                judgementAboveHitObjectLayer = new Container { RelativeSizeAxes = Axes.Both },
-            });
+                EffectsContainer = new EffectsContainer(),
+                judgementAboveHitObjectLayer = new Container { RelativeSizeAxes = Axes.Both }
+            ]);
 
             NewResult += onNewResult;
 
@@ -75,8 +85,8 @@ namespace osu.Game.Rulesets.Tau.UI
             AddRangeInternal(poolDictionary.Values);
         }
 
-        [BackgroundDependencyLoader]
-        private void load()
+        [BackgroundDependencyLoader(true)]
+        private void load([CanBeNull] IBeatmap beatmap)
         {
             RegisterPool<Beat, DrawableBeat>(10);
             RegisterPool<HardBeat, DrawableHardBeat>(5);
@@ -87,47 +97,9 @@ namespace osu.Game.Rulesets.Tau.UI
             RegisterPool<SliderHardBeat, DrawableSliderHardBeat>(5);
             RegisterPool<SliderRepeat, DrawableSliderRepeat>(5);
             RegisterPool<SliderTick, DrawableSliderTick>(10);
-        }
 
-        protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
-        {
-            base.OnNewDrawableHitObject(drawableHitObject);
-
-            switch (drawableHitObject)
-            {
-                case DrawableSlider s:
-                    s.CheckValidation = ang =>
-                    {
-                        if (ShouldShowPositionalEffects.Value)
-                            effectsContainer.TrackSlider(ang, s);
-
-                        return checkPaddlePosition(ang);
-                    };
-                    break;
-
-                case DrawableBeat beat:
-                    beat.CheckValidation = checkPaddlePosition;
-                    break;
-
-                case DrawableStrictHardBeat st:
-                    st.CheckValidation = checkPaddlePosition;
-                    break;
-            }
-        }
-
-        private ValidationResult checkPaddlePosition(float angle)
-        {
-            float angleDiff = Extensions.GetDeltaAngle(Cursor.DrawablePaddle.Rotation, angle);
-
-            if (Cursor.AdditionalPaddles != null)
-                foreach (var i in Cursor.AdditionalPaddles)
-                {
-                    float diff = Extensions.GetDeltaAngle(i.Rotation, angle);
-                    if (Math.Abs(diff) < Math.Abs(angleDiff))
-                        angleDiff = diff;
-                }
-
-            return new ValidationResult(Math.Abs(angleDiff) <= tauCachedProperties.AngleRange.Value / 2, angleDiff);
+            if (beatmap != null)
+                Cursor.SetAngleRange(beatmap.Difficulty.CircleSize);
         }
 
         private void onJudgmentLoaded(DrawableTauJudgement judgement)
@@ -138,7 +110,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private void onNewResult(DrawableHitObject judgedObject, JudgementResult result)
         {
             if (ShouldShowPositionalEffects.Value)
-                effectsContainer.OnNewResult(judgedObject, result);
+                EffectsContainer.OnNewResult(judgedObject, result);
 
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;

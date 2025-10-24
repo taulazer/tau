@@ -52,6 +52,8 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             });
         }
 
+        private float lastCursorRotation;
+
         protected override void Update()
         {
             base.Update();
@@ -59,8 +61,9 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             if (cursor == null)
                 return;
 
-            Vortices[0].Position = Extensions.FromPolarCoordinates((properties?.InverseModEnabled?.Value ?? false) ? 120 : 420, cursor.DrawablePaddle.Rotation);
-            Vortices[0].Speed = cursor.AngleDistanceFromLastUpdate * 5;
+            Vortices[0].Position = Extensions.FromPolarCoordinates((properties?.InverseModEnabled?.Value ?? false) ? 120 : 420, cursor.Rotation);
+            Vortices[0].Speed = Extensions.GetDeltaAngle(cursor.Rotation, lastCursorRotation) * 5;
+            lastCursorRotation = cursor.Rotation;
         }
     }
 

@@ -32,11 +32,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         public float PathDistance = TauPlayfield.BASE_SIZE.X / 2;
 
         protected override TauAction[] Actions => HitObject.IsHard
-            ? new[]
-            {
+            ? [
                 TauAction.HardButton1,
                 TauAction.HardButton2
-            }
+            ]
             : base.Actions;
 
         private readonly SliderPath path;
@@ -61,14 +60,13 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            AddRangeInternal(new Drawable[]
-            {
+            AddRangeInternal([
                 maskingContainer = new CircularContainer
                 {
                     Masking = false,
                     RelativeSizeAxes = Axes.Both,
-                    Children = new Drawable[]
-                    {
+                    Children =
+                    [
                         new Box
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -81,14 +79,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                             Origin = Anchor.Centre,
                             PathRadius = 4,
                             PathDistance = PathDistance
-                        },
-                    }
+                        }
+                    ]
                 },
                 headContainer = new Container { RelativeSizeAxes = Axes.Both },
                 tickContainer = new Container<DrawableSliderTick> { RelativeSizeAxes = Axes.Both },
                 repeatContainer = new Container<DrawableSliderRepeat> { RelativeSizeAxes = Axes.Both },
                 slidingSample = new PausableSkinnableSound { Looping = true }
-            });
+            ]);
 
             path.Ticks = repeatContainer;
 
@@ -202,7 +200,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public BindableBool Tracking = new();
         private const double tracking_checkpoint_interval = 5;
-        private readonly List<bool> trackingCheckpoints = new();
+        private readonly List<bool> trackingCheckpoints = [];
 
         protected override void Update()
         {
@@ -223,6 +221,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (Tracking.Value = checkIfTracking())
             {
                 totalTimeHeld += Time.Elapsed;
+                Playfield?.EffectsContainer.TrackSlider(GetCurrentAngle(), this);
             }
 
             int trackingCheckpointIndex = (int)((Time.Current - HitObject.StartTime) / tracking_checkpoint_interval);
