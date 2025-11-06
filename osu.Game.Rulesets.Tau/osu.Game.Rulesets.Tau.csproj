@@ -35,7 +35,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game" Version="2025.1105.0" />
+    <PackageReference Include="ppy.osu.Game" Version="2025.1107.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Objects\Drawables\DrawableSlider.Calculations.cs">
