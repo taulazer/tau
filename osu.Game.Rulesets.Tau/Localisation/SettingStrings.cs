@@ -27,6 +27,11 @@ namespace osu.Game.Rulesets.Tau.Localisation
         public static LocalisableString HitLighting => new TranslatableString(getKey(@"hit_lighting"), @"Hit Lighting");
 
         /// <summary>
+        /// "Increase Visual Distinction"
+        /// </summary>
+        public static LocalisableString IncreaseVisualDistinction = new TranslatableString(getKey(@"visual_distinction"), @"Increase Visual Distinction");
+
+        /// <summary>
         /// "Kiai Type"
         /// </summary>
         public static LocalisableString KiaiType => new TranslatableString(getKey(@"kiai_type"), @"Kiai Type");
