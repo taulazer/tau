@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Input;
 using osu.Game.Beatmaps;
 using osu.Game.Input.Handlers;
@@ -59,6 +60,7 @@ namespace osu.Game.Rulesets.Tau.UI
         private void load()
         {
             properties.SetRange(Beatmap.Difficulty.CircleSize);
+            KeyBindingInputManager.Add(new TauHardButtonTouchInputMapper(KeyBindingInputManager) { RelativeSizeAxes = Axes.Both });
         }
 
         protected override void Dispose(bool isDisposing)
