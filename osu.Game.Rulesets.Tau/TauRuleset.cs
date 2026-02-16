@@ -98,17 +98,17 @@ namespace osu.Game.Rulesets.Tau
                 _ => Enumerable.Empty<Mod>()
             };
 
-        protected override IEnumerable<HitResult> GetValidHitResults()
+        public override IEnumerable<HitResult> GetValidHitResults()
         {
-            return new[]
-            {
+            return
+            [
                 HitResult.Great,
                 HitResult.Ok,
                 HitResult.Miss,
 
                 HitResult.SmallTickHit,
                 HitResult.SmallTickMiss
-            };
+            ];
         }
 
         public override LocalisableString GetDisplayNameForHitResult(HitResult result)
