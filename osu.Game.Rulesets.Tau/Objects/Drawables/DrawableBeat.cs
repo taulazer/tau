@@ -48,10 +48,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateInitialTransforms();
 
             DrawableBox.FadeIn(HitObject.TimeFadeIn);
-
-            if (Properties != null && Properties.InverseModEnabled.Value)
-                DrawableBox.MoveToY(-1.0f);
-
             DrawableBox.MoveToY(-0.5f, HitObject.TimePreempt);
         }
 
@@ -70,9 +66,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             const double time_fade_hit = 250, time_fade_miss = 400;
             var offset = new Vector2(0, -.1f);
-
-            if (Properties != null && Properties.InverseModEnabled.Value)
-                offset.Y = -offset.Y;
 
             switch (state)
             {

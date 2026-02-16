@@ -27,9 +27,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             float radius = TauPlayfield.BASE_SIZE.X / 2;
 
-            float distanceAt(double t) => inversed
-                                              ? (float)(2 * radius - (time - t) / HitObject.TimePreempt * radius)
-                                              : (float)((time - t) / HitObject.TimePreempt * radius);
+            float distanceAt(double t) => (float)((time - t) / HitObject.TimePreempt * radius);
 
             void addVertex(double t, double angle)
             {

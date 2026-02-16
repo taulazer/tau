@@ -5,7 +5,6 @@ using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
-using osu.Game.Rulesets.Tau.UI;
 using osuTK;
 
 namespace osu.Game.Rulesets.Tau.Objects.Drawables
@@ -37,13 +36,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 Depth = float.MaxValue,
                 Alpha = 0
             });
-        }
-
-        [BackgroundDependencyLoader(true)]
-        private void load(TauCachedProperties properties)
-        {
-            if (properties != null && properties.InverseModEnabled.Value)
-                distance = 0.4f;
         }
 
         public override void Apply(JudgementResult result, DrawableHitObject judgedObject)
