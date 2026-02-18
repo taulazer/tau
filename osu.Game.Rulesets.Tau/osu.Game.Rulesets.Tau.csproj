@@ -38,6 +38,7 @@
     <PackageReference Include="ppy.osu.Game" Version="2026.213.0" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.5.0" />
     <Compile Update="Objects\Drawables\DrawableSlider.Calculations.cs">
       <DependentUpon>DrawableSlider.cs</DependentUpon>
     </Compile>
