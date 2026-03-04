@@ -71,10 +71,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.FadeIn(HitObject.TimeFadeIn);
-
-            if (properties != null && properties.InverseModEnabled.Value)
-                piece.ResizeTo(2);
-
             piece.ResizeTo(1, HitObject.TimePreempt);
         }
 
@@ -86,13 +82,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             base.UpdateHitStateTransforms(state);
 
             const double time_fade_hit = 250, time_fade_miss = 400;
-            float scaleHit = 1.25f, scaleMiss = 1.1f;
-
-            if (properties != null && properties.InverseModEnabled.Value)
-            {
-                scaleHit = 0.75f;
-                scaleMiss = 0.9f;
-            }
+            const float scale_hit = 1.25f, scale_miss = 1.1f;
 
             switch (state)
             {
@@ -102,7 +92,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     break;
 
                 case ArmedState.Hit:
-                    this.ScaleTo(scaleHit, time_fade_hit, Easing.OutQuint)
+                    this.ScaleTo(scale_hit, time_fade_hit, Easing.OutQuint)
                         .FadeColour(colour.ForHitResult(Result.Type), time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_hit);
 
@@ -110,7 +100,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
                 case ArmedState.Miss:
                     this.FadeColour(Color4.Red, time_fade_miss, Easing.OutQuint)
-                        .ResizeTo(scaleMiss, time_fade_hit, Easing.OutQuint)
+                        .ResizeTo(scale_miss, time_fade_hit, Easing.OutQuint)
                         .FadeOut(time_fade_miss);
 
                     break;

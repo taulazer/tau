@@ -64,7 +64,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             private float pathRadius = 10f;
             public Colour4 FadeColour;
-            public bool Reverse;
 
             /// <summary>
             /// How wide this path is on each side of the line.

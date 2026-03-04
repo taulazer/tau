@@ -46,8 +46,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         private readonly Cached drawCache = new();
         private readonly PausableSkinnableSound slidingSample;
 
-        private bool inversed;
-
         public DrawableSlider()
             : this(null)
         {
@@ -159,14 +157,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             path.FadeColour = colour.ForHitResult(HitResult.Great);
 
             totalTimeHeld = 0;
-
-            if (properties.InverseModEnabled.Value)
-            {
-                inversed = true;
-                maskingContainer.Masking = false;
-                path.Reverse = inversed;
-                // PathDistance = path.PathDistance = TauPlayfield.BaseSize.X;
-            }
         }
 
         protected override void OnFree()
