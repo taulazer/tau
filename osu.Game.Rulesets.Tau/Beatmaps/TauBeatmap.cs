@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
@@ -16,6 +17,8 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
             int sliders = HitObjects.Count(s => s is Slider);
             int hardBeats = HitObjects.Count(hb => hb is HardBeat);
 
+            float total = Math.Max(1, beats + sliders + hardBeats);
+
             return new[]
             {
                 new BeatmapStatistic
@@ -27,12 +30,14 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         Icon = FontAwesome.Solid.Square,
                         Scale = new Vector2(.7f)
                     },
+                    BarDisplayLength = beats / total
                 },
                 new BeatmapStatistic
                 {
                     Name = BeatmapStrings.SliderCount,
                     Content = sliders.ToString(),
-                    CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders)
+                    CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders),
+                    BarDisplayLength = sliders / total
                 },
                 new BeatmapStatistic
                 {
@@ -43,6 +48,7 @@ namespace osu.Game.Rulesets.Tau.Beatmaps
                         Icon = FontAwesome.Regular.Circle,
                         Scale = new Vector2(.7f)
                     },
+                    BarDisplayLength = hardBeats / total
                 }
             };
         }
