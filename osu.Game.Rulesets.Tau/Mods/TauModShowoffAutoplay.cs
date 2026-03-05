@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Replays;
 
@@ -10,7 +11,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModShowoffAutoplay : ModAutoplay
     {
-        public override IconUsage? Icon => FontAwesome.Regular.Eye;
+        public override IconUsage? Icon => OsuIcon.ModSynesthesia;
         public override Type[] IncompatibleMods => base.IncompatibleMods.Concat(new[] { typeof(TauModAutopilot) }).ToArray();
         public override bool HasImplementation => false;
 

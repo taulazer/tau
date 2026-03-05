@@ -1,4 +1,6 @@
-﻿using osu.Framework.Localisation;
+﻿using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Rulesets.Tau.Objects;
@@ -14,6 +16,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override ModType Type => ModType.Fun;
         public override LocalisableString Description => ModStrings.TraceableDescription;
         public override double ScoreMultiplier => 1;
+        public override IconUsage? Icon => OsuIcon.ModTraceable;
 
         public void ApplyToDrawableRuleset(DrawableRuleset<TauHitObject> drawableRuleset)
         {

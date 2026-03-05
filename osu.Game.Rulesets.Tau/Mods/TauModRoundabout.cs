@@ -9,6 +9,7 @@ using System;
 using osu.Framework.Localisation;
 using osu.Game.Rulesets.Tau.Localisation;
 using System.Collections.Generic;
+using osu.Game.Graphics;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
@@ -20,7 +21,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override double ScoreMultiplier => 1;
         public override ModType Type => ModType.Fun;
         public override bool UserPlayable => true;
-        public override IconUsage? Icon => FontAwesome.Solid.Redo;
+        public override IconUsage? Icon => OsuIcon.ModSpunOut;
         public override bool HasImplementation => true;
 
         [SettingSource(typeof(ModStrings), nameof(ModStrings.RoundaboutDirectionName))]

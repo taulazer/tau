@@ -1,12 +1,13 @@
 ﻿using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.Tau.Localisation;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
     public class TauModFadeIn : TauModHidden
     {
-        public override IconUsage? Icon => TauIcons.ModFadeIn;
+        public override IconUsage? Icon => OsuIcon.ModFadeIn;
 
         public override string Acronym => "FI";
 
