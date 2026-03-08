@@ -93,7 +93,8 @@ namespace osu.Game.Rulesets.Tau
                     new TauModRoundabout(),
                     new TauModNoScope(),
                     new TauModTraceable(),
-                    new TauModDual()
+                    new TauModDual(),
+                    new TauModBarrelRoll(),
                 },
                 _ => Enumerable.Empty<Mod>()
             };
