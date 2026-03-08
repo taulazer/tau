@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Mods;
@@ -19,10 +20,11 @@ namespace osu.Game.Rulesets.Tau.UI
         private readonly BindableDouble angleRange = new BindableDouble(TauDefaults.PADDLE_ANGLE);
         public IBindable<double> AngleRange => angleRange;
 
-        private readonly List<Paddle> paddles;
         public IReadOnlyList<Paddle> Paddles => paddles;
 
         protected IReadOnlyList<Mod> Mods = [];
+
+        private Container<Paddle> paddles;
 
         public TauCursor()
         {
@@ -34,8 +36,15 @@ namespace osu.Game.Rulesets.Tau.UI
             // Rotate 90° as the getAngleFromPosition method expects a 0° -> 360° clockwise range starting from the 3 o'clock position.
             Rotation = 90;
 
-            paddles = [new Paddle(angleRange)];
-            Add(paddles[0]);
+            // We put the paddles in a container, where we will apply rotation based on our cursor
+            // We don't want to Rotate TauCursor, because that will screw with positional calculation
+            Add(paddles = new Container<Paddle>
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+                Children = [ new Paddle(angleRange) ]
+            });
         }
 
         [BackgroundDependencyLoader(true)]
@@ -52,7 +61,6 @@ namespace osu.Game.Rulesets.Tau.UI
                 {
                     var paddle = new Paddle(angleRange);
                     paddles.Add(paddle);
-                    Add(paddle);
                 }
 
                 for (int i = 0; i < paddles.Count; i++)
@@ -70,8 +78,10 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            Rotation = Extensions.GetAngleFromPosition(ScreenSpaceDrawQuad.Centre, e.ScreenSpaceMousePosition) + 90;
-            ActiveCursor.Position = ToLocalSpace(e.ScreenSpaceMousePosition);
+            var localSpacePosition = ToLocalSpace(e.ScreenSpaceMousePosition);
+
+            paddles.Rotation = Extensions.GetAngleFromPosition(OriginPosition, localSpacePosition) + 90;
+            ActiveCursor.Position = localSpacePosition;
 
             return false;
         }
@@ -82,7 +92,7 @@ namespace osu.Game.Rulesets.Tau.UI
 
             foreach (var paddle in paddles)
             {
-                result = paddle.ValidateAngle(Rotation, angle);
+                result = paddle.ValidateAngle(Rotation + paddles.Rotation, angle);
 
                 if (result.IsValid)
                     return result;
