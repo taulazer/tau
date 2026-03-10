@@ -1,4 +1,4 @@
-[![tau](https://alten.s-ul.eu/pRr7vj6C.png)](https://github.com/taulazer/tau "tau")
+[![Tau](https://alten.s-ul.eu/pRr7vj6C.png)](https://github.com/taulazer/tau "Tau")
 <div align="center">
 
 [![release](https://img.shields.io/github/v/release/taulazer/tau?style=flat-square)](https://github.com/taulazer/tau/releases)
@@ -36,12 +36,12 @@ We have [prebuilt libraries](https://github.com/taulazer/tau/releases) for users
 ###### Do note that this instruction will only work with desktop devices.
 
 ## Development
-When developing or debugging the tau codebase, a few prerequisites are required as following:
+When developing or debugging the Tau codebase, a few prerequisites are required as following:
 * An IDE that supports the C# language in automatic completion, and syntax highlighting; examples of such being [Visual Studio](https://visualstudio.microsoft.com/vs/) and above, or [JetBrains Rider](https://www.jetbrains.com/rider/).
 * The [osu!framework](https://github.com/ppy/osu-framework/tree/master/osu.Framework), and [osu!](https://github.com/ppy/osu) codebases are added as dependencies for building
 
 ### Source Code
-You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the tau directory.
+You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the Tau directory.
 ```sh
 git clone https://github.com/taulazer/tau.git
 cd tau
@@ -72,6 +72,6 @@ Thanks to all of those who have helped with localization efforts. Members includ
 Thanks to all of the amazing people within our discord community.
 
 ## License
-tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/taulazer/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
+Tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/taulazer/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of Tau.
 
 The licensing here does not directly apply to [osu!](https://github.com/ppy/osu), as it is bound to its own licensing. What is reflected in our licensing *may* not be allowed in the [osu!](https://github.com/ppy/osu) github repository.
