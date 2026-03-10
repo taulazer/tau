@@ -1,4 +1,4 @@
-[![tau](https://alten.s-ul.eu/pRr7vj6C.png)](https://github.com/taulazer/tau "tau")
+[![Tau](https://alten.s-ul.eu/pRr7vj6C.png)](https://github.com/taulazer/tau "Tau")
 <div align="center">
 
 [![release](https://img.shields.io/github/v/release/taulazer/tau?style=flat-square)](https://github.com/taulazer/tau/releases)
@@ -27,36 +27,34 @@ We have [prebuilt libraries](https://github.com/taulazer/tau/releases) for users
 
 ### Instructions
 
-From the osu settings menu scroll down till you see `Open osu! folder`, that button should take you under `%appdata%/osu`.
+- From the osu settings menu scroll down till you see `Open osu! folder`, that button should take you under `%appdata%/osu`.
 
-![open osu! folder](https://github.com/LumpBloom7/sentakki/wiki/images/Instuction1.png)
+- Copy the ruleset file into the `rulesets` directory, do make sure that duplicate copies of the ruleset is overwritten.
 
-Copy the ruleset file into the `rulesets` directory, do make sure that duplicate copies of the ruleset is overwritten.
-
-Once done, restart osu!lazer, if lazer is already open. Once lazer is started, you should see the ruleset alongside the standard rulesets on the toolbar at the top.
+- Once done, restart osu!lazer, if lazer is already open. Once lazer is started, you should see the ruleset alongside the standard rulesets on the toolbar at the top.
 
 ###### Do note that this instruction will only work with desktop devices.
 
 ## Development
-When developing or debugging the tau codebase, a few prerequisites are required as following:
-* An IDE that supports the C# language in automatic completion, and syntax highlighting; examples of such being [Visual Studio 2019](https://visualstudio.microsoft.com/vs/) and above, or [JetBrains Rider](https://www.jetbrains.com/rider/).
+When developing or debugging the Tau codebase, a few prerequisites are required as following:
+* An IDE that supports the C# language in automatic completion, and syntax highlighting; examples of such being [Visual Studio](https://visualstudio.microsoft.com/vs/) and above, or [JetBrains Rider](https://www.jetbrains.com/rider/).
 * The [osu!framework](https://github.com/ppy/osu-framework/tree/master/osu.Framework), and [osu!](https://github.com/ppy/osu) codebases are added as dependencies for building
 
 ### Source Code
-You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the tau directory.
+You are able to clone the repository over command line, or by downloading it. Updating this code to the latest commit would be done with `git pull`, inside the Tau directory.
 ```sh
 git clone https://github.com/taulazer/tau.git
 cd tau
 ```
 
 ### Building the Gamemode From Source
-To build Tau, you will need to have [.NET 5](https://dotnet.microsoft.com/download) installed on your computer.
+To build Tau, you will need to have [.NET 8.0](https://dotnet.microsoft.com/download) installed on your computer.
 
 First, open a terminal and navigate to wherever you have the Tau source code downloaded. Once you are in the root of the repository, enter the directory named `osu.Game.Rulesets.Tau`.
 
 Next, run the command `dotnet build` and wait for the project to be built. This shouldn't take very long.
 
-Once the project has finished building, dotnet should tell you where the binary was built to (usually somewhere along the lines of ./tau/osu.Game.Rulesets.Tau/bin/Debug/netstandardx.x/). Find the .dll binary in the given location and follow the installation instructions above.
+Once the project has finished building, dotnet should tell you where the binary was built to (usually somewhere along the lines of `./tau/osu.Game.Rulesets.Tau/bin/Debug/net-8.0/`). Find the .dll binary in the given location and follow the installation instructions above.
 
 ## Contributions
 All contributions are appreciated, as to improve the mode on its playability and functionality. As this gamemode isn't perfect, we would enjoy all additions to the code through bugfixing and ideas. Contributions should be done over an issue or a pull request, to give maintainers a chance to review changes to the codebase.
@@ -74,6 +72,6 @@ Thanks to all of those who have helped with localization efforts. Members includ
 Thanks to all of the amazing people within our discord community.
 
 ## License
-tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/taulazer/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of tau.
+Tau is licenced under the [MIT](https://opensource.org/licenses/MIT) License. For licensing information, refer to the [license file](https://github.com/taulazer/tau/blob/master/LICENSE) regarding what is permitted regarding the codebase of Tau.
 
 The licensing here does not directly apply to [osu!](https://github.com/ppy/osu), as it is bound to its own licensing. What is reflected in our licensing *may* not be allowed in the [osu!](https://github.com/ppy/osu) github repository.
