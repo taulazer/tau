@@ -39,11 +39,12 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
         {
-            var converter = (TauBeatmapConverter)beatmapConverter;
+            if (beatmapConverter is not TauBeatmapConverter tauConverter)
+                return;
 
-            converter.CanConvertToHardBeats = ToggleHardBeats.Value;
-            converter.CanConvertToSliders = ToggleSliders.Value;
-            converter.SliderDivisor = SlidersDivisionLevel.Value;
+            tauConverter.CanConvertToHardBeats = ToggleHardBeats.Value;
+            tauConverter.CanConvertToSliders = ToggleSliders.Value;
+            tauConverter.SliderDivisor = SlidersDivisionLevel.Value;
         }
     }
 }
