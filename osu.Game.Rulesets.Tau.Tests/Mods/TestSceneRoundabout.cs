@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
             AddStep("add cursor", () =>
             {
                 Clear();
-                Add(cursor = new TauCursor());
+                Add(cursor = new TauModRoundabout.RoundaboutTauCursor());
             });
             AddStep("rotate CW 45°", () => moveMouse(-45));
             AddAssert("cursor rotation is correct", () => cursor.Rotation != 45);
