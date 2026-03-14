@@ -46,7 +46,10 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
         {
-            ((TauBeatmapConverter)beatmapConverter).LockedDirection = Direction.Value;
+            if (beatmapConverter is not TauBeatmapConverter tauConverter)
+                return;
+
+            tauConverter.LockedDirection = Direction.Value;
         }
 
         public partial class RoundaboutTauCursor : TauCursor
