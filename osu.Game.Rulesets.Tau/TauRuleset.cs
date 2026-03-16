@@ -88,7 +88,6 @@ namespace osu.Game.Rulesets.Tau
                 {
                     new MultiMod(new ModWindUp(), new ModWindDown()),
                     new ModAdaptiveSpeed(),
-                    new TauModInverse(),
                     new TauModImpossibleSliders(),
                     new TauModRoundabout(),
                     new TauModNoScope(),

@@ -13,7 +13,6 @@ layout(std140, set = 0, binding = 0) uniform m_sliderParameters {
     highp vec4 hitColor;
     highp float range;
     highp float fadeRange;
-    bool reverse;
 };
 
 layout(set = 1, binding = 0) uniform lowp texture2D m_texture;
@@ -28,7 +27,7 @@ void main(void)
     vec2 diff = v_Position - centerPos;
     float dist = sqrt(diff.x * diff.x + diff.y * diff.y);
 
-    if ( reverse != dist <= range ) 
+    if ( dist <= range ) 
     {
         o_colour = colour;
     } 

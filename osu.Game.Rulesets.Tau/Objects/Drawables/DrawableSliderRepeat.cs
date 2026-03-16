@@ -101,8 +101,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             base.OnApply();
 
-            DrawableBox.Y = Properties?.InverseModEnabled.Value == true ? -1.0f : 0;
-
             DrawableBox.Alpha = 0;
         }
 
@@ -119,9 +117,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         {
             float velocity = -0.5f / (float)HitObject.TimePreempt;
             float timeFadeHit = DrawableSlider.FADE_RANGE / Math.Abs(velocity);
-
-            if (Properties?.InverseModEnabled.Value == true)
-                velocity *= -1;
 
             switch (state)
             {
