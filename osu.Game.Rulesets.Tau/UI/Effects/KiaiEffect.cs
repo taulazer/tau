@@ -8,7 +8,6 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Tau.Objects;
-using osu.Game.Rulesets.Tau.UI.Cursor;
 using osuTK;
 using osuTK.Graphics;
 
@@ -54,7 +53,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             {
                 Amount = 10,
                 Angle = angle,
-                Inversed = properties?.InverseModEnabled?.Value ?? false,
                 Colour = hitResultColorOrDefault(result.Type, TauPlayfield.ACCENT_COLOUR.Value)
             }));
 
@@ -63,7 +61,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             {
                 Amount = 64,
                 IsCircular = true,
-                Inversed = properties?.InverseModEnabled?.Value ?? false,
                 Colour = hitResultColorOrDefault(result.Type, TauPlayfield.ACCENT_COLOUR.Value)
             }));
 
@@ -109,7 +106,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         protected abstract Drawable CreateAngularParticle();
         protected abstract Drawable CreateCircularParticle();
 
-        protected float Distance => Settings.Inversed ? 0.5f - Paddle.PADDLE_RADIUS : 0.5f;
+        protected float Distance => 0.5f;
 
         protected const double Duration = 1000;
 
@@ -165,11 +162,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             /// Note that this will nullify <see cref="Angle"/>.
             /// </summary>
             public bool IsCircular { get; init; }
-
-            /// <summary>
-            /// Whether or not the particles should be spewed inwards or outwards.
-            /// </summary>
-            public bool Inversed { get; init; }
         }
     }
 }

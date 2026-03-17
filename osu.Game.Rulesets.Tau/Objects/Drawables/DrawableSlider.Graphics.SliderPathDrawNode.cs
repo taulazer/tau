@@ -70,11 +70,8 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     public UniformVector4 HitColor;
                     public UniformFloat Range;
                     public UniformFloat FadeRange;
-                    public UniformBool Reverse;
 
-                    private UniformPadding4 _p2;
-                    private UniformPadding12 _p3;
-                    private UniformPadding4 _p4;
+                    private UniformPadding8 _p2;
                 }
 
                 // We multiply the size param by 3 such that the amount of vertices is a multiple of the amount of vertices
@@ -92,7 +89,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                 private Vector2 centerPos;
                 private float range;
                 private float fadeRange;
-                private bool reverse;
 
                 public override void ApplyState()
                 {
@@ -128,7 +124,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                     fadeRange = (Source.ToScreenSpace(fade) - centerPos).Length - range;
                     var c = Source.FadeColour;
                     hitColour = new Vector4(c.R, c.G, c.B, c.A);
-                    reverse = Source.Reverse;
                 }
 
                 private Vector2 pointOnCircle(float angle) => new(MathF.Sin(angle), -MathF.Cos(angle));
@@ -346,7 +341,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
                         Range = range,
                         FadeRange = fadeRange,
                         HitColor = hitColour,
-                        Reverse = reverse
                     };
 
                     //maskData ??= renderer.CreateUniformBuffer<MaskUniform>();

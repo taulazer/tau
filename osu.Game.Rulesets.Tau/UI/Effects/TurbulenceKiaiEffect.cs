@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
             if (cursor == null)
                 return;
 
-            Vortices[0].Position = Extensions.FromPolarCoordinates((properties?.InverseModEnabled?.Value ?? false) ? 120 : 420, cursor.Rotation);
+            Vortices[0].Position = Extensions.FromPolarCoordinates(420, cursor.Rotation);
             Vortices[0].Speed = Extensions.GetDeltaAngle(cursor.Rotation, lastCursorRotation) * 5;
             lastCursorRotation = cursor.Rotation;
         }
@@ -101,9 +101,6 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
                     Settings.IsCircular
                         ? Vector2.Zero.GetDegreesFromPosition(particle.Position)
                         : RNG.NextSingle(Settings.Angle - 10, Settings.Angle + 10));
-
-            if (Settings.Inversed)
-                particle.Velocity = -particle.Velocity;
         }
 
         private float getVelocityAmplitude()

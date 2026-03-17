@@ -18,8 +18,10 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
         {
-            var converter = (TauBeatmapConverter)beatmapConverter;
-            converter.HardBeatsAreStrict = true;
+            if (beatmapConverter is not TauBeatmapConverter tauConverter)
+                return;
+
+            tauConverter.HardBeatsAreStrict = true;
         }
     }
 }

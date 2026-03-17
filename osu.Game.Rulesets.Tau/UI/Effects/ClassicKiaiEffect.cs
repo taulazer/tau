@@ -49,7 +49,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         private void addTransformsForAngled(Drawable particle)
         {
             particle.MoveTo(Extensions.FromPolarCoordinates(
-                             (RNG.NextSingle() * 0.15f) * (Settings.Inversed ? -1f : 1f) + Distance,
+                             RNG.NextSingle() * 0.15f + Distance,
                              RNG.NextSingle(Settings.Angle - 10, Settings.Angle + 10)),
                          Duration, Easing.OutQuint)
                     .ResizeTo(new Vector2(RNG.Next(0, 5)), Duration, Easing.OutQuint);
@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Tau.UI.Effects
         {
             particle.MoveTo(
                          Extensions.FromPolarCoordinates(
-                             (RNG.NextSingle() * 0.15f) * (Settings.Inversed ? -1f : 2f) + Distance,
+                             (RNG.NextSingle() * 0.15f) * 2f + Distance,
                              Vector2.Zero.GetDegreesFromPosition(particle.Position)), Duration,
                          Easing.OutQuint)
                     .ScaleTo(new Vector2(RNG.Next(1, 2)), Duration, Easing.OutQuint);

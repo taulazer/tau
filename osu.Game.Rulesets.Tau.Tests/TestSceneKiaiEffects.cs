@@ -41,11 +41,6 @@ namespace osu.Game.Rulesets.Tau.Tests
         [TestCase(true)]
         public void TestEffect(bool isInversed)
         {
-            AddStep("Set inverse effect", () =>
-            {
-                Properties.InverseModEnabled.Value = isInversed;
-            });
-
             AddStep("Add beat result",
                 () => KiaiContainer.OnNewResult(
                     new DrawableBeat(new Beat()), new JudgementResult(new Beat(), new TauJudgement()) { Type = HitResult.Great }));

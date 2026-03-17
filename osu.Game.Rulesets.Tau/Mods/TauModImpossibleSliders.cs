@@ -15,9 +15,10 @@ namespace osu.Game.Rulesets.Tau.Mods
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
         {
-            var converter = (TauBeatmapConverter)beatmapConverter;
+            if (beatmapConverter is not TauBeatmapConverter tauConverter)
+                return;
 
-            converter.CanConvertImpossibleSliders = true;
+            tauConverter.CanConvertImpossibleSliders = true;
         }
     }
 }
