@@ -53,6 +53,6 @@
         <value>滑动条计数</value>
     </data>
   <data name="hard_beat_count" xml:space="preserve">
-        <value>硬拍计数</value>
+        <value>加强拍计数</value>
     </data>
 </root>

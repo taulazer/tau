@@ -50,9 +50,9 @@
         <value>Turbulence</value>
     </data>
   <data name="classic" xml:space="preserve">
-        <value>Classic</value>
+        <value>Mặc định</value>
     </data>
   <data name="none" xml:space="preserve">
-        <value>None</value>
+        <value>Không</value>
     </data>
 </root>

@@ -47,10 +47,10 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Paddle Size</value>
+        <value>Wielkość pada</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Override a beatmap's set PS.</value>
+        <value>Nadpisz wielkość pada wyznaczoną przez mapę.</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
         <value>Approach Rate</value>
@@ -59,55 +59,55 @@
         <value>Override a beatmap's set AR.</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>When one isn't enough</value>
+        <value>Kiedy jeden to za mało</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Paddle count</value>
+        <value>Ilość padów</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+        <value>Większy pad, bardziej przebaczające spadanie PŻ, mniejsze wymagania celności i trzy życia!</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Flashlight size</value>
+        <value>Rozmiar latarki</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
         <value>Multiplier applied to the default flashlight size.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Change size based on combo</value>
+        <value>Zmień rozmiar na podstawie combo</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
-        <value>Decrease the flashlight size as combo increases.</value>
+        <value>Zmniejsz rozmiar latarki wraz ze wzrostem combo.</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
-        <value>Automatic paddle movement - just follow the rhythm.</value>
+        <value>Automatyczny ruch pada - po prostu podążaj za rytmem.</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
         <value>Beats fade out before you hit them!</value>
     </data>
   <data name="fadein_description" xml:space="preserve">
-        <value>Beats appear out of nowhere!</value>
+        <value>Beaty pojawiają się znikąd!</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
-        <value>Beats will appear outside of the playfield.</value>
+        <value>Beaty pojawiają się z zewnątrz pola gry.</value>
     </data>
   <data name="impossible_sliders_description" xml:space="preserve">
         <value>Entirely removes the check for very sharp angles</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Removes certain aspects of the ruleset.</value>
+        <value>Usuwa niektóre aspekty tau.</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Sliders conversion</value>
+        <value>Konwersja sliderów</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
-        <value>Completely disables sliders altogether.</value>
+        <value>Kompletnie usuwa slidery.</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Hard beats conversion</value>
+        <value>Konwersja hard beatów</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
-        <value>Completely disables hard beats altogether.</value>
+        <value>Kompletnie usuwa hard beaty.</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
         <value>Slider division level</value>
@@ -116,7 +116,7 @@
         <value>The minimum slider length divisor.</value>
     </data>
   <data name="no_scope_description" xml:space="preserve">
-        <value>Where's the paddle?</value>
+        <value>Gdzie się podział pad?</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
         <value>Hidden at combo</value>
@@ -125,13 +125,13 @@
         <value>The combo count at which the paddle becomes completely hidden</value>
     </data>
   <data name="relax_description" xml:space="preserve">
-        <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
+        <value>Nie musisz klikać. Daj swoim klikającym/stukającym palcom odpocząć.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>You can only rotate the paddle in one direction.</value>
+        <value>Możesz obracać pada tylko w jedną stronę.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
-        <value>Direction</value>
+        <value>Kierunek</value>
     </data>
   <data name="traceable_description" xml:space="preserve">
         <value>Brim with no yankie</value>

@@ -1,6 +1,7 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Localisation;
+using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Tau.Configuration;
 using osu.Game.Rulesets.Tau.Localisation;
@@ -16,10 +17,10 @@ namespace osu.Game.Rulesets.Tau.UI
         {
         }
 
-        private SettingsCheckbox showEffects;
-        private SettingsCheckbox showSliderEffects;
-        private SettingsCheckbox showVisualizer;
-        private SettingsEnumDropdown<KiaiType> kiaiType;
+        private FormCheckBox showEffects;
+        private FormCheckBox showSliderEffects;
+        private FormCheckBox showVisualizer;
+        private FormEnumDropdown<KiaiType> kiaiType;
 
         [BackgroundDependencyLoader]
         private void load()
@@ -31,44 +32,44 @@ namespace osu.Game.Rulesets.Tau.UI
 
             Children = new Drawable[]
             {
-                showEffects = new SettingsCheckbox
+                new SettingsItemV2(new FormCheckBox
                 {
-                    LabelText = SettingStrings.ShowEffects,
-                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowEffects)
-                },
-                showSliderEffects = new SettingsCheckbox
-                {
-                    LabelText = SettingStrings.ShowSliderEffects,
-                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowSliderEffects)
-                },
-                showVisualizer = new SettingsCheckbox
-                {
-                    LabelText = SettingStrings.ShowVisualizer,
-                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
-                },
-                new SettingsCheckbox
-                {
-                    LabelText = SettingStrings.HitLighting,
+                    Caption = SettingStrings.HitLighting,
                     Current = config.GetBindable<bool>(TauRulesetSettings.HitLighting)
-                },
-                kiaiType = new SettingsEnumDropdown<KiaiType>()
+                }),
+                new SettingsItemV2(showEffects = new FormCheckBox
                 {
-                    LabelText = SettingStrings.KiaiType,
+                    Caption = SettingStrings.ShowEffects,
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowEffects)
+                }),
+                new SettingsItemV2(showSliderEffects = new FormCheckBox
+                {
+                    Caption = SettingStrings.ShowSliderEffects,
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowSliderEffects)
+                }),
+                new SettingsItemV2(showVisualizer = new FormCheckBox
+                {
+                    Caption = SettingStrings.ShowVisualizer,
+                    Current = config.GetBindable<bool>(TauRulesetSettings.ShowVisualizer)
+                }),
+                new SettingsItemV2(kiaiType = new FormEnumDropdown<KiaiType>()
+                {
+                    Caption = SettingStrings.KiaiType,
                     Current = config.GetBindable<KiaiType>(TauRulesetSettings.KiaiType)
-                },
-                new SettingsSlider<float>
+                }),
+                new SettingsItemV2(new FormSliderBar<float>
                 {
-                    LabelText = SettingStrings.PlayfieldDim,
+                    Caption = SettingStrings.PlayfieldDim,
                     Current = config.GetBindable<float>(TauRulesetSettings.PlayfieldDim),
                     KeyboardStep = 0.01f,
                     DisplayAsPercentage = true
-                },
-                new SettingsSlider<float>
+                }),
+                new SettingsItemV2(new FormSliderBar<float>
                 {
-                    LabelText = SettingStrings.NotesSize,
+                    Caption = SettingStrings.NotesSize,
                     Current = config.GetBindable<float>(TauRulesetSettings.NotesSize),
                     KeyboardStep = 1f
-                },
+                })
             };
 
             showEffects.Current.BindValueChanged(v =>

@@ -9,10 +9,12 @@ using System;
 using osu.Framework.Localisation;
 using osu.Game.Rulesets.Tau.Localisation;
 using System.Collections.Generic;
+using osu.Framework.Input.Events;
+using osu.Game.Rulesets.Tau.UI;
 
 namespace osu.Game.Rulesets.Tau.Mods
 {
-    public class TauModRoundabout : Mod, IApplicableToBeatmapConverter
+    public partial class TauModRoundabout : Mod, IApplicableToBeatmapConverter
     {
         public override string Name => "Roundabout";
         public override string Acronym => "RB";
@@ -22,6 +24,8 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override bool UserPlayable => true;
         public override IconUsage? Icon => FontAwesome.Solid.Redo;
         public override bool HasImplementation => true;
+
+        public override Type[] IncompatibleMods => [typeof(TauModAutoplay)];
 
         [SettingSource(typeof(ModStrings), nameof(ModStrings.RoundaboutDirectionName))]
         public Bindable<RotationDirection> Direction { get; } = new();
@@ -45,6 +49,42 @@ namespace osu.Game.Rulesets.Tau.Mods
             ((TauBeatmapConverter)beatmapConverter).LockedDirection = Direction.Value;
         }
 
-        public override Type[] IncompatibleMods => new[] { typeof(TauModAutoplay) };
+        public partial class RoundaboutTauCursor : TauCursor
+        {
+            private float lastLockedRotation;
+            private RotationDirection rotationLock;
+
+            protected override void LoadComplete()
+            {
+                base.LoadComplete();
+
+                if (Mods.GetMod(out TauModRoundabout mod))
+                    rotationLock = mod.Direction.Value;
+            }
+
+            protected override bool OnMouseMove(MouseMoveEvent e)
+            {
+                var prev = lastLockedRotation;
+                var nextAngle = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(e.ScreenSpaceMousePosition);
+                var diff = Extensions.GetDeltaAngle(nextAngle, prev);
+
+                switch (rotationLock)
+                {
+                    case RotationDirection.Clockwise:
+                        lastLockedRotation = diff > 0 ? nextAngle : prev;
+                        Rotation = diff < 0 ? (lastLockedRotation - diff.LimitEase(40)) : lastLockedRotation;
+                        break;
+
+                    case RotationDirection.Counterclockwise:
+                        lastLockedRotation = diff < 0 ? nextAngle : prev;
+                        Rotation = diff > 0 ? (lastLockedRotation + diff.LimitEase(40)) : lastLockedRotation;
+                        break;
+                }
+
+                Rotation = Rotation.Normalize();
+                ActiveCursor.Position = ToLocalSpace(e.ScreenSpaceMousePosition);
+                return false;
+            }
+        }
     }
 }

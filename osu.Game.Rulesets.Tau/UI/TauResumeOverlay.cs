@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -10,6 +11,7 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Tau.Localisation;
 using osu.Game.Screens.Play;
 using osuTK;
@@ -32,8 +34,8 @@ namespace osu.Game.Rulesets.Tau.UI
 
         protected override LocalisableString Message => UiStrings.ResumeMessage;
 
-        [BackgroundDependencyLoader]
-        private void load()
+        [BackgroundDependencyLoader(true)]
+        private void load([CanBeNull] IBeatmap beatmap)
         {
             Add(container = new Container
             {
@@ -43,8 +45,8 @@ namespace osu.Game.Rulesets.Tau.UI
                 Size = new Vector2(4f),
                 FillAspectRatio = 1,
                 FillMode = FillMode.Fit,
-                Children = new Drawable[]
-                {
+                Children =
+                [
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
@@ -59,10 +61,11 @@ namespace osu.Game.Rulesets.Tau.UI
                         Progress = (angleRange / 360) * 0.25f,
                         ResumeRequested = Resume
                     }
-                }
+                ]
             });
 
             Add(cursor = new TauCursor());
+            cursor.SetAngleRange(beatmap?.Difficulty.CircleSize ?? 0);
         }
 
         protected override void PopIn()
@@ -71,8 +74,9 @@ namespace osu.Game.Rulesets.Tau.UI
 
             GameplayCursor.ActiveCursor.Hide();
             cursor.Show();
-            clickContainer.Rotation = ScreenSpaceDrawQuad.Centre.GetDegreesFromPosition(ToScreenSpace(GameplayCursor.ActiveCursor.DrawPosition)) -
-                                      (((float)angleRange * 0.25f) / 2);
+            clickContainer.Rotation = Extensions.GetAngleFromPosition(ScreenSpaceDrawQuad.Centre, GameplayCursor.ActiveCursor.ScreenSpaceDrawQuad.Centre);
+            clickContainer.Rotation += 90;
+            clickContainer.Rotation -= (float)angleRange * 0.25f / 2f;
             container.FadeIn(200);
         }
 
@@ -119,6 +123,7 @@ namespace osu.Game.Rulesets.Tau.UI
                 Texture = generateTexture(renderer, 0.25f);
             }
 
+            // todo : use shader
             private Texture generateTexture(IRenderer renderer, float opacity)
             {
                 const int width = 128;

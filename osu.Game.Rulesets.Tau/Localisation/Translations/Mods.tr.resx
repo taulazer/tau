@@ -47,99 +47,99 @@
     </xsd:element>
   </xsd:schema>
   <data name="difficulty_adjust_paddle_size_name" xml:space="preserve">
-        <value>Paddle Size</value>
+        <value>Yakalayıcı Boyutu</value>
     </data>
   <data name="difficulty_adjust_paddle_size_description" xml:space="preserve">
-        <value>Override a beatmap's set PS.</value>
+        <value>Bir Beatmap'in varsayılan YB'nü değiştir.</value>
     </data>
   <data name="difficulty_adjust_approach_rate_name" xml:space="preserve">
-        <value>Approach Rate</value>
+        <value>Yaklaşma Oranı</value>
     </data>
   <data name="difficulty_adjust_approach_rate_description" xml:space="preserve">
-        <value>Override a beatmap's set AR.</value>
+        <value>Bir Beatmap'in varsayılan YO'nı değiştir.</value>
     </data>
   <data name="dual_description" xml:space="preserve">
-        <value>When one isn't enough</value>
+        <value>Bir tane yeterli olmadığı zaman için</value>
     </data>
   <data name="dual_paddle_count_name" xml:space="preserve">
-        <value>Paddle count</value>
+        <value>Yakalayıcı sayısı</value>
     </data>
   <data name="easy_description" xml:space="preserve">
-        <value>Larger paddle, more forgiving HP drain, less accuracy required, and three lives!</value>
+        <value>Daha büyük yakalayıcı, daha affedici can kaybetme, daha az hassasiyet gerekli, ve üç can!</value>
     </data>
   <data name="flashlight_size_name" xml:space="preserve">
-        <value>Flashlight size</value>
+        <value>El feneri büyüklüğü</value>
     </data>
   <data name="flashlight_size_description" xml:space="preserve">
-        <value>Multiplier applied to the default flashlight size.</value>
+        <value>Varsayılan el feneri büyüklüğüne eklenecek miktar.</value>
     </data>
   <data name="flashlight_combo_name" xml:space="preserve">
-        <value>Change size based on combo</value>
+        <value>Kombo'ya göre büyüklüğü değiştir</value>
     </data>
   <data name="flashlight_combo_description" xml:space="preserve">
-        <value>Decrease the flashlight size as combo increases.</value>
+        <value>Kombo arttıkça el feneri büyüklüğünü azalt.</value>
     </data>
   <data name="autopilot_description" xml:space="preserve">
-        <value>Automatic paddle movement - just follow the rhythm.</value>
+        <value>Otomatik yakalayıcı hareketi - sadece ritimi takip et.</value>
     </data>
   <data name="fadeout_description" xml:space="preserve">
-        <value>Beats fade out before you hit them!</value>
+        <value>Sen onları yakalamadan önce notalar kaybolur!</value>
     </data>
   <data name="fadein_description" xml:space="preserve">
-        <value>Beats appear out of nowhere!</value>
+        <value>Notalar durup dururken ortaya çıkar!</value>
     </data>
   <data name="inverse_description" xml:space="preserve">
-        <value>Beats will appear outside of the playfield.</value>
+        <value>Notalar oynanış alanının dışında çıkacak.</value>
     </data>
   <data name="impossible_sliders_description" xml:space="preserve">
-        <value>Entirely removes the check for very sharp angles</value>
+        <value>Çok keskin açılar için kontrolü tamamen kaldırır</value>
     </data>
   <data name="lite_description" xml:space="preserve">
-        <value>Removes certain aspects of the ruleset.</value>
+        <value>Oyun modunun bazı özelliklerini devre dışı bırakır.</value>
     </data>
   <data name="lite_toggle_sliders_name" xml:space="preserve">
-        <value>Sliders conversion</value>
+        <value>Kaydırıcı Dönüşümü</value>
     </data>
   <data name="lite_toggle_sliders_description" xml:space="preserve">
-        <value>Completely disables sliders altogether.</value>
+        <value>Kaydırıcıları tamamen devre dışı bırakır.</value>
     </data>
   <data name="lite_toggle_hard_beats_name" xml:space="preserve">
-        <value>Hard beats conversion</value>
+        <value>Katı nota donüşümü</value>
     </data>
   <data name="lite_toggle_hard_beats_description" xml:space="preserve">
-        <value>Completely disables hard beats altogether.</value>
+        <value>Katı notaları tamamen devre dışı bırakır.</value>
     </data>
   <data name="lite_slider_division_level_name" xml:space="preserve">
-        <value>Slider division level</value>
+        <value>Kaydırıcı bölme seviyesi</value>
     </data>
   <data name="lite_slider_division_level_description" xml:space="preserve">
-        <value>The minimum slider length divisor.</value>
+        <value>En az kaydırıcı uzunluğu bölücüsü.</value>
     </data>
   <data name="no_scope_description" xml:space="preserve">
-        <value>Where's the paddle?</value>
+        <value>Yakalayıcı nerede?</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
-        <value>Hidden at combo</value>
+        <value>Yakalayıcının görünmez olacağı kombo sayısı</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
-        <value>The combo count at which the paddle becomes completely hidden</value>
+        <value>Yakalayıcının tamamen görünmez olacağı kombo sayısı</value>
     </data>
   <data name="relax_description" xml:space="preserve">
-        <value>You don't need to click. Give your clicking/tapping fingers a break from the heat of things.</value>
+        <value>Tıklamana gerek yok. Tıklayan/Dokunan parmaklarını biraz rahatlat.</value>
     </data>
   <data name="roundabout_description" xml:space="preserve">
-        <value>You can only rotate the paddle in one direction.</value>
+        <value>Yakalayıcıyı sadece bir yönde döndürebilirsin.</value>
     </data>
   <data name="roundabout_direction_name" xml:space="preserve">
-        <value>Direction</value>
+        <value>Yön</value>
     </data>
   <data name="traceable_description" xml:space="preserve">
-        <value>Brim with no yankie</value>
+        <value>Kılavuz dış yuvarlağı olmadan oyna</value>
     </data>
   <data name="lenience_description" xml:space="preserve">
-        <value>Hard beats are more forgiving</value>
+        <value>Katı notalar daha affedici</value>
     </data>
   <data name="strict_description" xml:space="preserve">
-        <value>Aim the hard beats!</value>
+        <value>Katı notalara nişan al!</value>
     </data>
 </root>

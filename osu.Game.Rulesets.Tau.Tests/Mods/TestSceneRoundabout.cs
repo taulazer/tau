@@ -32,12 +32,12 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
             AddStep("add cursor", () =>
             {
                 Clear();
-                Add(cursor = new TauCursor());
+                Add(cursor = new TauModRoundabout.RoundaboutTauCursor());
             });
             AddStep("rotate CW 45°", () => moveMouse(-45));
-            AddAssert("cursor rotation is correct", () => cursor.DrawablePaddle.Rotation == 45);
+            AddAssert("cursor rotation is correct", () => cursor.Rotation == 45);
             AddStep("rotate CC 45°", () => moveMouse(45));
-            AddAssert("cursor rotation is correct", () => cursor.DrawablePaddle.Rotation != 315);
+            AddAssert("cursor rotation is correct", () => cursor.Rotation != 315);
         }
 
         [Test]
@@ -51,9 +51,9 @@ namespace osu.Game.Rulesets.Tau.Tests.Mods
                 Add(cursor = new TauCursor());
             });
             AddStep("rotate CW 45°", () => moveMouse(-45));
-            AddAssert("cursor rotation is correct", () => cursor.DrawablePaddle.Rotation != 45);
+            AddAssert("cursor rotation is correct", () => cursor.Rotation != 45);
             AddStep("rotate CC 45°", () => moveMouse(45));
-            AddAssert("cursor rotation is correct", () => cursor.DrawablePaddle.Rotation == 315);
+            AddAssert("cursor rotation is correct", () => cursor.Rotation == 315);
         }
 
         private void moveMouse(float angle)

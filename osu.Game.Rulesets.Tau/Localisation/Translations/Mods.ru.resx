@@ -119,7 +119,7 @@
         <value>Где платформа?</value>
     </data>
   <data name="no_scope_threshold_name" xml:space="preserve">
-        <value>Hidden at combo</value>
+        <value>Скрывать при комбо</value>
     </data>
   <data name="no_scope_threshold_description" xml:space="preserve">
         <value>Количество комбо, при котором платформа становится невидимой</value>

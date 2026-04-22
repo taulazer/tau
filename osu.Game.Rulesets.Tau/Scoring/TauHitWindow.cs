@@ -1,4 +1,6 @@
-﻿using osu.Game.Rulesets.Scoring;
+﻿using System;
+using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Tau.Scoring
 {
@@ -15,11 +17,32 @@ namespace osu.Game.Rulesets.Tau.Scoring
                 _ => false
             };
 
-        protected override DifficultyRange[] GetRanges() => new[]
+        private readonly DifficultyRange greatWindowRange = new DifficultyRange(64, 49, 34);
+        private readonly DifficultyRange okWindowRange = new DifficultyRange(127, 112, 97);
+
+        private double great;
+        private double ok;
+
+        public override void SetDifficulty(double difficulty)
         {
-            new DifficultyRange(HitResult.Great, 64, 49, 34),
-            new DifficultyRange(HitResult.Ok, 127, 112, 97),
-            new DifficultyRange(HitResult.Miss, 127, 112, 97),
-        };
+            great = IBeatmapDifficultyInfo.DifficultyRange(difficulty, greatWindowRange);
+            ok = IBeatmapDifficultyInfo.DifficultyRange(difficulty, okWindowRange);
+        }
+
+        public override double WindowFor(HitResult result)
+        {
+            switch (result)
+            {
+                case HitResult.Great:
+                    return great;
+
+                case HitResult.Ok:
+                case HitResult.Miss:
+                    return ok;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(result), result, null);
+            }
+        }
     }
 }

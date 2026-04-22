@@ -47,13 +47,13 @@
     </xsd:element>
   </xsd:schema>
   <data name="ticks" xml:space="preserve">
-        <value>Ticks</value>
+        <value>节拍细分</value>
     </data>
   <data name="timing_distribution" xml:space="preserve">
         <value>时序分布</value>
     </data>
   <data name="paddle_distribution" xml:space="preserve">
-        <value>Paddle Distribution</value>
+        <value>划桨分布</value>
     </data>
   <data name="distribution_sliders" xml:space="preserve">
         <value>划动条</value>
