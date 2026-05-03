@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// <summary>
         /// A list of <see cref="TauAction"/>s that denotes which keys can trigger this Hit object.
         /// </summary>
-        protected TauAction[] Actions { get; } =
+        public TauAction[] Actions { get; } =
         [
             TauAction.LeftButton,
             TauAction.RightButton
@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             if (!userTriggered)
             {
                 if (!HitObject.HitWindows.CanBeHit(timeOffset))
-                    ApplyResult(HitResult.Miss);
+                    ApplyMinResult();
 
                 return;
             }
@@ -77,7 +77,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         protected new void ApplyResult(HitResult result)
         {
             ApplyCustomResult(Result);
-
             base.ApplyResult(result);
         }
 

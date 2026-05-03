@@ -106,7 +106,10 @@ namespace osu.Game.Rulesets.Tau
                 HitResult.Miss,
 
                 HitResult.SmallTickHit,
-                HitResult.SmallTickMiss
+                HitResult.SmallTickMiss,
+
+                HitResult.LargeBonus,
+                HitResult.IgnoreMiss
             ];
         }
 

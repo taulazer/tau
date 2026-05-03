@@ -1,6 +1,9 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Input.Events;
 using osu.Game.Graphics;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Tau.Objects.Drawables.Pieces;
 using osu.Game.Rulesets.Tau.UI;
@@ -11,6 +14,10 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public partial class DrawableHardBeat : DrawableTauHitObject<HardBeat>
     {
+        public TauAction? HitAction { get; private set; }
+
+        private readonly Container<DrawableHardBeatNestedHitObject> nestedHitObjectsContainer;
+
         public DrawableHardBeat()
             : this(null)
         {
@@ -27,7 +34,14 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
             Alpha = 0f;
             AlwaysPresent = true;
 
-            AddInternal(new HardBeatPiece { RelativeSizeAxes = Axes.Both, NoteSize = { BindTarget = NoteSize } });
+            AddRangeInternal([
+                new HardBeatPiece
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    NoteSize = { BindTarget = NoteSize }
+                },
+                nestedHitObjectsContainer = new Container<DrawableHardBeatNestedHitObject>()
+            ]);
         }
 
         [Resolved(canBeNull: true)]
@@ -39,6 +53,45 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
             this.FadeIn(HitObject.TimeFadeIn);
             this.ResizeTo(1, HitObject.TimePreempt);
+        }
+
+        protected override void AddNestedHitObject(DrawableHitObject hitObject)
+        {
+            base.AddNestedHitObject(hitObject);
+
+            switch (hitObject)
+            {
+                case DrawableHardBeatNestedHitObject hb:
+                    nestedHitObjectsContainer.Add(hb);
+                    return;
+            }
+        }
+
+        protected override void ClearNestedHitObjects()
+        {
+            base.ClearNestedHitObjects();
+            nestedHitObjectsContainer.Clear(false);
+        }
+
+        protected override DrawableHitObject CreateNestedHitObject(HitObject hitObject)
+        {
+            switch (hitObject)
+            {
+                case HardBeatNestedHitObject nested:
+                    return new DrawableHardBeatNestedHitObject(nested);
+            }
+
+            return base.CreateNestedHitObject(hitObject);
+        }
+
+        public override bool OnPressed(KeyBindingPressEvent<TauAction> e)
+        {
+            bool isPressed = base.OnPressed(e);
+
+            if (isPressed)
+                HitAction = e.Action;
+
+            return isPressed;
         }
 
         [Resolved]

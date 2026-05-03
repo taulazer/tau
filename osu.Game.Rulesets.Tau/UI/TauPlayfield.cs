@@ -115,7 +115,8 @@ namespace osu.Game.Rulesets.Tau.UI
             if (!judgedObject.DisplayResult || !DisplayJudgements.Value)
                 return;
 
-            judgementLayer.Add(poolDictionary[result.Type].Get(doj => doj.Apply(result, judgedObject)));
+            if (poolDictionary.TryGetValue(result.Type, out var pool))
+                judgementLayer.Add(pool.Get(doj => doj.Apply(result, judgedObject)));
         }
 
         private partial class DrawableJudgementPool : DrawablePool<DrawableTauJudgement>
