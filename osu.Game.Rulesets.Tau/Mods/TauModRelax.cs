@@ -211,7 +211,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         }
 
         private void changeHardBeatState(bool down, double time)
-            => changeState(down, time, ref hardBeat, TauAction.HardButton1, TauAction.HardButton2);
+            => changeState(down, time, ref hardBeat, TauAction.LeftButton, TauAction.RightButton);
 
         private void changeNormalState(bool down, double time)
             => changeState(down, time, ref normal, TauAction.LeftButton, TauAction.RightButton);

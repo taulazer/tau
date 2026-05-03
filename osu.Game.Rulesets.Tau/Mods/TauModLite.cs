@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override LocalisableString Description => ModStrings.LiteDescription;
         public override ModType Type => ModType.Conversion;
 
-        public override Type[] IncompatibleMods => new[] { typeof(TauModStrict), typeof(TauModLenience) };
+        public override Type[] IncompatibleMods => new[] { typeof(TauModStrict) };
 
         [SettingSource(typeof(ModStrings), nameof(ModStrings.LiteToggleSlidersName), nameof(ModStrings.LiteToggleSlidersDescription))]
         public Bindable<bool> ToggleSliders { get; } = new Bindable<bool>(false);

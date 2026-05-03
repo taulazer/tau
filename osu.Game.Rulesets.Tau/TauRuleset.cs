@@ -61,8 +61,7 @@ namespace osu.Game.Rulesets.Tau
                 {
                     new TauModEasy(),
                     new TauModNoFail(),
-                    new MultiMod(new TauModHalfTime(), new TauModDaycore()),
-                    new TauModLenience()
+                    new MultiMod(new TauModHalfTime(), new TauModDaycore())
                 },
                 ModType.DifficultyIncrease => new Mod[]
                 {
@@ -150,9 +149,7 @@ namespace osu.Game.Rulesets.Tau
             new KeyBinding(InputKey.Z, TauAction.LeftButton),
             new KeyBinding(InputKey.X, TauAction.RightButton),
             new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
-            new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
-            new KeyBinding(InputKey.Space, TauAction.HardButton1),
-            new KeyBinding(InputKey.LShift, TauAction.HardButton2),
+            new KeyBinding(InputKey.MouseRight, TauAction.RightButton)
         };
 
         private partial class TauIcon : CompositeDrawable

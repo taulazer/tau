@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Tau.Mods
         public override double ScoreMultiplier => 1.2;
         public override string Acronym => "ST";
         public override ModType Type => ModType.DifficultyIncrease;
-        public override Type[] IncompatibleMods => new[] { typeof(TauModLenience), typeof(TauModLite) };
+        public override Type[] IncompatibleMods => new[] { typeof(TauModLite) };
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
         {
