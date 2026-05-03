@@ -11,12 +11,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 {
     public partial class DrawableStrictHardBeat : DrawableAngledTauHitObject<StrictHardBeat>
     {
-        protected override TauAction[] Actions { get; } =
-        {
-            TauAction.HardButton1,
-            TauAction.HardButton2
-        };
-
         private readonly StrictHardBeatPiece piece;
 
         public DrawableStrictHardBeat()

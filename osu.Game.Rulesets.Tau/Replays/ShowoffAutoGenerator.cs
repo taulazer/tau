@@ -267,7 +267,7 @@ public class ShowoffAutoGenerator : AutoGenerator
         TauAction down(bool hard = false)
         {
             var action = hard
-                             ? (nextHardIndex++ % 2 == 0 ? TauAction.HardButton1 : TauAction.HardButton2)
+                             ? (nextHardIndex++ % 2 == 0 ? TauAction.LeftButton : TauAction.RightButton)
                              : (nextIndex++ % 2 == 0 ? TauAction.LeftButton : TauAction.RightButton);
 
             if (taps.Any(x => x.action == action))

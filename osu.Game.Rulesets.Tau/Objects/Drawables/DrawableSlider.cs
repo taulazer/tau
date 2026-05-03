@@ -31,13 +31,6 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
 
         public float PathDistance = TauPlayfield.BASE_SIZE.X / 2;
 
-        protected override TauAction[] Actions => HitObject.IsHard
-            ? [
-                TauAction.HardButton1,
-                TauAction.HardButton2
-            ]
-            : base.Actions;
-
         private readonly SliderPath path;
         private readonly Container headContainer;
         private readonly Container<DrawableSliderTick> tickContainer;

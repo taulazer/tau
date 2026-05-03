@@ -26,11 +26,11 @@ namespace osu.Game.Rulesets.Tau.Objects.Drawables
         /// <summary>
         /// A list of <see cref="TauAction"/>s that denotes which keys can trigger this Hit object.
         /// </summary>
-        protected virtual TauAction[] Actions { get; } =
-        {
+        protected TauAction[] Actions { get; } =
+        [
             TauAction.LeftButton,
             TauAction.RightButton
-        };
+        ];
 
         [CanBeNull]
         protected TauPlayfield Playfield { get; private set; } = null;
