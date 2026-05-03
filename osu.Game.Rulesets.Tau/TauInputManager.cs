@@ -73,11 +73,5 @@ namespace osu.Game.Rulesets.Tau
 
         [LocalisableDescription(typeof(InputStrings), nameof(InputStrings.RightButton))]
         RightButton,
-
-        [LocalisableDescription(typeof(InputStrings), nameof(InputStrings.HardButton1))]
-        HardButton1,
-
-        [LocalisableDescription(typeof(InputStrings), nameof(InputStrings.HardButton2))]
-        HardButton2,
     }
 }

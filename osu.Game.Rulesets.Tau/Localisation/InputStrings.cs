@@ -16,16 +16,6 @@ namespace osu.Game.Rulesets.Tau.Localisation
         /// </summary>
         public static LocalisableString RightButton => new TranslatableString(getKey(@"right_button"), @"Right Button");
 
-        /// <summary>
-        /// "Hard Button 1"
-        /// </summary>
-        public static LocalisableString HardButton1 => new TranslatableString(getKey(@"hard_button_1"), @"Hard Button 1");
-
-        /// <summary>
-        /// "Hard Button 2"
-        /// </summary>
-        public static LocalisableString HardButton2 => new TranslatableString(getKey(@"hard_button_2"), @"Hard Button 2");
-
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }
