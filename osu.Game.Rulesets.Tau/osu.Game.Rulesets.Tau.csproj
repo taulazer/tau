@@ -35,6 +35,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.6.0" />
     <PackageReference Include="ppy.osu.Game" Version="2026.303.0" />
   </ItemGroup>
   <ItemGroup>
