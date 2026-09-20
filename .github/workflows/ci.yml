@@ -9,10 +9,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install .NET 8.0.x
+      - name: Install .NET 10.0.x
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "10.0.x"
 
       - name: Restore Tools
         run: dotnet tool restore
@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: osu.Game.Rulesets.Tau.dll
-          path: "osu.Game.Rulesets.Tau/bin/Debug/net8.0"
+          path: "osu.Game.Rulesets.Tau/bin/Debug/net10.0"
           retention-days: 90
 
   test:

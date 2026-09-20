@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Tau.Mods
 
             RelativeSizeAxes = Axes.Both;
 
-            InternalChild = new BufferedContainer(new[] { RenderBufferFormat.D16 })
+            InternalChild = new BufferedContainer(formats: new[] { RenderBufferFormat.D16 })
             {
                 RelativeSizeAxes = Axes.Both,
                 Size = new Vector2(1.5f),
