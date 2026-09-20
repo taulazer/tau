@@ -144,16 +144,20 @@ namespace osu.Game.Rulesets.Tau
             ]), true)
         ];
 
-        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) =>
-        [
-            new KeyBinding(InputKey.Z, TauAction.LeftButton),
-            new KeyBinding(InputKey.X, TauAction.RightButton),
-            new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
-            new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
-            new KeyBinding(InputKey.Space, TauAction.HardButton1),
-            new KeyBinding(InputKey.LShift, TauAction.HardButton2)
-        ];
+        public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0)
+        {
+            if (variant == EDITOR_VARIANT)
+                return [];
 
+            return [
+                new KeyBinding(InputKey.Z, TauAction.LeftButton),
+                new KeyBinding(InputKey.X, TauAction.RightButton),
+                new KeyBinding(InputKey.MouseLeft, TauAction.LeftButton),
+                new KeyBinding(InputKey.MouseRight, TauAction.RightButton),
+                new KeyBinding(InputKey.Space, TauAction.HardButton1),
+                new KeyBinding(InputKey.LShift, TauAction.HardButton2)
+            ];
+        }
         private partial class TauIcon : CompositeDrawable
         {
             private readonly Ruleset ruleset;
