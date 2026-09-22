@@ -30,9 +30,6 @@
     <EmbeddedResource Update="Localisation\Translations\Mods.*.resx">
       <DependentUpon>Mods.resx</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Update="Localisation\Translations\UI.ar.resx">
-      <DependentUpon>UI.resx</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ppy.osu.Game" Version="2026.916.0" />
